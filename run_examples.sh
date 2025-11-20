@@ -10,4 +10,3 @@ echo ""
 
 cd usage_examples
 go run .
-

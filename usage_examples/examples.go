@@ -1,30 +1,58 @@
 package main
 
 import (
-	bifrost "bifrost-for-developers/sdk"
+	"bifrost-for-developers/sdk"
+	"bifrost-for-developers/sdk/utils"
+	"context"
 	"fmt"
-	"strings"
+	"net/url"
+	"os"
+	"time"
 )
 
-func handleResult(result *bifrost.Result) {
-	if result.Error != nil {
-		fmt.Printf("❌ Error: %s\n", error.Error(result.Error))
+func handleResponse(resp *utils.Response, err error) {
+	if err != nil {
+		fmt.Printf("❌ Error: %s\n", err.Error())
 		return
 	}
-	if !result.Response.IsOK() {
-		fmt.Printf("❌ Error: %s\n", result.Response.Error)
+	if resp.Status != utils.StatusOK {
+		fmt.Printf("❌ Error: %s\n", resp.Error)
 		return
 	}
 	fmt.Println("✅ Success!")
-	if dataSlice, isSlice := result.Response.GetDataAsSlice(); isSlice {
+	if dataSlice, isSlice := resp.Data.([]interface{}); isSlice {
 		fmt.Printf("📦 %d records", len(dataSlice))
 		if len(dataSlice) > 0 {
 			fmt.Printf(" | First: %v", dataSlice[0])
 		}
 		fmt.Println()
-	} else if dataMap, isMap := result.Response.GetDataAsMap(); isMap {
+	} else if dataMap, isMap := resp.Data.(map[string]interface{}); isMap {
 		fmt.Printf("📦 Data: %v\n", dataMap)
 	}
+}
+
+func getConfig() utils.Configuration {
+	return utils.Configuration{
+		BaseURL:        getEnv("HYPERFLUID_BASE_URL", ""),
+		OrgID:          getEnv("HYPERFLUID_ORG_ID", ""),
+		Token:          getEnv("HYPERFLUID_TOKEN", ""),
+		RequestTimeout: 30 * time.Second,
+		MaxRetries:     3,
+
+		KeycloakBaseURL:      getEnv("KEYCLOAK_BASE_URL", ""),
+		KeycloakRealm:        getEnv("KEYCLOAK_REALM", ""),
+		KeycloakClientID:     getEnv("KEYCLOAK_CLIENT_ID", ""),
+		KeycloakClientSecret: getEnv("KEYCLOAK_CLIENT_SECRET", ""),
+		KeycloakUsername:     getEnv("KEYCLOAK_USERNAME", ""),
+		KeycloakPassword:     getEnv("KEYCLOAK_PASSWORD", ""),
+	}
+}
+
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
 }
 
 func runPostgresExample() {
@@ -32,14 +60,28 @@ func runPostgresExample() {
 	fmt.Println("🎯 Example 1: PostgreSQL Query")
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
-	bifrost.Init()
-	var globalConfiguration = bifrost.GetGlobalConfiguration()
+	config := getConfig()
+	client := sdk.NewClient(config)
 
-	sqlQuery := fmt.Sprintf("SELECT * FROM %s.%s.%s LIMIT 5", globalConfiguration.TestCatalog, globalConfiguration.TestSchema, globalConfiguration.TestTable)
-	fmt.Printf("📝 %s\n", sqlQuery)
+	testCatalog := getEnv("BIFROST_TEST_CATALOG", "")
+	testSchema := getEnv("BIFROST_TEST_SCHEMA", "")
+	testTable := getEnv("BIFROST_TEST_TABLE", "")
 
-	result := <-bifrost.Request(bifrost.BifrostRequest{Type: bifrost.RequestPostgres, PostgresPayload: &bifrost.PostgresPayload{SQL: sqlQuery}})
-	handleResult(&result)
+	if testCatalog == "" || testSchema == "" || testTable == "" {
+		fmt.Println("⚠️  Skipping: BIFROST_TEST_CATALOG, BIFROST_TEST_SCHEMA, or BIFROST_TEST_TABLE not set")
+		fmt.Println()
+		return
+	}
+
+	table := client.GetCatalog(testCatalog).Table(testSchema, testTable)
+
+	params := url.Values{}
+	params.Add("_limit", "5")
+
+	fmt.Printf("📝 GET /%s/%s/%s?_limit=5\n", testCatalog, testSchema, testTable)
+
+	resp, err := table.GetData(context.Background(), params)
+	handleResponse(resp, err)
 	fmt.Println()
 }
 
@@ -47,15 +89,8 @@ func runGraphQLExample() {
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 	fmt.Println("🎯 Example 2: GraphQL Query")
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-
-	bifrost.Init()
-	var globalConfiguration = bifrost.GetGlobalConfiguration()
-
-	graphqlQuery := fmt.Sprintf("{ %s { %s { %s (limit: 5){ %s }}}}", globalConfiguration.TestCatalog, globalConfiguration.TestSchema, globalConfiguration.TestTable, strings.ReplaceAll(globalConfiguration.TestColumns, ",", " "))
-	fmt.Printf("📝 %s\n", graphqlQuery)
-
-	result := <-bifrost.Request(bifrost.BifrostRequest{Type: bifrost.RequestGraphQL, GraphQLPayload: &bifrost.GraphQLPayload{Query: graphqlQuery}})
-	handleResult(&result)
+	fmt.Println("⚠️  Note: GraphQL is not yet supported in the current SDK version")
+	fmt.Println("         Use the REST API via runOpenAPIExample() instead")
 	fmt.Println()
 }
 
@@ -64,18 +99,31 @@ func runOpenAPIExample() {
 	fmt.Println("🎯 Example 3: OpenAPI (REST) Query")
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
-	bifrost.Init()
-	var globalConfiguration = bifrost.GetGlobalConfiguration()
+	config := getConfig()
+	client := sdk.NewClient(config)
 
-	fmt.Printf("📝 GET /%s/%s/%s?_limit=10&select=%s\n", globalConfiguration.TestCatalog, globalConfiguration.TestSchema, globalConfiguration.TestTable, globalConfiguration.TestColumns)
+	testCatalog := getEnv("BIFROST_TEST_CATALOG", "")
+	testSchema := getEnv("BIFROST_TEST_SCHEMA", "")
+	testTable := getEnv("BIFROST_TEST_TABLE", "")
+	testColumns := getEnv("BIFROST_TEST_COLUMNS", "*")
 
-	result := <-bifrost.Request(bifrost.BifrostRequest{Type: bifrost.RequestOpenAPI, OpenAPIPayload: &bifrost.OpenAPIPayload{
-		Catalog: globalConfiguration.TestCatalog,
-		Schema:  globalConfiguration.TestSchema,
-		Table:   globalConfiguration.TestTable,
-		Method:  "GET",
-		Params:  map[string]string{"select": globalConfiguration.TestColumns},
-	}})
-	handleResult(&result)
+	if testCatalog == "" || testSchema == "" || testTable == "" {
+		fmt.Println("⚠️  Skipping: BIFROST_TEST_CATALOG, BIFROST_TEST_SCHEMA, or BIFROST_TEST_TABLE not set")
+		fmt.Println()
+		return
+	}
+
+	table := client.GetCatalog(testCatalog).Table(testSchema, testTable)
+
+	params := url.Values{}
+	params.Add("_limit", "10")
+	if testColumns != "" && testColumns != "*" {
+		params.Add("select", testColumns)
+	}
+
+	fmt.Printf("📝 GET /%s/%s/%s?_limit=10&select=%s\n", testCatalog, testSchema, testTable, testColumns)
+
+	resp, err := table.GetData(context.Background(), params)
+	handleResponse(resp, err)
 	fmt.Println()
 }

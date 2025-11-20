@@ -114,7 +114,7 @@ func (c *Client) exchangeKeycloakToken(ctx context.Context, form url.Values) (st
 	if err != nil {
 		return "", fmt.Errorf("%w: cannot reach Keycloak: %w", utils.ErrAuthenticationFailed, err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	body, _ := io.ReadAll(resp.Body) // io.ReadAll already handles errors internally to return empty slice
 	if resp.StatusCode != http.StatusOK {

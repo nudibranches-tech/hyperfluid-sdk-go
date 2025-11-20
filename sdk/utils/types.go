@@ -13,12 +13,12 @@ type Configuration struct {
 	RequestTimeout time.Duration
 	MaxRetries     int
 
-	KeycloakBaseURL  string
-	KeycloakRealm    string
-	KeycloakClientID string
+	KeycloakBaseURL      string
+	KeycloakRealm        string
+	KeycloakClientID     string
 	KeycloakClientSecret string
-	KeycloakUsername string
-	KeycloakPassword string
+	KeycloakUsername     string
+	KeycloakPassword     string
 }
 
 type Response struct {

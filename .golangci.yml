@@ -1,0 +1,30 @@
+version: 2
+
+run:
+  # Maximum duration for `go build` command to run.
+  timeout: 5m
+  # Tells golangci-lint to use go modules mode for downloading dependencies.
+  # This should help resolve the 'undefined' issues.
+  modules-download-mode: mod
+  # Don't run linters on test files. This can sometimes help with package resolution.
+  tests: false
+
+linters-settings:
+  govet:
+    # Set to true to check for shadowing variables, which can be a source of bugs.
+    check-shadowing: true
+
+linters:
+  # Enable specific linters. This is a minimal set to start with.
+  enable:
+    - errcheck      # Checks for unhandled errors
+    - govet         # Examines Go source code and reports suspicious constructs
+    - ineffassign   # Detects when an assignment to a variable is not used
+    - staticcheck   # Statically checks Go code for bugs
+
+issues:
+  # Don't use default exclusions, we want to see all issues.
+  exclude-use-default: false
+  # Don't limit the number of issues per linter or per file.
+  max-per-linter: 0
+  max-issues-per-file: 0

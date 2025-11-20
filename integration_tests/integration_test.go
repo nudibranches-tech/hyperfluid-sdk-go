@@ -62,9 +62,9 @@ func TestIntegration_GetDataWithParameters(t *testing.T) {
 	// This test explicitly provides configuration parameters, overriding environment variables.
 	// You need to fill these with valid values for the test to pass.
 	overrideConfig := utils.Configuration{
-		BaseURL:   "https://bifrost.hyperfluid.cloud", // Replace with your actual base URL
-		OrgID:     "your_org_id",                       // Replace with your actual Org ID
-		Token:     "your_token",                        // Replace with your actual token OR Keycloak details
+		BaseURL: "https://bifrost.hyperfluid.cloud", // Replace with your actual base URL
+		OrgID:   "your_org_id",                      // Replace with your actual Org ID
+		Token:   "your_token",                       // Replace with your actual token OR Keycloak details
 		// Example with Keycloak:
 		// KeycloakBaseURL:    "https://keycloak.example.com",
 		// KeycloakRealm:      "your_realm",

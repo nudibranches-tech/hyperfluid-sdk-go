@@ -1,8 +1,8 @@
 package sdk
 
 import (
-	"context"
 	"bifrost-for-developers/sdk/utils"
+	"context"
 	"fmt"
 	"net/url"
 )
@@ -16,10 +16,10 @@ type Catalog struct {
 // Table retrieves a table from the catalog.
 func (c *Catalog) Table(schemaName string, tableName string) *Table {
 	return &Table{
-		Name:       tableName,
-		SchemaName: schemaName,
+		Name:        tableName,
+		SchemaName:  schemaName,
 		CatalogName: c.Name,
-		client:     c.client,
+		client:      c.client,
 	}
 }
 
