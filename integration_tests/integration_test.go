@@ -1,8 +1,8 @@
 package developpementtests
 
 import (
-	"bifrost-for-developers/sdk"
-	"bifrost-for-developers/sdk/utils"
+	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk"
+	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 	"context"
 	"os"
 	"testing"

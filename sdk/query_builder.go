@@ -1,7 +1,7 @@
 package sdk
 
 import (
-	"bifrost-for-developers/sdk/utils"
+	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 	"context"
 	"fmt"
 	"net/url"

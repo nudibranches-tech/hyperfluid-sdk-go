@@ -1,4 +1,4 @@
-module bifrost-for-developers
+module github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev
 
 go 1.25.1
 

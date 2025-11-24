@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bifrost-for-developers/sdk"
+	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk"
 	"context"
 	"fmt"
 )

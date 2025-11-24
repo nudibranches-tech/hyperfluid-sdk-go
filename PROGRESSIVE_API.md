@@ -232,8 +232,8 @@ resp, err := client.
 package main
 
 import (
-    "bifrost-for-developers/sdk"
-    "bifrost-for-developers/sdk/utils"
+    "github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk"
+    "github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
     "context"
     "fmt"
 )
