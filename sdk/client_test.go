@@ -1,13 +1,14 @@
 package sdk
 
 import (
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 	"context"
 	"errors"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
+
+	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 )
 
 func TestNewClient(t *testing.T) {

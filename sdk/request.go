@@ -1,7 +1,6 @@
 package sdk
 
 import (
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -10,6 +9,8 @@ import (
 	"math"
 	"net/http"
 	"time"
+
+	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 )
 
 func (c *Client) do(ctx context.Context, method, url string, body []byte) (*utils.Response, error) {

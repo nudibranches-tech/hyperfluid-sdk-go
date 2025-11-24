@@ -1,12 +1,13 @@
 package sdk
 
 import (
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 	"context"
 	"fmt"
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 )
 
 // QueryBuilder provides a fluent interface for building and executing queries.

@@ -1,7 +1,6 @@
 package sdk
 
 import (
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 	"context"
 	"crypto/tls"
 	"encoding/json"
@@ -11,6 +10,8 @@ import (
 	"net/url"
 	"strings"
 	"sync"
+
+	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 	// "time" // time import is no longer needed
 )
 

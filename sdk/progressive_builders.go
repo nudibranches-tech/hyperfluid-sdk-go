@@ -1,10 +1,11 @@
 package sdk
 
 import (
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 	"context"
 	"fmt"
 	"net/url"
+
+	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 )
 
 // Progressive Builders - Each level has its own type with specific methods

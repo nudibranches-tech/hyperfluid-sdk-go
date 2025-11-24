@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk"
 	"context"
 	"fmt"
+
+	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk"
 )
 
 // This file demonstrates the NEW progressive fluent API

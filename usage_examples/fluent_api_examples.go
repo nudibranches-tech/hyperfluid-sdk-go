@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk"
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 	"context"
 	"fmt"
 	"os"
 	"time"
+
+	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk"
+	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 )
 
 // This file demonstrates the new fluent API for the Bifrost SDK.
