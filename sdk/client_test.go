@@ -13,9 +13,9 @@ import (
 
 func TestNewClient(t *testing.T) {
 	config := utils.Configuration{
-		BaseURL: "http://localhost",
-		OrgID:   "test-org",
-		Token:   "test-token",
+		BaseURL:    "http://localhost",
+		DataDockID: "test-datadock", // Changed from OrgID
+		Token:      "test-token",
 	}
 	client := NewClient(config)
 
@@ -28,7 +28,7 @@ func TestNewClient(t *testing.T) {
 }
 
 func TestCatalogMethod(t *testing.T) {
-	client := NewClient(utils.Configuration{OrgID: "test-org"})
+	client := NewClient(utils.Configuration{DataDockID: "test-datadock"}) // Changed from OrgID
 	qb := client.Catalog("test-catalog")
 
 	if qb == nil {
@@ -40,9 +40,9 @@ func TestCatalogMethod(t *testing.T) {
 
 func TestFluentAPI_Success(t *testing.T) {
 	config := utils.Configuration{
-		Token:   "test-token",
-		OrgID:   "test-org",
-		BaseURL: "https://test.example.com",
+		Token:      "test-token",
+		DataDockID: "test-datadock", // Changed from OrgID
+		BaseURL:    "https://test.example.com",
 	}
 
 	client := &Client{
@@ -74,9 +74,9 @@ func TestFluentAPI_Success(t *testing.T) {
 
 func TestFluentAPI_NotFound(t *testing.T) {
 	config := utils.Configuration{
-		Token:   "test-token",
-		OrgID:   "test-org",
-		BaseURL: "https://test.example.com",
+		Token:      "test-token",
+		DataDockID: "test-datadock", // Changed from OrgID
+		BaseURL:    "https://test.example.com",
 	}
 
 	client := &Client{
@@ -102,9 +102,9 @@ func TestFluentAPI_NotFound(t *testing.T) {
 
 func TestFluentAPI_PermissionDenied(t *testing.T) {
 	config := utils.Configuration{
-		Token:   "test-token",
-		OrgID:   "test-org",
-		BaseURL: "https://test.example.com",
+		Token:      "test-token",
+		DataDockID: "test-datadock", // Changed from OrgID
+		BaseURL:    "https://test.example.com",
 	}
 
 	client := &Client{
@@ -132,7 +132,7 @@ func TestFluentAPI_ServerError_Retry(t *testing.T) {
 	reqCount := 0
 	config := utils.Configuration{
 		Token:      "test-token",
-		OrgID:      "test-org",
+		DataDockID: "test-datadock", // Changed from OrgID
 		BaseURL:    "https://test.example.com",
 		MaxRetries: 1,
 	}

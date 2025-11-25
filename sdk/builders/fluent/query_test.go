@@ -51,8 +51,8 @@ func TestQueryBuilder_BasicChaining(t *testing.T) {
 
 func TestQueryBuilder_WithSelect(t *testing.T) {
 	qb := newTestQueryBuilder(utils.Configuration{
-		Token: "test-token",
-		OrgID: "test-org",
+		Token:      "test-token",
+		DataDockID: "test-datadock",
 	}, func(req *http.Request) (*http.Response, error) {
 		query := req.URL.Query()
 		selectParam := query.Get("select")
@@ -80,8 +80,8 @@ func TestQueryBuilder_WithSelect(t *testing.T) {
 
 func TestQueryBuilder_WithMultipleSelects(t *testing.T) {
 	qb := newTestQueryBuilder(utils.Configuration{
-		Token: "test-token",
-		OrgID: "test-org",
+		Token:      "test-token",
+		DataDockID: "test-datadock",
 	}, func(req *http.Request) (*http.Response, error) {
 		query := req.URL.Query()
 		selectParam := query.Get("select")
@@ -110,8 +110,8 @@ func TestQueryBuilder_WithMultipleSelects(t *testing.T) {
 
 func TestQueryBuilder_WithFilters(t *testing.T) {
 	qb := newTestQueryBuilder(utils.Configuration{
-		Token: "test-token",
-		OrgID: "test-org",
+		Token:      "test-token",
+		DataDockID: "test-datadock",
 	}, func(req *http.Request) (*http.Response, error) {
 		// Check for filter parameters
 		if !strings.Contains(req.URL.RawQuery, "age") {
@@ -142,8 +142,8 @@ func TestQueryBuilder_WithFilters(t *testing.T) {
 
 func TestQueryBuilder_WithOrderBy(t *testing.T) {
 	qb := newTestQueryBuilder(utils.Configuration{
-		Token: "test-token",
-		OrgID: "test-org",
+		Token:      "test-token",
+		DataDockID: "test-datadock",
 	}, func(req *http.Request) (*http.Response, error) {
 		query := req.URL.Query()
 		orderParam := query.Get("order")
@@ -172,8 +172,8 @@ func TestQueryBuilder_WithOrderBy(t *testing.T) {
 
 func TestQueryBuilder_WithPagination(t *testing.T) {
 	qb := newTestQueryBuilder(utils.Configuration{
-		Token: "test-token",
-		OrgID: "test-org",
+		Token:      "test-token",
+		DataDockID: "test-datadock",
 	}, func(req *http.Request) (*http.Response, error) {
 		query := req.URL.Query()
 		if query.Get("_limit") != "25" {
@@ -212,7 +212,7 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "missing catalog",
 			buildQuery: func() *QueryBuilder {
-				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", DataDockID: "test-datadock"}, nil).
 					Schema("schema").
 					Table("table")
 			},
@@ -222,7 +222,7 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "missing schema",
 			buildQuery: func() *QueryBuilder {
-				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", DataDockID: "test-datadock"}, nil).
 					Catalog("cat").
 					Table("table")
 			},
@@ -232,7 +232,7 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "missing table",
 			buildQuery: func() *QueryBuilder {
-				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", DataDockID: "test-datadock"}, nil).
 					Catalog("cat").
 					Schema("schema")
 			},
@@ -242,7 +242,7 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "empty catalog name",
 			buildQuery: func() *QueryBuilder {
-				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", DataDockID: "test-datadock"}, nil).
 					Catalog("").
 					Schema("schema").
 					Table("table")
@@ -253,7 +253,7 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "negative limit",
 			buildQuery: func() *QueryBuilder {
-				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", DataDockID: "test-datadock"}, nil).
 					Catalog("cat").
 					Schema("schema").
 					Table("table").
@@ -265,7 +265,7 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "negative offset",
 			buildQuery: func() *QueryBuilder {
-				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", DataDockID: "test-datadock"}, nil).
 					Catalog("cat").
 					Schema("schema").
 					Table("table").
@@ -277,7 +277,7 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "invalid operator",
 			buildQuery: func() *QueryBuilder {
-				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", DataDockID: "test-datadock"}, nil).
 					Catalog("cat").
 					Schema("schema").
 					Table("table").
@@ -289,7 +289,7 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "invalid order direction",
 			buildQuery: func() *QueryBuilder {
-				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", DataDockID: "test-datadock"}, nil).
 					Catalog("cat").
 					Schema("schema").
 					Table("table").
@@ -322,8 +322,8 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 
 func TestQueryBuilder_RawParams(t *testing.T) {
 	qb := newTestQueryBuilder(utils.Configuration{
-		Token: "test-token",
-		OrgID: "test-org",
+		Token:      "test-token",
+		DataDockID: "test-datadock",
 	}, func(req *http.Request) (*http.Response, error) {
 		query := req.URL.Query()
 		if query.Get("custom_param") != "custom_value" {
@@ -353,8 +353,8 @@ func TestQueryBuilder_RawParams(t *testing.T) {
 
 func TestQueryBuilder_ComplexQuery(t *testing.T) {
 	qb := newTestQueryBuilder(utils.Configuration{
-		Token: "test-token",
-		OrgID: "test-org",
+		Token:      "test-token",
+		DataDockID: "test-datadock",
 	}, func(req *http.Request) (*http.Response, error) {
 		query := req.URL.Query()
 
@@ -409,8 +409,8 @@ func TestQueryBuilder_ComplexQuery(t *testing.T) {
 
 func TestQueryBuilder_URLEscaping(t *testing.T) {
 	qb := newTestQueryBuilder(utils.Configuration{
-		Token: "test-token",
-		OrgID: "test-org",
+		Token:      "test-token",
+		DataDockID: "test-datadock",
 	}, func(req *http.Request) (*http.Response, error) {
 		// Verify special characters are properly escaped
 		path := req.URL.Path
@@ -441,8 +441,8 @@ func TestQueryBuilder_URLEscaping(t *testing.T) {
 
 func TestQueryBuilder_OrderByDefaultDirection(t *testing.T) {
 	qb := newTestQueryBuilder(utils.Configuration{
-		Token: "test-token",
-		OrgID: "test-org",
+		Token:      "test-token",
+		DataDockID: "test-datadock",
 	}, func(req *http.Request) (*http.Response, error) {
 		query := req.URL.Query()
 		orderParam := query.Get("order")
