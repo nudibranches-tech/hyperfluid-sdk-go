@@ -33,8 +33,17 @@ func (c *Client) do(ctx context.Context, method, url string, body []byte) (*util
 			return nil, fmt.Errorf("%w: %w", utils.ErrInvalidRequest, err)
 		}
 
+		// If no token is set, try to get one from Keycloak
 		if c.config.Token == "" {
-			return nil, utils.ErrInvalidConfiguration
+			if c.isKeycloakAuthMethodConfigured() {
+				token, err := c.refreshToken(ctx)
+				if err != nil {
+					return nil, fmt.Errorf("failed to obtain token: %w", err)
+				}
+				c.config.Token = token
+			} else {
+				return nil, utils.ErrInvalidConfiguration
+			}
 		}
 
 		req.Header.Set("Authorization", "Bearer "+c.config.Token)

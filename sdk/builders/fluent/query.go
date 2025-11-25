@@ -1,4 +1,4 @@
-package sdk
+package fluent
 
 import (
 	"context"
@@ -7,59 +7,50 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/builders"
 	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 )
 
 // QueryBuilder provides a fluent interface for building and executing queries.
 type QueryBuilder struct {
-	client *Client
+	client builders.ClientInterface
 	errors []error
 
 	// Hierarchy
-	orgID       string
+	dataDockID  string
 	catalogName string
 	schemaName  string
 	tableName   string
 
 	// Query parameters
 	selectCols []string
-	filters    []Filter
-	orderBy    []OrderClause
+	filters    []builders.Filter
+	orderBy    []builders.OrderClause
 	limitVal   int
 	offsetVal  int
 	rawParams  url.Values
 }
 
-// Filter represents a WHERE clause condition.
-type Filter struct {
-	Column   string
-	Operator string // =, >, <, >=, <=, !=, LIKE, IN
-	Value    interface{}
-}
-
-// OrderClause represents an ORDER BY clause.
-type OrderClause struct {
-	Column    string
-	Direction string // ASC or DESC
-}
-
-// newQueryBuilder creates a new QueryBuilder instance.
-func newQueryBuilder(client *Client) *QueryBuilder {
+// NewQueryBuilder creates a new QueryBuilder instance.
+func NewQueryBuilder(client interface {
+	Do(ctx context.Context, method, endpoint string, body []byte) (*utils.Response, error)
+	GetConfig() utils.Configuration
+}) *QueryBuilder {
 	return &QueryBuilder{
-		client:    client,
-		errors:    []error{},
-		orgID:     client.config.OrgID, // Use default from config
-		rawParams: url.Values{},
+		client:     client,
+		errors:     []error{},
+		dataDockID: client.GetConfig().DataDockID, // Use default from config
+		rawParams:  url.Values{},
 	}
 }
 
-// Org sets the organization ID for the query.
-// If not called, uses the OrgID from client configuration.
-func (qb *QueryBuilder) Org(orgID string) *QueryBuilder {
-	if orgID == "" {
-		qb.errors = append(qb.errors, fmt.Errorf("organization ID cannot be empty"))
+// DataDock sets the data dock ID for the query.
+// If not called, uses the DataDockID from client configuration.
+func (qb *QueryBuilder) DataDock(dataDockID string) *QueryBuilder {
+	if dataDockID == "" {
+		qb.errors = append(qb.errors, fmt.Errorf("data dock ID cannot be empty"))
 	}
-	qb.orgID = orgID
+	qb.dataDockID = dataDockID
 	return qb
 }
 
@@ -109,7 +100,7 @@ func (qb *QueryBuilder) Where(column, operator string, value interface{}) *Query
 		qb.errors = append(qb.errors, fmt.Errorf("invalid operator '%s'", operator))
 	}
 
-	qb.filters = append(qb.filters, Filter{
+	qb.filters = append(qb.filters, builders.Filter{
 		Column:   column,
 		Operator: operator,
 		Value:    value,
@@ -130,7 +121,7 @@ func (qb *QueryBuilder) OrderBy(column, direction string) *QueryBuilder {
 		return qb
 	}
 
-	qb.orderBy = append(qb.orderBy, OrderClause{
+	qb.orderBy = append(qb.orderBy, builders.OrderClause{
 		Column:    column,
 		Direction: direction,
 	})
@@ -180,8 +171,8 @@ func (qb *QueryBuilder) validate() error {
 	}
 
 	// Check required fields
-	if qb.orgID == "" {
-		return fmt.Errorf("%w: organization ID is required", utils.ErrInvalidRequest)
+	if qb.dataDockID == "" {
+		return fmt.Errorf("%w: data dock ID is required", utils.ErrInvalidRequest)
 	}
 	if qb.catalogName == "" {
 		return fmt.Errorf("%w: catalog name is required", utils.ErrInvalidRequest)
@@ -201,8 +192,8 @@ func (qb *QueryBuilder) buildEndpoint() string {
 	// Use url.PathEscape for each segment to prevent injection
 	return fmt.Sprintf(
 		"%s/%s/openapi/%s/%s/%s",
-		strings.TrimRight(qb.client.config.BaseURL, "/"),
-		url.PathEscape(qb.orgID),
+		strings.TrimRight(qb.client.GetConfig().BaseURL, "/"),
+		url.PathEscape(qb.dataDockID),
 		url.PathEscape(qb.catalogName),
 		url.PathEscape(qb.schemaName),
 		url.PathEscape(qb.tableName),
@@ -226,7 +217,7 @@ func (qb *QueryBuilder) buildParams() url.Values {
 	}
 
 	// Add WHERE filters
-	// Note: This assumes the API supports filter parameters
+	// TODO - Note: This assumes the API supports filter parameters
 	// Adjust based on actual API capabilities
 	for _, filter := range qb.filters {
 		paramName := fmt.Sprintf("%s[%s]", filter.Column, filter.Operator)
@@ -277,7 +268,7 @@ func (qb *QueryBuilder) Get(ctx context.Context) (*utils.Response, error) {
 	}
 
 	// Execute the request
-	return qb.client.do(ctx, "GET", endpoint, nil)
+	return qb.client.Do(ctx, "GET", endpoint, nil)
 }
 
 // Count returns the count of rows matching the query.
@@ -299,7 +290,7 @@ func (qb *QueryBuilder) Count(ctx context.Context) (int, error) {
 	endpoint += "?" + params.Encode()
 
 	// Execute the request
-	resp, err := qb.client.do(ctx, "GET", endpoint, nil)
+	resp, err := qb.client.Do(ctx, "GET", endpoint, nil)
 	if err != nil {
 		return 0, err
 	}
@@ -323,7 +314,7 @@ func (qb *QueryBuilder) Post(ctx context.Context, data interface{}) (*utils.Resp
 	endpoint := qb.buildEndpoint()
 	body := utils.JsonMarshal(data)
 
-	return qb.client.do(ctx, "POST", endpoint, body)
+	return qb.client.Do(ctx, "POST", endpoint, body)
 }
 
 // Put executes a PUT request to update data.
@@ -340,7 +331,7 @@ func (qb *QueryBuilder) Put(ctx context.Context, data interface{}) (*utils.Respo
 	}
 
 	body := utils.JsonMarshal(data)
-	return qb.client.do(ctx, "PUT", endpoint, body)
+	return qb.client.Do(ctx, "PUT", endpoint, body)
 }
 
 // Delete executes a DELETE request.
@@ -356,5 +347,5 @@ func (qb *QueryBuilder) Delete(ctx context.Context) (*utils.Response, error) {
 		endpoint += "?" + params.Encode()
 	}
 
-	return qb.client.do(ctx, "DELETE", endpoint, nil)
+	return qb.client.Do(ctx, "DELETE", endpoint, nil)
 }

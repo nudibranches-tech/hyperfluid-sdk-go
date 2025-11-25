@@ -1,7 +1,8 @@
-package sdk
+package fluent
 
 import (
 	"context"
+	"encoding/json"
 	"io"
 	"net/http"
 	"strings"
@@ -11,7 +12,7 @@ import (
 )
 
 func TestQueryBuilder_BasicChaining(t *testing.T) {
-	client := newTestClient(utils.Configuration{
+	qb := newTestQueryBuilder(utils.Configuration{
 		Token: "test-token",
 		OrgID: "default-org",
 	}, func(req *http.Request) (*http.Response, error) {
@@ -33,7 +34,7 @@ func TestQueryBuilder_BasicChaining(t *testing.T) {
 		}, nil
 	})
 
-	resp, err := client.
+	resp, err := qb.
 		Catalog("test-catalog").
 		Schema("test-schema").
 		Table("test-table").
@@ -49,7 +50,7 @@ func TestQueryBuilder_BasicChaining(t *testing.T) {
 }
 
 func TestQueryBuilder_WithSelect(t *testing.T) {
-	client := newTestClient(utils.Configuration{
+	qb := newTestQueryBuilder(utils.Configuration{
 		Token: "test-token",
 		OrgID: "test-org",
 	}, func(req *http.Request) (*http.Response, error) {
@@ -65,7 +66,7 @@ func TestQueryBuilder_WithSelect(t *testing.T) {
 		}, nil
 	})
 
-	_, err := client.
+	_, err := qb.
 		Catalog("cat").
 		Schema("schema").
 		Table("users").
@@ -78,7 +79,7 @@ func TestQueryBuilder_WithSelect(t *testing.T) {
 }
 
 func TestQueryBuilder_WithMultipleSelects(t *testing.T) {
-	client := newTestClient(utils.Configuration{
+	qb := newTestQueryBuilder(utils.Configuration{
 		Token: "test-token",
 		OrgID: "test-org",
 	}, func(req *http.Request) (*http.Response, error) {
@@ -94,7 +95,7 @@ func TestQueryBuilder_WithMultipleSelects(t *testing.T) {
 		}, nil
 	})
 
-	_, err := client.
+	_, err := qb.
 		Catalog("cat").
 		Schema("schema").
 		Table("users").
@@ -108,7 +109,7 @@ func TestQueryBuilder_WithMultipleSelects(t *testing.T) {
 }
 
 func TestQueryBuilder_WithFilters(t *testing.T) {
-	client := newTestClient(utils.Configuration{
+	qb := newTestQueryBuilder(utils.Configuration{
 		Token: "test-token",
 		OrgID: "test-org",
 	}, func(req *http.Request) (*http.Response, error) {
@@ -126,7 +127,7 @@ func TestQueryBuilder_WithFilters(t *testing.T) {
 		}, nil
 	})
 
-	_, err := client.
+	_, err := qb.
 		Catalog("cat").
 		Schema("schema").
 		Table("users").
@@ -140,7 +141,7 @@ func TestQueryBuilder_WithFilters(t *testing.T) {
 }
 
 func TestQueryBuilder_WithOrderBy(t *testing.T) {
-	client := newTestClient(utils.Configuration{
+	qb := newTestQueryBuilder(utils.Configuration{
 		Token: "test-token",
 		OrgID: "test-org",
 	}, func(req *http.Request) (*http.Response, error) {
@@ -156,7 +157,7 @@ func TestQueryBuilder_WithOrderBy(t *testing.T) {
 		}, nil
 	})
 
-	_, err := client.
+	_, err := qb.
 		Catalog("cat").
 		Schema("schema").
 		Table("users").
@@ -170,7 +171,7 @@ func TestQueryBuilder_WithOrderBy(t *testing.T) {
 }
 
 func TestQueryBuilder_WithPagination(t *testing.T) {
-	client := newTestClient(utils.Configuration{
+	qb := newTestQueryBuilder(utils.Configuration{
 		Token: "test-token",
 		OrgID: "test-org",
 	}, func(req *http.Request) (*http.Response, error) {
@@ -188,7 +189,7 @@ func TestQueryBuilder_WithPagination(t *testing.T) {
 		}, nil
 	})
 
-	_, err := client.
+	_, err := qb.
 		Catalog("cat").
 		Schema("schema").
 		Table("users").
@@ -201,15 +202,7 @@ func TestQueryBuilder_WithPagination(t *testing.T) {
 	}
 }
 
-// Note: Custom org test removed - now use Progressive API with client.Org(customID)
-// The Org() method now returns OrgBuilder, not QueryBuilder
-
 func TestQueryBuilder_ValidationErrors(t *testing.T) {
-	client := newTestClient(utils.Configuration{
-		Token: "test-token",
-		OrgID: "test-org",
-	}, nil)
-
 	tests := []struct {
 		name        string
 		buildQuery  func() *QueryBuilder
@@ -219,7 +212,9 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "missing catalog",
 			buildQuery: func() *QueryBuilder {
-				return client.Query().Schema("schema").Table("table")
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+					Schema("schema").
+					Table("table")
 			},
 			expectError: true,
 			errorMsg:    "catalog name is required",
@@ -227,7 +222,9 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "missing schema",
 			buildQuery: func() *QueryBuilder {
-				return client.Query().Catalog("cat").Table("table")
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+					Catalog("cat").
+					Table("table")
 			},
 			expectError: true,
 			errorMsg:    "schema name is required",
@@ -235,7 +232,9 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "missing table",
 			buildQuery: func() *QueryBuilder {
-				return client.Query().Catalog("cat").Schema("schema")
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+					Catalog("cat").
+					Schema("schema")
 			},
 			expectError: true,
 			errorMsg:    "table name is required",
@@ -243,7 +242,10 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "empty catalog name",
 			buildQuery: func() *QueryBuilder {
-				return client.Query().Catalog("").Schema("schema").Table("table")
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+					Catalog("").
+					Schema("schema").
+					Table("table")
 			},
 			expectError: true,
 			errorMsg:    "catalog name cannot be empty",
@@ -251,7 +253,11 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "negative limit",
 			buildQuery: func() *QueryBuilder {
-				return client.Query().Catalog("cat").Schema("schema").Table("table").Limit(-1)
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+					Catalog("cat").
+					Schema("schema").
+					Table("table").
+					Limit(-1)
 			},
 			expectError: true,
 			errorMsg:    "limit cannot be negative",
@@ -259,7 +265,11 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "negative offset",
 			buildQuery: func() *QueryBuilder {
-				return client.Query().Catalog("cat").Schema("schema").Table("table").Offset(-10)
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+					Catalog("cat").
+					Schema("schema").
+					Table("table").
+					Offset(-10)
 			},
 			expectError: true,
 			errorMsg:    "offset cannot be negative",
@@ -267,7 +277,11 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "invalid operator",
 			buildQuery: func() *QueryBuilder {
-				return client.Query().Catalog("cat").Schema("schema").Table("table").Where("col", "??", "val")
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+					Catalog("cat").
+					Schema("schema").
+					Table("table").
+					Where("col", "??", "val")
 			},
 			expectError: true,
 			errorMsg:    "invalid operator",
@@ -275,7 +289,11 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 		{
 			name: "invalid order direction",
 			buildQuery: func() *QueryBuilder {
-				return client.Query().Catalog("cat").Schema("schema").Table("table").OrderBy("col", "INVALID")
+				return newTestQueryBuilder(utils.Configuration{Token: "test-token", OrgID: "test-org"}, nil).
+					Catalog("cat").
+					Schema("schema").
+					Table("table").
+					OrderBy("col", "INVALID")
 			},
 			expectError: true,
 			errorMsg:    "must be ASC or DESC",
@@ -303,7 +321,7 @@ func TestQueryBuilder_ValidationErrors(t *testing.T) {
 }
 
 func TestQueryBuilder_RawParams(t *testing.T) {
-	client := newTestClient(utils.Configuration{
+	qb := newTestQueryBuilder(utils.Configuration{
 		Token: "test-token",
 		OrgID: "test-org",
 	}, func(req *http.Request) (*http.Response, error) {
@@ -321,7 +339,7 @@ func TestQueryBuilder_RawParams(t *testing.T) {
 	rawParams := make(map[string][]string)
 	rawParams["custom_param"] = []string{"custom_value"}
 
-	_, err := client.
+	_, err := qb.
 		Catalog("cat").
 		Schema("schema").
 		Table("table").
@@ -334,7 +352,7 @@ func TestQueryBuilder_RawParams(t *testing.T) {
 }
 
 func TestQueryBuilder_ComplexQuery(t *testing.T) {
-	client := newTestClient(utils.Configuration{
+	qb := newTestQueryBuilder(utils.Configuration{
 		Token: "test-token",
 		OrgID: "test-org",
 	}, func(req *http.Request) (*http.Response, error) {
@@ -360,7 +378,7 @@ func TestQueryBuilder_ComplexQuery(t *testing.T) {
 		}, nil
 	})
 
-	resp, err := client.
+	resp, err := qb.
 		Catalog("sales").
 		Schema("public").
 		Table("customers").
@@ -390,7 +408,7 @@ func TestQueryBuilder_ComplexQuery(t *testing.T) {
 }
 
 func TestQueryBuilder_URLEscaping(t *testing.T) {
-	client := newTestClient(utils.Configuration{
+	qb := newTestQueryBuilder(utils.Configuration{
 		Token: "test-token",
 		OrgID: "test-org",
 	}, func(req *http.Request) (*http.Response, error) {
@@ -410,7 +428,7 @@ func TestQueryBuilder_URLEscaping(t *testing.T) {
 		}, nil
 	})
 
-	_, err := client.
+	_, err := qb.
 		Catalog("test/catalog").
 		Schema("test schema").
 		Table("test-table").
@@ -422,7 +440,7 @@ func TestQueryBuilder_URLEscaping(t *testing.T) {
 }
 
 func TestQueryBuilder_OrderByDefaultDirection(t *testing.T) {
-	client := newTestClient(utils.Configuration{
+	qb := newTestQueryBuilder(utils.Configuration{
 		Token: "test-token",
 		OrgID: "test-org",
 	}, func(req *http.Request) (*http.Response, error) {
@@ -439,7 +457,7 @@ func TestQueryBuilder_OrderByDefaultDirection(t *testing.T) {
 		}, nil
 	})
 
-	_, err := client.
+	_, err := qb.
 		Catalog("cat").
 		Schema("schema").
 		Table("users").
@@ -449,4 +467,72 @@ func TestQueryBuilder_OrderByDefaultDirection(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
 	}
+}
+
+// Test helper to create a mock QueryBuilder
+type mockClient struct {
+	config  utils.Configuration
+	handler func(*http.Request) (*http.Response, error)
+}
+
+func (m *mockClient) Do(ctx context.Context, method, endpoint string, body []byte) (*utils.Response, error) {
+	if m.handler == nil {
+		// For validation-only tests
+		return &utils.Response{Status: utils.StatusOK}, nil
+	}
+
+	req, _ := http.NewRequestWithContext(ctx, method, endpoint, nil)
+	resp, err := m.handler(req)
+	if err != nil {
+		return nil, err
+	}
+
+	bodyBytes, _ := io.ReadAll(resp.Body)
+	defer resp.Body.Close()
+
+	// Handle error status codes similar to request.go
+	if resp.StatusCode >= 300 {
+		response := &utils.Response{
+			Status:   utils.StatusError,
+			Error:    string(bodyBytes),
+			HTTPCode: resp.StatusCode,
+		}
+
+		if resp.StatusCode == http.StatusUnauthorized {
+			return response, utils.ErrAuthenticationFailed
+		}
+		if resp.StatusCode == http.StatusForbidden {
+			return response, utils.ErrPermissionDenied
+		}
+		if resp.StatusCode == http.StatusNotFound {
+			return response, utils.ErrNotFound
+		}
+		return response, nil
+	}
+
+	// Parse successful response
+	var parsedBody any
+	if len(bodyBytes) > 0 {
+		if err := json.Unmarshal(bodyBytes, &parsedBody); err != nil {
+			return nil, err
+		}
+	}
+
+	return &utils.Response{
+		Status:   utils.StatusOK,
+		Data:     parsedBody,
+		HTTPCode: resp.StatusCode,
+	}, nil
+}
+
+func (m *mockClient) GetConfig() utils.Configuration {
+	return m.config
+}
+
+func newTestQueryBuilder(config utils.Configuration, handler func(*http.Request) (*http.Response, error)) *QueryBuilder {
+	config.BaseURL = "https://test.example.com"
+	return NewQueryBuilder(&mockClient{
+		config:  config,
+		handler: handler,
+	})
 }
