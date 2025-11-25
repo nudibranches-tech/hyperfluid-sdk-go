@@ -13,6 +13,45 @@ import (
 // This file demonstrates the new fluent API for the Bifrost SDK.
 // The fluent API provides a more intuitive and user-friendly way to interact with the SDK.
 
+func runSearchExample() {
+	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+	fmt.Println("🎯 Search Example: Full-Text Search")
+	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+	config := getConfig()
+	client := sdk.NewClient(config)
+
+	projectID := getEnv("BIFROST_DATADOCK_ID", "")
+	catalog := getEnv("BIFROST_TEST_CATALOG", "iceberg")
+	schema := getEnv("BIFROST_TEST_SCHEMA", "public")
+	table := getEnv("BIFROST_TEST_TABLE", "text_files")
+
+	if projectID == "" {
+		fmt.Println("⚠️  Skipping: BIFROST_DATADOCK_ID not set")
+		fmt.Println()
+		return
+	}
+
+	fmt.Println("📝 Full-text search query:")
+	fmt.Printf("   DataDock: %s\n", projectID)
+	fmt.Printf("   Searching in: %s.%s.%s\n", catalog, schema, table)
+	fmt.Println()
+
+	// Search for content
+	resp, err := client.Search().
+		Query("machine learning").
+		DataDock(projectID).           // ✅ Use the actual UUID variable
+		Catalog(catalog).              // ✅ Use actual catalog
+		Schema(schema).                // ✅ Use actual schema
+		Table(table).                  // ✅ Use actual table
+		Columns("content", "summary"). // Adjust columns based on your table
+		Limit(10).
+		Execute(context.Background())
+
+	handleResponse(resp, err)
+	fmt.Println()
+}
+
 func runFluentAPISimpleExample() {
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 	fmt.Println("🎯 Fluent API Example 1: Simple Query")
@@ -34,8 +73,10 @@ func runFluentAPISimpleExample() {
 	fmt.Printf("📝 Fluent query: client.Catalog(%q).Schema(%q).Table(%q).Limit(5).Get(ctx)\n",
 		testCatalog, testSchema, testTable)
 
-	// NEW FLUENT API - Simple and intuitive!
+	dataDockID := getEnv("HYPERFLUID_DATADOCK_ID", "")
+
 	resp, err := client.
+		DataDock(dataDockID).
 		Catalog(testCatalog).
 		Schema(testSchema).
 		Table(testTable).
@@ -134,10 +175,16 @@ func runFluentAPIComplexExample() {
 func handleResponse(resp *utils.Response, err error) {
 	if err != nil {
 		fmt.Printf("❌ Error: %s\n", err.Error())
+		// Also show the server response if available
+		if resp != nil && resp.Error != "" {
+			fmt.Printf("   Server said: %s\n", resp.Error)
+			fmt.Printf("   HTTP Status: %d\n", resp.HTTPCode)
+		}
 		return
 	}
 	if resp.Status != utils.StatusOK {
 		fmt.Printf("❌ Error: %s\n", resp.Error)
+		fmt.Printf("   HTTP Status: %d\n", resp.HTTPCode)
 		return
 	}
 	fmt.Println("✅ Success!")
@@ -157,6 +204,7 @@ func getConfig() utils.Configuration {
 		BaseURL:        getEnv("HYPERFLUID_BASE_URL", ""),
 		OrgID:          getEnv("HYPERFLUID_ORG_ID", ""),
 		Token:          getEnv("HYPERFLUID_TOKEN", ""),
+		DataDockID:     getEnv("HYPERFLUID_DATADOCK_ID", ""), // Add this,
 		RequestTimeout: 30 * time.Second,
 		MaxRetries:     3,
 

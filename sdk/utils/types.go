@@ -5,9 +5,10 @@ import (
 )
 
 type Configuration struct {
-	BaseURL string
-	OrgID   string
-	Token   string
+	BaseURL    string
+	OrgID      string
+	DataDockID string
+	Token      string
 
 	SkipTLSVerify  bool
 	RequestTimeout time.Duration

@@ -15,35 +15,21 @@ func main() {
 
 	if err := godotenv.Load("../.env"); err != nil {
 		log.Printf("⚠️  Warning: .env not loaded: %v\n", err)
+	} else {
+		fmt.Println("✓ .env file loaded successfully")
 	}
 
-	fmt.Println("Running fluent API examples...")
+	// TODO: progressive examples
 	fmt.Println()
-
-	// Old fluent API examples (backward compatibility)
 	fmt.Println("══════════════════════════════════════════════")
-	fmt.Println("📚 SIMPLE FLUENT API (Catalog-first)")
+	fmt.Println("📊 FLUENT EXAMPLE")
 	fmt.Println("══════════════════════════════════════════════")
 	fmt.Println()
 
 	runFluentAPISimpleExample()
-	runFluentAPIWithSelectExample()
 	runFluentAPIComplexExample()
-
-	// NEW! Progressive fluent API examples
-	fmt.Println()
-	fmt.Println("══════════════════════════════════════════════")
-	fmt.Println("✨ PROGRESSIVE FLUENT API (Type-safe)")
-	fmt.Println("══════════════════════════════════════════════")
-	fmt.Println()
-
-	runProgressiveAPIExample1()
-	runProgressiveAPIExample2()
-	runProgressiveAPIExample3()
-	runProgressiveAPIExample4()
-	runProgressiveAPIExample5()
-	runProgressiveAPIExample6()
-	runProgressiveAPIListingExample()
+	runSearchExample()
+	runFluentAPIWithSelectExample()
 
 	fmt.Println()
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")

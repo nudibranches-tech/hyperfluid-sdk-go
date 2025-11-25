@@ -1,5 +1,6 @@
 package main
 
+/*
 import (
 	"context"
 	"fmt"
@@ -308,3 +309,4 @@ func runProgressiveAPIListingExample() {
 
 	fmt.Println()
 }
+*/
