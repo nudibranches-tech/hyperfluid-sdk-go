@@ -7,6 +7,27 @@ import (
 	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 )
 
+type DocumentRecord struct {
+	Name         string `json:"name"`
+	Content      string `json:"content"`
+	Summary      string `json:"summary"`
+	HfContext    string `json:"hf_context"`
+	OriginalFile string `json:"original_file"`
+	Categories   string `json:"categories"`
+	RlsLabels    string `json:"rls_labels"`
+}
+
+type DocumentResult struct {
+	Record DocumentRecord `json:"record"`
+	Score  float64        `json:"score"`
+}
+
+type SearchResults struct {
+	Results     []DocumentResult `json:"results"`
+	Total       int              `json:"total"`
+	TimeTakenMs int              `json:"took_ms"`
+}
+
 // SearchBuilder provides a fluent interface for building and executing full-text search queries.
 type SearchBuilder struct {
 	client interface {
@@ -136,7 +157,7 @@ func (sb *SearchBuilder) validate() error {
 }
 
 // Execute executes the search query and returns the results.
-func (sb *SearchBuilder) Execute(ctx context.Context) (*utils.Response, error) {
+func (sb *SearchBuilder) Execute(ctx context.Context) (*SearchResults, error) {
 	// Validate the search
 	if err := sb.validate(); err != nil {
 		return nil, err
@@ -160,5 +181,21 @@ func (sb *SearchBuilder) Execute(ctx context.Context) (*utils.Response, error) {
 	body := utils.JsonMarshal(requestBody)
 
 	// Execute the request
-	return sb.client.Do(ctx, "POST", endpoint, body)
+	resp, err := sb.client.Do(ctx, "POST", endpoint, body)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if response is OK
+	if resp.Status != utils.StatusOK {
+		return nil, fmt.Errorf("%w: %s", utils.ErrAPIError, resp.Error)
+	}
+
+	// Unmarshal the response data into SearchResults
+	searchResults := &SearchResults{}
+	if err := utils.UnmarshalData(resp.Data, searchResults); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal search results: %w", err)
+	}
+
+	return searchResults, nil
 }

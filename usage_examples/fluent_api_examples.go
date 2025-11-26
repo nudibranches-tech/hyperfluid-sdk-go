@@ -38,8 +38,8 @@ func runSearchExample() {
 	fmt.Println()
 
 	// Search for content
-	resp, err := client.Search().
-		Query("machine learning").
+	resp, _ := client.Search().
+		Query("rapport ventes").
 		DataDock(projectID).           // ✅ Use the actual UUID variable
 		Catalog(catalog).              // ✅ Use actual catalog
 		Schema(schema).                // ✅ Use actual schema
@@ -48,7 +48,7 @@ func runSearchExample() {
 		Limit(10).
 		Execute(context.Background())
 
-	handleResponse(resp, err)
+	fmt.Println(resp.Results)
 	fmt.Println()
 }
 
