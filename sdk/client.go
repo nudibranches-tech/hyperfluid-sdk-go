@@ -126,6 +126,10 @@ func (c *Client) Query() *fluent.QueryBuilder {
 	return fluent.NewQueryBuilder(c)
 }
 
+func (c *Client) S3() (*fluent.S3Builder, error) {
+	return fluent.NewS3Builder(c)
+}
+
 // Catalog starts a new fluent query with the catalog name.
 // This is a shortcut for client.Query().DataDock(defaultID).Catalog(name).
 // Uses DataDockID from config if available.

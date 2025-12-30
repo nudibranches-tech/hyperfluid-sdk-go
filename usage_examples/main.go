@@ -26,10 +26,7 @@ func main() {
 	fmt.Println("══════════════════════════════════════════════")
 	fmt.Println()
 
-	runFluentAPISimpleExample()
-	runFluentAPIComplexExample()
-	runSearchExample()
-	runFluentAPIWithSelectExample()
+	runS3Example()
 
 	fmt.Println()
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")

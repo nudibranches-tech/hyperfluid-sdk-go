@@ -20,6 +20,13 @@ type Configuration struct {
 	KeycloakClientSecret string
 	KeycloakUsername     string
 	KeycloakPassword     string
+
+	MinIORegion    string
+	MinIOEndpoint  string
+	MinIOAccessKey string
+	MinIOSecretKey string
+	MinIOUseSSL    string
+	MinIOUseOIDC   string
 }
 
 type Response struct {
