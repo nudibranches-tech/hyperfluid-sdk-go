@@ -43,6 +43,10 @@ func NewS3Builder(client interface {
 	GetConfig() utils.Configuration
 }) (*S3Builder, error) {
 	cfg := client.GetConfig()
+	err := verifyBasicConfig(cfg)
+	if err != nil {
+		return nil, err
+	}
 
 	// Check if we should use OIDC or static credentials
 	useOIDC := getEnvOrConfig(cfg, "MINIO_USE_OIDC", "false") == "true"
@@ -54,34 +58,36 @@ func NewS3Builder(client interface {
 	return newS3BuilderWithStaticCreds(client)
 }
 
+func verifyBasicConfig(cfg utils.Configuration) error {
+	if cfg.MinIOEndpoint == "" {
+		return fmt.Errorf("MINIO_ENDPOINT is required")
+	}
+	if cfg.MinIORegion == "" {
+		return fmt.Errorf("MINIO_REGION is required")
+	}
+	return nil
+}
+
 // newS3BuilderWithStaticCreds creates S3Builder with static MinIO credentials
 func newS3BuilderWithStaticCreds(client interface {
 	GetConfig() utils.Configuration
 }) (*S3Builder, error) {
 	cfg := client.GetConfig()
 
-	minioEndpoint := getEnvOrConfig(cfg, "MINIO_ENDPOINT", "")
-	minioAccessKey := getEnvOrConfig(cfg, "MINIO_ACCESS_KEY", "")
-	minioSecretKey := getEnvOrConfig(cfg, "MINIO_SECRET_KEY", "")
-	minioRegion := getEnvOrConfig(cfg, "MINIO_REGION", "us-east-1")
-
-	if minioEndpoint == "" {
-		return nil, fmt.Errorf("MINIO_ENDPOINT is required")
-	}
-	if minioAccessKey == "" {
+	if cfg.MinIOAccessKey == "" {
 		return nil, fmt.Errorf("MINIO_ACCESS_KEY is required")
 	}
-	if minioSecretKey == "" {
+	if cfg.MinIOSecretKey == "" {
 		return nil, fmt.Errorf("MINIO_SECRET_KEY is required")
 	}
 
 	ctx := context.Background()
 	awsCfg, err := config.LoadDefaultConfig(ctx,
-		config.WithRegion(minioRegion),
-		config.WithBaseEndpoint(minioEndpoint),
+		config.WithRegion(cfg.MinIORegion),
+		config.WithBaseEndpoint(cfg.MinIOEndpoint),
 		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(
-			minioAccessKey,
-			minioSecretKey,
+			cfg.MinIOAccessKey,
+			cfg.MinIOSecretKey,
 			"",
 		)),
 	)
@@ -106,26 +112,18 @@ func newS3BuilderWithOIDC(client interface {
 	GetConfig() utils.Configuration
 }) (*S3Builder, error) {
 	cfg := client.GetConfig()
-
-	minioEndpoint := getEnvOrConfig(cfg, "MINIO_ENDPOINT", "")
-	minioRegion := getEnvOrConfig(cfg, "MINIO_REGION", "us-east-1")
-
-	if minioEndpoint == "" {
-		return nil, fmt.Errorf("MINIO_ENDPOINT is required")
-	}
-
 	ctx := context.Background()
 
 	// Create base config with anonymous credentials for STS
 	awsCfg, err := config.LoadDefaultConfig(ctx,
-		config.WithRegion(minioRegion),
+		config.WithRegion(cfg.MinIORegion),
 		config.WithCredentialsProvider(aws.AnonymousCredentials{}),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load base config: %w", err)
 	}
 
-	isHttps, err := isHTTPS(minioEndpoint)
+	isHttps, err := isHTTPS(cfg.MinIOEndpoint)
 	if err != nil {
 		return nil, fmt.Errorf("MinIO endpoint incorecctly formatted")
 	}
@@ -133,13 +131,13 @@ func newS3BuilderWithOIDC(client interface {
 	// Create STS client pointing to MinIO's STS endpoint
 	stsClient := sts.NewFromConfig(awsCfg, func(o *sts.Options) {
 		// MinIO STS endpoint is typically at the base endpoint
-		o.BaseEndpoint = aws.String(minioEndpoint)
+		o.BaseEndpoint = aws.String(cfg.MinIOEndpoint)
 		o.EndpointOptions.DisableHTTPS = !isHttps
 	})
 
 	// Create S3 client (will be updated after STS)
 	s3Client := s3.NewFromConfig(awsCfg, func(o *s3.Options) {
-		o.BaseEndpoint = aws.String(minioEndpoint)
+		o.BaseEndpoint = aws.String(cfg.MinIOEndpoint)
 		o.UsePathStyle = true
 		o.EndpointOptions.DisableHTTPS = !isHttps
 	})
@@ -251,21 +249,18 @@ func (s *S3Builder) assumeRoleWithWebIdentity(ctx context.Context) error {
 
 	// Get MinIO config
 	cfg := s.client.GetConfig()
-	minioEndpoint := getEnvOrConfig(cfg, "MINIO_ENDPOINT", "")
-	minioRegion := getEnvOrConfig(cfg, "MINIO_REGION", "us-east-1")
-
 	// Recreate AWS config with new credentials
 	ctx2 := context.Background()
 	awsCfg, err := config.LoadDefaultConfig(ctx2,
-		config.WithRegion(minioRegion),
-		config.WithBaseEndpoint(minioEndpoint),
+		config.WithRegion(cfg.MinIORegion),
+		config.WithBaseEndpoint(cfg.MinIOEndpoint),
 		config.WithCredentialsProvider(staticCreds),
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create config with STS credentials: %w", err)
 	}
 
-	isHttps, err := isHTTPS(minioEndpoint)
+	isHttps, err := isHTTPS(cfg.MinIOEndpoint)
 	if err != nil {
 		return fmt.Errorf("MinIO endpoint incorecctly formatted")
 	}
