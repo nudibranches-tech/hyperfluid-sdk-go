@@ -21,3 +21,6 @@ go.work.sum
 # env file
 .env
 code_snippets/
+
+# binaries
+examples

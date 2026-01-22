@@ -81,6 +81,7 @@ func runServiceAccountFromFileExample() {
 		DataDockID:     getEnv("HYPERFLUID_DATADOCK_ID", ""),
 		RequestTimeout: 30,
 		MaxRetries:     3,
+		SkipTLSVerify:  globalSkipTLSVerify,
 	})
 	if err != nil {
 		fmt.Printf("❌ Failed to create client: %v\n", err)
@@ -136,6 +137,7 @@ func runServiceAccountFromJSONExample() {
 		DataDockID:     getEnv("HYPERFLUID_DATADOCK_ID", ""),
 		RequestTimeout: 30,
 		MaxRetries:     3,
+		SkipTLSVerify:  globalSkipTLSVerify,
 	})
 	if err != nil {
 		fmt.Printf("❌ Failed to create client: %v\n", err)
@@ -199,6 +201,7 @@ func runServiceAccountManualExample() {
 		DataDockID:     getEnv("HYPERFLUID_DATADOCK_ID", ""),
 		RequestTimeout: 30,
 		MaxRetries:     3,
+		SkipTLSVerify:  globalSkipTLSVerify,
 	})
 	if err != nil {
 		fmt.Printf("❌ Failed to create client: %v\n", err)

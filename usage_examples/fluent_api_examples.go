@@ -311,6 +311,7 @@ func getConfig() utils.Configuration {
 		DataDockID:     getEnv("HYPERFLUID_DATADOCK_ID", ""),
 		RequestTimeout: 30 * time.Second,
 		MaxRetries:     3,
+		SkipTLSVerify:  globalSkipTLSVerify,
 
 		KeycloakBaseURL:      getEnv("KEYCLOAK_BASE_URL", ""),
 		KeycloakRealm:        getEnv("KEYCLOAK_REALM", ""),
