@@ -79,11 +79,11 @@ func newControlPlaneClient(c *Client) (*ControlPlaneClient, error) {
 	}
 
 	if c.config.KeycloakClientID == "" || c.config.KeycloakClientSecret == "" {
-		return nil, fmt.Errorf("Keycloak client credentials are not configured")
+		return nil, fmt.Errorf("keycloak client credentials are not configured")
 	}
 
 	if c.config.KeycloakBaseURL == "" || c.config.KeycloakRealm == "" {
-		return nil, fmt.Errorf("Keycloak base URL or realm is not configured")
+		return nil, fmt.Errorf("keycloak base URL or realm is not configured")
 	}
 
 	tokenURL := fmt.Sprintf("%s/realms/%s/protocol/openid-connect/token",
@@ -125,7 +125,7 @@ func newControlPlaneClient(c *Client) (*ControlPlaneClient, error) {
 	return &ControlPlaneClient{
 		ClientWithResponses: apiClient,
 		httpClient:          httpClient,
-		tokenURL:             tokenURL,
+		tokenURL:            tokenURL,
 	}, nil
 }
 
