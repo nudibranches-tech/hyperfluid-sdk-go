@@ -1,0 +1,3964 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Hyperfluid Console API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/config": {
+      "get": {
+        "tags": [
+          "Console Config"
+        ],
+        "operationId": "handle_get_console_config",
+        "responses": {
+          "200": {
+            "description": "Get console configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetConsoleConfigResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/context-providers/{provider_id}": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Get a context provider by ID.",
+        "operationId": "get_context_provider_handler",
+        "parameters": [
+          {
+            "name": "provider_id",
+            "in": "path",
+            "description": "Context provider ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextProviderResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Provider not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Update a context provider.",
+        "operationId": "update_context_provider_handler",
+        "parameters": [
+          {
+            "name": "provider_id",
+            "in": "path",
+            "description": "Context provider ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContextProviderBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextProviderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Provider not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Delete a context provider.",
+        "operationId": "delete_context_provider_handler",
+        "parameters": [
+          {
+            "name": "provider_id",
+            "in": "path",
+            "description": "Context provider ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Provider deleted"
+          },
+          "404": {
+            "description": "Provider not found"
+          }
+        }
+      }
+    },
+    "/api/v1/context-providers/{provider_id}/sync": {
+      "post": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Trigger a manual sync for a context provider.",
+        "operationId": "sync_context_provider_handler",
+        "parameters": [
+          {
+            "name": "provider_id",
+            "in": "path",
+            "description": "Context provider ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sync initiated"
+          },
+          "404": {
+            "description": "Provider not found"
+          }
+        }
+      }
+    },
+    "/api/v1/contextual-restrictions/{restriction_id}": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Get a contextual restriction by ID.",
+        "operationId": "get_contextual_restriction_handler",
+        "parameters": [
+          {
+            "name": "restriction_id",
+            "in": "path",
+            "description": "Restriction ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextualRestrictionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Restriction not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Update a contextual restriction.",
+        "operationId": "update_contextual_restriction_handler",
+        "parameters": [
+          {
+            "name": "restriction_id",
+            "in": "path",
+            "description": "Restriction ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContextualRestrictionBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextualRestrictionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Restriction not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Delete a contextual restriction.",
+        "operationId": "delete_contextual_restriction_handler",
+        "parameters": [
+          {
+            "name": "restriction_id",
+            "in": "path",
+            "description": "Restriction ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Restriction deleted"
+          },
+          "404": {
+            "description": "Restriction not found"
+          }
+        }
+      }
+    },
+    "/api/v1/data-docks/crd": {
+      "post": {
+        "tags": [],
+        "operationId": "create_data_dock_crd",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDataDockRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Data dock CRD successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataDockResponseData"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-docks/{data_dock_id}/crd": {
+      "delete": {
+        "tags": [],
+        "operationId": "delete_data_dock_crd",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Data dock CRD successfully deleted"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-export": {
+      "post": {
+        "tags": [
+          "archive_operations"
+        ],
+        "operationId": "archive_export_data_container",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ArchiveExportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Export data container as zip",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BucketArchiveOperation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or not a bucket data container"
+          },
+          "404": {
+            "description": "Data container not found"
+          }
+        }
+      }
+    },
+    "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-import": {
+      "post": {
+        "tags": [
+          "archive_operations"
+        ],
+        "operationId": "archive_import_data_container",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ArchiveImportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Import data container from zip",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BucketArchiveOperation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or not a bucket data container"
+          },
+          "404": {
+            "description": "Data container not found"
+          }
+        }
+      }
+    },
+    "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-import/prepare": {
+      "post": {
+        "tags": [
+          "archive_operations"
+        ],
+        "operationId": "prepare_archive_import",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrepareArchiveImportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Get presigned upload URL for archive import",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrepareArchiveImportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or not a bucket data container"
+          },
+          "404": {
+            "description": "Data container not found"
+          }
+        }
+      }
+    },
+    "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-operations": {
+      "get": {
+        "tags": [
+          "archive_operations"
+        ],
+        "operationId": "list_archive_operations",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 100,
+              "nullable": true
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 0,
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List zip operations for data container",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BucketArchiveOperation"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not a bucket data container"
+          },
+          "404": {
+            "description": "Data container not found"
+          }
+        }
+      }
+    },
+    "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-operations/{operation_id}": {
+      "get": {
+        "tags": [
+          "archive_operations"
+        ],
+        "operationId": "get_archive_operation",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get zip operation details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BucketArchiveOperation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not a bucket data container"
+          },
+          "404": {
+            "description": "Data container or zip operation not found"
+          }
+        }
+      }
+    },
+    "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-operations/{operation_id}/download": {
+      "get": {
+        "tags": [
+          "archive_operations"
+        ],
+        "operationId": "download_archive_operation",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "expires_in",
+            "in": "query",
+            "description": "URL expiration time in seconds (default: 3600, max: 86400)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 3600,
+              "minimum": 0,
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get presigned download URL for the archive",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArchiveDownloadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Archive operation is not completed or not an export"
+          },
+          "404": {
+            "description": "Data container or archive operation not found"
+          }
+        }
+      }
+    },
+    "/api/v1/data-docks/{data_dock_id}/security/settings": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Get datadock security settings.",
+        "operationId": "get_data_dock_security_settings_handler",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "path",
+            "description": "DataDock ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataDockSecuritySettingsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Settings not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Update datadock security settings.",
+        "operationId": "update_data_dock_security_settings_handler",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "path",
+            "description": "DataDock ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDataDockSecuritySettingsBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataDockSecuritySettingsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/api/v1/harbors/{harbor_id}/data-docks": {
+      "get": {
+        "tags": [],
+        "operationId": "list_harbor_data_dock",
+        "parameters": [
+          {
+            "name": "harbor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List all data docks in a harbor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Harbor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organizations": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "list_organizations",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "slug",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List organizations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Org"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "shared_secret": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/crd": {
+      "post": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "create_organization_crd",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrganizationRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Organization created successfully"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "409": {
+            "description": "Organization already exists"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/name-availability": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "check_organization_name_availability",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Check organization name availability",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckOrganizationNameAvailabilityResponseData"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "get_organization_by_id",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get organization by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Org"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organization not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "shared_secret": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{organization_id}/crd": {
+      "delete": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "delete_organization_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Organization deleted successfully"
+          },
+          "404": {
+            "description": "Organization not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/harbors": {
+      "get": {
+        "tags": [
+          "Harbors"
+        ],
+        "operationId": "list_harbors",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "slug",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List harbors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Harbor"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "shared_secret": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{organization_id}/harbors/crd": {
+      "post": {
+        "tags": [
+          "Harbors"
+        ],
+        "operationId": "create_harbor_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateHarborCrdRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Harbor created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Harbor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "409": {
+            "description": "Harbor already exists"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/harbors/crd/{harbor_slug}": {
+      "delete": {
+        "tags": [
+          "Harbors"
+        ],
+        "operationId": "delete_harbor_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "harbor_slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Harbor deleted successfully"
+          },
+          "404": {
+            "description": "Harbor not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/harbors/{name}/available": {
+      "get": {
+        "tags": [
+          "check_name_availability"
+        ],
+        "operationId": "check_harbor_name_available",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Harbor name availability",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckNameAvailabilityResponseData"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/service-accounts/crd": {
+      "post": {
+        "tags": [
+          "Service Accounts"
+        ],
+        "operationId": "create_service_account_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateServiceAccountCrdRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Service account created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceAccount"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "409": {
+            "description": "Service account already exists"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/service-accounts/crd/{client_id}": {
+      "put": {
+        "tags": [
+          "Service Accounts"
+        ],
+        "operationId": "update_service_account_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "client_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateServiceAccountCrdRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Service account CRD updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceAccount"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Service account not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Service Accounts"
+        ],
+        "operationId": "delete_service_account_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "client_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Service account deleted successfully"
+          },
+          "404": {
+            "description": "Service account not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/user-attributes": {
+      "get": {
+        "tags": [
+          "User Attributes"
+        ],
+        "summary": "List all user attributes for an organization.",
+        "description": "Returns all users and their attributes for the specified organization.\nThis is useful for administrative views showing all user access configurations.\nOnly organization viewers and above can access this endpoint.",
+        "operationId": "list_org_user_attributes_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All user attributes in the organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrgUserAttributesResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - insufficient permissions"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/users": {
+      "get": {
+        "tags": [
+          "super::organizations::list_users"
+        ],
+        "operationId": "list_org_users",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List all users in an organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserWithRoles"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "handlers"
+        ],
+        "operationId": "add_user_to_organization",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddUser"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "User added to the organization successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "409": {
+            "description": "User already exists in the organization"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/users/{user_id}": {
+      "delete": {
+        "tags": [
+          "handlers"
+        ],
+        "operationId": "remove_user_from_organization",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User id to remove",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User removed from the organization successfully"
+          },
+          "404": {
+            "description": "User or organization not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/users/{user_id}/attributes": {
+      "get": {
+        "tags": [
+          "User Attributes"
+        ],
+        "summary": "List all attributes for a user in an organization.",
+        "description": "Returns all RLS attributes assigned to the user in the specified organization.\nAttributes are in `namespace::value` format (e.g., `region::occitanie`).",
+        "operationId": "list_user_attributes_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user attributes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListUserAttributesResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - insufficient permissions"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User Attributes"
+        ],
+        "summary": "Set all attributes for a user (replaces existing).",
+        "description": "Replaces all existing attributes for the user with the provided list.\nAll attributes must be in valid `namespace::value` format.\nOnly organization owners can perform this operation.",
+        "operationId": "set_user_attributes_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetUserAttributesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Attributes updated successfully"
+          },
+          "400": {
+            "description": "Invalid attribute format"
+          },
+          "403": {
+            "description": "Forbidden - insufficient permissions"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "User Attributes"
+        ],
+        "summary": "Add a single attribute to a user.",
+        "description": "Adds a new attribute to the user's existing attributes.\nThe attribute must be in valid `namespace::value` format.\nIf the attribute already exists, this is a no-op.\nOnly organization owners can perform this operation.",
+        "operationId": "add_user_attribute_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddUserAttributeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Attribute added successfully"
+          },
+          "400": {
+            "description": "Invalid attribute format"
+          },
+          "403": {
+            "description": "Forbidden - insufficient permissions"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/users/{user_id}/attributes/{attribute}": {
+      "delete": {
+        "tags": [
+          "User Attributes"
+        ],
+        "summary": "Remove a single attribute from a user.",
+        "description": "Removes the specified attribute from the user.\nThe attribute path parameter must be URL-encoded (e.g., `region%3A%3Aoccitanie`).\nOnly organization owners can perform this operation.",
+        "operationId": "remove_user_attribute_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "attribute",
+            "in": "path",
+            "description": "URL-encoded attribute to remove (e.g., region%3A%3Aoccitanie)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Attribute removed successfully"
+          },
+          "400": {
+            "description": "Invalid URL encoding"
+          },
+          "403": {
+            "description": "Forbidden - insufficient permissions"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/api/v1/orgs/{organization_id}/context-providers": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "List context providers for an organization.",
+        "operationId": "list_context_providers_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListContextProvidersResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Create a new context provider.",
+        "operationId": "create_context_provider_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContextProviderBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextProviderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/api/v1/orgs/{organization_id}/contextual-restrictions": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "List contextual restrictions for an organization.",
+        "operationId": "list_contextual_restrictions_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "data_dock_id",
+            "in": "query",
+            "description": "Filter by DataDock ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListContextualRestrictionsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Create a new contextual restriction.",
+        "operationId": "create_contextual_restriction_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "data_dock_id",
+            "in": "query",
+            "description": "DataDock ID (optional for org-level)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContextualRestrictionBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextualRestrictionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/api/v1/orgs/{organization_id}/data-docks/refresh": {
+      "post": {
+        "tags": [],
+        "operationId": "refresh_org_data_docks",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data docks refreshed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshDataDocksResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User not authorized to refresh data docks in this organization"
+          },
+          "404": {
+            "description": "Organization not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/orgs/{organization_id}/data-docks/{data_dock_id}/security/effective": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Get effective security settings (org + datadock combined).",
+        "operationId": "get_effective_security_settings_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "data_dock_id",
+            "in": "path",
+            "description": "DataDock ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EffectiveSecuritySettingsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Settings not found"
+          }
+        }
+      }
+    },
+    "/api/v1/orgs/{organization_id}/security/settings": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Get organization security settings.",
+        "operationId": "get_org_security_settings_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrgSecuritySettingsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Settings not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Update organization security settings.",
+        "operationId": "update_org_security_settings_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrgSecuritySettingsBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrgSecuritySettingsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/api/v1/orgs/{organization_id}/users/{user_id}/context": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Get aggregated user context.",
+        "operationId": "get_user_context_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserContextResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No context found"
+          }
+        }
+      }
+    },
+    "/api/v1/users": {
+      "post": {
+        "tags": [
+          "handlers"
+        ],
+        "operationId": "create_user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUser"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddUser": {
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "AddUserAttributeRequest": {
+        "type": "object",
+        "description": "Request to add a single attribute to a user.",
+        "required": [
+          "attribute"
+        ],
+        "properties": {
+          "attribute": {
+            "type": "string",
+            "description": "Attribute in `namespace::value` format.\nExample: `\"region::occitanie\"`"
+          }
+        }
+      },
+      "ArchiveDownloadResponse": {
+        "type": "object",
+        "required": [
+          "url",
+          "expires_in_seconds"
+        ],
+        "properties": {
+          "expires_in_seconds": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "ArchiveExportRequest": {
+        "type": "object",
+        "required": [
+          "destination_data_container_id",
+          "destination_file_name"
+        ],
+        "properties": {
+          "destination_data_container_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "destination_file_name": {
+            "type": "string"
+          },
+          "destination_file_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "prefix": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ArchiveFileType": {
+        "type": "string",
+        "enum": [
+          "application/zip"
+        ]
+      },
+      "ArchiveImportRequest": {
+        "type": "object",
+        "required": [
+          "destination_data_container_id",
+          "file_path"
+        ],
+        "properties": {
+          "destination_data_container_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The bucket where the zip file is stored"
+          },
+          "file_path": {
+            "type": "string",
+            "description": "The full path to the uploaded file (from prepare_archive_import response)"
+          },
+          "prefix": {
+            "type": "string",
+            "description": "Optional prefix where files will be extracted in the target bucket",
+            "nullable": true
+          }
+        }
+      },
+      "ArchiveOperationStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "processing",
+          "completed",
+          "failed"
+        ]
+      },
+      "ArchiveOperationType": {
+        "type": "string",
+        "enum": [
+          "import",
+          "export"
+        ]
+      },
+      "BucketArchiveOperation": {
+        "type": "object",
+        "required": [
+          "id",
+          "data_container_id",
+          "organization_id",
+          "operation_type",
+          "status",
+          "file_name",
+          "file_type",
+          "destination_data_container_id",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data_container_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The data container to import to/export from"
+          },
+          "destination_data_container_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The data container where the files will be extracted to when importing\nor where the files will be extracted from when exporting"
+          },
+          "error_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "file_name": {
+            "type": "string",
+            "description": "The name of the archive file"
+          },
+          "file_path": {
+            "type": "string",
+            "description": "The path of the archive file",
+            "nullable": true
+          },
+          "file_size": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The size of the archive file",
+            "nullable": true
+          },
+          "file_type": {
+            "$ref": "#/components/schemas/ArchiveFileType"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operation_type": {
+            "$ref": "#/components/schemas/ArchiveOperationType"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "prefix": {
+            "type": "string",
+            "description": "If the operation is an import, the prefix to add to all files when extracting the archive\nIf the operation is an export, the prefix to filter which files to include in the export (only files matching this prefix will be exported)",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/ArchiveOperationStatus"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CheckNameAvailabilityResponseData": {
+        "type": "object",
+        "required": [
+          "available"
+        ],
+        "properties": {
+          "available": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CheckOrganizationNameAvailabilityResponseData": {
+        "type": "object",
+        "required": [
+          "available"
+        ],
+        "properties": {
+          "available": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ConsoleConfigFeatureFlag": {
+        "type": "string",
+        "enum": [
+          "show_demo_banner",
+          "vauban_preview"
+        ]
+      },
+      "ContextProviderResponse": {
+        "type": "object",
+        "description": "Response for a context provider.",
+        "required": [
+          "id",
+          "organization_id",
+          "name",
+          "provider_type",
+          "sync_interval_seconds",
+          "enabled",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "last_sync_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_sync_error": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_sync_status": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_sync_user_count": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "provider_type": {
+            "type": "string"
+          },
+          "sync_interval_seconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ContextualRestrictionResponse": {
+        "type": "object",
+        "description": "Response for a contextual restriction.",
+        "required": [
+          "id",
+          "organization_id",
+          "name",
+          "data_selector",
+          "user_requirement",
+          "enabled",
+          "priority",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data_dock_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "data_selector": {},
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "user_requirement": {}
+        }
+      },
+      "CreateContextProviderBody": {
+        "type": "object",
+        "description": "Request to create a context provider.",
+        "required": [
+          "name",
+          "provider_type",
+          "config"
+        ],
+        "properties": {
+          "config": {
+            "description": "Configuration JSON based on provider type"
+          },
+          "enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "provider_type": {
+            "type": "string",
+            "description": "Provider type: \"csv\" or \"http_api\""
+          },
+          "sync_interval_seconds": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "CreateContextualRestrictionBody": {
+        "type": "object",
+        "description": "Request to create a contextual restriction.",
+        "required": [
+          "name",
+          "data_selector",
+          "user_requirement"
+        ],
+        "properties": {
+          "data_selector": {},
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "user_requirement": {}
+        }
+      },
+      "CreateDataDockRequestBody": {
+        "type": "object",
+        "required": [
+          "harbor_id",
+          "name",
+          "slug",
+          "connection_kind"
+        ],
+        "properties": {
+          "connection_kind": {
+            "$ref": "#/components/schemas/DataDockKindRequest"
+          },
+          "harbor_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateHarborCrdRequestBody": {
+        "type": "object",
+        "required": [
+          "name",
+          "slug"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateOrganizationRequestBody": {
+        "type": "object",
+        "required": [
+          "name",
+          "slug"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateServiceAccountCrdRequestBody": {
+        "type": "object",
+        "required": [
+          "client_id"
+        ],
+        "properties": {
+          "client_id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CreateUser": {
+        "type": "object",
+        "required": [
+          "email",
+          "first_name",
+          "last_name",
+          "oauth_id"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "oauth_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "DataDockKindRequest": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/TrinoConfigRequest"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "Trino"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/TrinoInternalConfig"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "TrinoInternal"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/MinioInternalConfig"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "MinioInternal"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/PostgresInternalConfig"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "PostgresInternal"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "DataDockKindResponse": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/TrinoConfigResponse"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "Trino"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/TrinoInternalConfigResponse"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "TrinoInternal"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/MinioInternalConfigResponse"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "MinioInternal"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/PostgresInternalConfigResponse"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "PostgresInternal"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "DataDockResponseData": {
+        "type": "object",
+        "required": [
+          "id",
+          "harbor_id",
+          "name",
+          "slug",
+          "description",
+          "connection_kind",
+          "host",
+          "port",
+          "refresh_interval",
+          "status"
+        ],
+        "properties": {
+          "connection_kind": {
+            "$ref": "#/components/schemas/DataDockKindResponse"
+          },
+          "description": {
+            "type": "string"
+          },
+          "harbor_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "host": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "port": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "refresh_interval": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "refreshed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "slug": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/DataDockStatus"
+          }
+        }
+      },
+      "DataDockSecuritySettingsResponse": {
+        "type": "object",
+        "description": "Response for datadock security settings.",
+        "required": [
+          "data_dock_id",
+          "read_only_mode",
+          "sensitivity_enforcement",
+          "table_label_matching",
+          "column_label_matching",
+          "rls_enabled_catalogs",
+          "rls_enabled_schemas",
+          "rls_enabled_tables",
+          "rls_label_column",
+          "contextual_restrictions_enabled",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "column_label_matching": {
+            "type": "boolean"
+          },
+          "contextual_restrictions_enabled": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data_dock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "office_hours_enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "read_only_mode": {
+            "type": "boolean"
+          },
+          "rls_enabled_catalogs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rls_enabled_schemas": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rls_enabled_tables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rls_label_column": {
+            "type": "string"
+          },
+          "sensitivity_enforcement": {
+            "type": "boolean"
+          },
+          "table_label_matching": {
+            "type": "boolean"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "DataDockStatus": {
+        "type": "string",
+        "enum": [
+          "Offline",
+          "Online",
+          "Pending",
+          "Sleeping"
+        ]
+      },
+      "EffectiveSecuritySettingsResponse": {
+        "type": "object",
+        "description": "Response for effective security settings.",
+        "required": [
+          "office_hours_enabled",
+          "zero_trust_mode",
+          "read_only_mode",
+          "sensitivity_enforcement",
+          "table_label_matching",
+          "column_label_matching",
+          "rls_enabled_catalogs",
+          "rls_enabled_schemas",
+          "rls_enabled_tables",
+          "rls_label_column",
+          "contextual_restrictions_enabled"
+        ],
+        "properties": {
+          "column_label_matching": {
+            "type": "boolean"
+          },
+          "contextual_restrictions_enabled": {
+            "type": "boolean"
+          },
+          "office_hours_enabled": {
+            "type": "boolean"
+          },
+          "office_hours_end_utc": {
+            "type": "string",
+            "nullable": true
+          },
+          "office_hours_start_utc": {
+            "type": "string",
+            "nullable": true
+          },
+          "read_only_mode": {
+            "type": "boolean"
+          },
+          "rls_enabled_catalogs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rls_enabled_schemas": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rls_enabled_tables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rls_label_column": {
+            "type": "string"
+          },
+          "sensitivity_enforcement": {
+            "type": "boolean"
+          },
+          "table_label_matching": {
+            "type": "boolean"
+          },
+          "zero_trust_mode": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GetConsoleConfigResponse": {
+        "type": "object",
+        "required": [
+          "bifrost_api_url",
+          "bifrost_sql_endpoint",
+          "console_service_account_client_id",
+          "oidc_base_url",
+          "oidc_expected_audiences",
+          "feature_flags",
+          "app_version",
+          "sapience_api_url",
+          "console_base_domain"
+        ],
+        "properties": {
+          "app_version": {
+            "type": "string"
+          },
+          "bifrost_api_url": {
+            "type": "string"
+          },
+          "bifrost_sql_endpoint": {
+            "type": "string"
+          },
+          "console_base_domain": {
+            "type": "string",
+            "description": "The base domain for the console (e.g., \"localhost\" for dev, \"hyperfluid.app\" for prod)."
+          },
+          "console_service_account_client_id": {
+            "type": "string"
+          },
+          "feature_flags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConsoleConfigFeatureFlag"
+            }
+          },
+          "oidc_base_url": {
+            "type": "string"
+          },
+          "oidc_expected_audiences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sapience_api_url": {
+            "type": "string"
+          }
+        }
+      },
+      "Harbor": {
+        "type": "object",
+        "description": "A harbor is a collection of [DataDocks](super::datadock::Datadock)\nEach harbor belongs to an [Org](super::org::Org)\nEach harbor has an owner who is a [User](super::user::User)",
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "organization_id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "owner_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "slug": {
+            "type": "string"
+          }
+        }
+      },
+      "ListContextProvidersResponse": {
+        "type": "object",
+        "description": "Response for list of context providers.",
+        "required": [
+          "providers"
+        ],
+        "properties": {
+          "providers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContextProviderResponse"
+            }
+          }
+        }
+      },
+      "ListContextualRestrictionsResponse": {
+        "type": "object",
+        "description": "Response for list of contextual restrictions.",
+        "required": [
+          "restrictions"
+        ],
+        "properties": {
+          "restrictions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContextualRestrictionResponse"
+            }
+          }
+        }
+      },
+      "ListUserAttributesResponse": {
+        "type": "object",
+        "description": "Response containing a list of user attributes.",
+        "required": [
+          "attributes"
+        ],
+        "properties": {
+          "attributes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of attributes in `namespace::value` format."
+          }
+        }
+      },
+      "MinioInternalConfig": {
+        "type": "object",
+        "required": [
+          "storage_size"
+        ],
+        "properties": {
+          "storage_size": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Storage size in Gigabytes",
+            "minimum": 0
+          }
+        }
+      },
+      "MinioInternalConfigResponse": {
+        "type": "object",
+        "required": [
+          "storage_size"
+        ],
+        "properties": {
+          "storage_size": {
+            "type": "string"
+          }
+        }
+      },
+      "Org": {
+        "type": "object",
+        "description": "An organization is a collection of [Users](super::user::User) and [DataDocks](super::datadock::DataDock)",
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "created_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        }
+      },
+      "OrgSecuritySettingsResponse": {
+        "type": "object",
+        "description": "Response for organization security settings.",
+        "required": [
+          "organization_id",
+          "office_hours_enabled",
+          "zero_trust_mode",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "office_hours_enabled": {
+            "type": "boolean"
+          },
+          "office_hours_end_utc": {
+            "type": "string",
+            "nullable": true
+          },
+          "office_hours_start_utc": {
+            "type": "string",
+            "nullable": true
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "zero_trust_mode": {
+            "type": "boolean"
+          }
+        }
+      },
+      "OrgUserAttributesResponse": {
+        "type": "object",
+        "description": "Response for organization-wide user attributes (grouped by user).",
+        "required": [
+          "users"
+        ],
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserAttributesEntry"
+            },
+            "description": "Map of user_id to their attributes."
+          }
+        }
+      },
+      "ParsedAttributeResponse": {
+        "type": "object",
+        "description": "Parsed attribute with separate namespace and value.",
+        "required": [
+          "namespace",
+          "value"
+        ],
+        "properties": {
+          "namespace": {
+            "type": "string",
+            "description": "Namespace part (e.g., \"region\")"
+          },
+          "value": {
+            "type": "string",
+            "description": "Value part (e.g., \"occitanie\")"
+          }
+        }
+      },
+      "PostgresInternalConfig": {
+        "type": "object",
+        "required": [
+          "instances",
+          "storage_size"
+        ],
+        "properties": {
+          "cpu": {
+            "type": "string",
+            "description": "CPU limit (e.g., \"500m\")",
+            "nullable": true
+          },
+          "instances": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Number of PostgreSQL instances (1=standalone, 2+=HA with replicas)"
+          },
+          "memory": {
+            "type": "string",
+            "description": "Memory limit (e.g., \"1Gi\")",
+            "nullable": true
+          },
+          "storage_size": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Storage size in Gigabytes",
+            "minimum": 0
+          }
+        }
+      },
+      "PostgresInternalConfigResponse": {
+        "type": "object",
+        "required": [
+          "instances",
+          "storage_size"
+        ],
+        "properties": {
+          "cpu": {
+            "type": "string",
+            "nullable": true
+          },
+          "instances": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "memory": {
+            "type": "string",
+            "nullable": true
+          },
+          "storage_size": {
+            "type": "string"
+          }
+        }
+      },
+      "PrepareArchiveImportRequest": {
+        "type": "object",
+        "required": [
+          "destination_data_container_id",
+          "destination_file_name"
+        ],
+        "properties": {
+          "destination_data_container_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The bucket where the zip file will be uploaded"
+          },
+          "destination_file_name": {
+            "type": "string",
+            "description": "The name of the zip file"
+          },
+          "destination_file_path": {
+            "type": "string",
+            "description": "Where the zip file will be stored in the bucket (optional path)",
+            "nullable": true
+          }
+        }
+      },
+      "PrepareArchiveImportResponse": {
+        "type": "object",
+        "required": [
+          "upload_url",
+          "file_path"
+        ],
+        "properties": {
+          "file_path": {
+            "type": "string"
+          },
+          "upload_url": {
+            "type": "string"
+          }
+        }
+      },
+      "RefreshDataDocksResponse": {
+        "type": "object",
+        "required": [
+          "refreshed_count",
+          "total_count",
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "refreshed_count": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "total_count": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          }
+        }
+      },
+      "Role": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "organization_id",
+          "is_system",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "color": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "is_system": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ServiceAccount": {
+        "type": "object",
+        "required": [
+          "id",
+          "organization_id",
+          "iam_sa_id",
+          "iam_sa_credentials_path",
+          "iam_sa_client_id",
+          "name",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "iam_sa_client_id": {
+            "type": "string",
+            "description": "The client_id of the Keycloak client."
+          },
+          "iam_sa_credentials_path": {
+            "type": "string",
+            "description": "The secret path in the secret store for the service account credentials."
+          },
+          "iam_sa_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "This is the storage ID of the Keycloak client NOT the client_id."
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SetUserAttributesRequest": {
+        "type": "object",
+        "description": "Request to set all attributes for a user (replaces existing).",
+        "required": [
+          "attributes"
+        ],
+        "properties": {
+          "attributes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of attributes in `namespace::value` format.\nExample: `[\"region::occitanie\", \"department::sales\"]`"
+          }
+        }
+      },
+      "TrinoConfigRequest": {
+        "type": "object",
+        "required": [
+          "host",
+          "port",
+          "service_account_id",
+          "service_account_secret",
+          "token_issuer_endpoint"
+        ],
+        "properties": {
+          "host": {
+            "type": "string"
+          },
+          "port": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "service_account_id": {
+            "type": "string"
+          },
+          "service_account_secret": {
+            "type": "string"
+          },
+          "token_issuer_endpoint": {
+            "type": "string"
+          }
+        }
+      },
+      "TrinoConfigResponse": {
+        "type": "object",
+        "required": [
+          "service_account_id",
+          "service_account_secret",
+          "token_issuer_endpoint"
+        ],
+        "properties": {
+          "service_account_id": {
+            "type": "string"
+          },
+          "service_account_secret": {
+            "type": "string"
+          },
+          "token_issuer_endpoint": {
+            "type": "string"
+          }
+        }
+      },
+      "TrinoInternalConfig": {
+        "type": "object",
+        "required": [
+          "worker_replicas"
+        ],
+        "properties": {
+          "coordinator_cpu": {
+            "type": "string",
+            "nullable": true
+          },
+          "coordinator_memory": {
+            "type": "string",
+            "nullable": true
+          },
+          "hash_partition_count": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "max_memory_per_node": {
+            "type": "string",
+            "nullable": true
+          },
+          "query_max_execution_time": {
+            "type": "string",
+            "nullable": true
+          },
+          "query_max_memory": {
+            "type": "string",
+            "nullable": true
+          },
+          "task_concurrency": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "worker_auto_scaling": {
+            "$ref": "#/components/schemas/WorkerAutoScaling",
+            "nullable": true
+          },
+          "worker_cpu": {
+            "type": "string",
+            "nullable": true
+          },
+          "worker_memory": {
+            "type": "string",
+            "nullable": true
+          },
+          "worker_replicas": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TrinoInternalConfigResponse": {
+        "type": "object",
+        "required": [
+          "worker_replicas"
+        ],
+        "properties": {
+          "coordinator_cpu": {
+            "type": "string",
+            "nullable": true
+          },
+          "coordinator_memory": {
+            "type": "string",
+            "nullable": true
+          },
+          "hash_partition_count": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "max_memory_per_node": {
+            "type": "string",
+            "nullable": true
+          },
+          "query_max_execution_time": {
+            "type": "string",
+            "nullable": true
+          },
+          "query_max_memory": {
+            "type": "string",
+            "nullable": true
+          },
+          "task_concurrency": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "worker_auto_scaling": {
+            "$ref": "#/components/schemas/WorkerAutoScalingResponse",
+            "nullable": true
+          },
+          "worker_cpu": {
+            "type": "string",
+            "nullable": true
+          },
+          "worker_memory": {
+            "type": "string",
+            "nullable": true
+          },
+          "worker_replicas": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UpdateContextProviderBody": {
+        "type": "object",
+        "description": "Request to update a context provider.",
+        "properties": {
+          "config": {},
+          "enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "sync_interval_seconds": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateContextualRestrictionBody": {
+        "type": "object",
+        "description": "Request to update a contextual restriction.",
+        "properties": {
+          "data_selector": {},
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "user_requirement": {}
+        }
+      },
+      "UpdateDataDockSecuritySettingsBody": {
+        "type": "object",
+        "description": "Request to update datadock security settings.",
+        "properties": {
+          "column_label_matching": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "contextual_restrictions_enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "office_hours_override": {
+            "type": "string",
+            "description": "Office hours override: \"inherit\", \"enabled\", or \"disabled\"",
+            "nullable": true
+          },
+          "read_only_mode": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "rls_enabled_catalogs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "rls_enabled_schemas": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "rls_enabled_tables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "rls_label_column": {
+            "type": "string",
+            "nullable": true
+          },
+          "sensitivity_enforcement": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "table_label_matching": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateOrgSecuritySettingsBody": {
+        "type": "object",
+        "description": "Request to update organization security settings.",
+        "properties": {
+          "office_hours_enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "office_hours_end_utc": {
+            "type": "string",
+            "nullable": true
+          },
+          "office_hours_start_utc": {
+            "type": "string",
+            "nullable": true
+          },
+          "zero_trust_mode": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateServiceAccountCrdRequestBody": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": [
+          "id",
+          "oauth_id",
+          "first_name",
+          "last_name",
+          "email",
+          "created_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "email": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "oauth_id": {
+            "type": "string"
+          }
+        }
+      },
+      "UserAttributesEntry": {
+        "type": "object",
+        "description": "Entry for a single user's attributes.",
+        "required": [
+          "user_id",
+          "attributes"
+        ],
+        "properties": {
+          "attributes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of attributes in `namespace::value` format."
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "User ID."
+          }
+        }
+      },
+      "UserContextResponse": {
+        "type": "object",
+        "description": "Response for user context.",
+        "required": [
+          "user_id",
+          "attributes",
+          "attribute_sources"
+        ],
+        "properties": {
+          "attribute_sources": {
+            "type": "object",
+            "description": "Maps attribute names to the provider name that supplied them.",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "attributes": {},
+          "user_id": {
+            "type": "string"
+          }
+        }
+      },
+      "UserWithRoles": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/User"
+          },
+          {
+            "type": "object",
+            "required": [
+              "roles"
+            ],
+            "properties": {
+              "roles": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "WorkerAutoScaling": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "max_replicas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "min_replicas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "target_cpu_utilization": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "target_memory_utilization": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "WorkerAutoScalingResponse": {
+        "type": "object",
+        "required": [
+          "enabled",
+          "min_replicas",
+          "max_replicas",
+          "target_cpu_utilization"
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "max_replicas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "min_replicas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "target_cpu_utilization": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "target_memory_utilization": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Users operations"
+    },
+    {
+      "name": "Organizations",
+      "description": "Organizations operations"
+    },
+    {
+      "name": "Harbors",
+      "description": "Harbors operations"
+    },
+    {
+      "name": "Console Config",
+      "description": "Console configuration"
+    },
+    {
+      "name": "Service Accounts",
+      "description": "Service Accounts operations"
+    },
+    {
+      "name": "Security",
+      "description": "Security settings and management"
+    },
+    {
+      "name": "User Attributes",
+      "description": "User attributes management for Row-Level Security (RLS)"
+    }
+  ]
+}
