@@ -7,8 +7,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk"
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 )
 
 // This file demonstrates the new fluent API for the Bifrost SDK.
@@ -311,6 +311,7 @@ func getConfig() utils.Configuration {
 		DataDockID:     getEnv("HYPERFLUID_DATADOCK_ID", ""),
 		RequestTimeout: 30 * time.Second,
 		MaxRetries:     3,
+		SkipTLSVerify:  globalSkipTLSVerify,
 
 		KeycloakBaseURL:      getEnv("KEYCLOAK_BASE_URL", ""),
 		KeycloakRealm:        getEnv("KEYCLOAK_REALM", ""),

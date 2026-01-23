@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/builders/fluent"
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/builders/progressive"
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/builders/fluent"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/builders/progressive"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 )
 
 // Client is the main entry point for the SDK.

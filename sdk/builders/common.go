@@ -3,7 +3,7 @@ package builders
 import (
 	"context"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 )
 
 // ClientInterface defines the methods that builders need from the SDK client.

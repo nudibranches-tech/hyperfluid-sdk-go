@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/builders"
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/builders"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 )
 
 // QueryBuilder provides a fluent interface for building and executing queries.

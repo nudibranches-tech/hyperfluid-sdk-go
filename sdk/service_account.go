@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 )
 
 // ServiceAccount represents the Hyperfluid service account credentials.
@@ -176,6 +176,11 @@ type ServiceAccountOptions struct {
 	// Example: "https://api.hyperfluid.cloud"
 	BaseURL string
 
+	// ControlPlaneURL is the Control Plane API base URL (optional).
+	// If not set, defaults to BaseURL.
+	// Example: "https://console.hyperfluid.cloud"
+	ControlPlaneURL string
+
 	// OrgID is the default organization ID for API requests (optional).
 	// If set, this will be used as the default for operations requiring an org ID.
 	OrgID string
@@ -217,8 +222,15 @@ func (sa *ServiceAccount) ToConfiguration(opts ServiceAccountOptions) (utils.Con
 		return utils.Configuration{}, fmt.Errorf("failed to parse issuer: %w", err)
 	}
 
+	// Default ControlPlaneURL to BaseURL if not specified
+	controlPlaneURL := opts.ControlPlaneURL
+	if controlPlaneURL == "" {
+		controlPlaneURL = opts.BaseURL
+	}
+
 	cfg := utils.Configuration{
 		BaseURL:              opts.BaseURL,
+		ControlPlaneURL:      controlPlaneURL,
 		OrgID:                opts.OrgID,
 		DataDockID:           opts.DataDockID,
 		SkipTLSVerify:        opts.SkipTLSVerify,

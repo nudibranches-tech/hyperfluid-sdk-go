@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk"
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 )
 
 // This file demonstrates how to use Hyperfluid service accounts with the Bifrost SDK.
@@ -81,6 +81,7 @@ func runServiceAccountFromFileExample() {
 		DataDockID:     getEnv("HYPERFLUID_DATADOCK_ID", ""),
 		RequestTimeout: 30,
 		MaxRetries:     3,
+		SkipTLSVerify:  globalSkipTLSVerify,
 	})
 	if err != nil {
 		fmt.Printf("❌ Failed to create client: %v\n", err)
@@ -136,6 +137,7 @@ func runServiceAccountFromJSONExample() {
 		DataDockID:     getEnv("HYPERFLUID_DATADOCK_ID", ""),
 		RequestTimeout: 30,
 		MaxRetries:     3,
+		SkipTLSVerify:  globalSkipTLSVerify,
 	})
 	if err != nil {
 		fmt.Printf("❌ Failed to create client: %v\n", err)
@@ -199,6 +201,7 @@ func runServiceAccountManualExample() {
 		DataDockID:     getEnv("HYPERFLUID_DATADOCK_ID", ""),
 		RequestTimeout: 30,
 		MaxRetries:     3,
+		SkipTLSVerify:  globalSkipTLSVerify,
 	})
 	if err != nil {
 		fmt.Printf("❌ Failed to create client: %v\n", err)

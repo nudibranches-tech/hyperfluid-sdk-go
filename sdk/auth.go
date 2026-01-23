@@ -11,7 +11,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 	// "time" // time import is no longer needed
 )
 

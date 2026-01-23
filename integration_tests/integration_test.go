@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk"
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 )
 
 func TestIntegration_GetData(t *testing.T) {

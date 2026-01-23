@@ -8,7 +8,7 @@ Go SDK for Hyperfluid data access with **two fluent APIs**:
 
 ```bash
 # Install
-go get github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk
+go get github.com/nudibranches-tech/hyperfluid-sdk-go/sdk
 ```
 
 ## Two APIs, Choose Your Style
@@ -48,8 +48,8 @@ Jump directly to tables when you just need data:
 import (
     "context"
     "fmt"
-    "github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk"
-    "github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
+    "github.com/nudibranches-tech/hyperfluid-sdk-go/sdk"
+    "github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 )
 
 func main() {

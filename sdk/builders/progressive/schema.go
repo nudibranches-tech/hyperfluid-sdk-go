@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/builders"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/builders"
 )
 
 // SchemaBuilder represents a schema context.

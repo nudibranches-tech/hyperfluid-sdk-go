@@ -1,10 +1,11 @@
 package developpementtests
 
 import (
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 )
 
 // getTestConfig loads configuration from environment variables,
