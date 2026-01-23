@@ -5,7 +5,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk"
 )
 
 // This file demonstrates the NEW progressive fluent API

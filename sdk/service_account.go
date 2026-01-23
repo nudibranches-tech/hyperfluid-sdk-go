@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 )
 
 // ServiceAccount represents the Hyperfluid service account credentials.

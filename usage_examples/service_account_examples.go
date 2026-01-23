@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk"
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 )
 
 // This file demonstrates how to use Hyperfluid service accounts with the Bifrost SDK.

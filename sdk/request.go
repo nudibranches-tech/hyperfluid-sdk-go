@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 )
 
 func (c *Client) do(ctx context.Context, method, url string, body []byte) (*utils.Response, error) {

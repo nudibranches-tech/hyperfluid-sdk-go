@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk"
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/controlplaneapiclient"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/controlplaneapiclient"
 )
 
 // runControlPlaneListArchiveOperationsExample demonstrates listing archive operations for an organization.

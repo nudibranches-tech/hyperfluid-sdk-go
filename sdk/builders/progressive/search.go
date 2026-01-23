@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/builders"
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/builders"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 )
 
 // SearchBuilder provides a progressive search interface starting from a DataDock.

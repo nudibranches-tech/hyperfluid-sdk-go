@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/utils"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
 )
 
 func TestNewClient(t *testing.T) {

@@ -10,7 +10,7 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
 
-	"github.com/nudibranches-tech/bifrost-hyperfluid-sdk-dev/sdk/controlplaneapiclient"
+	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/controlplaneapiclient"
 )
 
 // ControlPlaneClient wraps the generated OpenAPI client with automatic OAuth2 token management.
