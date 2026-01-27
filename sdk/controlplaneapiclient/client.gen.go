@@ -48,6 +48,21 @@ const (
 	VaubanPreview  ConsoleConfigFeatureFlag = "vauban_preview"
 )
 
+// Defines values for CreatePipelineRequestV20Type.
+const (
+	CreatePipelineRequestV20TypeFileSorter CreatePipelineRequestV20Type = "file_sorter"
+)
+
+// Defines values for CreatePipelineRequestV21Type.
+const (
+	CreatePipelineRequestV21TypeTrino CreatePipelineRequestV21Type = "trino"
+)
+
+// Defines values for CreatePipelineRequestV22Type.
+const (
+	FileRouter CreatePipelineRequestV22Type = "file_router"
+)
+
 // Defines values for DataDockKindRequest0Type.
 const (
 	DataDockKindRequest0TypeTrino DataDockKindRequest0Type = "Trino"
@@ -94,6 +109,39 @@ const (
 	DataDockStatusOnline   DataDockStatus = "Online"
 	DataDockStatusPending  DataDockStatus = "Pending"
 	DataDockStatusSleeping DataDockStatus = "Sleeping"
+)
+
+// Defines values for PipelineOutputParameters0Type.
+const (
+	PipelineOutputParameters0TypeTrino PipelineOutputParameters0Type = "trino"
+)
+
+// Defines values for PipelineOutputParameters1Type.
+const (
+	S3 PipelineOutputParameters1Type = "s3"
+)
+
+// Defines values for PipelineOutputParameters2Type.
+const (
+	Filesorter PipelineOutputParameters2Type = "filesorter"
+)
+
+// Defines values for PipelineRunStatus.
+const (
+	Completed PipelineRunStatus = "completed"
+	Failed    PipelineRunStatus = "failed"
+	Pending   PipelineRunStatus = "pending"
+	Running   PipelineRunStatus = "running"
+)
+
+// Defines values for PipelineType.
+const (
+	PipelineTypeCopy             PipelineType = "Copy"
+	PipelineTypeFileRouter       PipelineType = "FileRouter"
+	PipelineTypeFileSorter       PipelineType = "FileSorter"
+	PipelineTypeHephaistosPdfeed PipelineType = "HephaistosPdfeed"
+	PipelineTypeLabelizer        PipelineType = "Labelizer"
+	PipelineTypeMarkitdown       PipelineType = "Markitdown"
 )
 
 // AddUser defines model for AddUser.
@@ -175,6 +223,16 @@ type BucketArchiveOperation struct {
 	UpdatedAt time.Time              `json:"updated_at"`
 }
 
+// CategoryRouterConfig Category router configuration (CategoryRouterMetadataAware step)
+type CategoryRouterConfig struct {
+	// DefaultCategory Default category if no label matches (e.g., "inconnu")
+	DefaultCategory *string `json:"default_category"`
+
+	// PrefixRegex Regex to extract prefix from source path (single capture group)
+	// Example: "(condominium-\\d+)/"
+	PrefixRegex *string `json:"prefix_regex"`
+}
+
 // CheckNameAvailabilityResponseData defines model for CheckNameAvailabilityResponseData.
 type CheckNameAvailabilityResponseData struct {
 	Available bool `json:"available"`
@@ -183,6 +241,18 @@ type CheckNameAvailabilityResponseData struct {
 // CheckOrganizationNameAvailabilityResponseData defines model for CheckOrganizationNameAvailabilityResponseData.
 type CheckOrganizationNameAvailabilityResponseData struct {
 	Available bool `json:"available"`
+}
+
+// ClassificationConfig Classification configuration for AI processing
+type ClassificationConfig struct {
+	// ApiKey API key for the AI model (e.g., Mistral)
+	ApiKey string `json:"api_key"`
+
+	// Labels Document classification labels
+	Labels []LabelDefinition `json:"labels"`
+
+	// ModelName Model name (e.g., "mistral-large-latest")
+	ModelName string `json:"model_name"`
 }
 
 // ConsoleConfigFeatureFlag defines model for ConsoleConfigFeatureFlag.
@@ -249,6 +319,43 @@ type CreateDataDockRequestBody struct {
 	Slug           string              `json:"slug"`
 }
 
+// CreateFileRouterPipelineRequest FileRouter pipeline request
+type CreateFileRouterPipelineRequest struct {
+	// DefaultRoute Configuration for a FileRouter destination
+	// Allows routing to different Data Docks with specific prefixes
+	DefaultRoute *DestinationConfig `json:"default_route,omitempty"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// RoutingRules Routing rules: label -> list of destinations
+	RoutingRules map[string][]DestinationConfig `json:"routing_rules"`
+
+	// Source FileSorter source configuration (S3 bucket for unsorted files)
+	Source FileSorterSourceConfig `json:"source"`
+}
+
+// CreateFileSorterRequest FileSorter pipeline request with semantic groupings
+type CreateFileSorterRequest struct {
+	// Classification Classification configuration for AI processing
+	Classification ClassificationConfig `json:"classification"`
+
+	// Destination FileSorter destination configuration (S3 bucket for sorted files)
+	Destination FileSorterDestinationConfig `json:"destination"`
+
+	// MetadataStorage Metadata storage configuration (Trino/Iceberg for document metadata)
+	MetadataStorage MetadataStorageConfig `json:"metadata_storage"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// Routing FileSorter routing configuration
+	Routing FileSorterRoutingConfig `json:"routing"`
+
+	// Source FileSorter source configuration (S3 bucket for unsorted files)
+	Source FileSorterSourceConfig `json:"source"`
+}
+
 // CreateHarborCrdRequestBody defines model for CreateHarborCrdRequestBody.
 type CreateHarborCrdRequestBody struct {
 	Name string `json:"name"`
@@ -261,10 +368,103 @@ type CreateOrganizationRequestBody struct {
 	Slug string `json:"slug"`
 }
 
+// CreatePipelineRequest defines model for CreatePipelineRequest.
+type CreatePipelineRequest struct {
+	Input    PipelineInputParameters  `json:"input"`
+	Output   PipelineOutputParameters `json:"output"`
+	Pipeline PipelineParameters       `json:"pipeline"`
+}
+
+// CreatePipelineRequestV2 Discriminated union for pipeline creation requests
+type CreatePipelineRequestV2 struct {
+	union json.RawMessage
+}
+
+// CreatePipelineRequestV20 defines model for .
+type CreatePipelineRequestV20 struct {
+	// Classification Classification configuration for AI processing
+	Classification ClassificationConfig `json:"classification"`
+
+	// Destination FileSorter destination configuration (S3 bucket for sorted files)
+	Destination FileSorterDestinationConfig `json:"destination"`
+
+	// MetadataStorage Metadata storage configuration (Trino/Iceberg for document metadata)
+	MetadataStorage MetadataStorageConfig `json:"metadata_storage"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// Routing FileSorter routing configuration
+	Routing FileSorterRoutingConfig `json:"routing"`
+
+	// Source FileSorter source configuration (S3 bucket for unsorted files)
+	Source FileSorterSourceConfig       `json:"source"`
+	Type   CreatePipelineRequestV20Type `json:"type"`
+}
+
+// CreatePipelineRequestV20Type defines model for CreatePipelineRequestV2.0.Type.
+type CreatePipelineRequestV20Type string
+
+// CreatePipelineRequestV21 defines model for .
+type CreatePipelineRequestV21 struct {
+	// Classification Classification configuration for AI processing
+	Classification *ClassificationConfig `json:"classification,omitempty"`
+
+	// MetadataStorage Metadata storage configuration (Trino/Iceberg for document metadata)
+	MetadataStorage MetadataStorageConfig `json:"metadata_storage"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline     PipelineMetadata `json:"pipeline"`
+	PipelineType PipelineType     `json:"pipeline_type"`
+
+	// Source FileSorter source configuration (S3 bucket for unsorted files)
+	Source FileSorterSourceConfig       `json:"source"`
+	Type   CreatePipelineRequestV21Type `json:"type"`
+}
+
+// CreatePipelineRequestV21Type defines model for CreatePipelineRequestV2.1.Type.
+type CreatePipelineRequestV21Type string
+
+// CreatePipelineRequestV22 defines model for .
+type CreatePipelineRequestV22 struct {
+	// DefaultRoute Configuration for a FileRouter destination
+	// Allows routing to different Data Docks with specific prefixes
+	DefaultRoute *DestinationConfig `json:"default_route,omitempty"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// RoutingRules Routing rules: label -> list of destinations
+	RoutingRules map[string][]DestinationConfig `json:"routing_rules"`
+
+	// Source FileSorter source configuration (S3 bucket for unsorted files)
+	Source FileSorterSourceConfig       `json:"source"`
+	Type   CreatePipelineRequestV22Type `json:"type"`
+}
+
+// CreatePipelineRequestV22Type defines model for CreatePipelineRequestV2.2.Type.
+type CreatePipelineRequestV22Type string
+
 // CreateServiceAccountCrdRequestBody defines model for CreateServiceAccountCrdRequestBody.
 type CreateServiceAccountCrdRequestBody struct {
 	ClientId    string  `json:"client_id"`
 	Description *string `json:"description"`
+}
+
+// CreateTrinoPipelineRequest Trino-based pipeline request (Markitdown, HephaistosPdfeed, Labelizer)
+type CreateTrinoPipelineRequest struct {
+	// Classification Classification configuration for AI processing
+	Classification *ClassificationConfig `json:"classification,omitempty"`
+
+	// MetadataStorage Metadata storage configuration (Trino/Iceberg for document metadata)
+	MetadataStorage MetadataStorageConfig `json:"metadata_storage"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline     PipelineMetadata `json:"pipeline"`
+	PipelineType PipelineType     `json:"pipeline_type"`
+
+	// Source FileSorter source configuration (S3 bucket for unsorted files)
+	Source FileSorterSourceConfig `json:"source"`
 }
 
 // CreateUser defines model for CreateUser.
@@ -393,6 +593,19 @@ type DataDockSecuritySettingsResponse struct {
 // DataDockStatus defines model for DataDockStatus.
 type DataDockStatus string
 
+// DestinationConfig Configuration for a FileRouter destination
+// Allows routing to different Data Docks with specific prefixes
+type DestinationConfig struct {
+	// BucketId UUID of the bucket Data Container within the destination data dock
+	BucketId openapi_types.UUID `json:"bucket_id"`
+
+	// DataDockId UUID of the destination Data Dock (S3)
+	DataDockId openapi_types.UUID `json:"data_dock_id"`
+
+	// Prefix Prefix path within the destination bucket (e.g., "invoices/processed/")
+	Prefix string `json:"prefix"`
+}
+
 // EffectiveSecuritySettingsResponse Response for effective security settings.
 type EffectiveSecuritySettingsResponse struct {
 	ColumnLabelMatching           bool     `json:"column_label_matching"`
@@ -410,6 +623,73 @@ type EffectiveSecuritySettingsResponse struct {
 	ZeroTrustMode                 bool     `json:"zero_trust_mode"`
 }
 
+// FileSorterDestinationConfig FileSorter destination configuration (S3 bucket for sorted files)
+type FileSorterDestinationConfig struct {
+	// BasePrefix Base prefix for sorted files
+	BasePrefix *string `json:"base_prefix"`
+
+	// DataContainerId Data Container ID for the destination bucket (null = use source bucket)
+	DataContainerId *openapi_types.UUID `json:"data_container_id"`
+}
+
+// FileSorterOutputParameters FileSorter output configuration - combines 3 steps:
+// HephaistosPdfeed -> Labelize -> CategoryRouterMetadataAware
+type FileSorterOutputParameters struct {
+	// DcIcebergId UUID of the Iceberg catalog Data Container
+	DcIcebergId openapi_types.UUID `json:"dc_iceberg_id"`
+
+	// DdTrinoInt UUID of the Trino Data Dock for metadata storage
+	DdTrinoInt openapi_types.UUID `json:"dd_trino_int"`
+
+	// DestinationBucketId UUID of the destination bucket Data Container for sorted files
+	DestinationBucketId *openapi_types.UUID `json:"destination_bucket_id"`
+
+	// DestinationPrefix Destination prefix for sorted files
+	DestinationPrefix *string `json:"destination_prefix"`
+
+	// DestinationS3Dd UUID of the destination S3 Data Dock for sorted files
+	DestinationS3Dd *openapi_types.UUID `json:"destination_s3_dd"`
+
+	// Labels Labels for document classification
+	Labels []LabelDefinition `json:"labels"`
+
+	// ModelApiKey Mistral API key for OCR and classification
+	ModelApiKey string `json:"model_api_key"`
+
+	// ModelName Model name (e.g., "mistral-medium", "mistral-large-latest")
+	ModelName string `json:"model_name"`
+
+	// Router Category router configuration (CategoryRouterMetadataAware step)
+	Router CategoryRouterConfig `json:"router"`
+
+	// SourceFileConnectionId Source S3 connection ID for router (references input.dd_minio)
+	SourceFileConnectionId *string `json:"source_file_connection_id"`
+
+	// TrinoSchema Trino schema name
+	TrinoSchema string `json:"trino_schema"`
+
+	// TrinoTable Trino table name for metadata
+	TrinoTable string `json:"trino_table"`
+}
+
+// FileSorterRoutingConfig FileSorter routing configuration
+type FileSorterRoutingConfig struct {
+	// DefaultCategory Default category if no label matches
+	DefaultCategory *string `json:"default_category"`
+
+	// SourcePrefixRegex Regex to extract prefix from source path (single capture group)
+	SourcePrefixRegex *string `json:"source_prefix_regex"`
+}
+
+// FileSorterSourceConfig FileSorter source configuration (S3 bucket for unsorted files)
+type FileSorterSourceConfig struct {
+	// DataContainerId Data Container ID for the source bucket (DataDock is resolved automatically)
+	DataContainerId openapi_types.UUID `json:"data_container_id"`
+
+	// FolderPrefix Optional folder prefix within the bucket
+	FolderPrefix *string `json:"folder_prefix"`
+}
+
 // GetConsoleConfigResponse defines model for GetConsoleConfigResponse.
 type GetConsoleConfigResponse struct {
 	AppVersion         string `json:"app_version"`
@@ -425,6 +705,11 @@ type GetConsoleConfigResponse struct {
 	SapienceApiUrl                string                     `json:"sapience_api_url"`
 }
 
+// GetRunResponse defines model for GetRunResponse.
+type GetRunResponse struct {
+	Run PipelineRun `json:"run"`
+}
+
 // Harbor A harbor is a collection of [DataDocks](super::datadock::Datadock)
 // Each harbor belongs to an [Org](super::org::Org)
 // Each harbor has an owner who is a [User](super::user::User)
@@ -434,6 +719,15 @@ type Harbor struct {
 	OrganizationId openapi_types.UUID  `json:"organization_id"`
 	OwnerId        *openapi_types.UUID `json:"owner_id"`
 	Slug           string              `json:"slug"`
+}
+
+// LabelDefinition Label definition for document classification (Labelize step)
+type LabelDefinition struct {
+	// Category Label category key (e.g., "Factures/Eau", "Contrats/Entretien")
+	Category string `json:"category"`
+
+	// Description Human-readable description for LLM classification
+	Description string `json:"description"`
 }
 
 // ListContextProvidersResponse Response for list of context providers.
@@ -446,10 +740,27 @@ type ListContextualRestrictionsResponse struct {
 	Restrictions []ContextualRestrictionResponse `json:"restrictions"`
 }
 
+// ListRunsResponse defines model for ListRunsResponse.
+type ListRunsResponse struct {
+	Runs []PipelineRun `json:"runs"`
+}
+
 // ListUserAttributesResponse Response containing a list of user attributes.
 type ListUserAttributesResponse struct {
 	// Attributes List of attributes in `namespace::value` format.
 	Attributes []string `json:"attributes"`
+}
+
+// MetadataStorageConfig Metadata storage configuration (Trino/Iceberg for document metadata)
+type MetadataStorageConfig struct {
+	// DataContainerId Data Container ID for the Iceberg catalog (DataDock is resolved automatically)
+	DataContainerId openapi_types.UUID `json:"data_container_id"`
+
+	// SchemaName Trino schema name
+	SchemaName string `json:"schema_name"`
+
+	// TableName Trino table name
+	TableName string `json:"table_name"`
 }
 
 // MinioInternalConfig defines model for MinioInternalConfig.
@@ -487,6 +798,160 @@ type OrgUserAttributesResponse struct {
 	// Users Map of user_id to their attributes.
 	Users []UserAttributesEntry `json:"users"`
 }
+
+// PipelineInputParameters defines model for PipelineInputParameters.
+type PipelineInputParameters struct {
+	// DcBucketId UUID of the bucket Data Container
+	DcBucketId openapi_types.UUID `json:"dc_bucket_id"`
+
+	// DdMinio UUID of the source MinIO Data Dock
+	DdMinio openapi_types.UUID `json:"dd_minio"`
+
+	// DefaultRoute Configuration for a FileRouter destination
+	// Allows routing to different Data Docks with specific prefixes
+	DefaultRoute *DestinationConfig `json:"default_route,omitempty"`
+	Folder       *string            `json:"folder"`
+
+	// RoutingRules FileRouter routing rules: label -> list of destinations
+	// Example: {"type::invoice": [DestinationConfig { data_dock_id: "uuid", bucket_id: "uuid", prefix: "invoices/" }]}
+	RoutingRules *map[string][]DestinationConfig `json:"routing_rules"`
+}
+
+// PipelineMetadata Pipeline metadata configuration (common to all pipeline types)
+type PipelineMetadata struct {
+	// Enabled Whether the pipeline is enabled (only applies to CronJobs)
+	Enabled *bool `json:"enabled,omitempty"`
+
+	// Name Pipeline name
+	Name string `json:"name"`
+
+	// OneOff Whether this is a one-off job (true) or a scheduled CronJob (false)
+	OneOff *bool `json:"one_off,omitempty"`
+
+	// OrganizationId Organization ID
+	OrganizationId openapi_types.UUID `json:"organization_id"`
+
+	// OrganizationSlug Organization slug (used for Keycloak realm)
+	OrganizationSlug string `json:"organization_slug"`
+}
+
+// PipelineOutputParameters defines model for PipelineOutputParameters.
+type PipelineOutputParameters struct {
+	union json.RawMessage
+}
+
+// PipelineOutputParameters0 defines model for .
+type PipelineOutputParameters0 struct {
+	// DcIcebergId UUID of the Iceberg catalog Data Container
+	DcIcebergId openapi_types.UUID `json:"dc_iceberg_id"`
+
+	// DdTrinoInt UUID of the Trino Data Dock
+	DdTrinoInt  openapi_types.UUID            `json:"dd_trino_int"`
+	Labels      *map[string]string            `json:"labels"`
+	ModelApiKey *string                       `json:"model_api_key"`
+	ModelName   *string                       `json:"model_name"`
+	TrinoSchema string                        `json:"trino_schema"`
+	TrinoTable  string                        `json:"trino_table"`
+	Type        PipelineOutputParameters0Type `json:"type"`
+}
+
+// PipelineOutputParameters0Type defines model for PipelineOutputParameters.0.Type.
+type PipelineOutputParameters0Type string
+
+// PipelineOutputParameters1 defines model for .
+type PipelineOutputParameters1 struct {
+	Type PipelineOutputParameters1Type `json:"type"`
+}
+
+// PipelineOutputParameters1Type defines model for PipelineOutputParameters.1.Type.
+type PipelineOutputParameters1Type string
+
+// PipelineOutputParameters2 defines model for .
+type PipelineOutputParameters2 struct {
+	// DcIcebergId UUID of the Iceberg catalog Data Container
+	DcIcebergId openapi_types.UUID `json:"dc_iceberg_id"`
+
+	// DdTrinoInt UUID of the Trino Data Dock for metadata storage
+	DdTrinoInt openapi_types.UUID `json:"dd_trino_int"`
+
+	// DestinationBucketId UUID of the destination bucket Data Container for sorted files
+	DestinationBucketId *openapi_types.UUID `json:"destination_bucket_id"`
+
+	// DestinationPrefix Destination prefix for sorted files
+	DestinationPrefix *string `json:"destination_prefix"`
+
+	// DestinationS3Dd UUID of the destination S3 Data Dock for sorted files
+	DestinationS3Dd *openapi_types.UUID `json:"destination_s3_dd"`
+
+	// Labels Labels for document classification
+	Labels []LabelDefinition `json:"labels"`
+
+	// ModelApiKey Mistral API key for OCR and classification
+	ModelApiKey string `json:"model_api_key"`
+
+	// ModelName Model name (e.g., "mistral-medium", "mistral-large-latest")
+	ModelName string `json:"model_name"`
+
+	// Router Category router configuration (CategoryRouterMetadataAware step)
+	Router CategoryRouterConfig `json:"router"`
+
+	// SourceFileConnectionId Source S3 connection ID for router (references input.dd_minio)
+	SourceFileConnectionId *string `json:"source_file_connection_id"`
+
+	// TrinoSchema Trino schema name
+	TrinoSchema string `json:"trino_schema"`
+
+	// TrinoTable Trino table name for metadata
+	TrinoTable string                        `json:"trino_table"`
+	Type       PipelineOutputParameters2Type `json:"type"`
+}
+
+// PipelineOutputParameters2Type defines model for PipelineOutputParameters.2.Type.
+type PipelineOutputParameters2Type string
+
+// PipelineParameters defines model for PipelineParameters.
+type PipelineParameters struct {
+	// Enabled Whether the pipeline is enabled. Only applies to CronJob pipelines.
+	// When false, the CronJob will be suspended. Defaults to true (enabled).
+	Enabled *bool              `json:"enabled,omitempty"`
+	Name    string             `json:"name"`
+	OneOff  bool               `json:"one_off"`
+	OrgId   openapi_types.UUID `json:"org_id"`
+	OrgSlug string             `json:"org_slug"`
+	Type    string             `json:"type"`
+}
+
+// PipelineResponseData defines model for PipelineResponseData.
+type PipelineResponseData struct {
+	CreatedAt time.Time          `json:"created_at"`
+	Id        openapi_types.UUID `json:"id"`
+	Name      string             `json:"name"`
+	OrgId     openapi_types.UUID `json:"org_id"`
+	Status    bool               `json:"status"`
+	Type      string             `json:"type"`
+}
+
+// PipelineRun defines model for PipelineRun.
+type PipelineRun struct {
+	AverageStepDurationMillis int64              `json:"average_step_duration_millis"`
+	CreatedAt                 time.Time          `json:"created_at"`
+	Failures                  int64              `json:"failures"`
+	FilesProcessed            int64              `json:"files_processed"`
+	FilesScanned              int64              `json:"files_scanned"`
+	Id                        openapi_types.UUID `json:"id"`
+	LastHeartbeatAt           time.Time          `json:"last_heartbeat_at"`
+	OrganizationId            openapi_types.UUID `json:"organization_id"`
+	PipelineId                openapi_types.UUID `json:"pipeline_id"`
+	RunDurationMillis         int64              `json:"run_duration_millis"`
+	Status                    PipelineRunStatus  `json:"status"`
+	UpdatedAt                 time.Time          `json:"updated_at"`
+}
+
+// PipelineRunStatus defines model for PipelineRunStatus.
+type PipelineRunStatus string
+
+// PipelineType defines model for PipelineType.
+type PipelineType string
 
 // PostgresInternalConfig defines model for PostgresInternalConfig.
 type PostgresInternalConfig struct {
@@ -547,6 +1012,9 @@ type Role struct {
 	OrganizationId openapi_types.UUID `json:"organization_id"`
 	UpdatedAt      time.Time          `json:"updated_at"`
 }
+
+// S3OutputParameters defines model for S3OutputParameters.
+type S3OutputParameters = map[string]interface{}
 
 // ServiceAccount defines model for ServiceAccount.
 type ServiceAccount struct {
@@ -618,6 +1086,20 @@ type TrinoInternalConfigResponse struct {
 	WorkerCpu             *string                    `json:"worker_cpu"`
 	WorkerMemory          *string                    `json:"worker_memory"`
 	WorkerReplicas        int32                      `json:"worker_replicas"`
+}
+
+// TrinoOutputParameters defines model for TrinoOutputParameters.
+type TrinoOutputParameters struct {
+	// DcIcebergId UUID of the Iceberg catalog Data Container
+	DcIcebergId openapi_types.UUID `json:"dc_iceberg_id"`
+
+	// DdTrinoInt UUID of the Trino Data Dock
+	DdTrinoInt  openapi_types.UUID `json:"dd_trino_int"`
+	Labels      *map[string]string `json:"labels"`
+	ModelApiKey *string            `json:"model_api_key"`
+	ModelName   *string            `json:"model_name"`
+	TrinoSchema string             `json:"trino_schema"`
+	TrinoTable  string             `json:"trino_table"`
 }
 
 // UpdateContextProviderBody Request to update a context provider.
@@ -819,8 +1301,102 @@ type CreateContextualRestrictionHandlerJSONRequestBody = CreateContextualRestric
 // UpdateOrgSecuritySettingsHandlerJSONRequestBody defines body for UpdateOrgSecuritySettingsHandler for application/json ContentType.
 type UpdateOrgSecuritySettingsHandlerJSONRequestBody = UpdateOrgSecuritySettingsBody
 
+// CreatePipelineJSONRequestBody defines body for CreatePipeline for application/json ContentType.
+type CreatePipelineJSONRequestBody = CreatePipelineRequest
+
 // CreateUserJSONRequestBody defines body for CreateUser for application/json ContentType.
 type CreateUserJSONRequestBody = CreateUser
+
+// CreatePipelineV2JSONRequestBody defines body for CreatePipelineV2 for application/json ContentType.
+type CreatePipelineV2JSONRequestBody = CreatePipelineRequestV2
+
+// AsCreatePipelineRequestV20 returns the union data inside the CreatePipelineRequestV2 as a CreatePipelineRequestV20
+func (t CreatePipelineRequestV2) AsCreatePipelineRequestV20() (CreatePipelineRequestV20, error) {
+	var body CreatePipelineRequestV20
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreatePipelineRequestV20 overwrites any union data inside the CreatePipelineRequestV2 as the provided CreatePipelineRequestV20
+func (t *CreatePipelineRequestV2) FromCreatePipelineRequestV20(v CreatePipelineRequestV20) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreatePipelineRequestV20 performs a merge with any union data inside the CreatePipelineRequestV2, using the provided CreatePipelineRequestV20
+func (t *CreatePipelineRequestV2) MergeCreatePipelineRequestV20(v CreatePipelineRequestV20) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCreatePipelineRequestV21 returns the union data inside the CreatePipelineRequestV2 as a CreatePipelineRequestV21
+func (t CreatePipelineRequestV2) AsCreatePipelineRequestV21() (CreatePipelineRequestV21, error) {
+	var body CreatePipelineRequestV21
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreatePipelineRequestV21 overwrites any union data inside the CreatePipelineRequestV2 as the provided CreatePipelineRequestV21
+func (t *CreatePipelineRequestV2) FromCreatePipelineRequestV21(v CreatePipelineRequestV21) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreatePipelineRequestV21 performs a merge with any union data inside the CreatePipelineRequestV2, using the provided CreatePipelineRequestV21
+func (t *CreatePipelineRequestV2) MergeCreatePipelineRequestV21(v CreatePipelineRequestV21) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCreatePipelineRequestV22 returns the union data inside the CreatePipelineRequestV2 as a CreatePipelineRequestV22
+func (t CreatePipelineRequestV2) AsCreatePipelineRequestV22() (CreatePipelineRequestV22, error) {
+	var body CreatePipelineRequestV22
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreatePipelineRequestV22 overwrites any union data inside the CreatePipelineRequestV2 as the provided CreatePipelineRequestV22
+func (t *CreatePipelineRequestV2) FromCreatePipelineRequestV22(v CreatePipelineRequestV22) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreatePipelineRequestV22 performs a merge with any union data inside the CreatePipelineRequestV2, using the provided CreatePipelineRequestV22
+func (t *CreatePipelineRequestV2) MergeCreatePipelineRequestV22(v CreatePipelineRequestV22) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t CreatePipelineRequestV2) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *CreatePipelineRequestV2) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
 
 // AsDataDockKindRequest0 returns the union data inside the DataDockKindRequest as a DataDockKindRequest0
 func (t DataDockKindRequest) AsDataDockKindRequest0() (DataDockKindRequest0, error) {
@@ -1050,6 +1626,94 @@ func (t *DataDockKindResponse) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsPipelineOutputParameters0 returns the union data inside the PipelineOutputParameters as a PipelineOutputParameters0
+func (t PipelineOutputParameters) AsPipelineOutputParameters0() (PipelineOutputParameters0, error) {
+	var body PipelineOutputParameters0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPipelineOutputParameters0 overwrites any union data inside the PipelineOutputParameters as the provided PipelineOutputParameters0
+func (t *PipelineOutputParameters) FromPipelineOutputParameters0(v PipelineOutputParameters0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePipelineOutputParameters0 performs a merge with any union data inside the PipelineOutputParameters, using the provided PipelineOutputParameters0
+func (t *PipelineOutputParameters) MergePipelineOutputParameters0(v PipelineOutputParameters0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsPipelineOutputParameters1 returns the union data inside the PipelineOutputParameters as a PipelineOutputParameters1
+func (t PipelineOutputParameters) AsPipelineOutputParameters1() (PipelineOutputParameters1, error) {
+	var body PipelineOutputParameters1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPipelineOutputParameters1 overwrites any union data inside the PipelineOutputParameters as the provided PipelineOutputParameters1
+func (t *PipelineOutputParameters) FromPipelineOutputParameters1(v PipelineOutputParameters1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePipelineOutputParameters1 performs a merge with any union data inside the PipelineOutputParameters, using the provided PipelineOutputParameters1
+func (t *PipelineOutputParameters) MergePipelineOutputParameters1(v PipelineOutputParameters1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsPipelineOutputParameters2 returns the union data inside the PipelineOutputParameters as a PipelineOutputParameters2
+func (t PipelineOutputParameters) AsPipelineOutputParameters2() (PipelineOutputParameters2, error) {
+	var body PipelineOutputParameters2
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPipelineOutputParameters2 overwrites any union data inside the PipelineOutputParameters as the provided PipelineOutputParameters2
+func (t *PipelineOutputParameters) FromPipelineOutputParameters2(v PipelineOutputParameters2) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePipelineOutputParameters2 performs a merge with any union data inside the PipelineOutputParameters, using the provided PipelineOutputParameters2
+func (t *PipelineOutputParameters) MergePipelineOutputParameters2(v PipelineOutputParameters2) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t PipelineOutputParameters) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *PipelineOutputParameters) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
 
@@ -1225,6 +1889,21 @@ type ClientInterface interface {
 	// CheckHarborNameAvailable request
 	CheckHarborNameAvailable(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListPipelines request
+	ListPipelines(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeletePipeline request
+	DeletePipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListPipelineRuns request
+	ListPipelineRuns(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetPipelineRun request
+	GetPipelineRun(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, runId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TriggerPipeline request
+	TriggerPipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// CreateServiceAccountCrdWithBody request with any body
 	CreateServiceAccountCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1301,10 +1980,20 @@ type ClientInterface interface {
 	// GetUserContextHandler request
 	GetUserContextHandler(ctx context.Context, organizationId openapi_types.UUID, userId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// CreatePipelineWithBody request with any body
+	CreatePipelineWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreatePipeline(ctx context.Context, body CreatePipelineJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// CreateUserWithBody request with any body
 	CreateUserWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	CreateUser(ctx context.Context, body CreateUserJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreatePipelineV2WithBody request with any body
+	CreatePipelineV2WithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreatePipelineV2(ctx context.Context, body CreatePipelineV2JSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 func (c *Client) HandleGetConsoleConfig(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -1751,6 +2440,66 @@ func (c *Client) CheckHarborNameAvailable(ctx context.Context, organizationId op
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListPipelines(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListPipelinesRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeletePipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeletePipelineRequest(c.Server, organizationId, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListPipelineRuns(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListPipelineRunsRequest(c.Server, organizationId, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetPipelineRun(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, runId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetPipelineRunRequest(c.Server, organizationId, pipelineId, runId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TriggerPipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTriggerPipelineRequest(c.Server, organizationId, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) CreateServiceAccountCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateServiceAccountCrdRequestWithBody(c.Server, organizationId, contentType, body)
 	if err != nil {
@@ -2087,6 +2836,30 @@ func (c *Client) GetUserContextHandler(ctx context.Context, organizationId opena
 	return c.Client.Do(req)
 }
 
+func (c *Client) CreatePipelineWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreatePipelineRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreatePipeline(ctx context.Context, body CreatePipelineJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreatePipelineRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) CreateUserWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateUserRequestWithBody(c.Server, contentType, body)
 	if err != nil {
@@ -2101,6 +2874,30 @@ func (c *Client) CreateUserWithBody(ctx context.Context, contentType string, bod
 
 func (c *Client) CreateUser(ctx context.Context, body CreateUserJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateUserRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreatePipelineV2WithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreatePipelineV2RequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreatePipelineV2(ctx context.Context, body CreatePipelineV2JSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreatePipelineV2Request(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -3433,6 +4230,211 @@ func NewCheckHarborNameAvailableRequest(server string, organizationId openapi_ty
 	return req, nil
 }
 
+// NewListPipelinesRequest generates requests for ListPipelines
+func NewListPipelinesRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/pipelines", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeletePipelineRequest generates requests for DeletePipeline
+func NewDeletePipelineRequest(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "pipeline_id", runtime.ParamLocationPath, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/pipelines/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListPipelineRunsRequest generates requests for ListPipelineRuns
+func NewListPipelineRunsRequest(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "pipeline_id", runtime.ParamLocationPath, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/pipelines/%s/runs", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetPipelineRunRequest generates requests for GetPipelineRun
+func NewGetPipelineRunRequest(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, runId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "pipeline_id", runtime.ParamLocationPath, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "run_id", runtime.ParamLocationPath, runId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/pipelines/%s/runs/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewTriggerPipelineRequest generates requests for TriggerPipeline
+func NewTriggerPipelineRequest(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "pipeline_id", runtime.ParamLocationPath, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/pipelines/%s/trigger", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewCreateServiceAccountCrdRequest calls the generic CreateServiceAccountCrd builder with application/json body
 func NewCreateServiceAccountCrdRequest(server string, organizationId openapi_types.UUID, body CreateServiceAccountCrdJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -4331,6 +5333,46 @@ func NewGetUserContextHandlerRequest(server string, organizationId openapi_types
 	return req, nil
 }
 
+// NewCreatePipelineRequest calls the generic CreatePipeline builder with application/json body
+func NewCreatePipelineRequest(server string, body CreatePipelineJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreatePipelineRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreatePipelineRequestWithBody generates requests for CreatePipeline with any type of body
+func NewCreatePipelineRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/pipelines")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewCreateUserRequest calls the generic CreateUser builder with application/json body
 func NewCreateUserRequest(server string, body CreateUserJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -4352,6 +5394,46 @@ func NewCreateUserRequestWithBody(server string, contentType string, body io.Rea
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/users")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCreatePipelineV2Request calls the generic CreatePipelineV2 builder with application/json body
+func NewCreatePipelineV2Request(server string, body CreatePipelineV2JSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreatePipelineV2RequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreatePipelineV2RequestWithBody generates requests for CreatePipelineV2 with any type of body
+func NewCreatePipelineV2RequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v2/pipelines")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -4516,6 +5598,21 @@ type ClientWithResponsesInterface interface {
 	// CheckHarborNameAvailableWithResponse request
 	CheckHarborNameAvailableWithResponse(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*CheckHarborNameAvailableRes, error)
 
+	// ListPipelinesWithResponse request
+	ListPipelinesWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListPipelinesRes, error)
+
+	// DeletePipelineWithResponse request
+	DeletePipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeletePipelineRes, error)
+
+	// ListPipelineRunsWithResponse request
+	ListPipelineRunsWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListPipelineRunsRes, error)
+
+	// GetPipelineRunWithResponse request
+	GetPipelineRunWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, runId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetPipelineRunRes, error)
+
+	// TriggerPipelineWithResponse request
+	TriggerPipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*TriggerPipelineRes, error)
+
 	// CreateServiceAccountCrdWithBodyWithResponse request with any body
 	CreateServiceAccountCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateServiceAccountCrdRes, error)
 
@@ -4592,10 +5689,20 @@ type ClientWithResponsesInterface interface {
 	// GetUserContextHandlerWithResponse request
 	GetUserContextHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, userId string, reqEditors ...RequestEditorFn) (*GetUserContextHandlerRes, error)
 
+	// CreatePipelineWithBodyWithResponse request with any body
+	CreatePipelineWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreatePipelineRes, error)
+
+	CreatePipelineWithResponse(ctx context.Context, body CreatePipelineJSONRequestBody, reqEditors ...RequestEditorFn) (*CreatePipelineRes, error)
+
 	// CreateUserWithBodyWithResponse request with any body
 	CreateUserWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateUserRes, error)
 
 	CreateUserWithResponse(ctx context.Context, body CreateUserJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateUserRes, error)
+
+	// CreatePipelineV2WithBodyWithResponse request with any body
+	CreatePipelineV2WithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreatePipelineV2Res, error)
+
+	CreatePipelineV2WithResponse(ctx context.Context, body CreatePipelineV2JSONRequestBody, reqEditors ...RequestEditorFn) (*CreatePipelineV2Res, error)
 }
 
 type HandleGetConsoleConfigRes struct {
@@ -5207,6 +6314,114 @@ func (r CheckHarborNameAvailableRes) StatusCode() int {
 	return 0
 }
 
+type ListPipelinesRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]PipelineResponseData
+}
+
+// Status returns HTTPResponse.Status
+func (r ListPipelinesRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListPipelinesRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeletePipelineRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeletePipelineRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeletePipelineRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListPipelineRunsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ListRunsResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListPipelineRunsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListPipelineRunsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetPipelineRunRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *GetRunResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetPipelineRunRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetPipelineRunRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type TriggerPipelineRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r TriggerPipelineRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TriggerPipelineRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type CreateServiceAccountCrdRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -5642,6 +6857,27 @@ func (r GetUserContextHandlerRes) StatusCode() int {
 	return 0
 }
 
+type CreatePipelineRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r CreatePipelineRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreatePipelineRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type CreateUserRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -5658,6 +6894,28 @@ func (r CreateUserRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r CreateUserRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreatePipelineV2Res struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *PipelineResponseData
+}
+
+// Status returns HTTPResponse.Status
+func (r CreatePipelineV2Res) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreatePipelineV2Res) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -5988,6 +7246,51 @@ func (c *ClientWithResponses) CheckHarborNameAvailableWithResponse(ctx context.C
 	return ParseCheckHarborNameAvailableRes(rsp)
 }
 
+// ListPipelinesWithResponse request returning *ListPipelinesRes
+func (c *ClientWithResponses) ListPipelinesWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListPipelinesRes, error) {
+	rsp, err := c.ListPipelines(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListPipelinesRes(rsp)
+}
+
+// DeletePipelineWithResponse request returning *DeletePipelineRes
+func (c *ClientWithResponses) DeletePipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeletePipelineRes, error) {
+	rsp, err := c.DeletePipeline(ctx, organizationId, pipelineId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeletePipelineRes(rsp)
+}
+
+// ListPipelineRunsWithResponse request returning *ListPipelineRunsRes
+func (c *ClientWithResponses) ListPipelineRunsWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListPipelineRunsRes, error) {
+	rsp, err := c.ListPipelineRuns(ctx, organizationId, pipelineId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListPipelineRunsRes(rsp)
+}
+
+// GetPipelineRunWithResponse request returning *GetPipelineRunRes
+func (c *ClientWithResponses) GetPipelineRunWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, runId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetPipelineRunRes, error) {
+	rsp, err := c.GetPipelineRun(ctx, organizationId, pipelineId, runId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetPipelineRunRes(rsp)
+}
+
+// TriggerPipelineWithResponse request returning *TriggerPipelineRes
+func (c *ClientWithResponses) TriggerPipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*TriggerPipelineRes, error) {
+	rsp, err := c.TriggerPipeline(ctx, organizationId, pipelineId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTriggerPipelineRes(rsp)
+}
+
 // CreateServiceAccountCrdWithBodyWithResponse request with arbitrary body returning *CreateServiceAccountCrdRes
 func (c *ClientWithResponses) CreateServiceAccountCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateServiceAccountCrdRes, error) {
 	rsp, err := c.CreateServiceAccountCrdWithBody(ctx, organizationId, contentType, body, reqEditors...)
@@ -6232,6 +7535,23 @@ func (c *ClientWithResponses) GetUserContextHandlerWithResponse(ctx context.Cont
 	return ParseGetUserContextHandlerRes(rsp)
 }
 
+// CreatePipelineWithBodyWithResponse request with arbitrary body returning *CreatePipelineRes
+func (c *ClientWithResponses) CreatePipelineWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreatePipelineRes, error) {
+	rsp, err := c.CreatePipelineWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreatePipelineRes(rsp)
+}
+
+func (c *ClientWithResponses) CreatePipelineWithResponse(ctx context.Context, body CreatePipelineJSONRequestBody, reqEditors ...RequestEditorFn) (*CreatePipelineRes, error) {
+	rsp, err := c.CreatePipeline(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreatePipelineRes(rsp)
+}
+
 // CreateUserWithBodyWithResponse request with arbitrary body returning *CreateUserRes
 func (c *ClientWithResponses) CreateUserWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateUserRes, error) {
 	rsp, err := c.CreateUserWithBody(ctx, contentType, body, reqEditors...)
@@ -6247,6 +7567,23 @@ func (c *ClientWithResponses) CreateUserWithResponse(ctx context.Context, body C
 		return nil, err
 	}
 	return ParseCreateUserRes(rsp)
+}
+
+// CreatePipelineV2WithBodyWithResponse request with arbitrary body returning *CreatePipelineV2Res
+func (c *ClientWithResponses) CreatePipelineV2WithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreatePipelineV2Res, error) {
+	rsp, err := c.CreatePipelineV2WithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreatePipelineV2Res(rsp)
+}
+
+func (c *ClientWithResponses) CreatePipelineV2WithResponse(ctx context.Context, body CreatePipelineV2JSONRequestBody, reqEditors ...RequestEditorFn) (*CreatePipelineV2Res, error) {
+	rsp, err := c.CreatePipelineV2(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreatePipelineV2Res(rsp)
 }
 
 // ParseHandleGetConsoleConfigRes parses an HTTP response from a HandleGetConsoleConfigWithResponse call
@@ -6907,6 +8244,116 @@ func ParseCheckHarborNameAvailableRes(rsp *http.Response) (*CheckHarborNameAvail
 	return response, nil
 }
 
+// ParseListPipelinesRes parses an HTTP response from a ListPipelinesWithResponse call
+func ParseListPipelinesRes(rsp *http.Response) (*ListPipelinesRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListPipelinesRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []PipelineResponseData
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeletePipelineRes parses an HTTP response from a DeletePipelineWithResponse call
+func ParseDeletePipelineRes(rsp *http.Response) (*DeletePipelineRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeletePipelineRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseListPipelineRunsRes parses an HTTP response from a ListPipelineRunsWithResponse call
+func ParseListPipelineRunsRes(rsp *http.Response) (*ListPipelineRunsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListPipelineRunsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListRunsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetPipelineRunRes parses an HTTP response from a GetPipelineRunWithResponse call
+func ParseGetPipelineRunRes(rsp *http.Response) (*GetPipelineRunRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetPipelineRunRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest GetRunResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTriggerPipelineRes parses an HTTP response from a TriggerPipelineWithResponse call
+func ParseTriggerPipelineRes(rsp *http.Response) (*TriggerPipelineRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TriggerPipelineRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
 // ParseCreateServiceAccountCrdRes parses an HTTP response from a CreateServiceAccountCrdWithResponse call
 func ParseCreateServiceAccountCrdRes(rsp *http.Response) (*CreateServiceAccountCrdRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -7377,6 +8824,22 @@ func ParseGetUserContextHandlerRes(rsp *http.Response) (*GetUserContextHandlerRe
 	return response, nil
 }
 
+// ParseCreatePipelineRes parses an HTTP response from a CreatePipelineWithResponse call
+func ParseCreatePipelineRes(rsp *http.Response) (*CreatePipelineRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreatePipelineRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
 // ParseCreateUserRes parses an HTTP response from a CreateUserWithResponse call
 func ParseCreateUserRes(rsp *http.Response) (*CreateUserRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -7393,6 +8856,32 @@ func ParseCreateUserRes(rsp *http.Response) (*CreateUserRes, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest User
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreatePipelineV2Res parses an HTTP response from a CreatePipelineV2WithResponse call
+func ParseCreatePipelineV2Res(rsp *http.Response) (*CreatePipelineV2Res, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreatePipelineV2Res{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest PipelineResponseData
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

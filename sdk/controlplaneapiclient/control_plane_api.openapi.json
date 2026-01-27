@@ -1225,6 +1225,228 @@
         }
       }
     },
+    "/api/v1/organizations/{organization_id}/pipelines": {
+      "get": {
+        "tags": [
+          "Pipelines"
+        ],
+        "operationId": "list_pipelines",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List pipelines for organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PipelineResponseData"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/pipelines/{pipeline_id}": {
+      "delete": {
+        "tags": [
+          "Pipelines"
+        ],
+        "operationId": "delete_pipeline",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pipeline deleted"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/pipelines/{pipeline_id}/runs": {
+      "get": {
+        "tags": [
+          "Pipelines"
+        ],
+        "operationId": "list_pipeline_runs",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List all runs for a pipeline",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListRunsResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/pipelines/{pipeline_id}/runs/{run_id}": {
+      "get": {
+        "tags": [
+          "Pipelines"
+        ],
+        "operationId": "get_pipeline_run",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get pipeline run by ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRunResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Run not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/pipelines/{pipeline_id}/trigger": {
+      "post": {
+        "tags": [
+          "Pipelines"
+        ],
+        "operationId": "trigger_pipeline",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pipeline triggered"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/organizations/{organization_id}/service-accounts/crd": {
       "post": {
         "tags": [
@@ -2129,6 +2351,36 @@
         }
       }
     },
+    "/api/v1/pipelines": {
+      "post": {
+        "tags": [
+          "Pipelines"
+        ],
+        "summary": "Creates a pipeline CRD, meant to be called from console",
+        "operationId": "create_pipeline",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePipelineRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Pipeline creation initiated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/users": {
       "post": {
         "tags": [
@@ -2155,6 +2407,43 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v2/pipelines": {
+      "post": {
+        "tags": [
+          "Pipelines"
+        ],
+        "summary": "Creates a pipeline CRD using the new V2 API with discriminated union",
+        "operationId": "create_pipeline_v2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePipelineRequestV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Pipeline created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipelineResponseData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "500": {
             "description": "Internal server error"
@@ -2351,6 +2640,22 @@
           }
         }
       },
+      "CategoryRouterConfig": {
+        "type": "object",
+        "description": "Category router configuration (CategoryRouterMetadataAware step)",
+        "properties": {
+          "default_category": {
+            "type": "string",
+            "description": "Default category if no label matches (e.g., \"inconnu\")",
+            "nullable": true
+          },
+          "prefix_regex": {
+            "type": "string",
+            "description": "Regex to extract prefix from source path (single capture group)\nExample: \"(condominium-\\\\d+)/\"",
+            "nullable": true
+          }
+        }
+      },
       "CheckNameAvailabilityResponseData": {
         "type": "object",
         "required": [
@@ -2370,6 +2675,33 @@
         "properties": {
           "available": {
             "type": "boolean"
+          }
+        }
+      },
+      "ClassificationConfig": {
+        "type": "object",
+        "description": "Classification configuration for AI processing",
+        "required": [
+          "api_key",
+          "model_name",
+          "labels"
+        ],
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "format": "password",
+            "description": "API key for the AI model (e.g., Mistral)"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LabelDefinition"
+            },
+            "description": "Document classification labels"
+          },
+          "model_name": {
+            "type": "string",
+            "description": "Model name (e.g., \"mistral-large-latest\")"
           }
         }
       },
@@ -2580,6 +2912,69 @@
           }
         }
       },
+      "CreateFileRouterPipelineRequest": {
+        "type": "object",
+        "description": "FileRouter pipeline request",
+        "required": [
+          "pipeline",
+          "source",
+          "routing_rules"
+        ],
+        "properties": {
+          "default_route": {
+            "$ref": "#/components/schemas/DestinationConfig",
+            "nullable": true
+          },
+          "pipeline": {
+            "$ref": "#/components/schemas/PipelineMetadata"
+          },
+          "routing_rules": {
+            "type": "object",
+            "description": "Routing rules: label -> list of destinations",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/DestinationConfig"
+              }
+            }
+          },
+          "source": {
+            "$ref": "#/components/schemas/FileSorterSourceConfig"
+          }
+        }
+      },
+      "CreateFileSorterRequest": {
+        "type": "object",
+        "description": "FileSorter pipeline request with semantic groupings",
+        "required": [
+          "pipeline",
+          "source",
+          "classification",
+          "metadata_storage",
+          "destination",
+          "routing"
+        ],
+        "properties": {
+          "classification": {
+            "$ref": "#/components/schemas/ClassificationConfig"
+          },
+          "destination": {
+            "$ref": "#/components/schemas/FileSorterDestinationConfig"
+          },
+          "metadata_storage": {
+            "$ref": "#/components/schemas/MetadataStorageConfig"
+          },
+          "pipeline": {
+            "$ref": "#/components/schemas/PipelineMetadata"
+          },
+          "routing": {
+            "$ref": "#/components/schemas/FileSorterRoutingConfig"
+          },
+          "source": {
+            "$ref": "#/components/schemas/FileSorterSourceConfig"
+          }
+        }
+      },
       "CreateHarborCrdRequestBody": {
         "type": "object",
         "required": [
@@ -2610,6 +3005,96 @@
           }
         }
       },
+      "CreatePipelineRequest": {
+        "type": "object",
+        "required": [
+          "pipeline",
+          "input",
+          "output"
+        ],
+        "properties": {
+          "input": {
+            "$ref": "#/components/schemas/PipelineInputParameters"
+          },
+          "output": {
+            "$ref": "#/components/schemas/PipelineOutputParameters"
+          },
+          "pipeline": {
+            "$ref": "#/components/schemas/PipelineParameters"
+          }
+        }
+      },
+      "CreatePipelineRequestV2": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateFileSorterRequest"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "file_sorter"
+                    ]
+                  }
+                }
+              }
+            ],
+            "description": "FileSorter: PDF OCR + Classification + Routing"
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateTrinoPipelineRequest"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "trino"
+                    ]
+                  }
+                }
+              }
+            ],
+            "description": "Trino-based pipelines: Markitdown, HephaistosPdfeed, Labelizer"
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateFileRouterPipelineRequest"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "file_router"
+                    ]
+                  }
+                }
+              }
+            ],
+            "description": "FileRouter: S3-to-S3 routing based on labels"
+          }
+        ],
+        "description": "Discriminated union for pipeline creation requests"
+      },
       "CreateServiceAccountCrdRequestBody": {
         "type": "object",
         "required": [
@@ -2622,6 +3107,34 @@
           "description": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "CreateTrinoPipelineRequest": {
+        "type": "object",
+        "description": "Trino-based pipeline request (Markitdown, HephaistosPdfeed, Labelizer)",
+        "required": [
+          "pipeline_type",
+          "pipeline",
+          "source",
+          "metadata_storage"
+        ],
+        "properties": {
+          "classification": {
+            "$ref": "#/components/schemas/ClassificationConfig",
+            "nullable": true
+          },
+          "metadata_storage": {
+            "$ref": "#/components/schemas/MetadataStorageConfig"
+          },
+          "pipeline": {
+            "$ref": "#/components/schemas/PipelineMetadata"
+          },
+          "pipeline_type": {
+            "$ref": "#/components/schemas/PipelineType"
+          },
+          "source": {
+            "$ref": "#/components/schemas/FileSorterSourceConfig"
           }
         }
       },
@@ -2943,6 +3456,31 @@
           "Sleeping"
         ]
       },
+      "DestinationConfig": {
+        "type": "object",
+        "description": "Configuration for a FileRouter destination\nAllows routing to different Data Docks with specific prefixes",
+        "required": [
+          "data_dock_id",
+          "bucket_id",
+          "prefix"
+        ],
+        "properties": {
+          "bucket_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the bucket Data Container within the destination data dock"
+          },
+          "data_dock_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the destination Data Dock (S3)"
+          },
+          "prefix": {
+            "type": "string",
+            "description": "Prefix path within the destination bucket (e.g., \"invoices/processed/\")"
+          }
+        }
+      },
       "EffectiveSecuritySettingsResponse": {
         "type": "object",
         "description": "Response for effective security settings.",
@@ -3012,6 +3550,133 @@
           }
         }
       },
+      "FileSorterDestinationConfig": {
+        "type": "object",
+        "description": "FileSorter destination configuration (S3 bucket for sorted files)",
+        "properties": {
+          "base_prefix": {
+            "type": "string",
+            "description": "Base prefix for sorted files",
+            "nullable": true
+          },
+          "data_container_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Data Container ID for the destination bucket (null = use source bucket)",
+            "nullable": true
+          }
+        }
+      },
+      "FileSorterOutputParameters": {
+        "type": "object",
+        "description": "FileSorter output configuration - combines 3 steps:\nHephaistosPdfeed -> Labelize -> CategoryRouterMetadataAware",
+        "required": [
+          "dd_trino_int",
+          "dc_iceberg_id",
+          "trino_schema",
+          "trino_table",
+          "model_api_key",
+          "model_name",
+          "labels",
+          "router"
+        ],
+        "properties": {
+          "dc_iceberg_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the Iceberg catalog Data Container"
+          },
+          "dd_trino_int": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the Trino Data Dock for metadata storage"
+          },
+          "destination_bucket_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the destination bucket Data Container for sorted files",
+            "nullable": true
+          },
+          "destination_prefix": {
+            "type": "string",
+            "description": "Destination prefix for sorted files",
+            "nullable": true
+          },
+          "destination_s3_dd": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the destination S3 Data Dock for sorted files",
+            "nullable": true
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LabelDefinition"
+            },
+            "description": "Labels for document classification"
+          },
+          "model_api_key": {
+            "type": "string",
+            "format": "password",
+            "description": "Mistral API key for OCR and classification"
+          },
+          "model_name": {
+            "type": "string",
+            "description": "Model name (e.g., \"mistral-medium\", \"mistral-large-latest\")"
+          },
+          "router": {
+            "$ref": "#/components/schemas/CategoryRouterConfig"
+          },
+          "source_file_connection_id": {
+            "type": "string",
+            "description": "Source S3 connection ID for router (references input.dd_minio)",
+            "nullable": true
+          },
+          "trino_schema": {
+            "type": "string",
+            "description": "Trino schema name"
+          },
+          "trino_table": {
+            "type": "string",
+            "description": "Trino table name for metadata"
+          }
+        }
+      },
+      "FileSorterRoutingConfig": {
+        "type": "object",
+        "description": "FileSorter routing configuration",
+        "properties": {
+          "default_category": {
+            "type": "string",
+            "description": "Default category if no label matches",
+            "nullable": true
+          },
+          "source_prefix_regex": {
+            "type": "string",
+            "description": "Regex to extract prefix from source path (single capture group)",
+            "nullable": true
+          }
+        }
+      },
+      "FileSorterSourceConfig": {
+        "type": "object",
+        "description": "FileSorter source configuration (S3 bucket for unsorted files)",
+        "required": [
+          "data_container_id"
+        ],
+        "properties": {
+          "data_container_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Data Container ID for the source bucket (DataDock is resolved automatically)"
+          },
+          "folder_prefix": {
+            "type": "string",
+            "description": "Optional folder prefix within the bucket",
+            "nullable": true
+          }
+        }
+      },
       "GetConsoleConfigResponse": {
         "type": "object",
         "required": [
@@ -3062,6 +3727,17 @@
           }
         }
       },
+      "GetRunResponse": {
+        "type": "object",
+        "required": [
+          "run"
+        ],
+        "properties": {
+          "run": {
+            "$ref": "#/components/schemas/PipelineRun"
+          }
+        }
+      },
       "Harbor": {
         "type": "object",
         "description": "A harbor is a collection of [DataDocks](super::datadock::Datadock)\nEach harbor belongs to an [Org](super::org::Org)\nEach harbor has an owner who is a [User](super::user::User)",
@@ -3090,6 +3766,24 @@
           },
           "slug": {
             "type": "string"
+          }
+        }
+      },
+      "LabelDefinition": {
+        "type": "object",
+        "description": "Label definition for document classification (Labelize step)",
+        "required": [
+          "category",
+          "description"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Label category key (e.g., \"Factures/Eau\", \"Contrats/Entretien\")"
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable description for LLM classification"
           }
         }
       },
@@ -3123,6 +3817,20 @@
           }
         }
       },
+      "ListRunsResponse": {
+        "type": "object",
+        "required": [
+          "runs"
+        ],
+        "properties": {
+          "runs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PipelineRun"
+            }
+          }
+        }
+      },
       "ListUserAttributesResponse": {
         "type": "object",
         "description": "Response containing a list of user attributes.",
@@ -3136,6 +3844,30 @@
               "type": "string"
             },
             "description": "List of attributes in `namespace::value` format."
+          }
+        }
+      },
+      "MetadataStorageConfig": {
+        "type": "object",
+        "description": "Metadata storage configuration (Trino/Iceberg for document metadata)",
+        "required": [
+          "data_container_id",
+          "schema_name",
+          "table_name"
+        ],
+        "properties": {
+          "data_container_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Data Container ID for the Iceberg catalog (DataDock is resolved automatically)"
+          },
+          "schema_name": {
+            "type": "string",
+            "description": "Trino schema name"
+          },
+          "table_name": {
+            "type": "string",
+            "description": "Trino table name"
           }
         }
       },
@@ -3262,6 +3994,296 @@
             "description": "Value part (e.g., \"occitanie\")"
           }
         }
+      },
+      "PipelineInputParameters": {
+        "type": "object",
+        "required": [
+          "dd_minio",
+          "dc_bucket_id"
+        ],
+        "properties": {
+          "dc_bucket_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the bucket Data Container"
+          },
+          "dd_minio": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the source MinIO Data Dock"
+          },
+          "default_route": {
+            "$ref": "#/components/schemas/DestinationConfig",
+            "nullable": true
+          },
+          "folder": {
+            "type": "string",
+            "nullable": true
+          },
+          "routing_rules": {
+            "type": "object",
+            "description": "FileRouter routing rules: label -> list of destinations\nExample: {\"type::invoice\": [DestinationConfig { data_dock_id: \"uuid\", bucket_id: \"uuid\", prefix: \"invoices/\" }]}",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/DestinationConfig"
+              }
+            },
+            "nullable": true
+          }
+        }
+      },
+      "PipelineMetadata": {
+        "type": "object",
+        "description": "Pipeline metadata configuration (common to all pipeline types)",
+        "required": [
+          "name",
+          "organization_id",
+          "organization_slug"
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether the pipeline is enabled (only applies to CronJobs)"
+          },
+          "name": {
+            "type": "string",
+            "description": "Pipeline name"
+          },
+          "one_off": {
+            "type": "boolean",
+            "description": "Whether this is a one-off job (true) or a scheduled CronJob (false)"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Organization ID"
+          },
+          "organization_slug": {
+            "type": "string",
+            "description": "Organization slug (used for Keycloak realm)"
+          }
+        }
+      },
+      "PipelineOutputParameters": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TrinoOutputParameters"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "trino"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/S3OutputParameters"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "s3"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FileSorterOutputParameters"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "filesorter"
+                    ]
+                  }
+                }
+              }
+            ],
+            "description": "FileSorter: HephaistosPdfeed + Labelize + CategoryRouterMetadataAware"
+          }
+        ]
+      },
+      "PipelineParameters": {
+        "type": "object",
+        "required": [
+          "name",
+          "type",
+          "org_id",
+          "org_slug",
+          "one_off"
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether the pipeline is enabled. Only applies to CronJob pipelines.\nWhen false, the CronJob will be suspended. Defaults to true (enabled)."
+          },
+          "name": {
+            "type": "string"
+          },
+          "one_off": {
+            "type": "boolean"
+          },
+          "org_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "org_slug": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "PipelineResponseData": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "type",
+          "status",
+          "org_id",
+          "created_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "org_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "PipelineRun": {
+        "type": "object",
+        "required": [
+          "id",
+          "organization_id",
+          "pipeline_id",
+          "status",
+          "files_scanned",
+          "files_processed",
+          "failures",
+          "average_step_duration_millis",
+          "run_duration_millis",
+          "created_at",
+          "updated_at",
+          "last_heartbeat_at"
+        ],
+        "properties": {
+          "average_step_duration_millis": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "failures": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "files_processed": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "files_scanned": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "last_heartbeat_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pipeline_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "run_duration_millis": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PipelineRunStatus"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PipelineRunStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "running",
+          "completed",
+          "failed"
+        ]
+      },
+      "PipelineType": {
+        "type": "string",
+        "enum": [
+          "Markitdown",
+          "HephaistosPdfeed",
+          "Labelizer",
+          "FileRouter",
+          "Copy",
+          "FileSorter"
+        ]
       },
       "PostgresInternalConfig": {
         "type": "object",
@@ -3420,6 +4442,9 @@
             "format": "date-time"
           }
         }
+      },
+      "S3OutputParameters": {
+        "type": "object"
       },
       "ServiceAccount": {
         "type": "object",
@@ -3640,6 +4665,49 @@
           "worker_replicas": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "TrinoOutputParameters": {
+        "type": "object",
+        "required": [
+          "dd_trino_int",
+          "dc_iceberg_id",
+          "trino_schema",
+          "trino_table"
+        ],
+        "properties": {
+          "dc_iceberg_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the Iceberg catalog Data Container"
+          },
+          "dd_trino_int": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the Trino Data Dock"
+          },
+          "labels": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "model_api_key": {
+            "type": "string",
+            "format": "password",
+            "nullable": true
+          },
+          "model_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "trino_schema": {
+            "type": "string"
+          },
+          "trino_table": {
+            "type": "string"
           }
         }
       },
@@ -3959,6 +5027,10 @@
     {
       "name": "User Attributes",
       "description": "User attributes management for Row-Level Security (RLS)"
+    },
+    {
+      "name": "Pipelines",
+      "description": "Pipeline management operations"
     }
   ]
 }
