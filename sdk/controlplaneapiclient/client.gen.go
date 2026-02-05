@@ -63,6 +63,11 @@ const (
 	FileRouter CreatePipelineRequestV22Type = "file_router"
 )
 
+// Defines values for CreatePipelineRequestV23Type.
+const (
+	CreatePipelineRequestV23TypeCopy CreatePipelineRequestV23Type = "copy"
+)
+
 // Defines values for DataDockKindRequest0Type.
 const (
 	DataDockKindRequest0TypeTrino DataDockKindRequest0Type = "Trino"
@@ -126,6 +131,11 @@ const (
 	Filesorter PipelineOutputParameters2Type = "filesorter"
 )
 
+// Defines values for PipelineOutputParameters3Type.
+const (
+	PipelineOutputParameters3TypeCopy PipelineOutputParameters3Type = "copy"
+)
+
 // Defines values for PipelineRunStatus.
 const (
 	Completed PipelineRunStatus = "completed"
@@ -143,6 +153,31 @@ const (
 	PipelineTypeLabelizer        PipelineType = "Labelizer"
 	PipelineTypeMarkitdown       PipelineType = "Markitdown"
 )
+
+// Defines values for PrepareArchiveImportResponse0UploadType.
+const (
+	Simple PrepareArchiveImportResponse0UploadType = "simple"
+)
+
+// Defines values for PrepareArchiveImportResponse1UploadType.
+const (
+	Multipart PrepareArchiveImportResponse1UploadType = "multipart"
+)
+
+// AbortMultipartUploadRequest defines model for AbortMultipartUploadRequest.
+type AbortMultipartUploadRequest struct {
+	// Bucket The bucket name
+	Bucket string `json:"bucket"`
+
+	// DestinationDataContainerId The data container where the file was being uploaded
+	DestinationDataContainerId openapi_types.UUID `json:"destination_data_container_id"`
+
+	// Key The object key in the bucket
+	Key string `json:"key"`
+
+	// UploadId The S3 multipart upload ID
+	UploadId string `json:"upload_id"`
+}
 
 // AddUser defines model for AddUser.
 type AddUser struct {
@@ -175,6 +210,8 @@ type ArchiveFileType string
 
 // ArchiveImportRequest defines model for ArchiveImportRequest.
 type ArchiveImportRequest struct {
+	DedupingStrategy *DedupingStrategy `json:"deduping_strategy,omitempty"`
+
 	// DestinationDataContainerId The bucket where the zip file is stored
 	DestinationDataContainerId openapi_types.UUID `json:"destination_data_container_id"`
 
@@ -196,7 +233,8 @@ type BucketArchiveOperation struct {
 	CreatedAt time.Time `json:"created_at"`
 
 	// DataContainerId The data container to import to/export from
-	DataContainerId openapi_types.UUID `json:"data_container_id"`
+	DataContainerId  openapi_types.UUID `json:"data_container_id"`
+	DedupingStrategy *DedupingStrategy  `json:"deduping_strategy,omitempty"`
 
 	// DestinationDataContainerId The data container where the files will be extracted to when importing
 	// or where the files will be extracted from when exporting
@@ -255,6 +293,33 @@ type ClassificationConfig struct {
 	ModelName string `json:"model_name"`
 }
 
+// CompleteMultipartUploadRequest defines model for CompleteMultipartUploadRequest.
+type CompleteMultipartUploadRequest struct {
+	// Bucket The bucket name
+	Bucket string `json:"bucket"`
+
+	// DestinationDataContainerId The data container where the file is being uploaded
+	DestinationDataContainerId openapi_types.UUID `json:"destination_data_container_id"`
+
+	// Key The object key in the bucket
+	Key string `json:"key"`
+
+	// Parts List of completed parts with their ETags
+	Parts []CompletedPartInfo `json:"parts"`
+
+	// UploadId The S3 multipart upload ID
+	UploadId string `json:"upload_id"`
+}
+
+// CompletedPartInfo Information about a completed part, used when finalizing multipart upload
+type CompletedPartInfo struct {
+	// ETag ETag returned by S3 after uploading the part
+	ETag string `json:"e_tag"`
+
+	// PartNumber Part number (1-indexed as per S3 API)
+	PartNumber int32 `json:"part_number"`
+}
+
 // ConsoleConfigFeatureFlag defines model for ConsoleConfigFeatureFlag.
 type ConsoleConfigFeatureFlag string
 
@@ -289,6 +354,36 @@ type ContextualRestrictionResponse struct {
 	UserRequirement interface{}         `json:"user_requirement"`
 }
 
+// CopyDestinationConfig Copy pipeline destination configuration (S3 bucket)
+type CopyDestinationConfig struct {
+	// DataContainerId Data Container ID for the destination bucket (DataDock is resolved automatically)
+	DataContainerId openapi_types.UUID `json:"data_container_id"`
+
+	// DestinationPrefix Optional prefix path within the destination bucket
+	DestinationPrefix *string `json:"destination_prefix"`
+}
+
+// CopyOutputParameters Copy pipeline output configuration - S3 destination for imported files
+type CopyOutputParameters struct {
+	// DestinationBucketId UUID of the destination bucket Data Container
+	DestinationBucketId openapi_types.UUID `json:"destination_bucket_id"`
+
+	// DestinationDd UUID of the destination MinIO Data Dock
+	DestinationDd openapi_types.UUID `json:"destination_dd"`
+
+	// DestinationPrefix Optional prefix path within the destination bucket
+	DestinationPrefix *string `json:"destination_prefix"`
+}
+
+// CopySourceConfig Copy pipeline source configuration (Import API)
+type CopySourceConfig struct {
+	// ImportApiKey Import API Key for authentication
+	ImportApiKey string `json:"import_api_key"`
+
+	// ImportApiUrl Import API URL (source endpoint)
+	ImportApiUrl string `json:"import_api_url"`
+}
+
 // CreateContextProviderBody Request to create a context provider.
 type CreateContextProviderBody struct {
 	// Config Configuration JSON based on provider type
@@ -309,6 +404,18 @@ type CreateContextualRestrictionBody struct {
 	Name            string      `json:"name"`
 	Priority        *int32      `json:"priority"`
 	UserRequirement interface{} `json:"user_requirement"`
+}
+
+// CreateCopyPipelineRequest Copy pipeline request: Import API source → S3 destination
+type CreateCopyPipelineRequest struct {
+	// Destination Copy pipeline destination configuration (S3 bucket)
+	Destination CopyDestinationConfig `json:"destination"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// Source Copy pipeline source configuration (Import API)
+	Source CopySourceConfig `json:"source"`
 }
 
 // CreateDataDockRequestBody defines model for CreateDataDockRequestBody.
@@ -444,6 +551,22 @@ type CreatePipelineRequestV22 struct {
 
 // CreatePipelineRequestV22Type defines model for CreatePipelineRequestV2.2.Type.
 type CreatePipelineRequestV22Type string
+
+// CreatePipelineRequestV23 defines model for .
+type CreatePipelineRequestV23 struct {
+	// Destination Copy pipeline destination configuration (S3 bucket)
+	Destination CopyDestinationConfig `json:"destination"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// Source Copy pipeline source configuration (Import API)
+	Source CopySourceConfig             `json:"source"`
+	Type   CreatePipelineRequestV23Type `json:"type"`
+}
+
+// CreatePipelineRequestV23Type defines model for CreatePipelineRequestV2.3.Type.
+type CreatePipelineRequestV23Type string
 
 // CreateServiceAccountCrdRequestBody defines model for CreateServiceAccountCrdRequestBody.
 type CreateServiceAccountCrdRequestBody struct {
@@ -593,6 +716,16 @@ type DataDockSecuritySettingsResponse struct {
 // DataDockStatus defines model for DataDockStatus.
 type DataDockStatus string
 
+// DedupingStrategy defines model for DedupingStrategy.
+type DedupingStrategy struct {
+	union json.RawMessage
+}
+
+// DedupingStrategy0 defines model for .
+type DedupingStrategy0 struct {
+	Suffix Sha256HashDedupingStrategy `json:"Suffix"`
+}
+
 // DestinationConfig Configuration for a FileRouter destination
 // Allows routing to different Data Docks with specific prefixes
 type DestinationConfig struct {
@@ -650,8 +783,24 @@ type FileSorterOutputParameters struct {
 	// DestinationS3Dd UUID of the destination S3 Data Dock for sorted files
 	DestinationS3Dd *openapi_types.UUID `json:"destination_s3_dd"`
 
-	// Labels Labels for document classification
-	Labels []LabelDefinition `json:"labels"`
+	// LabelsYaml Labels for document classification in YAML format.
+	// Supports both static and dynamic labels with placeholders.
+	//
+	// Example:
+	// ```yaml
+	// - id: facture_eau
+	//   type: static
+	//   description: "Water utility invoices"
+	// - id: travaux
+	//   type: dynamic
+	//   description: "Construction work documents"
+	//   format: "TRAVAUX/{year}/{date}"
+	//   placeholders:
+	//     - id: year
+	//       source: "Extract the year"
+	//       format: "YYYY"
+	// ```
+	LabelsYaml string `json:"labels_yaml"`
 
 	// ModelApiKey Mistral API key for OCR and classification
 	ModelApiKey string `json:"model_api_key"`
@@ -670,6 +819,9 @@ type FileSorterOutputParameters struct {
 
 	// TrinoTable Trino table name for metadata
 	TrinoTable string `json:"trino_table"`
+
+	// UnknownPlaceholderValue Value to use when a placeholder cannot be extracted (default: "unknown")
+	UnknownPlaceholderValue *string `json:"unknown_placeholder_value,omitempty"`
 }
 
 // FileSorterRoutingConfig FileSorter routing configuration
@@ -722,6 +874,24 @@ type Harbor struct {
 }
 
 // LabelDefinition Label definition for document classification (Labelize step)
+// Supports both static labels (id + description) and dynamic labels with placeholders.
+//
+// Example YAML format:
+// ```yaml
+//   - id: facture_eau
+//     type: static
+//     description: "Water utility invoices"
+//   - id: travaux
+//     type: dynamic
+//     description: "Construction work documents"
+//     format: "TRAVAUX/{year}/{date}-{work_name}"
+//     placeholders:
+//   - id: year
+//     source: "Extract the year from the document"
+//     format: "YYYY"
+//     rules: ["Must be 4 digits"]
+//
+// ```
 type LabelDefinition struct {
 	// Category Label category key (e.g., "Factures/Eau", "Contrats/Entretien")
 	Category string `json:"category"`
@@ -774,6 +944,15 @@ type MinioInternalConfigResponse struct {
 	StorageSize string `json:"storage_size"`
 }
 
+// MultipartPartUrl Presigned URL for a single part in multipart upload
+type MultipartPartUrl struct {
+	// PartNumber Part number (1-indexed as per S3 API)
+	PartNumber int32 `json:"part_number"`
+
+	// UploadUrl Presigned URL for uploading this part
+	UploadUrl string `json:"upload_url"`
+}
+
 // Org An organization is a collection of [Users](super::user::User) and [DataDocks](super::datadock::DataDock)
 type Org struct {
 	CreatedAt time.Time          `json:"created_at"`
@@ -801,16 +980,22 @@ type OrgUserAttributesResponse struct {
 
 // PipelineInputParameters defines model for PipelineInputParameters.
 type PipelineInputParameters struct {
-	// DcBucketId UUID of the bucket Data Container
-	DcBucketId openapi_types.UUID `json:"dc_bucket_id"`
+	// DcBucketId UUID of the bucket Data Container (not required for Copy pipeline)
+	DcBucketId *openapi_types.UUID `json:"dc_bucket_id"`
 
-	// DdMinio UUID of the source MinIO Data Dock
-	DdMinio openapi_types.UUID `json:"dd_minio"`
+	// DdMinio UUID of the source MinIO Data Dock (not required for Copy pipeline)
+	DdMinio *openapi_types.UUID `json:"dd_minio"`
 
 	// DefaultRoute Configuration for a FileRouter destination
 	// Allows routing to different Data Docks with specific prefixes
 	DefaultRoute *DestinationConfig `json:"default_route,omitempty"`
 	Folder       *string            `json:"folder"`
+
+	// ImportApiKey Copy pipeline: Import API Key (source)
+	ImportApiKey *string `json:"import_api_key"`
+
+	// ImportApiUrl Copy pipeline: Import API URL (source)
+	ImportApiUrl *string `json:"import_api_url"`
 
 	// RoutingRules FileRouter routing rules: label -> list of destinations
 	// Example: {"type::invoice": [DestinationConfig { data_dock_id: "uuid", bucket_id: "uuid", prefix: "invoices/" }]}
@@ -883,8 +1068,24 @@ type PipelineOutputParameters2 struct {
 	// DestinationS3Dd UUID of the destination S3 Data Dock for sorted files
 	DestinationS3Dd *openapi_types.UUID `json:"destination_s3_dd"`
 
-	// Labels Labels for document classification
-	Labels []LabelDefinition `json:"labels"`
+	// LabelsYaml Labels for document classification in YAML format.
+	// Supports both static and dynamic labels with placeholders.
+	//
+	// Example:
+	// ```yaml
+	// - id: facture_eau
+	//   type: static
+	//   description: "Water utility invoices"
+	// - id: travaux
+	//   type: dynamic
+	//   description: "Construction work documents"
+	//   format: "TRAVAUX/{year}/{date}"
+	//   placeholders:
+	//     - id: year
+	//       source: "Extract the year"
+	//       format: "YYYY"
+	// ```
+	LabelsYaml string `json:"labels_yaml"`
 
 	// ModelApiKey Mistral API key for OCR and classification
 	ModelApiKey string `json:"model_api_key"`
@@ -904,10 +1105,29 @@ type PipelineOutputParameters2 struct {
 	// TrinoTable Trino table name for metadata
 	TrinoTable string                        `json:"trino_table"`
 	Type       PipelineOutputParameters2Type `json:"type"`
+
+	// UnknownPlaceholderValue Value to use when a placeholder cannot be extracted (default: "unknown")
+	UnknownPlaceholderValue *string `json:"unknown_placeholder_value,omitempty"`
 }
 
 // PipelineOutputParameters2Type defines model for PipelineOutputParameters.2.Type.
 type PipelineOutputParameters2Type string
+
+// PipelineOutputParameters3 defines model for .
+type PipelineOutputParameters3 struct {
+	// DestinationBucketId UUID of the destination bucket Data Container
+	DestinationBucketId openapi_types.UUID `json:"destination_bucket_id"`
+
+	// DestinationDd UUID of the destination MinIO Data Dock
+	DestinationDd openapi_types.UUID `json:"destination_dd"`
+
+	// DestinationPrefix Optional prefix path within the destination bucket
+	DestinationPrefix *string                       `json:"destination_prefix"`
+	Type              PipelineOutputParameters3Type `json:"type"`
+}
+
+// PipelineOutputParameters3Type defines model for PipelineOutputParameters.3.Type.
+type PipelineOutputParameters3Type string
 
 // PipelineParameters defines model for PipelineParameters.
 type PipelineParameters struct {
@@ -986,13 +1206,53 @@ type PrepareArchiveImportRequest struct {
 
 	// DestinationFilePath Where the zip file will be stored in the bucket (optional path)
 	DestinationFilePath *string `json:"destination_file_path"`
+
+	// FileSize The size of the file in bytes - determines upload strategy
+	FileSize int64 `json:"file_size"`
 }
 
-// PrepareArchiveImportResponse defines model for PrepareArchiveImportResponse.
+// PrepareArchiveImportResponse Response for preparing archive import - either simple upload or multipart
 type PrepareArchiveImportResponse struct {
-	FilePath  string `json:"file_path"`
+	union json.RawMessage
+}
+
+// PrepareArchiveImportResponse0 Simple single PUT upload for files < 100MB
+type PrepareArchiveImportResponse0 struct {
+	// FilePath The full path where the file will be stored
+	FilePath   string                                  `json:"file_path"`
+	UploadType PrepareArchiveImportResponse0UploadType `json:"upload_type"`
+
+	// UploadUrl Presigned PUT URL for uploading the file
 	UploadUrl string `json:"upload_url"`
 }
+
+// PrepareArchiveImportResponse0UploadType defines model for PrepareArchiveImportResponse.0.UploadType.
+type PrepareArchiveImportResponse0UploadType string
+
+// PrepareArchiveImportResponse1 Multipart upload for files >= 100MB
+type PrepareArchiveImportResponse1 struct {
+	// Bucket The bucket name
+	Bucket string `json:"bucket"`
+
+	// FilePath The full path where the file will be stored
+	FilePath string `json:"file_path"`
+
+	// Key The object key in the bucket
+	Key string `json:"key"`
+
+	// PartSize Size of each part in bytes (last part may be smaller)
+	PartSize int64 `json:"part_size"`
+
+	// PartUrls Presigned URLs for each part
+	PartUrls []MultipartPartUrl `json:"part_urls"`
+
+	// UploadId S3 multipart upload ID
+	UploadId   string                                  `json:"upload_id"`
+	UploadType PrepareArchiveImportResponse1UploadType `json:"upload_type"`
+}
+
+// PrepareArchiveImportResponse1UploadType defines model for PrepareArchiveImportResponse.1.UploadType.
+type PrepareArchiveImportResponse1UploadType string
 
 // RefreshDataDocksResponse defines model for RefreshDataDocksResponse.
 type RefreshDataDocksResponse struct {
@@ -1040,6 +1300,15 @@ type SetUserAttributesRequest struct {
 	// Attributes List of attributes in `namespace::value` format.
 	// Example: `["region::occitanie", "department::sales"]`
 	Attributes []string `json:"attributes"`
+}
+
+// Sha256HashDedupingStrategy defines model for Sha256HashDedupingStrategy.
+type Sha256HashDedupingStrategy struct {
+	// Flatten Whether to flatten directory structure (true) or preserve it (false)
+	Flatten bool `json:"flatten"`
+
+	// Length Number of characters from SHA256 hash to use as suffix
+	Length int `json:"length"`
 }
 
 // TrinoConfigRequest defines model for TrinoConfigRequest.
@@ -1265,6 +1534,12 @@ type ArchiveExportDataContainerJSONRequestBody = ArchiveExportRequest
 // ArchiveImportDataContainerJSONRequestBody defines body for ArchiveImportDataContainer for application/json ContentType.
 type ArchiveImportDataContainerJSONRequestBody = ArchiveImportRequest
 
+// AbortMultipartUploadJSONRequestBody defines body for AbortMultipartUpload for application/json ContentType.
+type AbortMultipartUploadJSONRequestBody = AbortMultipartUploadRequest
+
+// CompleteMultipartUploadJSONRequestBody defines body for CompleteMultipartUpload for application/json ContentType.
+type CompleteMultipartUploadJSONRequestBody = CompleteMultipartUploadRequest
+
 // PrepareArchiveImportJSONRequestBody defines body for PrepareArchiveImport for application/json ContentType.
 type PrepareArchiveImportJSONRequestBody = PrepareArchiveImportRequest
 
@@ -1378,6 +1653,32 @@ func (t *CreatePipelineRequestV2) FromCreatePipelineRequestV22(v CreatePipelineR
 
 // MergeCreatePipelineRequestV22 performs a merge with any union data inside the CreatePipelineRequestV2, using the provided CreatePipelineRequestV22
 func (t *CreatePipelineRequestV2) MergeCreatePipelineRequestV22(v CreatePipelineRequestV22) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCreatePipelineRequestV23 returns the union data inside the CreatePipelineRequestV2 as a CreatePipelineRequestV23
+func (t CreatePipelineRequestV2) AsCreatePipelineRequestV23() (CreatePipelineRequestV23, error) {
+	var body CreatePipelineRequestV23
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreatePipelineRequestV23 overwrites any union data inside the CreatePipelineRequestV2 as the provided CreatePipelineRequestV23
+func (t *CreatePipelineRequestV2) FromCreatePipelineRequestV23(v CreatePipelineRequestV23) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreatePipelineRequestV23 performs a merge with any union data inside the CreatePipelineRequestV2, using the provided CreatePipelineRequestV23
+func (t *CreatePipelineRequestV2) MergeCreatePipelineRequestV23(v CreatePipelineRequestV23) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -1626,6 +1927,42 @@ func (t *DataDockKindResponse) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsDedupingStrategy0 returns the union data inside the DedupingStrategy as a DedupingStrategy0
+func (t DedupingStrategy) AsDedupingStrategy0() (DedupingStrategy0, error) {
+	var body DedupingStrategy0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDedupingStrategy0 overwrites any union data inside the DedupingStrategy as the provided DedupingStrategy0
+func (t *DedupingStrategy) FromDedupingStrategy0(v DedupingStrategy0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDedupingStrategy0 performs a merge with any union data inside the DedupingStrategy, using the provided DedupingStrategy0
+func (t *DedupingStrategy) MergeDedupingStrategy0(v DedupingStrategy0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t DedupingStrategy) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *DedupingStrategy) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsPipelineOutputParameters0 returns the union data inside the PipelineOutputParameters as a PipelineOutputParameters0
 func (t PipelineOutputParameters) AsPipelineOutputParameters0() (PipelineOutputParameters0, error) {
 	var body PipelineOutputParameters0
@@ -1704,12 +2041,100 @@ func (t *PipelineOutputParameters) MergePipelineOutputParameters2(v PipelineOutp
 	return err
 }
 
+// AsPipelineOutputParameters3 returns the union data inside the PipelineOutputParameters as a PipelineOutputParameters3
+func (t PipelineOutputParameters) AsPipelineOutputParameters3() (PipelineOutputParameters3, error) {
+	var body PipelineOutputParameters3
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPipelineOutputParameters3 overwrites any union data inside the PipelineOutputParameters as the provided PipelineOutputParameters3
+func (t *PipelineOutputParameters) FromPipelineOutputParameters3(v PipelineOutputParameters3) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePipelineOutputParameters3 performs a merge with any union data inside the PipelineOutputParameters, using the provided PipelineOutputParameters3
+func (t *PipelineOutputParameters) MergePipelineOutputParameters3(v PipelineOutputParameters3) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t PipelineOutputParameters) MarshalJSON() ([]byte, error) {
 	b, err := t.union.MarshalJSON()
 	return b, err
 }
 
 func (t *PipelineOutputParameters) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsPrepareArchiveImportResponse0 returns the union data inside the PrepareArchiveImportResponse as a PrepareArchiveImportResponse0
+func (t PrepareArchiveImportResponse) AsPrepareArchiveImportResponse0() (PrepareArchiveImportResponse0, error) {
+	var body PrepareArchiveImportResponse0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPrepareArchiveImportResponse0 overwrites any union data inside the PrepareArchiveImportResponse as the provided PrepareArchiveImportResponse0
+func (t *PrepareArchiveImportResponse) FromPrepareArchiveImportResponse0(v PrepareArchiveImportResponse0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePrepareArchiveImportResponse0 performs a merge with any union data inside the PrepareArchiveImportResponse, using the provided PrepareArchiveImportResponse0
+func (t *PrepareArchiveImportResponse) MergePrepareArchiveImportResponse0(v PrepareArchiveImportResponse0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsPrepareArchiveImportResponse1 returns the union data inside the PrepareArchiveImportResponse as a PrepareArchiveImportResponse1
+func (t PrepareArchiveImportResponse) AsPrepareArchiveImportResponse1() (PrepareArchiveImportResponse1, error) {
+	var body PrepareArchiveImportResponse1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPrepareArchiveImportResponse1 overwrites any union data inside the PrepareArchiveImportResponse as the provided PrepareArchiveImportResponse1
+func (t *PrepareArchiveImportResponse) FromPrepareArchiveImportResponse1(v PrepareArchiveImportResponse1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePrepareArchiveImportResponse1 performs a merge with any union data inside the PrepareArchiveImportResponse, using the provided PrepareArchiveImportResponse1
+func (t *PrepareArchiveImportResponse) MergePrepareArchiveImportResponse1(v PrepareArchiveImportResponse1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t PrepareArchiveImportResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *PrepareArchiveImportResponse) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -1832,6 +2257,16 @@ type ClientInterface interface {
 	ArchiveImportDataContainerWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	ArchiveImportDataContainer(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AbortMultipartUploadWithBody request with any body
+	AbortMultipartUploadWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AbortMultipartUpload(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body AbortMultipartUploadJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CompleteMultipartUploadWithBody request with any body
+	CompleteMultipartUploadWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CompleteMultipartUpload(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body CompleteMultipartUploadJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PrepareArchiveImportWithBody request with any body
 	PrepareArchiveImportWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -2190,6 +2625,54 @@ func (c *Client) ArchiveImportDataContainerWithBody(ctx context.Context, dataDoc
 
 func (c *Client) ArchiveImportDataContainer(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewArchiveImportDataContainerRequest(c.Server, dataDockId, dataContainerId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AbortMultipartUploadWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAbortMultipartUploadRequestWithBody(c.Server, dataDockId, dataContainerId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AbortMultipartUpload(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body AbortMultipartUploadJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAbortMultipartUploadRequest(c.Server, dataDockId, dataContainerId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CompleteMultipartUploadWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCompleteMultipartUploadRequestWithBody(c.Server, dataDockId, dataContainerId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CompleteMultipartUpload(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body CompleteMultipartUploadJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCompleteMultipartUploadRequest(c.Server, dataDockId, dataContainerId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -3362,6 +3845,114 @@ func NewArchiveImportDataContainerRequestWithBody(server string, dataDockId open
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/data-docks/%s/data-containers/%s/archive-import", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewAbortMultipartUploadRequest calls the generic AbortMultipartUpload builder with application/json body
+func NewAbortMultipartUploadRequest(server string, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body AbortMultipartUploadJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAbortMultipartUploadRequestWithBody(server, dataDockId, dataContainerId, "application/json", bodyReader)
+}
+
+// NewAbortMultipartUploadRequestWithBody generates requests for AbortMultipartUpload with any type of body
+func NewAbortMultipartUploadRequestWithBody(server string, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_dock_id", runtime.ParamLocationPath, dataDockId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-docks/%s/data-containers/%s/archive-import/abort-multipart", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCompleteMultipartUploadRequest calls the generic CompleteMultipartUpload builder with application/json body
+func NewCompleteMultipartUploadRequest(server string, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body CompleteMultipartUploadJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCompleteMultipartUploadRequestWithBody(server, dataDockId, dataContainerId, "application/json", bodyReader)
+}
+
+// NewCompleteMultipartUploadRequestWithBody generates requests for CompleteMultipartUpload with any type of body
+func NewCompleteMultipartUploadRequestWithBody(server string, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_dock_id", runtime.ParamLocationPath, dataDockId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-docks/%s/data-containers/%s/archive-import/complete-multipart", pathParam0, pathParam1)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -5542,6 +6133,16 @@ type ClientWithResponsesInterface interface {
 
 	ArchiveImportDataContainerWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*ArchiveImportDataContainerRes, error)
 
+	// AbortMultipartUploadWithBodyWithResponse request with any body
+	AbortMultipartUploadWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AbortMultipartUploadRes, error)
+
+	AbortMultipartUploadWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body AbortMultipartUploadJSONRequestBody, reqEditors ...RequestEditorFn) (*AbortMultipartUploadRes, error)
+
+	// CompleteMultipartUploadWithBodyWithResponse request with any body
+	CompleteMultipartUploadWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CompleteMultipartUploadRes, error)
+
+	CompleteMultipartUploadWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body CompleteMultipartUploadJSONRequestBody, reqEditors ...RequestEditorFn) (*CompleteMultipartUploadRes, error)
+
 	// PrepareArchiveImportWithBodyWithResponse request with any body
 	PrepareArchiveImportWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PrepareArchiveImportRes, error)
 
@@ -5959,6 +6560,48 @@ func (r ArchiveImportDataContainerRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ArchiveImportDataContainerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AbortMultipartUploadRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r AbortMultipartUploadRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AbortMultipartUploadRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CompleteMultipartUploadRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r CompleteMultipartUploadRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CompleteMultipartUploadRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -7070,6 +7713,40 @@ func (c *ClientWithResponses) ArchiveImportDataContainerWithResponse(ctx context
 	return ParseArchiveImportDataContainerRes(rsp)
 }
 
+// AbortMultipartUploadWithBodyWithResponse request with arbitrary body returning *AbortMultipartUploadRes
+func (c *ClientWithResponses) AbortMultipartUploadWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AbortMultipartUploadRes, error) {
+	rsp, err := c.AbortMultipartUploadWithBody(ctx, dataDockId, dataContainerId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAbortMultipartUploadRes(rsp)
+}
+
+func (c *ClientWithResponses) AbortMultipartUploadWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body AbortMultipartUploadJSONRequestBody, reqEditors ...RequestEditorFn) (*AbortMultipartUploadRes, error) {
+	rsp, err := c.AbortMultipartUpload(ctx, dataDockId, dataContainerId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAbortMultipartUploadRes(rsp)
+}
+
+// CompleteMultipartUploadWithBodyWithResponse request with arbitrary body returning *CompleteMultipartUploadRes
+func (c *ClientWithResponses) CompleteMultipartUploadWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CompleteMultipartUploadRes, error) {
+	rsp, err := c.CompleteMultipartUploadWithBody(ctx, dataDockId, dataContainerId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCompleteMultipartUploadRes(rsp)
+}
+
+func (c *ClientWithResponses) CompleteMultipartUploadWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body CompleteMultipartUploadJSONRequestBody, reqEditors ...RequestEditorFn) (*CompleteMultipartUploadRes, error) {
+	rsp, err := c.CompleteMultipartUpload(ctx, dataDockId, dataContainerId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCompleteMultipartUploadRes(rsp)
+}
+
 // PrepareArchiveImportWithBodyWithResponse request with arbitrary body returning *PrepareArchiveImportRes
 func (c *ClientWithResponses) PrepareArchiveImportWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PrepareArchiveImportRes, error) {
 	rsp, err := c.PrepareArchiveImportWithBody(ctx, dataDockId, dataContainerId, contentType, body, reqEditors...)
@@ -7853,6 +8530,38 @@ func ParseArchiveImportDataContainerRes(rsp *http.Response) (*ArchiveImportDataC
 		}
 		response.JSON200 = &dest
 
+	}
+
+	return response, nil
+}
+
+// ParseAbortMultipartUploadRes parses an HTTP response from a AbortMultipartUploadWithResponse call
+func ParseAbortMultipartUploadRes(rsp *http.Response) (*AbortMultipartUploadRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AbortMultipartUploadRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseCompleteMultipartUploadRes parses an HTTP response from a CompleteMultipartUploadWithResponse call
+func ParseCompleteMultipartUploadRes(rsp *http.Response) (*CompleteMultipartUploadRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CompleteMultipartUploadRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
 	}
 
 	return response, nil

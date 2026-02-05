@@ -336,7 +336,7 @@
     "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-export": {
       "post": {
         "tags": [
-          "archive_operations"
+          "archive_export"
         ],
         "operationId": "archive_export_data_container",
         "parameters": [
@@ -392,7 +392,7 @@
     "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-import": {
       "post": {
         "tags": [
-          "archive_operations"
+          "archive_import"
         ],
         "operationId": "archive_import_data_container",
         "parameters": [
@@ -445,10 +445,108 @@
         }
       }
     },
+    "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-import/abort-multipart": {
+      "post": {
+        "tags": [
+          "abort_multipart_upload"
+        ],
+        "operationId": "abort_multipart_upload",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AbortMultipartUploadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Multipart upload aborted successfully"
+          },
+          "400": {
+            "description": "Invalid request or not a bucket data container"
+          },
+          "404": {
+            "description": "Data container not found"
+          }
+        }
+      }
+    },
+    "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-import/complete-multipart": {
+      "post": {
+        "tags": [
+          "complete_multipart_upload"
+        ],
+        "operationId": "complete_multipart_upload",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompleteMultipartUploadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Multipart upload completed successfully"
+          },
+          "400": {
+            "description": "Invalid request or not a bucket data container"
+          },
+          "404": {
+            "description": "Data container not found"
+          }
+        }
+      }
+    },
     "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-import/prepare": {
       "post": {
         "tags": [
-          "archive_operations"
+          "prepare_archive_import"
         ],
         "operationId": "prepare_archive_import",
         "parameters": [
@@ -483,7 +581,7 @@
         },
         "responses": {
           "200": {
-            "description": "Get presigned upload URL for archive import",
+            "description": "Get presigned upload URL(s) for archive import",
             "content": {
               "application/json": {
                 "schema": {
@@ -504,7 +602,7 @@
     "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-operations": {
       "get": {
         "tags": [
-          "archive_operations"
+          "list_archive_operations"
         ],
         "operationId": "list_archive_operations",
         "parameters": [
@@ -575,7 +673,7 @@
     "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-operations/{operation_id}": {
       "get": {
         "tags": [
-          "archive_operations"
+          "get_archive_operation"
         ],
         "operationId": "get_archive_operation",
         "parameters": [
@@ -630,7 +728,7 @@
     "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-operations/{operation_id}/download": {
       "get": {
         "tags": [
-          "archive_operations"
+          "download_archive_operation"
         ],
         "operationId": "download_archive_operation",
         "parameters": [
@@ -2454,6 +2552,34 @@
   },
   "components": {
     "schemas": {
+      "AbortMultipartUploadRequest": {
+        "type": "object",
+        "required": [
+          "destination_data_container_id",
+          "upload_id",
+          "bucket",
+          "key"
+        ],
+        "properties": {
+          "bucket": {
+            "type": "string",
+            "description": "The bucket name"
+          },
+          "destination_data_container_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The data container where the file was being uploaded"
+          },
+          "key": {
+            "type": "string",
+            "description": "The object key in the bucket"
+          },
+          "upload_id": {
+            "type": "string",
+            "description": "The S3 multipart upload ID"
+          }
+        }
+      },
       "AddUser": {
         "type": "object",
         "required": [
@@ -2532,6 +2658,10 @@
           "file_path"
         ],
         "properties": {
+          "deduping_strategy": {
+            "$ref": "#/components/schemas/DedupingStrategy",
+            "nullable": true
+          },
           "destination_data_container_id": {
             "type": "string",
             "format": "uuid",
@@ -2587,6 +2717,10 @@
             "type": "string",
             "format": "uuid",
             "description": "The data container to import to/export from"
+          },
+          "deduping_strategy": {
+            "$ref": "#/components/schemas/DedupingStrategy",
+            "nullable": true
           },
           "destination_data_container_id": {
             "type": "string",
@@ -2702,6 +2836,61 @@
           "model_name": {
             "type": "string",
             "description": "Model name (e.g., \"mistral-large-latest\")"
+          }
+        }
+      },
+      "CompleteMultipartUploadRequest": {
+        "type": "object",
+        "required": [
+          "destination_data_container_id",
+          "upload_id",
+          "bucket",
+          "key",
+          "parts"
+        ],
+        "properties": {
+          "bucket": {
+            "type": "string",
+            "description": "The bucket name"
+          },
+          "destination_data_container_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The data container where the file is being uploaded"
+          },
+          "key": {
+            "type": "string",
+            "description": "The object key in the bucket"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompletedPartInfo"
+            },
+            "description": "List of completed parts with their ETags"
+          },
+          "upload_id": {
+            "type": "string",
+            "description": "The S3 multipart upload ID"
+          }
+        }
+      },
+      "CompletedPartInfo": {
+        "type": "object",
+        "description": "Information about a completed part, used when finalizing multipart upload",
+        "required": [
+          "part_number",
+          "e_tag"
+        ],
+        "properties": {
+          "e_tag": {
+            "type": "string",
+            "description": "ETag returned by S3 after uploading the part"
+          },
+          "part_number": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Part number (1-indexed as per S3 API)"
           }
         }
       },
@@ -2829,6 +3018,69 @@
           "user_requirement": {}
         }
       },
+      "CopyDestinationConfig": {
+        "type": "object",
+        "description": "Copy pipeline destination configuration (S3 bucket)",
+        "required": [
+          "data_container_id"
+        ],
+        "properties": {
+          "data_container_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Data Container ID for the destination bucket (DataDock is resolved automatically)"
+          },
+          "destination_prefix": {
+            "type": "string",
+            "description": "Optional prefix path within the destination bucket",
+            "nullable": true
+          }
+        }
+      },
+      "CopyOutputParameters": {
+        "type": "object",
+        "description": "Copy pipeline output configuration - S3 destination for imported files",
+        "required": [
+          "destination_dd",
+          "destination_bucket_id"
+        ],
+        "properties": {
+          "destination_bucket_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the destination bucket Data Container"
+          },
+          "destination_dd": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the destination MinIO Data Dock"
+          },
+          "destination_prefix": {
+            "type": "string",
+            "description": "Optional prefix path within the destination bucket",
+            "nullable": true
+          }
+        }
+      },
+      "CopySourceConfig": {
+        "type": "object",
+        "description": "Copy pipeline source configuration (Import API)",
+        "required": [
+          "import_api_url",
+          "import_api_key"
+        ],
+        "properties": {
+          "import_api_key": {
+            "type": "string",
+            "format": "password",
+            "description": "Import API Key for authentication"
+          },
+          "import_api_url": {
+            "type": "string",
+            "description": "Import API URL (source endpoint)"
+          }
+        }
+      },
       "CreateContextProviderBody": {
         "type": "object",
         "description": "Request to create a context provider.",
@@ -2886,6 +3138,26 @@
             "nullable": true
           },
           "user_requirement": {}
+        }
+      },
+      "CreateCopyPipelineRequest": {
+        "type": "object",
+        "description": "Copy pipeline request: Import API source → S3 destination",
+        "required": [
+          "pipeline",
+          "source",
+          "destination"
+        ],
+        "properties": {
+          "destination": {
+            "$ref": "#/components/schemas/CopyDestinationConfig"
+          },
+          "pipeline": {
+            "$ref": "#/components/schemas/PipelineMetadata"
+          },
+          "source": {
+            "$ref": "#/components/schemas/CopySourceConfig"
+          }
         }
       },
       "CreateDataDockRequestBody": {
@@ -3091,6 +3363,28 @@
               }
             ],
             "description": "FileRouter: S3-to-S3 routing based on labels"
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateCopyPipelineRequest"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "copy"
+                    ]
+                  }
+                }
+              }
+            ],
+            "description": "Copy: Import API source → S3 destination"
           }
         ],
         "description": "Discriminated union for pipeline creation requests"
@@ -3456,6 +3750,21 @@
           "Sleeping"
         ]
       },
+      "DedupingStrategy": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "Suffix"
+            ],
+            "properties": {
+              "Suffix": {
+                "$ref": "#/components/schemas/Sha256HashDedupingStrategy"
+              }
+            }
+          }
+        ]
+      },
       "DestinationConfig": {
         "type": "object",
         "description": "Configuration for a FileRouter destination\nAllows routing to different Data Docks with specific prefixes",
@@ -3577,7 +3886,7 @@
           "trino_table",
           "model_api_key",
           "model_name",
-          "labels",
+          "labels_yaml",
           "router"
         ],
         "properties": {
@@ -3608,12 +3917,9 @@
             "description": "UUID of the destination S3 Data Dock for sorted files",
             "nullable": true
           },
-          "labels": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LabelDefinition"
-            },
-            "description": "Labels for document classification"
+          "labels_yaml": {
+            "type": "string",
+            "description": "Labels for document classification in YAML format.\nSupports both static and dynamic labels with placeholders.\n\nExample:\n```yaml\n- id: facture_eau\n  type: static\n  description: \"Water utility invoices\"\n- id: travaux\n  type: dynamic\n  description: \"Construction work documents\"\n  format: \"TRAVAUX/{year}/{date}\"\n  placeholders:\n    - id: year\n      source: \"Extract the year\"\n      format: \"YYYY\"\n```"
           },
           "model_api_key": {
             "type": "string",
@@ -3639,6 +3945,10 @@
           "trino_table": {
             "type": "string",
             "description": "Trino table name for metadata"
+          },
+          "unknown_placeholder_value": {
+            "type": "string",
+            "description": "Value to use when a placeholder cannot be extracted (default: \"unknown\")"
           }
         }
       },
@@ -3771,7 +4081,7 @@
       },
       "LabelDefinition": {
         "type": "object",
-        "description": "Label definition for document classification (Labelize step)",
+        "description": "Label definition for document classification (Labelize step)\nSupports both static labels (id + description) and dynamic labels with placeholders.\n\nExample YAML format:\n```yaml\n- id: facture_eau\n  type: static\n  description: \"Water utility invoices\"\n- id: travaux\n  type: dynamic\n  description: \"Construction work documents\"\n  format: \"TRAVAUX/{year}/{date}-{work_name}\"\n  placeholders:\n    - id: year\n      source: \"Extract the year from the document\"\n      format: \"YYYY\"\n      rules: [\"Must be 4 digits\"]\n```",
         "required": [
           "category",
           "description"
@@ -3896,6 +4206,25 @@
           }
         }
       },
+      "MultipartPartUrl": {
+        "type": "object",
+        "description": "Presigned URL for a single part in multipart upload",
+        "required": [
+          "part_number",
+          "upload_url"
+        ],
+        "properties": {
+          "part_number": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Part number (1-indexed as per S3 API)"
+          },
+          "upload_url": {
+            "type": "string",
+            "description": "Presigned URL for uploading this part"
+          }
+        }
+      },
       "Org": {
         "type": "object",
         "description": "An organization is a collection of [Users](super::user::User) and [DataDocks](super::datadock::DataDock)",
@@ -3997,20 +4326,18 @@
       },
       "PipelineInputParameters": {
         "type": "object",
-        "required": [
-          "dd_minio",
-          "dc_bucket_id"
-        ],
         "properties": {
           "dc_bucket_id": {
             "type": "string",
             "format": "uuid",
-            "description": "UUID of the bucket Data Container"
+            "description": "UUID of the bucket Data Container (not required for Copy pipeline)",
+            "nullable": true
           },
           "dd_minio": {
             "type": "string",
             "format": "uuid",
-            "description": "UUID of the source MinIO Data Dock"
+            "description": "UUID of the source MinIO Data Dock (not required for Copy pipeline)",
+            "nullable": true
           },
           "default_route": {
             "$ref": "#/components/schemas/DestinationConfig",
@@ -4018,6 +4345,17 @@
           },
           "folder": {
             "type": "string",
+            "nullable": true
+          },
+          "import_api_key": {
+            "type": "string",
+            "format": "password",
+            "description": "Copy pipeline: Import API Key (source)",
+            "nullable": true
+          },
+          "import_api_url": {
+            "type": "string",
+            "description": "Copy pipeline: Import API URL (source)",
             "nullable": true
           },
           "routing_rules": {
@@ -4130,6 +4468,28 @@
               }
             ],
             "description": "FileSorter: HephaistosPdfeed + Labelize + CategoryRouterMetadataAware"
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CopyOutputParameters"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "copy"
+                    ]
+                  }
+                }
+              }
+            ],
+            "description": "Copy: Import from external API to S3 destination"
           }
         ]
       },
@@ -4343,7 +4703,8 @@
         "type": "object",
         "required": [
           "destination_data_container_id",
-          "destination_file_name"
+          "destination_file_name",
+          "file_size"
         ],
         "properties": {
           "destination_data_container_id": {
@@ -4359,23 +4720,94 @@
             "type": "string",
             "description": "Where the zip file will be stored in the bucket (optional path)",
             "nullable": true
+          },
+          "file_size": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The size of the file in bytes - determines upload strategy",
+            "minimum": 0
           }
         }
       },
       "PrepareArchiveImportResponse": {
-        "type": "object",
-        "required": [
-          "upload_url",
-          "file_path"
-        ],
-        "properties": {
-          "file_path": {
-            "type": "string"
+        "oneOf": [
+          {
+            "type": "object",
+            "description": "Simple single PUT upload for files < 100MB",
+            "required": [
+              "upload_url",
+              "file_path",
+              "upload_type"
+            ],
+            "properties": {
+              "file_path": {
+                "type": "string",
+                "description": "The full path where the file will be stored"
+              },
+              "upload_type": {
+                "type": "string",
+                "enum": [
+                  "simple"
+                ]
+              },
+              "upload_url": {
+                "type": "string",
+                "description": "Presigned PUT URL for uploading the file"
+              }
+            }
           },
-          "upload_url": {
-            "type": "string"
+          {
+            "type": "object",
+            "description": "Multipart upload for files >= 100MB",
+            "required": [
+              "upload_id",
+              "file_path",
+              "bucket",
+              "key",
+              "part_urls",
+              "part_size",
+              "upload_type"
+            ],
+            "properties": {
+              "bucket": {
+                "type": "string",
+                "description": "The bucket name"
+              },
+              "file_path": {
+                "type": "string",
+                "description": "The full path where the file will be stored"
+              },
+              "key": {
+                "type": "string",
+                "description": "The object key in the bucket"
+              },
+              "part_size": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Size of each part in bytes (last part may be smaller)",
+                "minimum": 0
+              },
+              "part_urls": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MultipartPartUrl"
+                },
+                "description": "Presigned URLs for each part"
+              },
+              "upload_id": {
+                "type": "string",
+                "description": "S3 multipart upload ID"
+              },
+              "upload_type": {
+                "type": "string",
+                "enum": [
+                  "multipart"
+                ]
+              }
+            }
           }
-        }
+        ],
+        "description": "Response for preparing archive import - either simple upload or multipart"
       },
       "RefreshDataDocksResponse": {
         "type": "object",
@@ -4510,6 +4942,24 @@
               "type": "string"
             },
             "description": "List of attributes in `namespace::value` format.\nExample: `[\"region::occitanie\", \"department::sales\"]`"
+          }
+        }
+      },
+      "Sha256HashDedupingStrategy": {
+        "type": "object",
+        "required": [
+          "length",
+          "flatten"
+        ],
+        "properties": {
+          "flatten": {
+            "type": "boolean",
+            "description": "Whether to flatten directory structure (true) or preserve it (false)"
+          },
+          "length": {
+            "type": "integer",
+            "description": "Number of characters from SHA256 hash to use as suffix",
+            "minimum": 0
           }
         }
       },
