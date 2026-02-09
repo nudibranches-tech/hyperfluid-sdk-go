@@ -116,6 +116,27 @@ const (
 	DataDockStatusSleeping DataDockStatus = "Sleeping"
 )
 
+// Defines values for ModelRuntime.
+const (
+	Tgi  ModelRuntime = "tgi"
+	Vllm ModelRuntime = "vllm"
+)
+
+// Defines values for ModelServingPhase.
+const (
+	ModelServingPhaseFailed       ModelServingPhase = "Failed"
+	ModelServingPhasePending      ModelServingPhase = "Pending"
+	ModelServingPhaseProvisioning ModelServingPhase = "Provisioning"
+	ModelServingPhaseReady        ModelServingPhase = "Ready"
+	ModelServingPhaseTerminating  ModelServingPhase = "Terminating"
+)
+
+// Defines values for ModelType.
+const (
+	Embedding  ModelType = "embedding"
+	Generation ModelType = "generation"
+)
+
 // Defines values for PipelineOutputParameters0Type.
 const (
 	PipelineOutputParameters0TypeTrino PipelineOutputParameters0Type = "trino"
@@ -138,10 +159,10 @@ const (
 
 // Defines values for PipelineRunStatus.
 const (
-	Completed PipelineRunStatus = "completed"
-	Failed    PipelineRunStatus = "failed"
-	Pending   PipelineRunStatus = "pending"
-	Running   PipelineRunStatus = "running"
+	PipelineRunStatusCompleted PipelineRunStatus = "completed"
+	PipelineRunStatusFailed    PipelineRunStatus = "failed"
+	PipelineRunStatusPending   PipelineRunStatus = "pending"
+	PipelineRunStatusRunning   PipelineRunStatus = "running"
 )
 
 // Defines values for PipelineType.
@@ -191,6 +212,17 @@ type AddUserAttributeRequest struct {
 	Attribute string `json:"attribute"`
 }
 
+// ApiKeyResponse defines model for ApiKeyResponse.
+type ApiKeyResponse struct {
+	CreatedAt  time.Time          `json:"created_at"`
+	ExpiresAt  *time.Time         `json:"expires_at"`
+	Id         openapi_types.UUID `json:"id"`
+	KeyPrefix  string             `json:"key_prefix"`
+	LastUsedAt *time.Time         `json:"last_used_at"`
+	Name       string             `json:"name"`
+	Scopes     []string           `json:"scopes"`
+}
+
 // ArchiveDownloadResponse defines model for ArchiveDownloadResponse.
 type ArchiveDownloadResponse struct {
 	ExpiresInSeconds int64  `json:"expires_in_seconds"`
@@ -203,6 +235,9 @@ type ArchiveExportRequest struct {
 	DestinationFileName        string             `json:"destination_file_name"`
 	DestinationFilePath        *string            `json:"destination_file_path"`
 	Prefix                     *string            `json:"prefix"`
+
+	// StripPrefix Whether to strip the prefix from file paths in the archive
+	StripPrefix *bool `json:"strip_prefix"`
 }
 
 // ArchiveFileType defines model for ArchiveFileType.
@@ -256,9 +291,12 @@ type BucketArchiveOperation struct {
 
 	// Prefix If the operation is an import, the prefix to add to all files when extracting the archive
 	// If the operation is an export, the prefix to filter which files to include in the export (only files matching this prefix will be exported)
-	Prefix    *string                `json:"prefix"`
-	Status    ArchiveOperationStatus `json:"status"`
-	UpdatedAt time.Time              `json:"updated_at"`
+	Prefix *string                `json:"prefix"`
+	Status ArchiveOperationStatus `json:"status"`
+
+	// StripPrefix Whether to strip the prefix from file paths when creating the archive (export only)
+	StripPrefix bool      `json:"strip_prefix"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 // CategoryRouterConfig Category router configuration (CategoryRouterMetadataAware step)
@@ -384,6 +422,24 @@ type CopySourceConfig struct {
 	ImportApiUrl string `json:"import_api_url"`
 }
 
+// CreateApiKeyRequest defines model for CreateApiKeyRequest.
+type CreateApiKeyRequest struct {
+	ExpiresInDays *int32    `json:"expires_in_days"`
+	Name          string    `json:"name"`
+	Scopes        *[]string `json:"scopes,omitempty"`
+}
+
+// CreateApiKeyResponse defines model for CreateApiKeyResponse.
+type CreateApiKeyResponse struct {
+	CreatedAt time.Time          `json:"created_at"`
+	ExpiresAt *time.Time         `json:"expires_at"`
+	Id        openapi_types.UUID `json:"id"`
+	Key       string             `json:"key"`
+	KeyPrefix string             `json:"key_prefix"`
+	Name      string             `json:"name"`
+	Scopes    []string           `json:"scopes"`
+}
+
 // CreateContextProviderBody Request to create a context provider.
 type CreateContextProviderBody struct {
 	// Config Configuration JSON based on provider type
@@ -467,6 +523,30 @@ type CreateFileSorterRequest struct {
 type CreateHarborCrdRequestBody struct {
 	Name string `json:"name"`
 	Slug string `json:"slug"`
+}
+
+// CreateModelServingRequest defines model for CreateModelServingRequest.
+type CreateModelServingRequest struct {
+	// DisplayName Human-readable display name
+	DisplayName string `json:"display_name"`
+
+	// Gpu GPU count
+	Gpu *int32 `json:"gpu,omitempty"`
+
+	// MaxModelLen Maximum model context length (optional, for generation models)
+	MaxModelLen *int32 `json:"max_model_len"`
+
+	// Memory Memory request (e.g. "8Gi")
+	Memory *string `json:"memory,omitempty"`
+
+	// ModelId Model identifier (e.g. "meta-llama/Llama-3.1-8B-Instruct")
+	ModelId string `json:"model_id"`
+
+	// ModelType The type of model being served.
+	ModelType ModelType `json:"model_type"`
+
+	// Runtime Runtime engine for serving the model.
+	Runtime ModelRuntime `json:"runtime"`
 }
 
 // CreateOrganizationRequestBody defines model for CreateOrganizationRequestBody.
@@ -944,6 +1024,78 @@ type MinioInternalConfigResponse struct {
 	StorageSize string `json:"storage_size"`
 }
 
+// ModelConfig Extra configuration for the model serving instance.
+type ModelConfig struct {
+	// ExtraArgs Extra CLI arguments passed to the runtime
+	ExtraArgs *[]string `json:"extraArgs,omitempty"`
+
+	// MaxModelLen Maximum model context length (vLLM --max-model-len)
+	MaxModelLen *int32 `json:"maxModelLen"`
+
+	// ServedModelName Served model name override
+	ServedModelName *string `json:"servedModelName"`
+
+	// StorageUri Custom storage URI (e.g. s3:// or pvc://)
+	StorageUri *string `json:"storageUri"`
+}
+
+// ModelResources Resource requests for the model serving instance.
+type ModelResources struct {
+	// Cpu CPU request (e.g. "2", "4")
+	Cpu *string `json:"cpu,omitempty"`
+
+	// Gpu Number of GPUs (0 for CPU-only)
+	Gpu *int32 `json:"gpu,omitempty"`
+
+	// Memory Memory request (e.g. "8Gi", "16Gi")
+	Memory *string `json:"memory,omitempty"`
+}
+
+// ModelRuntime Runtime engine for serving the model.
+type ModelRuntime string
+
+// ModelServingPhase Phase of the ModelServing lifecycle.
+type ModelServingPhase string
+
+// ModelServingResponse defines model for ModelServingResponse.
+type ModelServingResponse struct {
+	// Config Extra configuration for the model serving instance.
+	Config ModelConfig `json:"config"`
+
+	// DisplayName Human-readable display name
+	DisplayName string `json:"display_name"`
+
+	// Endpoint OpenAI-compatible endpoint
+	Endpoint *string `json:"endpoint"`
+
+	// ModelId Model identifier
+	ModelId string `json:"model_id"`
+
+	// ModelType The type of model being served.
+	ModelType ModelType `json:"model_type"`
+
+	// Name CRD resource name
+	Name string `json:"name"`
+
+	// Phase Phase of the ModelServing lifecycle.
+	Phase *ModelServingPhase `json:"phase,omitempty"`
+
+	// ReadyReplicas Ready replicas
+	ReadyReplicas int32 `json:"ready_replicas"`
+
+	// Resources Resource requests for the model serving instance.
+	Resources ModelResources `json:"resources"`
+
+	// Runtime Runtime engine for serving the model.
+	Runtime ModelRuntime `json:"runtime"`
+
+	// TotalReplicas Total desired replicas
+	TotalReplicas int32 `json:"total_replicas"`
+}
+
+// ModelType The type of model being served.
+type ModelType string
+
 // MultipartPartUrl Presigned URL for a single part in multipart upload
 type MultipartPartUrl struct {
 	// PartNumber Part number (1-indexed as per S3 API)
@@ -976,6 +1128,12 @@ type OrgSecuritySettingsResponse struct {
 type OrgUserAttributesResponse struct {
 	// Users Map of user_id to their attributes.
 	Users []UserAttributesEntry `json:"users"`
+}
+
+// PatchModelServingRequest defines model for PatchModelServingRequest.
+type PatchModelServingRequest struct {
+	// Replicas Target replica count for scaling
+	Replicas *int32 `json:"replicas"`
 }
 
 // PipelineInputParameters defines model for PipelineInputParameters.
@@ -1549,8 +1707,17 @@ type UpdateDataDockSecuritySettingsHandlerJSONRequestBody = UpdateDataDockSecuri
 // CreateOrganizationCrdJSONRequestBody defines body for CreateOrganizationCrd for application/json ContentType.
 type CreateOrganizationCrdJSONRequestBody = CreateOrganizationRequestBody
 
+// CreateApiKeyJSONRequestBody defines body for CreateApiKey for application/json ContentType.
+type CreateApiKeyJSONRequestBody = CreateApiKeyRequest
+
 // CreateHarborCrdJSONRequestBody defines body for CreateHarborCrd for application/json ContentType.
 type CreateHarborCrdJSONRequestBody = CreateHarborCrdRequestBody
+
+// CreateModelServingJSONRequestBody defines body for CreateModelServing for application/json ContentType.
+type CreateModelServingJSONRequestBody = CreateModelServingRequest
+
+// PatchModelServingJSONRequestBody defines body for PatchModelServing for application/json ContentType.
+type PatchModelServingJSONRequestBody = PatchModelServingRequest
 
 // CreateServiceAccountCrdJSONRequestBody defines body for CreateServiceAccountCrd for application/json ContentType.
 type CreateServiceAccountCrdJSONRequestBody = CreateServiceAccountCrdRequestBody
@@ -2307,6 +2474,17 @@ type ClientInterface interface {
 	// GetOrganizationById request
 	GetOrganizationById(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListApiKeys request
+	ListApiKeys(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateApiKeyWithBody request with any body
+	CreateApiKeyWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateApiKey(ctx context.Context, organizationId openapi_types.UUID, body CreateApiKeyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RevokeApiKey request
+	RevokeApiKey(ctx context.Context, organizationId openapi_types.UUID, keyId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DeleteOrganizationCrd request
 	DeleteOrganizationCrd(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -2323,6 +2501,25 @@ type ClientInterface interface {
 
 	// CheckHarborNameAvailable request
 	CheckHarborNameAvailable(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListModelServings request
+	ListModelServings(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateModelServingWithBody request with any body
+	CreateModelServingWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateModelServing(ctx context.Context, organizationId openapi_types.UUID, body CreateModelServingJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteModelServing request
+	DeleteModelServing(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetModelServing request
+	GetModelServing(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchModelServingWithBody request with any body
+	PatchModelServingWithBody(ctx context.Context, organizationId openapi_types.UUID, name string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchModelServing(ctx context.Context, organizationId openapi_types.UUID, name string, body PatchModelServingJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListPipelines request
 	ListPipelines(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -2851,6 +3048,54 @@ func (c *Client) GetOrganizationById(ctx context.Context, organizationId openapi
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListApiKeys(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListApiKeysRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateApiKeyWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateApiKeyRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateApiKey(ctx context.Context, organizationId openapi_types.UUID, body CreateApiKeyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateApiKeyRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RevokeApiKey(ctx context.Context, organizationId openapi_types.UUID, keyId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRevokeApiKeyRequest(c.Server, organizationId, keyId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) DeleteOrganizationCrd(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteOrganizationCrdRequest(c.Server, organizationId)
 	if err != nil {
@@ -2913,6 +3158,90 @@ func (c *Client) DeleteHarborCrd(ctx context.Context, organizationId openapi_typ
 
 func (c *Client) CheckHarborNameAvailable(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCheckHarborNameAvailableRequest(c.Server, organizationId, name)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListModelServings(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListModelServingsRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateModelServingWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateModelServingRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateModelServing(ctx context.Context, organizationId openapi_types.UUID, body CreateModelServingJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateModelServingRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteModelServing(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteModelServingRequest(c.Server, organizationId, name)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetModelServing(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetModelServingRequest(c.Server, organizationId, name)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchModelServingWithBody(ctx context.Context, organizationId openapi_types.UUID, name string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchModelServingRequestWithBody(c.Server, organizationId, name, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchModelServing(ctx context.Context, organizationId openapi_types.UUID, name string, body PatchModelServingJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchModelServingRequest(c.Server, organizationId, name, body)
 	if err != nil {
 		return nil, err
 	}
@@ -4554,6 +4883,128 @@ func NewGetOrganizationByIdRequest(server string, organizationId openapi_types.U
 	return req, nil
 }
 
+// NewListApiKeysRequest generates requests for ListApiKeys
+func NewListApiKeysRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/api-keys", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateApiKeyRequest calls the generic CreateApiKey builder with application/json body
+func NewCreateApiKeyRequest(server string, organizationId openapi_types.UUID, body CreateApiKeyJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateApiKeyRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewCreateApiKeyRequestWithBody generates requests for CreateApiKey with any type of body
+func NewCreateApiKeyRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/api-keys", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewRevokeApiKeyRequest generates requests for RevokeApiKey
+func NewRevokeApiKeyRequest(server string, organizationId openapi_types.UUID, keyId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "key_id", runtime.ParamLocationPath, keyId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/api-keys/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewDeleteOrganizationCrdRequest generates requests for DeleteOrganizationCrd
 func NewDeleteOrganizationCrdRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -4817,6 +5268,223 @@ func NewCheckHarborNameAvailableRequest(server string, organizationId openapi_ty
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewListModelServingsRequest generates requests for ListModelServings
+func NewListModelServingsRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/model-servings", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateModelServingRequest calls the generic CreateModelServing builder with application/json body
+func NewCreateModelServingRequest(server string, organizationId openapi_types.UUID, body CreateModelServingJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateModelServingRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewCreateModelServingRequestWithBody generates requests for CreateModelServing with any type of body
+func NewCreateModelServingRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/model-servings", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteModelServingRequest generates requests for DeleteModelServing
+func NewDeleteModelServingRequest(server string, organizationId openapi_types.UUID, name string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "name", runtime.ParamLocationPath, name)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/model-servings/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetModelServingRequest generates requests for GetModelServing
+func NewGetModelServingRequest(server string, organizationId openapi_types.UUID, name string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "name", runtime.ParamLocationPath, name)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/model-servings/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPatchModelServingRequest calls the generic PatchModelServing builder with application/json body
+func NewPatchModelServingRequest(server string, organizationId openapi_types.UUID, name string, body PatchModelServingJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchModelServingRequestWithBody(server, organizationId, name, "application/json", bodyReader)
+}
+
+// NewPatchModelServingRequestWithBody generates requests for PatchModelServing with any type of body
+func NewPatchModelServingRequestWithBody(server string, organizationId openapi_types.UUID, name string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "name", runtime.ParamLocationPath, name)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/model-servings/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -6182,6 +6850,17 @@ type ClientWithResponsesInterface interface {
 	// GetOrganizationByIdWithResponse request
 	GetOrganizationByIdWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOrganizationByIdRes, error)
 
+	// ListApiKeysWithResponse request
+	ListApiKeysWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListApiKeysRes, error)
+
+	// CreateApiKeyWithBodyWithResponse request with any body
+	CreateApiKeyWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateApiKeyRes, error)
+
+	CreateApiKeyWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateApiKeyJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateApiKeyRes, error)
+
+	// RevokeApiKeyWithResponse request
+	RevokeApiKeyWithResponse(ctx context.Context, organizationId openapi_types.UUID, keyId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RevokeApiKeyRes, error)
+
 	// DeleteOrganizationCrdWithResponse request
 	DeleteOrganizationCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteOrganizationCrdRes, error)
 
@@ -6198,6 +6877,25 @@ type ClientWithResponsesInterface interface {
 
 	// CheckHarborNameAvailableWithResponse request
 	CheckHarborNameAvailableWithResponse(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*CheckHarborNameAvailableRes, error)
+
+	// ListModelServingsWithResponse request
+	ListModelServingsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListModelServingsRes, error)
+
+	// CreateModelServingWithBodyWithResponse request with any body
+	CreateModelServingWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateModelServingRes, error)
+
+	CreateModelServingWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateModelServingJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateModelServingRes, error)
+
+	// DeleteModelServingWithResponse request
+	DeleteModelServingWithResponse(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*DeleteModelServingRes, error)
+
+	// GetModelServingWithResponse request
+	GetModelServingWithResponse(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*GetModelServingRes, error)
+
+	// PatchModelServingWithBodyWithResponse request with any body
+	PatchModelServingWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, name string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchModelServingRes, error)
+
+	PatchModelServingWithResponse(ctx context.Context, organizationId openapi_types.UUID, name string, body PatchModelServingJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchModelServingRes, error)
 
 	// ListPipelinesWithResponse request
 	ListPipelinesWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListPipelinesRes, error)
@@ -6849,6 +7547,71 @@ func (r GetOrganizationByIdRes) StatusCode() int {
 	return 0
 }
 
+type ListApiKeysRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]ApiKeyResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListApiKeysRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListApiKeysRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateApiKeyRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *CreateApiKeyResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateApiKeyRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateApiKeyRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type RevokeApiKeyRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r RevokeApiKeyRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RevokeApiKeyRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type DeleteOrganizationCrdRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -6951,6 +7714,115 @@ func (r CheckHarborNameAvailableRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r CheckHarborNameAvailableRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListModelServingsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]ModelServingResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListModelServingsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListModelServingsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateModelServingRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *ModelServingResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateModelServingRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateModelServingRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteModelServingRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteModelServingRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteModelServingRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetModelServingRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ModelServingResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetModelServingRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetModelServingRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchModelServingRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ModelServingResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchModelServingRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchModelServingRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -7870,6 +8742,41 @@ func (c *ClientWithResponses) GetOrganizationByIdWithResponse(ctx context.Contex
 	return ParseGetOrganizationByIdRes(rsp)
 }
 
+// ListApiKeysWithResponse request returning *ListApiKeysRes
+func (c *ClientWithResponses) ListApiKeysWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListApiKeysRes, error) {
+	rsp, err := c.ListApiKeys(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListApiKeysRes(rsp)
+}
+
+// CreateApiKeyWithBodyWithResponse request with arbitrary body returning *CreateApiKeyRes
+func (c *ClientWithResponses) CreateApiKeyWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateApiKeyRes, error) {
+	rsp, err := c.CreateApiKeyWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateApiKeyRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateApiKeyWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateApiKeyJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateApiKeyRes, error) {
+	rsp, err := c.CreateApiKey(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateApiKeyRes(rsp)
+}
+
+// RevokeApiKeyWithResponse request returning *RevokeApiKeyRes
+func (c *ClientWithResponses) RevokeApiKeyWithResponse(ctx context.Context, organizationId openapi_types.UUID, keyId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RevokeApiKeyRes, error) {
+	rsp, err := c.RevokeApiKey(ctx, organizationId, keyId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRevokeApiKeyRes(rsp)
+}
+
 // DeleteOrganizationCrdWithResponse request returning *DeleteOrganizationCrdRes
 func (c *ClientWithResponses) DeleteOrganizationCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteOrganizationCrdRes, error) {
 	rsp, err := c.DeleteOrganizationCrd(ctx, organizationId, reqEditors...)
@@ -7921,6 +8828,67 @@ func (c *ClientWithResponses) CheckHarborNameAvailableWithResponse(ctx context.C
 		return nil, err
 	}
 	return ParseCheckHarborNameAvailableRes(rsp)
+}
+
+// ListModelServingsWithResponse request returning *ListModelServingsRes
+func (c *ClientWithResponses) ListModelServingsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListModelServingsRes, error) {
+	rsp, err := c.ListModelServings(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListModelServingsRes(rsp)
+}
+
+// CreateModelServingWithBodyWithResponse request with arbitrary body returning *CreateModelServingRes
+func (c *ClientWithResponses) CreateModelServingWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateModelServingRes, error) {
+	rsp, err := c.CreateModelServingWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateModelServingRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateModelServingWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateModelServingJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateModelServingRes, error) {
+	rsp, err := c.CreateModelServing(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateModelServingRes(rsp)
+}
+
+// DeleteModelServingWithResponse request returning *DeleteModelServingRes
+func (c *ClientWithResponses) DeleteModelServingWithResponse(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*DeleteModelServingRes, error) {
+	rsp, err := c.DeleteModelServing(ctx, organizationId, name, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteModelServingRes(rsp)
+}
+
+// GetModelServingWithResponse request returning *GetModelServingRes
+func (c *ClientWithResponses) GetModelServingWithResponse(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*GetModelServingRes, error) {
+	rsp, err := c.GetModelServing(ctx, organizationId, name, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetModelServingRes(rsp)
+}
+
+// PatchModelServingWithBodyWithResponse request with arbitrary body returning *PatchModelServingRes
+func (c *ClientWithResponses) PatchModelServingWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, name string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchModelServingRes, error) {
+	rsp, err := c.PatchModelServingWithBody(ctx, organizationId, name, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchModelServingRes(rsp)
+}
+
+func (c *ClientWithResponses) PatchModelServingWithResponse(ctx context.Context, organizationId openapi_types.UUID, name string, body PatchModelServingJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchModelServingRes, error) {
+	rsp, err := c.PatchModelServing(ctx, organizationId, name, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchModelServingRes(rsp)
 }
 
 // ListPipelinesWithResponse request returning *ListPipelinesRes
@@ -8843,6 +9811,74 @@ func ParseGetOrganizationByIdRes(rsp *http.Response) (*GetOrganizationByIdRes, e
 	return response, nil
 }
 
+// ParseListApiKeysRes parses an HTTP response from a ListApiKeysWithResponse call
+func ParseListApiKeysRes(rsp *http.Response) (*ListApiKeysRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListApiKeysRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []ApiKeyResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateApiKeyRes parses an HTTP response from a CreateApiKeyWithResponse call
+func ParseCreateApiKeyRes(rsp *http.Response) (*CreateApiKeyRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateApiKeyRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest CreateApiKeyResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRevokeApiKeyRes parses an HTTP response from a RevokeApiKeyWithResponse call
+func ParseRevokeApiKeyRes(rsp *http.Response) (*RevokeApiKeyRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RevokeApiKeyRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
 // ParseDeleteOrganizationCrdRes parses an HTTP response from a DeleteOrganizationCrdWithResponse call
 func ParseDeleteOrganizationCrdRes(rsp *http.Response) (*DeleteOrganizationCrdRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -8943,6 +9979,126 @@ func ParseCheckHarborNameAvailableRes(rsp *http.Response) (*CheckHarborNameAvail
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest CheckNameAvailabilityResponseData
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListModelServingsRes parses an HTTP response from a ListModelServingsWithResponse call
+func ParseListModelServingsRes(rsp *http.Response) (*ListModelServingsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListModelServingsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []ModelServingResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateModelServingRes parses an HTTP response from a CreateModelServingWithResponse call
+func ParseCreateModelServingRes(rsp *http.Response) (*CreateModelServingRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateModelServingRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ModelServingResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteModelServingRes parses an HTTP response from a DeleteModelServingWithResponse call
+func ParseDeleteModelServingRes(rsp *http.Response) (*DeleteModelServingRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteModelServingRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetModelServingRes parses an HTTP response from a GetModelServingWithResponse call
+func ParseGetModelServingRes(rsp *http.Response) (*GetModelServingRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetModelServingRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ModelServingResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchModelServingRes parses an HTTP response from a PatchModelServingWithResponse call
+func ParsePatchModelServingRes(rsp *http.Response) (*PatchModelServingRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchModelServingRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ModelServingResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

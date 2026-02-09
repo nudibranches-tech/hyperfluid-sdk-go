@@ -1083,6 +1083,124 @@
         ]
       }
     },
+    "/api/v1/organizations/{organization_id}/api-keys": {
+      "get": {
+        "tags": [
+          "API Keys"
+        ],
+        "operationId": "list_api_keys",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List API keys for organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiKeyResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "API Keys"
+        ],
+        "operationId": "create_api_key",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateApiKeyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "API key created (key shown once)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateApiKeyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/api-keys/{key_id}": {
+      "delete": {
+        "tags": [
+          "API Keys"
+        ],
+        "operationId": "revoke_api_key",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "key_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "API key revoked"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/organizations/{organization_id}/crd": {
       "delete": {
         "tags": [
@@ -1316,6 +1434,219 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/model-servings": {
+      "get": {
+        "tags": [
+          "Model Serving"
+        ],
+        "operationId": "list_model_servings",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List model servings for organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModelServingResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Model Serving"
+        ],
+        "operationId": "create_model_serving",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateModelServingRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Model serving created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelServingResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/model-servings/{name}": {
+      "get": {
+        "tags": [
+          "Model Serving"
+        ],
+        "operationId": "get_model_serving",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Model serving details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelServingResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Model Serving"
+        ],
+        "operationId": "delete_model_serving",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Model serving deleted"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Model Serving"
+        ],
+        "operationId": "patch_model_serving",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchModelServingRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Model serving updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelServingResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
           },
           "500": {
             "description": "Internal server error"
@@ -2604,6 +2935,48 @@
           }
         }
       },
+      "ApiKeyResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "key_prefix",
+          "scopes",
+          "created_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "key_prefix": {
+            "type": "string"
+          },
+          "last_used_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "ArchiveDownloadResponse": {
         "type": "object",
         "required": [
@@ -2641,6 +3014,11 @@
           },
           "prefix": {
             "type": "string",
+            "nullable": true
+          },
+          "strip_prefix": {
+            "type": "boolean",
+            "description": "Whether to strip the prefix from file paths in the archive",
             "nullable": true
           }
         }
@@ -2704,6 +3082,7 @@
           "status",
           "file_name",
           "file_type",
+          "strip_prefix",
           "destination_data_container_id",
           "created_at",
           "updated_at"
@@ -2767,6 +3146,10 @@
           },
           "status": {
             "$ref": "#/components/schemas/ArchiveOperationStatus"
+          },
+          "strip_prefix": {
+            "type": "boolean",
+            "description": "Whether to strip the prefix from file paths when creating the archive (export only)"
           },
           "updated_at": {
             "type": "string",
@@ -3081,6 +3464,70 @@
           }
         }
       },
+      "CreateApiKeyRequest": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "expires_in_days": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CreateApiKeyResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "key",
+          "key_prefix",
+          "scopes",
+          "created_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "key": {
+            "type": "string"
+          },
+          "key_prefix": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "CreateContextProviderBody": {
         "type": "object",
         "description": "Request to create a context provider.",
@@ -3259,6 +3706,48 @@
           },
           "slug": {
             "type": "string"
+          }
+        }
+      },
+      "CreateModelServingRequest": {
+        "type": "object",
+        "required": [
+          "display_name",
+          "model_id",
+          "runtime",
+          "model_type"
+        ],
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "description": "Human-readable display name"
+          },
+          "gpu": {
+            "type": "integer",
+            "format": "int32",
+            "description": "GPU count",
+            "minimum": 0
+          },
+          "max_model_len": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Maximum model context length (optional, for generation models)",
+            "minimum": 0,
+            "nullable": true
+          },
+          "memory": {
+            "type": "string",
+            "description": "Memory request (e.g. \"8Gi\")"
+          },
+          "model_id": {
+            "type": "string",
+            "description": "Model identifier (e.g. \"meta-llama/Llama-3.1-8B-Instruct\")"
+          },
+          "model_type": {
+            "$ref": "#/components/schemas/ModelType"
+          },
+          "runtime": {
+            "$ref": "#/components/schemas/ModelRuntime"
           }
         }
       },
@@ -4206,6 +4695,144 @@
           }
         }
       },
+      "ModelConfig": {
+        "type": "object",
+        "description": "Extra configuration for the model serving instance.",
+        "properties": {
+          "extraArgs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Extra CLI arguments passed to the runtime"
+          },
+          "maxModelLen": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Maximum model context length (vLLM --max-model-len)",
+            "minimum": 0,
+            "nullable": true
+          },
+          "servedModelName": {
+            "type": "string",
+            "description": "Served model name override",
+            "nullable": true
+          },
+          "storageUri": {
+            "type": "string",
+            "description": "Custom storage URI (e.g. s3:// or pvc://)",
+            "nullable": true
+          }
+        }
+      },
+      "ModelResources": {
+        "type": "object",
+        "description": "Resource requests for the model serving instance.",
+        "properties": {
+          "cpu": {
+            "type": "string",
+            "description": "CPU request (e.g. \"2\", \"4\")"
+          },
+          "gpu": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Number of GPUs (0 for CPU-only)",
+            "minimum": 0
+          },
+          "memory": {
+            "type": "string",
+            "description": "Memory request (e.g. \"8Gi\", \"16Gi\")"
+          }
+        }
+      },
+      "ModelRuntime": {
+        "type": "string",
+        "description": "Runtime engine for serving the model.",
+        "enum": [
+          "vllm",
+          "tgi"
+        ]
+      },
+      "ModelServingPhase": {
+        "type": "string",
+        "description": "Phase of the ModelServing lifecycle.",
+        "enum": [
+          "Pending",
+          "Provisioning",
+          "Ready",
+          "Failed",
+          "Terminating"
+        ]
+      },
+      "ModelServingResponse": {
+        "type": "object",
+        "required": [
+          "name",
+          "display_name",
+          "model_id",
+          "runtime",
+          "model_type",
+          "resources",
+          "config",
+          "ready_replicas",
+          "total_replicas"
+        ],
+        "properties": {
+          "config": {
+            "$ref": "#/components/schemas/ModelConfig"
+          },
+          "display_name": {
+            "type": "string",
+            "description": "Human-readable display name"
+          },
+          "endpoint": {
+            "type": "string",
+            "description": "OpenAI-compatible endpoint",
+            "nullable": true
+          },
+          "model_id": {
+            "type": "string",
+            "description": "Model identifier"
+          },
+          "model_type": {
+            "$ref": "#/components/schemas/ModelType"
+          },
+          "name": {
+            "type": "string",
+            "description": "CRD resource name"
+          },
+          "phase": {
+            "$ref": "#/components/schemas/ModelServingPhase",
+            "nullable": true
+          },
+          "ready_replicas": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Ready replicas",
+            "minimum": 0
+          },
+          "resources": {
+            "$ref": "#/components/schemas/ModelResources"
+          },
+          "runtime": {
+            "$ref": "#/components/schemas/ModelRuntime"
+          },
+          "total_replicas": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Total desired replicas",
+            "minimum": 0
+          }
+        }
+      },
+      "ModelType": {
+        "type": "string",
+        "description": "The type of model being served.",
+        "enum": [
+          "generation",
+          "embedding"
+        ]
+      },
       "MultipartPartUrl": {
         "type": "object",
         "description": "Presigned URL for a single part in multipart upload",
@@ -4321,6 +4948,18 @@
           "value": {
             "type": "string",
             "description": "Value part (e.g., \"occitanie\")"
+          }
+        }
+      },
+      "PatchModelServingRequest": {
+        "type": "object",
+        "properties": {
+          "replicas": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Target replica count for scaling",
+            "minimum": 0,
+            "nullable": true
           }
         }
       },
@@ -5481,6 +6120,14 @@
     {
       "name": "Pipelines",
       "description": "Pipeline management operations"
+    },
+    {
+      "name": "Model Serving",
+      "description": "LLMaaS model serving operations"
+    },
+    {
+      "name": "API Keys",
+      "description": "LLMaaS API key management"
     }
   ]
 }
