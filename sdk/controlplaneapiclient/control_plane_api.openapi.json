@@ -277,6 +277,993 @@
         }
       }
     },
+    "/api/v1/data-containers/bucket": {
+      "post": {
+        "tags": [
+          "bucket::create_bucket_data_container"
+        ],
+        "operationId": "create_bucket_data_container",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBucketDataContainerRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Bucket data container created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataContainerOverview"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data dock not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/bucket/{data_container_id}/files": {
+      "get": {
+        "tags": [
+          "bucket::list_bucket_files"
+        ],
+        "operationId": "list_bucket_files",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of files in bucket",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BucketFile"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data container not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "bucket::upload_bucket_file"
+        ],
+        "operationId": "upload_bucket_file",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "File uploaded via multipart form data (fields: file, path, labels)"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Data container not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "bucket::delete_bucket_file"
+        ],
+        "operationId": "delete_bucket_file",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File deleted"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Data container not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/bucket/{data_container_id}/files/download": {
+      "get": {
+        "tags": [
+          "bucket::download_bucket_file"
+        ],
+        "operationId": "download_bucket_file",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File downloaded",
+            "content": {
+              "application/octet-stream": {}
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Data container not found"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/bucket/{data_container_id}/folders": {
+      "post": {
+        "tags": [
+          "bucket::create_bucket_folder"
+        ],
+        "operationId": "create_bucket_folder",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBucketFolderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Folder created"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Data container not found"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/bucket/{data_container_id}/stats": {
+      "get": {
+        "tags": [
+          "bucket::get_bucket_stats"
+        ],
+        "operationId": "get_bucket_stats",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bucket statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BucketStats"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data container not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/faker/field-types": {
+      "get": {
+        "tags": [
+          "faker::get_field_types"
+        ],
+        "operationId": "get_faker_field_types",
+        "responses": {
+          "200": {
+            "description": "List of faker field types",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFakerFieldTypesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/faker/{data_container_id}/schemas": {
+      "get": {
+        "tags": [
+          "faker::get_schemas"
+        ],
+        "operationId": "get_faker_schemas",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of faker schemas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFakerSchemaResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "faker::create_schema"
+        ],
+        "operationId": "create_faker_schema",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFakerSchemaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Faker schema created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FakerSchemaOverview"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data container not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/faker/{data_container_id}/schemas/{schema_id}": {
+      "delete": {
+        "tags": [
+          "faker::delete_schema"
+        ],
+        "operationId": "delete_faker_schema",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "schema_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Faker schema deleted"
+          },
+          "404": {
+            "description": "Data container not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/faker/{data_container_id}/schemas/{schema_id}/tables": {
+      "post": {
+        "tags": [
+          "faker::create_table"
+        ],
+        "operationId": "create_faker_table",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "schema_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFakerTableRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Faker table created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FakerTableOverview"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data container not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/faker/{data_container_id}/schemas/{schema_id}/tables/structured": {
+      "post": {
+        "tags": [
+          "faker::create_table_structured"
+        ],
+        "operationId": "create_faker_table_structured",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "schema_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFakerTableStructuredRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Structured faker table created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FakerTableOverview"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data container not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/faker/{data_container_id}/tables": {
+      "get": {
+        "tags": [
+          "faker::get_tables"
+        ],
+        "operationId": "get_faker_tables",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of faker tables",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFakerTablesResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/faker/{data_container_id}/tables/{table_id}": {
+      "get": {
+        "tags": [
+          "faker::get_table"
+        ],
+        "operationId": "get_faker_table",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Faker table details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFakerTableResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Data container ID mismatch"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "faker::update_table"
+        ],
+        "operationId": "update_faker_table",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFakerTableRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Faker table updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FakerTableOverview"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data container not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "faker::delete_table"
+        ],
+        "operationId": "delete_faker_table",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Faker table deleted"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/iceberg": {
+      "post": {
+        "tags": [
+          "iceberg::create_iceberg_data_container"
+        ],
+        "operationId": "create_iceberg_data_container",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateIcebergDataContainerRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Iceberg data container created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataContainerOverview"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/iceberg/{data_container_id}": {
+      "get": {
+        "tags": [
+          "iceberg::get_iceberg_data_container"
+        ],
+        "operationId": "get_iceberg_data_container",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Iceberg data container details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IcebergConnectorDataContainer"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data container not found"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/iceberg/{data_container_id}/schemas": {
+      "get": {
+        "tags": [
+          "iceberg::get_schemas"
+        ],
+        "operationId": "get_schemas",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of iceberg schemas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IcebergSchemaMetadata"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "iceberg::create_schema"
+        ],
+        "operationId": "create_schema",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMedallionSchemaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Iceberg schema created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IcebergSchemaMetadata"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Data container not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/iceberg/{data_container_id}/tables": {
+      "get": {
+        "tags": [
+          "iceberg::get_tables"
+        ],
+        "operationId": "get_tables",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of iceberg tables",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IcebergTableResponseData"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "iceberg::create_table"
+        ],
+        "operationId": "create_table",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateIcebergTableMetadataRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Iceberg table created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IcebergTableMetadata"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/{data_container_id}": {
+      "get": {
+        "tags": [
+          "get_data_container"
+        ],
+        "operationId": "get_data_container",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data container details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataContainerOverview"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data container not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "handlers"
+        ],
+        "operationId": "delete_data_container",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Data container deleted"
+          },
+          "404": {
+            "description": "Data container not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/data-docks/crd": {
       "post": {
         "tags": [],
@@ -2735,6 +3722,258 @@
         }
       }
     },
+    "/api/v1/orgs/{organization_id}/table-classifications": {
+      "get": {
+        "tags": [
+          "Table Classifications"
+        ],
+        "summary": "List table classifications for an organization.",
+        "operationId": "list_table_classifications_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTableClassificationsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Table Classifications"
+        ],
+        "summary": "Create a new table classification.",
+        "operationId": "create_table_classification_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTableClassificationBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableClassificationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "409": {
+            "description": "Classification already exists"
+          }
+        }
+      }
+    },
+    "/api/v1/orgs/{organization_id}/table-classifications/ai-classify": {
+      "post": {
+        "tags": [
+          "Table Classifications"
+        ],
+        "summary": "AI-assisted classification of tables.",
+        "operationId": "ai_classify_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AiClassifyRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AiClassifyResponseBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/api/v1/orgs/{organization_id}/table-classifications/stats": {
+      "get": {
+        "tags": [
+          "Table Classifications"
+        ],
+        "summary": "Get classification statistics for an organization.",
+        "operationId": "get_table_classification_stats_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassificationStatsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orgs/{organization_id}/table-classifications/{classification_id}": {
+      "delete": {
+        "tags": [
+          "Table Classifications"
+        ],
+        "summary": "Delete a table classification.",
+        "operationId": "delete_table_classification_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "classification_id",
+            "in": "path",
+            "description": "Classification ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Classification deleted"
+          },
+          "404": {
+            "description": "Classification not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Table Classifications"
+        ],
+        "summary": "Update a table classification.",
+        "operationId": "update_table_classification_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "classification_id",
+            "in": "path",
+            "description": "Classification ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTableClassificationBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableClassificationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Classification not found"
+          }
+        }
+      }
+    },
     "/api/v1/orgs/{organization_id}/users/{user_id}/context": {
       "get": {
         "tags": [
@@ -2803,6 +4042,165 @@
           },
           "403": {
             "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/refs/count": {
+      "post": {
+        "tags": [
+          "Pipelines"
+        ],
+        "operationId": "count_refs",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CountRefRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Count of references matching filters",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/refs/list": {
+      "get": {
+        "tags": [
+          "Pipelines"
+        ],
+        "operationId": "list_refs",
+        "parameters": [
+          {
+            "name": "pipeline_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          },
+          {
+            "name": "pipeline_checksum",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/RefStatus",
+              "nullable": true
+            }
+          },
+          {
+            "name": "key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "updated_at_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            }
+          },
+          {
+            "name": "updated_at_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            }
+          },
+          {
+            "name": "lock",
+            "in": "query",
+            "description": "Whether to lock the references listed",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "locked_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List references matching filters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Ref"
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error"
@@ -2932,6 +4330,89 @@
           "attribute": {
             "type": "string",
             "description": "Attribute in `namespace::value` format.\nExample: `\"region::occitanie\"`"
+          }
+        }
+      },
+      "AiClassificationResultResponse": {
+        "type": "object",
+        "description": "Response for AI classification result.",
+        "required": [
+          "table_fqdn",
+          "sensitivity",
+          "compliance_tags",
+          "confidence",
+          "reasoning"
+        ],
+        "properties": {
+          "compliance_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "confidence": {
+            "type": "number",
+            "format": "float"
+          },
+          "reasoning": {
+            "type": "string"
+          },
+          "sensitivity": {
+            "$ref": "#/components/schemas/SensitivityLevel"
+          },
+          "table_fqdn": {
+            "type": "string"
+          }
+        }
+      },
+      "AiClassifyRequestBody": {
+        "type": "object",
+        "description": "Request for AI classification.",
+        "required": [
+          "data_dock_id",
+          "table_fqdns"
+        ],
+        "properties": {
+          "data_dock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "model_name": {
+            "type": "string",
+            "description": "Optional model name (defaults to org's configured model)",
+            "nullable": true
+          },
+          "table_fqdns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fully qualified table names to classify"
+          }
+        }
+      },
+      "AiClassifyResponseBody": {
+        "type": "object",
+        "description": "Response for AI classification operation.",
+        "required": [
+          "results",
+          "classified_count",
+          "failed_count"
+        ],
+        "properties": {
+          "classified_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "failed_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AiClassificationResultResponse"
+            }
           }
         }
       },
@@ -3157,6 +4638,66 @@
           }
         }
       },
+      "BucketFile": {
+        "type": "object",
+        "required": [
+          "name",
+          "path",
+          "is_folder"
+        ],
+        "properties": {
+          "is_folder": {
+            "type": "boolean"
+          },
+          "last_modified": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "nullable": true
+          }
+        }
+      },
+      "BucketStats": {
+        "type": "object",
+        "required": [
+          "totalFiles",
+          "totalFolders",
+          "totalSize"
+        ],
+        "properties": {
+          "lastModified": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "totalFiles": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "totalFolders": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "totalSize": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          }
+        }
+      },
       "CategoryRouterConfig": {
         "type": "object",
         "description": "Category router configuration (CategoryRouterMetadataAware step)",
@@ -3219,6 +4760,79 @@
           "model_name": {
             "type": "string",
             "description": "Model name (e.g., \"mistral-large-latest\")"
+          }
+        }
+      },
+      "ClassificationStatsResponse": {
+        "type": "object",
+        "description": "Response for classification statistics.",
+        "required": [
+          "total_tables",
+          "classified_count",
+          "public_count",
+          "internal_count",
+          "confidential_count",
+          "restricted_count",
+          "pii_count",
+          "phi_count",
+          "pci_count",
+          "financial_count",
+          "legal_count",
+          "ai_classified_count",
+          "manual_classified_count"
+        ],
+        "properties": {
+          "ai_classified_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "classified_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "confidential_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "financial_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "internal_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "legal_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "manual_classified_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pci_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "phi_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pii_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "public_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "restricted_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total_tables": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
@@ -3464,6 +5078,33 @@
           }
         }
       },
+      "CountRefRequest": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "locked": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/RefStatus",
+            "nullable": true
+          },
+          "updated_at_after": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at_before": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
       "CreateApiKeyRequest": {
         "type": "object",
         "required": [
@@ -3525,6 +5166,33 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "CreateBucketDataContainerRequestBody": {
+        "type": "object",
+        "required": [
+          "data_dock_id",
+          "name"
+        ],
+        "properties": {
+          "data_dock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateBucketFolderRequest": {
+        "type": "object",
+        "required": [
+          "path"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
           }
         }
       },
@@ -3631,6 +5299,54 @@
           }
         }
       },
+      "CreateFakerSchemaRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateFakerTableRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "sql_request"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "sql_request": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateFakerTableStructuredRequest": {
+        "type": "object",
+        "required": [
+          "table_name",
+          "fields"
+        ],
+        "properties": {
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FakerTableFields"
+            }
+          },
+          "table_name": {
+            "type": "string"
+          }
+        }
+      },
       "CreateFileRouterPipelineRequest": {
         "type": "object",
         "description": "FileRouter pipeline request",
@@ -3706,6 +5422,79 @@
           },
           "slug": {
             "type": "string"
+          }
+        }
+      },
+      "CreateIcebergDataContainerRequestBody": {
+        "type": "object",
+        "required": [
+          "data_dock_id",
+          "name",
+          "storage_data_dock_id",
+          "s3_bucket"
+        ],
+        "properties": {
+          "data_dock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "s3_bucket": {
+            "type": "string"
+          },
+          "storage_data_dock_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "CreateIcebergTableMetadataRequest": {
+        "type": "object",
+        "description": "Request to create Iceberg table metadata",
+        "required": [
+          "schema_id",
+          "table_name",
+          "description",
+          "ddl_statement"
+        ],
+        "properties": {
+          "ddl_statement": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "schema_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "table_name": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateMedallionSchemaRequest": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "cdc_enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "tier": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -3893,6 +5682,34 @@
           }
         }
       },
+      "CreateTableClassificationBody": {
+        "type": "object",
+        "description": "Request to create a table classification.",
+        "required": [
+          "data_dock_id",
+          "table_fqdn",
+          "sensitivity"
+        ],
+        "properties": {
+          "compliance_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "data_dock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sensitivity": {
+            "$ref": "#/components/schemas/SensitivityLevel"
+          },
+          "table_fqdn": {
+            "type": "string",
+            "description": "Fully qualified table name: \"catalog.schema.table\""
+          }
+        }
+      },
       "CreateTrinoPipelineRequest": {
         "type": "object",
         "description": "Trino-based pipeline request (Markitdown, HephaistosPdfeed, Labelizer)",
@@ -3947,6 +5764,32 @@
             "type": "string",
             "format": "uuid",
             "nullable": true
+          }
+        }
+      },
+      "DataContainerOverview": {
+        "type": "object",
+        "description": "A summary of a data container",
+        "required": [
+          "id",
+          "data_dock_id",
+          "name",
+          "kind"
+        ],
+        "properties": {
+          "data_dock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
           }
         }
       },
@@ -4348,6 +6191,157 @@
           }
         }
       },
+      "FakerFieldType": {
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "field_type",
+          "category"
+        ],
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "field_type": {
+            "type": "string"
+          },
+          "generator": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "FakerSchemaOverview": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "data_container_id",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data_container_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FakerTableFieldOptions": {
+        "type": "object",
+        "properties": {
+          "blank": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          }
+        }
+      },
+      "FakerTableFields": {
+        "type": "object",
+        "required": [
+          "name",
+          "field_type"
+        ],
+        "properties": {
+          "field_type": {
+            "type": "string"
+          },
+          "generator": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "options": {
+            "$ref": "#/components/schemas/FakerTableFieldOptions",
+            "nullable": true
+          }
+        }
+      },
+      "FakerTableOverview": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "data_container_id",
+          "fields",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data_container_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FakerTableFields"
+            }
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "raw_sql": {
+            "type": "string",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FakerTableTemplate": {
+        "type": "object",
+        "required": [
+          "name",
+          "fields"
+        ],
+        "properties": {
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TemplateFakerField"
+            }
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
       "FileSorterDestinationConfig": {
         "type": "object",
         "description": "FileSorter destination configuration (S3 bucket for sorted files)",
@@ -4526,6 +6520,66 @@
           }
         }
       },
+      "GetFakerFieldTypesResponse": {
+        "type": "object",
+        "required": [
+          "data",
+          "templates"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FakerFieldType"
+            }
+          },
+          "templates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FakerTableTemplate"
+            }
+          }
+        }
+      },
+      "GetFakerSchemaResponse": {
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FakerSchemaOverview"
+            }
+          }
+        }
+      },
+      "GetFakerTableResponse": {
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/FakerTableOverview"
+          }
+        }
+      },
+      "GetFakerTablesResponse": {
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FakerTableOverview"
+            }
+          }
+        }
+      },
       "GetRunResponse": {
         "type": "object",
         "required": [
@@ -4565,6 +6619,182 @@
           },
           "slug": {
             "type": "string"
+          }
+        }
+      },
+      "IcebergConnectorDataContainer": {
+        "type": "object",
+        "required": [
+          "id",
+          "data_dock_id",
+          "name",
+          "storage_data_dock",
+          "s3_bucket"
+        ],
+        "properties": {
+          "data_dock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "s3_bucket": {
+            "type": "string"
+          },
+          "storage_data_dock": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "IcebergSchemaMetadata": {
+        "type": "object",
+        "required": [
+          "id",
+          "data_container_id",
+          "schema_name",
+          "medallion_tier",
+          "cdc_enabled",
+          "location",
+          "creator_id",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "cdc_enabled": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "creator_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "data_container_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "location": {
+            "type": "string"
+          },
+          "medallion_tier": {
+            "type": "string"
+          },
+          "schema_name": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "IcebergTableMetadata": {
+        "type": "object",
+        "description": "Iceberg table metadata stored in Hyperfluid",
+        "required": [
+          "id",
+          "schema_id",
+          "table_name",
+          "ddl_statement",
+          "creator_id",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "creator_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ddl_statement": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schema_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "table_name": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "IcebergTableResponseData": {
+        "type": "object",
+        "required": [
+          "id",
+          "schema_id",
+          "table_name",
+          "ddl_statement",
+          "creator_id",
+          "created_at",
+          "updated_at",
+          "data_container_id",
+          "schema_name",
+          "medallion_tier"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "creator_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "data_container_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ddl_statement": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "medallion_tier": {
+            "type": "string"
+          },
+          "schema_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schema_name": {
+            "type": "string"
+          },
+          "table_name": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -4626,6 +6856,21 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PipelineRun"
+            }
+          }
+        }
+      },
+      "ListTableClassificationsResponse": {
+        "type": "object",
+        "description": "Response for list of table classifications.",
+        "required": [
+          "classifications"
+        ],
+        "properties": {
+          "classifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableClassificationResponse"
             }
           }
         }
@@ -5448,6 +7693,70 @@
         ],
         "description": "Response for preparing archive import - either simple upload or multipart"
       },
+      "Ref": {
+        "type": "object",
+        "description": "A reference to a file in a storage bucket\nThis reference is created upon scanning a bucket and is used to track the\nstatus of the file through the pipeline.",
+        "required": [
+          "pipeline_id",
+          "key",
+          "pipeline_checksum",
+          "status",
+          "attempts",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "attempts": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "error_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "key": {
+            "type": "string"
+          },
+          "locked_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "locked_by": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the pipeline run that locked the reference\nThis is used to track the progress of the pipeline run\nIf the pipeline run is unhealthy (missed a heartbeat), the reference\nwill be unlocked and the pipeline run will be considered failed.",
+            "nullable": true
+          },
+          "pipeline_checksum": {
+            "type": "string"
+          },
+          "pipeline_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/RefStatus"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "RefStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "done",
+          "failed",
+          "skipped"
+        ]
+      },
       "RefreshDataDocksResponse": {
         "type": "object",
         "required": [
@@ -5516,6 +7825,16 @@
       },
       "S3OutputParameters": {
         "type": "object"
+      },
+      "SensitivityLevel": {
+        "type": "string",
+        "description": "Sensitivity level for data classification",
+        "enum": [
+          "public",
+          "internal",
+          "confidential",
+          "restricted"
+        ]
       },
       "ServiceAccount": {
         "type": "object",
@@ -5599,6 +7918,100 @@
             "type": "integer",
             "description": "Number of characters from SHA256 hash to use as suffix",
             "minimum": 0
+          }
+        }
+      },
+      "TableClassificationResponse": {
+        "type": "object",
+        "description": "Response for a table classification.",
+        "required": [
+          "id",
+          "organization_id",
+          "data_dock_id",
+          "table_fqdn",
+          "sensitivity",
+          "compliance_tags",
+          "ai_generated",
+          "classified_at",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "ai_confidence": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "ai_generated": {
+            "type": "boolean"
+          },
+          "ai_reasoning": {
+            "type": "string",
+            "nullable": true
+          },
+          "classified_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "classified_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "compliance_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data_dock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sensitivity": {
+            "$ref": "#/components/schemas/SensitivityLevel"
+          },
+          "table_fqdn": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TemplateFakerField": {
+        "type": "object",
+        "required": [
+          "name",
+          "field_type",
+          "type_name"
+        ],
+        "properties": {
+          "field_type": {
+            "type": "string"
+          },
+          "generator": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "type_name": {
+            "type": "string"
           }
         }
       },
@@ -5901,6 +8314,20 @@
           }
         }
       },
+      "UpdateFakerTableRequest": {
+        "type": "object",
+        "required": [
+          "fields"
+        ],
+        "properties": {
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FakerTableFields"
+            }
+          }
+        }
+      },
       "UpdateOrgSecuritySettingsBody": {
         "type": "object",
         "description": "Request to update organization security settings.",
@@ -5928,6 +8355,23 @@
         "properties": {
           "description": {
             "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateTableClassificationBody": {
+        "type": "object",
+        "description": "Request to update a table classification.",
+        "properties": {
+          "compliance_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "sensitivity": {
+            "$ref": "#/components/schemas/SensitivityLevel",
             "nullable": true
           }
         }
@@ -6128,6 +8572,10 @@
     {
       "name": "API Keys",
       "description": "LLMaaS API key management"
+    },
+    {
+      "name": "Table Classifications",
+      "description": "Table classification management"
     }
   ]
 }

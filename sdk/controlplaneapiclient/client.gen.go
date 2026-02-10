@@ -185,6 +185,22 @@ const (
 	Multipart PrepareArchiveImportResponse1UploadType = "multipart"
 )
 
+// Defines values for RefStatus.
+const (
+	Done    RefStatus = "done"
+	Failed  RefStatus = "failed"
+	Pending RefStatus = "pending"
+	Skipped RefStatus = "skipped"
+)
+
+// Defines values for SensitivityLevel.
+const (
+	Confidential SensitivityLevel = "confidential"
+	Internal     SensitivityLevel = "internal"
+	Public       SensitivityLevel = "public"
+	Restricted   SensitivityLevel = "restricted"
+)
+
 // AbortMultipartUploadRequest defines model for AbortMultipartUploadRequest.
 type AbortMultipartUploadRequest struct {
 	// Bucket The bucket name
@@ -210,6 +226,35 @@ type AddUserAttributeRequest struct {
 	// Attribute Attribute in `namespace::value` format.
 	// Example: `"region::occitanie"`
 	Attribute string `json:"attribute"`
+}
+
+// AiClassificationResultResponse Response for AI classification result.
+type AiClassificationResultResponse struct {
+	ComplianceTags []string `json:"compliance_tags"`
+	Confidence     float32  `json:"confidence"`
+	Reasoning      string   `json:"reasoning"`
+
+	// Sensitivity Sensitivity level for data classification
+	Sensitivity SensitivityLevel `json:"sensitivity"`
+	TableFqdn   string           `json:"table_fqdn"`
+}
+
+// AiClassifyRequestBody Request for AI classification.
+type AiClassifyRequestBody struct {
+	DataDockId openapi_types.UUID `json:"data_dock_id"`
+
+	// ModelName Optional model name (defaults to org's configured model)
+	ModelName *string `json:"model_name"`
+
+	// TableFqdns List of fully qualified table names to classify
+	TableFqdns []string `json:"table_fqdns"`
+}
+
+// AiClassifyResponseBody Response for AI classification operation.
+type AiClassifyResponseBody struct {
+	ClassifiedCount int                              `json:"classified_count"`
+	FailedCount     int                              `json:"failed_count"`
+	Results         []AiClassificationResultResponse `json:"results"`
 }
 
 // ApiKeyResponse defines model for ApiKeyResponse.
@@ -299,6 +344,23 @@ type BucketArchiveOperation struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
+// BucketFile defines model for BucketFile.
+type BucketFile struct {
+	IsFolder     bool       `json:"is_folder"`
+	LastModified *time.Time `json:"last_modified"`
+	Name         string     `json:"name"`
+	Path         string     `json:"path"`
+	Size         *int64     `json:"size"`
+}
+
+// BucketStats defines model for BucketStats.
+type BucketStats struct {
+	LastModified *time.Time `json:"lastModified"`
+	TotalFiles   int64      `json:"totalFiles"`
+	TotalFolders int64      `json:"totalFolders"`
+	TotalSize    int64      `json:"totalSize"`
+}
+
 // CategoryRouterConfig Category router configuration (CategoryRouterMetadataAware step)
 type CategoryRouterConfig struct {
 	// DefaultCategory Default category if no label matches (e.g., "inconnu")
@@ -329,6 +391,23 @@ type ClassificationConfig struct {
 
 	// ModelName Model name (e.g., "mistral-large-latest")
 	ModelName string `json:"model_name"`
+}
+
+// ClassificationStatsResponse Response for classification statistics.
+type ClassificationStatsResponse struct {
+	AiClassifiedCount     int64 `json:"ai_classified_count"`
+	ClassifiedCount       int64 `json:"classified_count"`
+	ConfidentialCount     int64 `json:"confidential_count"`
+	FinancialCount        int64 `json:"financial_count"`
+	InternalCount         int64 `json:"internal_count"`
+	LegalCount            int64 `json:"legal_count"`
+	ManualClassifiedCount int64 `json:"manual_classified_count"`
+	PciCount              int64 `json:"pci_count"`
+	PhiCount              int64 `json:"phi_count"`
+	PiiCount              int64 `json:"pii_count"`
+	PublicCount           int64 `json:"public_count"`
+	RestrictedCount       int64 `json:"restricted_count"`
+	TotalTables           int64 `json:"total_tables"`
 }
 
 // CompleteMultipartUploadRequest defines model for CompleteMultipartUploadRequest.
@@ -422,6 +501,15 @@ type CopySourceConfig struct {
 	ImportApiUrl string `json:"import_api_url"`
 }
 
+// CountRefRequest defines model for CountRefRequest.
+type CountRefRequest struct {
+	Key             *string    `json:"key"`
+	Locked          *bool      `json:"locked"`
+	Status          *RefStatus `json:"status,omitempty"`
+	UpdatedAtAfter  *time.Time `json:"updated_at_after"`
+	UpdatedAtBefore *time.Time `json:"updated_at_before"`
+}
+
 // CreateApiKeyRequest defines model for CreateApiKeyRequest.
 type CreateApiKeyRequest struct {
 	ExpiresInDays *int32    `json:"expires_in_days"`
@@ -438,6 +526,17 @@ type CreateApiKeyResponse struct {
 	KeyPrefix string             `json:"key_prefix"`
 	Name      string             `json:"name"`
 	Scopes    []string           `json:"scopes"`
+}
+
+// CreateBucketDataContainerRequestBody defines model for CreateBucketDataContainerRequestBody.
+type CreateBucketDataContainerRequestBody struct {
+	DataDockId openapi_types.UUID `json:"data_dock_id"`
+	Name       string             `json:"name"`
+}
+
+// CreateBucketFolderRequest defines model for CreateBucketFolderRequest.
+type CreateBucketFolderRequest struct {
+	Path string `json:"path"`
 }
 
 // CreateContextProviderBody Request to create a context provider.
@@ -482,6 +581,24 @@ type CreateDataDockRequestBody struct {
 	Slug           string              `json:"slug"`
 }
 
+// CreateFakerSchemaRequest defines model for CreateFakerSchemaRequest.
+type CreateFakerSchemaRequest struct {
+	Description string `json:"description"`
+	Name        string `json:"name"`
+}
+
+// CreateFakerTableRequest defines model for CreateFakerTableRequest.
+type CreateFakerTableRequest struct {
+	Name       string `json:"name"`
+	SqlRequest string `json:"sql_request"`
+}
+
+// CreateFakerTableStructuredRequest defines model for CreateFakerTableStructuredRequest.
+type CreateFakerTableStructuredRequest struct {
+	Fields    []FakerTableFields `json:"fields"`
+	TableName string             `json:"table_name"`
+}
+
 // CreateFileRouterPipelineRequest FileRouter pipeline request
 type CreateFileRouterPipelineRequest struct {
 	// DefaultRoute Configuration for a FileRouter destination
@@ -523,6 +640,30 @@ type CreateFileSorterRequest struct {
 type CreateHarborCrdRequestBody struct {
 	Name string `json:"name"`
 	Slug string `json:"slug"`
+}
+
+// CreateIcebergDataContainerRequestBody defines model for CreateIcebergDataContainerRequestBody.
+type CreateIcebergDataContainerRequestBody struct {
+	DataDockId        openapi_types.UUID `json:"data_dock_id"`
+	Name              string             `json:"name"`
+	S3Bucket          string             `json:"s3_bucket"`
+	StorageDataDockId openapi_types.UUID `json:"storage_data_dock_id"`
+}
+
+// CreateIcebergTableMetadataRequest Request to create Iceberg table metadata
+type CreateIcebergTableMetadataRequest struct {
+	DdlStatement string             `json:"ddl_statement"`
+	Description  string             `json:"description"`
+	SchemaId     openapi_types.UUID `json:"schema_id"`
+	TableName    string             `json:"table_name"`
+}
+
+// CreateMedallionSchemaRequest defines model for CreateMedallionSchemaRequest.
+type CreateMedallionSchemaRequest struct {
+	CdcEnabled  *bool   `json:"cdc_enabled"`
+	Description *string `json:"description"`
+	Name        string  `json:"name"`
+	Tier        *string `json:"tier"`
 }
 
 // CreateModelServingRequest defines model for CreateModelServingRequest.
@@ -654,6 +795,18 @@ type CreateServiceAccountCrdRequestBody struct {
 	Description *string `json:"description"`
 }
 
+// CreateTableClassificationBody Request to create a table classification.
+type CreateTableClassificationBody struct {
+	ComplianceTags *[]string          `json:"compliance_tags,omitempty"`
+	DataDockId     openapi_types.UUID `json:"data_dock_id"`
+
+	// Sensitivity Sensitivity level for data classification
+	Sensitivity SensitivityLevel `json:"sensitivity"`
+
+	// TableFqdn Fully qualified table name: "catalog.schema.table"
+	TableFqdn string `json:"table_fqdn"`
+}
+
 // CreateTrinoPipelineRequest Trino-based pipeline request (Markitdown, HephaistosPdfeed, Labelizer)
 type CreateTrinoPipelineRequest struct {
 	// Classification Classification configuration for AI processing
@@ -677,6 +830,14 @@ type CreateUser struct {
 	LastName       string              `json:"last_name"`
 	OauthId        openapi_types.UUID  `json:"oauth_id"`
 	OrganizationId *openapi_types.UUID `json:"organization_id"`
+}
+
+// DataContainerOverview A summary of a data container
+type DataContainerOverview struct {
+	DataDockId openapi_types.UUID `json:"data_dock_id"`
+	Id         openapi_types.UUID `json:"id"`
+	Kind       string             `json:"kind"`
+	Name       string             `json:"name"`
 }
 
 // DataDockKindRequest defines model for DataDockKindRequest.
@@ -836,6 +997,54 @@ type EffectiveSecuritySettingsResponse struct {
 	ZeroTrustMode                 bool     `json:"zero_trust_mode"`
 }
 
+// FakerFieldType defines model for FakerFieldType.
+type FakerFieldType struct {
+	Category    string  `json:"category"`
+	Description string  `json:"description"`
+	FieldType   string  `json:"field_type"`
+	Generator   *string `json:"generator"`
+	Name        string  `json:"name"`
+}
+
+// FakerSchemaOverview defines model for FakerSchemaOverview.
+type FakerSchemaOverview struct {
+	CreatedAt       time.Time          `json:"created_at"`
+	DataContainerId openapi_types.UUID `json:"data_container_id"`
+	Id              openapi_types.UUID `json:"id"`
+	Name            string             `json:"name"`
+	UpdatedAt       time.Time          `json:"updated_at"`
+}
+
+// FakerTableFieldOptions defines model for FakerTableFieldOptions.
+type FakerTableFieldOptions struct {
+	Blank *float32 `json:"blank"`
+}
+
+// FakerTableFields defines model for FakerTableFields.
+type FakerTableFields struct {
+	FieldType string                  `json:"field_type"`
+	Generator *string                 `json:"generator"`
+	Name      string                  `json:"name"`
+	Options   *FakerTableFieldOptions `json:"options,omitempty"`
+}
+
+// FakerTableOverview defines model for FakerTableOverview.
+type FakerTableOverview struct {
+	CreatedAt       time.Time          `json:"created_at"`
+	DataContainerId openapi_types.UUID `json:"data_container_id"`
+	Fields          []FakerTableFields `json:"fields"`
+	Id              openapi_types.UUID `json:"id"`
+	Name            string             `json:"name"`
+	RawSql          *string            `json:"raw_sql"`
+	UpdatedAt       time.Time          `json:"updated_at"`
+}
+
+// FakerTableTemplate defines model for FakerTableTemplate.
+type FakerTableTemplate struct {
+	Fields []TemplateFakerField `json:"fields"`
+	Name   string               `json:"name"`
+}
+
 // FileSorterDestinationConfig FileSorter destination configuration (S3 bucket for sorted files)
 type FileSorterDestinationConfig struct {
 	// BasePrefix Base prefix for sorted files
@@ -937,6 +1146,27 @@ type GetConsoleConfigResponse struct {
 	SapienceApiUrl                string                     `json:"sapience_api_url"`
 }
 
+// GetFakerFieldTypesResponse defines model for GetFakerFieldTypesResponse.
+type GetFakerFieldTypesResponse struct {
+	Data      []FakerFieldType     `json:"data"`
+	Templates []FakerTableTemplate `json:"templates"`
+}
+
+// GetFakerSchemaResponse defines model for GetFakerSchemaResponse.
+type GetFakerSchemaResponse struct {
+	Data []FakerSchemaOverview `json:"data"`
+}
+
+// GetFakerTableResponse defines model for GetFakerTableResponse.
+type GetFakerTableResponse struct {
+	Data FakerTableOverview `json:"data"`
+}
+
+// GetFakerTablesResponse defines model for GetFakerTablesResponse.
+type GetFakerTablesResponse struct {
+	Data []FakerTableOverview `json:"data"`
+}
+
 // GetRunResponse defines model for GetRunResponse.
 type GetRunResponse struct {
 	Run PipelineRun `json:"run"`
@@ -951,6 +1181,54 @@ type Harbor struct {
 	OrganizationId openapi_types.UUID  `json:"organization_id"`
 	OwnerId        *openapi_types.UUID `json:"owner_id"`
 	Slug           string              `json:"slug"`
+}
+
+// IcebergConnectorDataContainer defines model for IcebergConnectorDataContainer.
+type IcebergConnectorDataContainer struct {
+	DataDockId      openapi_types.UUID `json:"data_dock_id"`
+	Id              openapi_types.UUID `json:"id"`
+	Name            string             `json:"name"`
+	S3Bucket        string             `json:"s3_bucket"`
+	StorageDataDock openapi_types.UUID `json:"storage_data_dock"`
+}
+
+// IcebergSchemaMetadata defines model for IcebergSchemaMetadata.
+type IcebergSchemaMetadata struct {
+	CdcEnabled      bool               `json:"cdc_enabled"`
+	CreatedAt       time.Time          `json:"created_at"`
+	CreatorId       openapi_types.UUID `json:"creator_id"`
+	DataContainerId openapi_types.UUID `json:"data_container_id"`
+	Description     *string            `json:"description"`
+	Id              openapi_types.UUID `json:"id"`
+	Location        string             `json:"location"`
+	MedallionTier   string             `json:"medallion_tier"`
+	SchemaName      string             `json:"schema_name"`
+	UpdatedAt       time.Time          `json:"updated_at"`
+}
+
+// IcebergTableMetadata Iceberg table metadata stored in Hyperfluid
+type IcebergTableMetadata struct {
+	CreatedAt    time.Time          `json:"created_at"`
+	CreatorId    openapi_types.UUID `json:"creator_id"`
+	DdlStatement string             `json:"ddl_statement"`
+	Id           openapi_types.UUID `json:"id"`
+	SchemaId     openapi_types.UUID `json:"schema_id"`
+	TableName    string             `json:"table_name"`
+	UpdatedAt    time.Time          `json:"updated_at"`
+}
+
+// IcebergTableResponseData defines model for IcebergTableResponseData.
+type IcebergTableResponseData struct {
+	CreatedAt       time.Time          `json:"created_at"`
+	CreatorId       openapi_types.UUID `json:"creator_id"`
+	DataContainerId openapi_types.UUID `json:"data_container_id"`
+	DdlStatement    string             `json:"ddl_statement"`
+	Id              openapi_types.UUID `json:"id"`
+	MedallionTier   string             `json:"medallion_tier"`
+	SchemaId        openapi_types.UUID `json:"schema_id"`
+	SchemaName      string             `json:"schema_name"`
+	TableName       string             `json:"table_name"`
+	UpdatedAt       time.Time          `json:"updated_at"`
 }
 
 // LabelDefinition Label definition for document classification (Labelize step)
@@ -993,6 +1271,11 @@ type ListContextualRestrictionsResponse struct {
 // ListRunsResponse defines model for ListRunsResponse.
 type ListRunsResponse struct {
 	Runs []PipelineRun `json:"runs"`
+}
+
+// ListTableClassificationsResponse Response for list of table classifications.
+type ListTableClassificationsResponse struct {
+	Classifications []TableClassificationResponse `json:"classifications"`
 }
 
 // ListUserAttributesResponse Response containing a list of user attributes.
@@ -1412,6 +1695,30 @@ type PrepareArchiveImportResponse1 struct {
 // PrepareArchiveImportResponse1UploadType defines model for PrepareArchiveImportResponse.1.UploadType.
 type PrepareArchiveImportResponse1UploadType string
 
+// Ref A reference to a file in a storage bucket
+// This reference is created upon scanning a bucket and is used to track the
+// status of the file through the pipeline.
+type Ref struct {
+	Attempts     int64      `json:"attempts"`
+	CreatedAt    time.Time  `json:"created_at"`
+	ErrorMessage *string    `json:"error_message"`
+	Key          string     `json:"key"`
+	LockedAt     *time.Time `json:"locked_at"`
+
+	// LockedBy The ID of the pipeline run that locked the reference
+	// This is used to track the progress of the pipeline run
+	// If the pipeline run is unhealthy (missed a heartbeat), the reference
+	// will be unlocked and the pipeline run will be considered failed.
+	LockedBy         *openapi_types.UUID `json:"locked_by"`
+	PipelineChecksum string              `json:"pipeline_checksum"`
+	PipelineId       openapi_types.UUID  `json:"pipeline_id"`
+	Status           RefStatus           `json:"status"`
+	UpdatedAt        time.Time           `json:"updated_at"`
+}
+
+// RefStatus defines model for RefStatus.
+type RefStatus string
+
 // RefreshDataDocksResponse defines model for RefreshDataDocksResponse.
 type RefreshDataDocksResponse struct {
 	Message        string `json:"message"`
@@ -1433,6 +1740,9 @@ type Role struct {
 
 // S3OutputParameters defines model for S3OutputParameters.
 type S3OutputParameters = map[string]interface{}
+
+// SensitivityLevel Sensitivity level for data classification
+type SensitivityLevel string
 
 // ServiceAccount defines model for ServiceAccount.
 type ServiceAccount struct {
@@ -1467,6 +1777,33 @@ type Sha256HashDedupingStrategy struct {
 
 	// Length Number of characters from SHA256 hash to use as suffix
 	Length int `json:"length"`
+}
+
+// TableClassificationResponse Response for a table classification.
+type TableClassificationResponse struct {
+	AiConfidence   *float32            `json:"ai_confidence"`
+	AiGenerated    bool                `json:"ai_generated"`
+	AiReasoning    *string             `json:"ai_reasoning"`
+	ClassifiedAt   time.Time           `json:"classified_at"`
+	ClassifiedBy   *openapi_types.UUID `json:"classified_by"`
+	ComplianceTags []string            `json:"compliance_tags"`
+	CreatedAt      time.Time           `json:"created_at"`
+	DataDockId     openapi_types.UUID  `json:"data_dock_id"`
+	Id             openapi_types.UUID  `json:"id"`
+	OrganizationId openapi_types.UUID  `json:"organization_id"`
+
+	// Sensitivity Sensitivity level for data classification
+	Sensitivity SensitivityLevel `json:"sensitivity"`
+	TableFqdn   string           `json:"table_fqdn"`
+	UpdatedAt   time.Time        `json:"updated_at"`
+}
+
+// TemplateFakerField defines model for TemplateFakerField.
+type TemplateFakerField struct {
+	FieldType string  `json:"field_type"`
+	Generator *string `json:"generator"`
+	Name      string  `json:"name"`
+	TypeName  string  `json:"type_name"`
 }
 
 // TrinoConfigRequest defines model for TrinoConfigRequest.
@@ -1563,6 +1900,11 @@ type UpdateDataDockSecuritySettingsBody struct {
 	TableLabelMatching     *bool     `json:"table_label_matching"`
 }
 
+// UpdateFakerTableRequest defines model for UpdateFakerTableRequest.
+type UpdateFakerTableRequest struct {
+	Fields []FakerTableFields `json:"fields"`
+}
+
 // UpdateOrgSecuritySettingsBody Request to update organization security settings.
 type UpdateOrgSecuritySettingsBody struct {
 	OfficeHoursEnabled  *bool   `json:"office_hours_enabled"`
@@ -1574,6 +1916,14 @@ type UpdateOrgSecuritySettingsBody struct {
 // UpdateServiceAccountCrdRequestBody defines model for UpdateServiceAccountCrdRequestBody.
 type UpdateServiceAccountCrdRequestBody struct {
 	Description *string `json:"description"`
+}
+
+// UpdateTableClassificationBody Request to update a table classification.
+type UpdateTableClassificationBody struct {
+	ComplianceTags *[]string `json:"compliance_tags"`
+
+	// Sensitivity Sensitivity level for data classification
+	Sensitivity *SensitivityLevel `json:"sensitivity,omitempty"`
 }
 
 // User defines model for User.
@@ -1632,6 +1982,21 @@ type WorkerAutoScalingResponse struct {
 	TargetMemoryUtilization *int32 `json:"target_memory_utilization"`
 }
 
+// DeleteBucketFileParams defines parameters for DeleteBucketFile.
+type DeleteBucketFileParams struct {
+	Path string `form:"path" json:"path"`
+}
+
+// ListBucketFilesParams defines parameters for ListBucketFiles.
+type ListBucketFilesParams struct {
+	Path *string `form:"path,omitempty" json:"path,omitempty"`
+}
+
+// DownloadBucketFileParams defines parameters for DownloadBucketFile.
+type DownloadBucketFileParams struct {
+	Path string `form:"path" json:"path"`
+}
+
 // ListArchiveOperationsParams defines parameters for ListArchiveOperations.
 type ListArchiveOperationsParams struct {
 	Limit  *int64 `form:"limit,omitempty" json:"limit,omitempty"`
@@ -1677,11 +2042,54 @@ type CreateContextualRestrictionHandlerParams struct {
 	DataDockId *openapi_types.UUID `form:"data_dock_id,omitempty" json:"data_dock_id,omitempty"`
 }
 
+// ListRefsParams defines parameters for ListRefs.
+type ListRefsParams struct {
+	PipelineId       *openapi_types.UUID `form:"pipeline_id,omitempty" json:"pipeline_id,omitempty"`
+	PipelineChecksum *string             `form:"pipeline_checksum,omitempty" json:"pipeline_checksum,omitempty"`
+	Status           *RefStatus          `form:"status,omitempty" json:"status,omitempty"`
+	Key              *string             `form:"key,omitempty" json:"key,omitempty"`
+	UpdatedAtBefore  *time.Time          `form:"updated_at_before,omitempty" json:"updated_at_before,omitempty"`
+	UpdatedAtAfter   *time.Time          `form:"updated_at_after,omitempty" json:"updated_at_after,omitempty"`
+
+	// Lock Whether to lock the references listed
+	Lock     *bool               `form:"lock,omitempty" json:"lock,omitempty"`
+	LockedBy *openapi_types.UUID `form:"locked_by,omitempty" json:"locked_by,omitempty"`
+	Limit    *int64              `form:"limit,omitempty" json:"limit,omitempty"`
+	Offset   *int64              `form:"offset,omitempty" json:"offset,omitempty"`
+}
+
 // UpdateContextProviderHandlerJSONRequestBody defines body for UpdateContextProviderHandler for application/json ContentType.
 type UpdateContextProviderHandlerJSONRequestBody = UpdateContextProviderBody
 
 // UpdateContextualRestrictionHandlerJSONRequestBody defines body for UpdateContextualRestrictionHandler for application/json ContentType.
 type UpdateContextualRestrictionHandlerJSONRequestBody = UpdateContextualRestrictionBody
+
+// CreateBucketDataContainerJSONRequestBody defines body for CreateBucketDataContainer for application/json ContentType.
+type CreateBucketDataContainerJSONRequestBody = CreateBucketDataContainerRequestBody
+
+// CreateBucketFolderJSONRequestBody defines body for CreateBucketFolder for application/json ContentType.
+type CreateBucketFolderJSONRequestBody = CreateBucketFolderRequest
+
+// CreateFakerSchemaJSONRequestBody defines body for CreateFakerSchema for application/json ContentType.
+type CreateFakerSchemaJSONRequestBody = CreateFakerSchemaRequest
+
+// CreateFakerTableJSONRequestBody defines body for CreateFakerTable for application/json ContentType.
+type CreateFakerTableJSONRequestBody = CreateFakerTableRequest
+
+// CreateFakerTableStructuredJSONRequestBody defines body for CreateFakerTableStructured for application/json ContentType.
+type CreateFakerTableStructuredJSONRequestBody = CreateFakerTableStructuredRequest
+
+// UpdateFakerTableJSONRequestBody defines body for UpdateFakerTable for application/json ContentType.
+type UpdateFakerTableJSONRequestBody = UpdateFakerTableRequest
+
+// CreateIcebergDataContainerJSONRequestBody defines body for CreateIcebergDataContainer for application/json ContentType.
+type CreateIcebergDataContainerJSONRequestBody = CreateIcebergDataContainerRequestBody
+
+// CreateSchemaJSONRequestBody defines body for CreateSchema for application/json ContentType.
+type CreateSchemaJSONRequestBody = CreateMedallionSchemaRequest
+
+// CreateTableJSONRequestBody defines body for CreateTable for application/json ContentType.
+type CreateTableJSONRequestBody = CreateIcebergTableMetadataRequest
 
 // CreateDataDockCrdJSONRequestBody defines body for CreateDataDockCrd for application/json ContentType.
 type CreateDataDockCrdJSONRequestBody = CreateDataDockRequestBody
@@ -1743,8 +2151,20 @@ type CreateContextualRestrictionHandlerJSONRequestBody = CreateContextualRestric
 // UpdateOrgSecuritySettingsHandlerJSONRequestBody defines body for UpdateOrgSecuritySettingsHandler for application/json ContentType.
 type UpdateOrgSecuritySettingsHandlerJSONRequestBody = UpdateOrgSecuritySettingsBody
 
+// CreateTableClassificationHandlerJSONRequestBody defines body for CreateTableClassificationHandler for application/json ContentType.
+type CreateTableClassificationHandlerJSONRequestBody = CreateTableClassificationBody
+
+// AiClassifyHandlerJSONRequestBody defines body for AiClassifyHandler for application/json ContentType.
+type AiClassifyHandlerJSONRequestBody = AiClassifyRequestBody
+
+// UpdateTableClassificationHandlerJSONRequestBody defines body for UpdateTableClassificationHandler for application/json ContentType.
+type UpdateTableClassificationHandlerJSONRequestBody = UpdateTableClassificationBody
+
 // CreatePipelineJSONRequestBody defines body for CreatePipeline for application/json ContentType.
 type CreatePipelineJSONRequestBody = CreatePipelineRequest
+
+// CountRefsJSONRequestBody defines body for CountRefs for application/json ContentType.
+type CountRefsJSONRequestBody = CountRefRequest
 
 // CreateUserJSONRequestBody defines body for CreateUser for application/json ContentType.
 type CreateUserJSONRequestBody = CreateUser
@@ -2407,6 +2827,99 @@ type ClientInterface interface {
 
 	UpdateContextualRestrictionHandler(ctx context.Context, restrictionId openapi_types.UUID, body UpdateContextualRestrictionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// CreateBucketDataContainerWithBody request with any body
+	CreateBucketDataContainerWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateBucketDataContainer(ctx context.Context, body CreateBucketDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteBucketFile request
+	DeleteBucketFile(ctx context.Context, dataContainerId openapi_types.UUID, params *DeleteBucketFileParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListBucketFiles request
+	ListBucketFiles(ctx context.Context, dataContainerId openapi_types.UUID, params *ListBucketFilesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UploadBucketFile request
+	UploadBucketFile(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DownloadBucketFile request
+	DownloadBucketFile(ctx context.Context, dataContainerId openapi_types.UUID, params *DownloadBucketFileParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateBucketFolderWithBody request with any body
+	CreateBucketFolderWithBody(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateBucketFolder(ctx context.Context, dataContainerId openapi_types.UUID, body CreateBucketFolderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetBucketStats request
+	GetBucketStats(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetFakerFieldTypes request
+	GetFakerFieldTypes(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetFakerSchemas request
+	GetFakerSchemas(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateFakerSchemaWithBody request with any body
+	CreateFakerSchemaWithBody(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateFakerSchema(ctx context.Context, dataContainerId openapi_types.UUID, body CreateFakerSchemaJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteFakerSchema request
+	DeleteFakerSchema(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateFakerTableWithBody request with any body
+	CreateFakerTableWithBody(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateFakerTable(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, body CreateFakerTableJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateFakerTableStructuredWithBody request with any body
+	CreateFakerTableStructuredWithBody(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateFakerTableStructured(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, body CreateFakerTableStructuredJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetFakerTables request
+	GetFakerTables(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteFakerTable request
+	DeleteFakerTable(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetFakerTable request
+	GetFakerTable(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateFakerTableWithBody request with any body
+	UpdateFakerTableWithBody(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateFakerTable(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, body UpdateFakerTableJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateIcebergDataContainerWithBody request with any body
+	CreateIcebergDataContainerWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateIcebergDataContainer(ctx context.Context, body CreateIcebergDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetIcebergDataContainer request
+	GetIcebergDataContainer(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSchemas request
+	GetSchemas(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateSchemaWithBody request with any body
+	CreateSchemaWithBody(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateSchema(ctx context.Context, dataContainerId openapi_types.UUID, body CreateSchemaJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetTables request
+	GetTables(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateTableWithBody request with any body
+	CreateTableWithBody(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateTable(ctx context.Context, dataContainerId openapi_types.UUID, body CreateTableJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteDataContainer request
+	DeleteDataContainer(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetDataContainer request
+	GetDataContainer(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// CreateDataDockCrdWithBody request with any body
 	CreateDataDockCrdWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -2609,6 +3122,30 @@ type ClientInterface interface {
 
 	UpdateOrgSecuritySettingsHandler(ctx context.Context, organizationId openapi_types.UUID, body UpdateOrgSecuritySettingsHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListTableClassificationsHandler request
+	ListTableClassificationsHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateTableClassificationHandlerWithBody request with any body
+	CreateTableClassificationHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateTableClassificationHandler(ctx context.Context, organizationId openapi_types.UUID, body CreateTableClassificationHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AiClassifyHandlerWithBody request with any body
+	AiClassifyHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AiClassifyHandler(ctx context.Context, organizationId openapi_types.UUID, body AiClassifyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetTableClassificationStatsHandler request
+	GetTableClassificationStatsHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteTableClassificationHandler request
+	DeleteTableClassificationHandler(ctx context.Context, organizationId openapi_types.UUID, classificationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateTableClassificationHandlerWithBody request with any body
+	UpdateTableClassificationHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, classificationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateTableClassificationHandler(ctx context.Context, organizationId openapi_types.UUID, classificationId openapi_types.UUID, body UpdateTableClassificationHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetUserContextHandler request
 	GetUserContextHandler(ctx context.Context, organizationId openapi_types.UUID, userId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -2616,6 +3153,14 @@ type ClientInterface interface {
 	CreatePipelineWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	CreatePipeline(ctx context.Context, body CreatePipelineJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CountRefsWithBody request with any body
+	CountRefsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CountRefs(ctx context.Context, body CountRefsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListRefs request
+	ListRefs(ctx context.Context, params *ListRefsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CreateUserWithBody request with any body
 	CreateUserWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -2738,6 +3283,414 @@ func (c *Client) UpdateContextualRestrictionHandlerWithBody(ctx context.Context,
 
 func (c *Client) UpdateContextualRestrictionHandler(ctx context.Context, restrictionId openapi_types.UUID, body UpdateContextualRestrictionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateContextualRestrictionHandlerRequest(c.Server, restrictionId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateBucketDataContainerWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateBucketDataContainerRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateBucketDataContainer(ctx context.Context, body CreateBucketDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateBucketDataContainerRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteBucketFile(ctx context.Context, dataContainerId openapi_types.UUID, params *DeleteBucketFileParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteBucketFileRequest(c.Server, dataContainerId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListBucketFiles(ctx context.Context, dataContainerId openapi_types.UUID, params *ListBucketFilesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListBucketFilesRequest(c.Server, dataContainerId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UploadBucketFile(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUploadBucketFileRequest(c.Server, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DownloadBucketFile(ctx context.Context, dataContainerId openapi_types.UUID, params *DownloadBucketFileParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDownloadBucketFileRequest(c.Server, dataContainerId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateBucketFolderWithBody(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateBucketFolderRequestWithBody(c.Server, dataContainerId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateBucketFolder(ctx context.Context, dataContainerId openapi_types.UUID, body CreateBucketFolderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateBucketFolderRequest(c.Server, dataContainerId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetBucketStats(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetBucketStatsRequest(c.Server, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetFakerFieldTypes(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFakerFieldTypesRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetFakerSchemas(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFakerSchemasRequest(c.Server, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateFakerSchemaWithBody(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateFakerSchemaRequestWithBody(c.Server, dataContainerId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateFakerSchema(ctx context.Context, dataContainerId openapi_types.UUID, body CreateFakerSchemaJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateFakerSchemaRequest(c.Server, dataContainerId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteFakerSchema(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteFakerSchemaRequest(c.Server, dataContainerId, schemaId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateFakerTableWithBody(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateFakerTableRequestWithBody(c.Server, dataContainerId, schemaId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateFakerTable(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, body CreateFakerTableJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateFakerTableRequest(c.Server, dataContainerId, schemaId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateFakerTableStructuredWithBody(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateFakerTableStructuredRequestWithBody(c.Server, dataContainerId, schemaId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateFakerTableStructured(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, body CreateFakerTableStructuredJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateFakerTableStructuredRequest(c.Server, dataContainerId, schemaId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetFakerTables(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFakerTablesRequest(c.Server, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteFakerTable(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteFakerTableRequest(c.Server, dataContainerId, tableId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetFakerTable(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFakerTableRequest(c.Server, dataContainerId, tableId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateFakerTableWithBody(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateFakerTableRequestWithBody(c.Server, dataContainerId, tableId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateFakerTable(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, body UpdateFakerTableJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateFakerTableRequest(c.Server, dataContainerId, tableId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateIcebergDataContainerWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateIcebergDataContainerRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateIcebergDataContainer(ctx context.Context, body CreateIcebergDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateIcebergDataContainerRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetIcebergDataContainer(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetIcebergDataContainerRequest(c.Server, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetSchemas(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSchemasRequest(c.Server, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateSchemaWithBody(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateSchemaRequestWithBody(c.Server, dataContainerId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateSchema(ctx context.Context, dataContainerId openapi_types.UUID, body CreateSchemaJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateSchemaRequest(c.Server, dataContainerId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetTables(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetTablesRequest(c.Server, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateTableWithBody(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateTableRequestWithBody(c.Server, dataContainerId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateTable(ctx context.Context, dataContainerId openapi_types.UUID, body CreateTableJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateTableRequest(c.Server, dataContainerId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteDataContainer(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteDataContainerRequest(c.Server, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetDataContainer(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetDataContainerRequest(c.Server, dataContainerId)
 	if err != nil {
 		return nil, err
 	}
@@ -3636,6 +4589,114 @@ func (c *Client) UpdateOrgSecuritySettingsHandler(ctx context.Context, organizat
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListTableClassificationsHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListTableClassificationsHandlerRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateTableClassificationHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateTableClassificationHandlerRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateTableClassificationHandler(ctx context.Context, organizationId openapi_types.UUID, body CreateTableClassificationHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateTableClassificationHandlerRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AiClassifyHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAiClassifyHandlerRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AiClassifyHandler(ctx context.Context, organizationId openapi_types.UUID, body AiClassifyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAiClassifyHandlerRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetTableClassificationStatsHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetTableClassificationStatsHandlerRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteTableClassificationHandler(ctx context.Context, organizationId openapi_types.UUID, classificationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteTableClassificationHandlerRequest(c.Server, organizationId, classificationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateTableClassificationHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, classificationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateTableClassificationHandlerRequestWithBody(c.Server, organizationId, classificationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateTableClassificationHandler(ctx context.Context, organizationId openapi_types.UUID, classificationId openapi_types.UUID, body UpdateTableClassificationHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateTableClassificationHandlerRequest(c.Server, organizationId, classificationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetUserContextHandler(ctx context.Context, organizationId openapi_types.UUID, userId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetUserContextHandlerRequest(c.Server, organizationId, userId)
 	if err != nil {
@@ -3662,6 +4723,42 @@ func (c *Client) CreatePipelineWithBody(ctx context.Context, contentType string,
 
 func (c *Client) CreatePipeline(ctx context.Context, body CreatePipelineJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreatePipelineRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CountRefsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCountRefsRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CountRefs(ctx context.Context, body CountRefsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCountRefsRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListRefs(ctx context.Context, params *ListRefsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListRefsRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -4007,6 +5104,1052 @@ func NewUpdateContextualRestrictionHandlerRequestWithBody(server string, restric
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCreateBucketDataContainerRequest calls the generic CreateBucketDataContainer builder with application/json body
+func NewCreateBucketDataContainerRequest(server string, body CreateBucketDataContainerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateBucketDataContainerRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreateBucketDataContainerRequestWithBody generates requests for CreateBucketDataContainer with any type of body
+func NewCreateBucketDataContainerRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/bucket")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteBucketFileRequest generates requests for DeleteBucketFile
+func NewDeleteBucketFileRequest(server string, dataContainerId openapi_types.UUID, params *DeleteBucketFileParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/bucket/%s/files", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "path", runtime.ParamLocationQuery, params.Path); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListBucketFilesRequest generates requests for ListBucketFiles
+func NewListBucketFilesRequest(server string, dataContainerId openapi_types.UUID, params *ListBucketFilesParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/bucket/%s/files", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Path != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "path", runtime.ParamLocationQuery, *params.Path); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUploadBucketFileRequest generates requests for UploadBucketFile
+func NewUploadBucketFileRequest(server string, dataContainerId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/bucket/%s/files", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDownloadBucketFileRequest generates requests for DownloadBucketFile
+func NewDownloadBucketFileRequest(server string, dataContainerId openapi_types.UUID, params *DownloadBucketFileParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/bucket/%s/files/download", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "path", runtime.ParamLocationQuery, params.Path); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateBucketFolderRequest calls the generic CreateBucketFolder builder with application/json body
+func NewCreateBucketFolderRequest(server string, dataContainerId openapi_types.UUID, body CreateBucketFolderJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateBucketFolderRequestWithBody(server, dataContainerId, "application/json", bodyReader)
+}
+
+// NewCreateBucketFolderRequestWithBody generates requests for CreateBucketFolder with any type of body
+func NewCreateBucketFolderRequestWithBody(server string, dataContainerId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/bucket/%s/folders", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetBucketStatsRequest generates requests for GetBucketStats
+func NewGetBucketStatsRequest(server string, dataContainerId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/bucket/%s/stats", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetFakerFieldTypesRequest generates requests for GetFakerFieldTypes
+func NewGetFakerFieldTypesRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/faker/field-types")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetFakerSchemasRequest generates requests for GetFakerSchemas
+func NewGetFakerSchemasRequest(server string, dataContainerId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/faker/%s/schemas", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateFakerSchemaRequest calls the generic CreateFakerSchema builder with application/json body
+func NewCreateFakerSchemaRequest(server string, dataContainerId openapi_types.UUID, body CreateFakerSchemaJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateFakerSchemaRequestWithBody(server, dataContainerId, "application/json", bodyReader)
+}
+
+// NewCreateFakerSchemaRequestWithBody generates requests for CreateFakerSchema with any type of body
+func NewCreateFakerSchemaRequestWithBody(server string, dataContainerId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/faker/%s/schemas", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteFakerSchemaRequest generates requests for DeleteFakerSchema
+func NewDeleteFakerSchemaRequest(server string, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "schema_id", runtime.ParamLocationPath, schemaId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/faker/%s/schemas/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateFakerTableRequest calls the generic CreateFakerTable builder with application/json body
+func NewCreateFakerTableRequest(server string, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, body CreateFakerTableJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateFakerTableRequestWithBody(server, dataContainerId, schemaId, "application/json", bodyReader)
+}
+
+// NewCreateFakerTableRequestWithBody generates requests for CreateFakerTable with any type of body
+func NewCreateFakerTableRequestWithBody(server string, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "schema_id", runtime.ParamLocationPath, schemaId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/faker/%s/schemas/%s/tables", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCreateFakerTableStructuredRequest calls the generic CreateFakerTableStructured builder with application/json body
+func NewCreateFakerTableStructuredRequest(server string, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, body CreateFakerTableStructuredJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateFakerTableStructuredRequestWithBody(server, dataContainerId, schemaId, "application/json", bodyReader)
+}
+
+// NewCreateFakerTableStructuredRequestWithBody generates requests for CreateFakerTableStructured with any type of body
+func NewCreateFakerTableStructuredRequestWithBody(server string, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "schema_id", runtime.ParamLocationPath, schemaId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/faker/%s/schemas/%s/tables/structured", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetFakerTablesRequest generates requests for GetFakerTables
+func NewGetFakerTablesRequest(server string, dataContainerId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/faker/%s/tables", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteFakerTableRequest generates requests for DeleteFakerTable
+func NewDeleteFakerTableRequest(server string, dataContainerId openapi_types.UUID, tableId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "table_id", runtime.ParamLocationPath, tableId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/faker/%s/tables/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetFakerTableRequest generates requests for GetFakerTable
+func NewGetFakerTableRequest(server string, dataContainerId openapi_types.UUID, tableId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "table_id", runtime.ParamLocationPath, tableId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/faker/%s/tables/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateFakerTableRequest calls the generic UpdateFakerTable builder with application/json body
+func NewUpdateFakerTableRequest(server string, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, body UpdateFakerTableJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateFakerTableRequestWithBody(server, dataContainerId, tableId, "application/json", bodyReader)
+}
+
+// NewUpdateFakerTableRequestWithBody generates requests for UpdateFakerTable with any type of body
+func NewUpdateFakerTableRequestWithBody(server string, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "table_id", runtime.ParamLocationPath, tableId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/faker/%s/tables/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCreateIcebergDataContainerRequest calls the generic CreateIcebergDataContainer builder with application/json body
+func NewCreateIcebergDataContainerRequest(server string, body CreateIcebergDataContainerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateIcebergDataContainerRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreateIcebergDataContainerRequestWithBody generates requests for CreateIcebergDataContainer with any type of body
+func NewCreateIcebergDataContainerRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/iceberg")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetIcebergDataContainerRequest generates requests for GetIcebergDataContainer
+func NewGetIcebergDataContainerRequest(server string, dataContainerId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/iceberg/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetSchemasRequest generates requests for GetSchemas
+func NewGetSchemasRequest(server string, dataContainerId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/iceberg/%s/schemas", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateSchemaRequest calls the generic CreateSchema builder with application/json body
+func NewCreateSchemaRequest(server string, dataContainerId openapi_types.UUID, body CreateSchemaJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateSchemaRequestWithBody(server, dataContainerId, "application/json", bodyReader)
+}
+
+// NewCreateSchemaRequestWithBody generates requests for CreateSchema with any type of body
+func NewCreateSchemaRequestWithBody(server string, dataContainerId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/iceberg/%s/schemas", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetTablesRequest generates requests for GetTables
+func NewGetTablesRequest(server string, dataContainerId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/iceberg/%s/tables", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateTableRequest calls the generic CreateTable builder with application/json body
+func NewCreateTableRequest(server string, dataContainerId openapi_types.UUID, body CreateTableJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateTableRequestWithBody(server, dataContainerId, "application/json", bodyReader)
+}
+
+// NewCreateTableRequestWithBody generates requests for CreateTable with any type of body
+func NewCreateTableRequestWithBody(server string, dataContainerId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/iceberg/%s/tables", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteDataContainerRequest generates requests for DeleteDataContainer
+func NewDeleteDataContainerRequest(server string, dataContainerId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetDataContainerRequest generates requests for GetDataContainer
+func NewGetDataContainerRequest(server string, dataContainerId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -6551,6 +8694,263 @@ func NewUpdateOrgSecuritySettingsHandlerRequestWithBody(server string, organizat
 	return req, nil
 }
 
+// NewListTableClassificationsHandlerRequest generates requests for ListTableClassificationsHandler
+func NewListTableClassificationsHandlerRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/table-classifications", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateTableClassificationHandlerRequest calls the generic CreateTableClassificationHandler builder with application/json body
+func NewCreateTableClassificationHandlerRequest(server string, organizationId openapi_types.UUID, body CreateTableClassificationHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateTableClassificationHandlerRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewCreateTableClassificationHandlerRequestWithBody generates requests for CreateTableClassificationHandler with any type of body
+func NewCreateTableClassificationHandlerRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/table-classifications", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewAiClassifyHandlerRequest calls the generic AiClassifyHandler builder with application/json body
+func NewAiClassifyHandlerRequest(server string, organizationId openapi_types.UUID, body AiClassifyHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAiClassifyHandlerRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewAiClassifyHandlerRequestWithBody generates requests for AiClassifyHandler with any type of body
+func NewAiClassifyHandlerRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/table-classifications/ai-classify", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetTableClassificationStatsHandlerRequest generates requests for GetTableClassificationStatsHandler
+func NewGetTableClassificationStatsHandlerRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/table-classifications/stats", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteTableClassificationHandlerRequest generates requests for DeleteTableClassificationHandler
+func NewDeleteTableClassificationHandlerRequest(server string, organizationId openapi_types.UUID, classificationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "classification_id", runtime.ParamLocationPath, classificationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/table-classifications/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateTableClassificationHandlerRequest calls the generic UpdateTableClassificationHandler builder with application/json body
+func NewUpdateTableClassificationHandlerRequest(server string, organizationId openapi_types.UUID, classificationId openapi_types.UUID, body UpdateTableClassificationHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateTableClassificationHandlerRequestWithBody(server, organizationId, classificationId, "application/json", bodyReader)
+}
+
+// NewUpdateTableClassificationHandlerRequestWithBody generates requests for UpdateTableClassificationHandler with any type of body
+func NewUpdateTableClassificationHandlerRequestWithBody(server string, organizationId openapi_types.UUID, classificationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "classification_id", runtime.ParamLocationPath, classificationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/table-classifications/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetUserContextHandlerRequest generates requests for GetUserContextHandler
 func NewGetUserContextHandlerRequest(server string, organizationId openapi_types.UUID, userId string) (*http.Request, error) {
 	var err error
@@ -6628,6 +9028,239 @@ func NewCreatePipelineRequestWithBody(server string, contentType string, body io
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCountRefsRequest calls the generic CountRefs builder with application/json body
+func NewCountRefsRequest(server string, body CountRefsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCountRefsRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCountRefsRequestWithBody generates requests for CountRefs with any type of body
+func NewCountRefsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/refs/count")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListRefsRequest generates requests for ListRefs
+func NewListRefsRequest(server string, params *ListRefsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/refs/list")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.PipelineId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "pipeline_id", runtime.ParamLocationQuery, *params.PipelineId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PipelineChecksum != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "pipeline_checksum", runtime.ParamLocationQuery, *params.PipelineChecksum); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Status != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "status", runtime.ParamLocationQuery, *params.Status); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Key != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "key", runtime.ParamLocationQuery, *params.Key); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.UpdatedAtBefore != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "updated_at_before", runtime.ParamLocationQuery, *params.UpdatedAtBefore); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.UpdatedAtAfter != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "updated_at_after", runtime.ParamLocationQuery, *params.UpdatedAtAfter); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Lock != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "lock", runtime.ParamLocationQuery, *params.Lock); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.LockedBy != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "locked_by", runtime.ParamLocationQuery, *params.LockedBy); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Offset != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "offset", runtime.ParamLocationQuery, *params.Offset); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -6782,6 +9415,99 @@ type ClientWithResponsesInterface interface {
 	UpdateContextualRestrictionHandlerWithBodyWithResponse(ctx context.Context, restrictionId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateContextualRestrictionHandlerRes, error)
 
 	UpdateContextualRestrictionHandlerWithResponse(ctx context.Context, restrictionId openapi_types.UUID, body UpdateContextualRestrictionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateContextualRestrictionHandlerRes, error)
+
+	// CreateBucketDataContainerWithBodyWithResponse request with any body
+	CreateBucketDataContainerWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateBucketDataContainerRes, error)
+
+	CreateBucketDataContainerWithResponse(ctx context.Context, body CreateBucketDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateBucketDataContainerRes, error)
+
+	// DeleteBucketFileWithResponse request
+	DeleteBucketFileWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, params *DeleteBucketFileParams, reqEditors ...RequestEditorFn) (*DeleteBucketFileRes, error)
+
+	// ListBucketFilesWithResponse request
+	ListBucketFilesWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, params *ListBucketFilesParams, reqEditors ...RequestEditorFn) (*ListBucketFilesRes, error)
+
+	// UploadBucketFileWithResponse request
+	UploadBucketFileWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*UploadBucketFileRes, error)
+
+	// DownloadBucketFileWithResponse request
+	DownloadBucketFileWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, params *DownloadBucketFileParams, reqEditors ...RequestEditorFn) (*DownloadBucketFileRes, error)
+
+	// CreateBucketFolderWithBodyWithResponse request with any body
+	CreateBucketFolderWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateBucketFolderRes, error)
+
+	CreateBucketFolderWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, body CreateBucketFolderJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateBucketFolderRes, error)
+
+	// GetBucketStatsWithResponse request
+	GetBucketStatsWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetBucketStatsRes, error)
+
+	// GetFakerFieldTypesWithResponse request
+	GetFakerFieldTypesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetFakerFieldTypesRes, error)
+
+	// GetFakerSchemasWithResponse request
+	GetFakerSchemasWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetFakerSchemasRes, error)
+
+	// CreateFakerSchemaWithBodyWithResponse request with any body
+	CreateFakerSchemaWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateFakerSchemaRes, error)
+
+	CreateFakerSchemaWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, body CreateFakerSchemaJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateFakerSchemaRes, error)
+
+	// DeleteFakerSchemaWithResponse request
+	DeleteFakerSchemaWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteFakerSchemaRes, error)
+
+	// CreateFakerTableWithBodyWithResponse request with any body
+	CreateFakerTableWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateFakerTableRes, error)
+
+	CreateFakerTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, body CreateFakerTableJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateFakerTableRes, error)
+
+	// CreateFakerTableStructuredWithBodyWithResponse request with any body
+	CreateFakerTableStructuredWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateFakerTableStructuredRes, error)
+
+	CreateFakerTableStructuredWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, body CreateFakerTableStructuredJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateFakerTableStructuredRes, error)
+
+	// GetFakerTablesWithResponse request
+	GetFakerTablesWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetFakerTablesRes, error)
+
+	// DeleteFakerTableWithResponse request
+	DeleteFakerTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteFakerTableRes, error)
+
+	// GetFakerTableWithResponse request
+	GetFakerTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetFakerTableRes, error)
+
+	// UpdateFakerTableWithBodyWithResponse request with any body
+	UpdateFakerTableWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateFakerTableRes, error)
+
+	UpdateFakerTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, body UpdateFakerTableJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateFakerTableRes, error)
+
+	// CreateIcebergDataContainerWithBodyWithResponse request with any body
+	CreateIcebergDataContainerWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateIcebergDataContainerRes, error)
+
+	CreateIcebergDataContainerWithResponse(ctx context.Context, body CreateIcebergDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateIcebergDataContainerRes, error)
+
+	// GetIcebergDataContainerWithResponse request
+	GetIcebergDataContainerWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetIcebergDataContainerRes, error)
+
+	// GetSchemasWithResponse request
+	GetSchemasWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetSchemasRes, error)
+
+	// CreateSchemaWithBodyWithResponse request with any body
+	CreateSchemaWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateSchemaRes, error)
+
+	CreateSchemaWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, body CreateSchemaJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateSchemaRes, error)
+
+	// GetTablesWithResponse request
+	GetTablesWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTablesRes, error)
+
+	// CreateTableWithBodyWithResponse request with any body
+	CreateTableWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateTableRes, error)
+
+	CreateTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, body CreateTableJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateTableRes, error)
+
+	// DeleteDataContainerWithResponse request
+	DeleteDataContainerWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteDataContainerRes, error)
+
+	// GetDataContainerWithResponse request
+	GetDataContainerWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDataContainerRes, error)
 
 	// CreateDataDockCrdWithBodyWithResponse request with any body
 	CreateDataDockCrdWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateDataDockCrdRes, error)
@@ -6985,6 +9711,30 @@ type ClientWithResponsesInterface interface {
 
 	UpdateOrgSecuritySettingsHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body UpdateOrgSecuritySettingsHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateOrgSecuritySettingsHandlerRes, error)
 
+	// ListTableClassificationsHandlerWithResponse request
+	ListTableClassificationsHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListTableClassificationsHandlerRes, error)
+
+	// CreateTableClassificationHandlerWithBodyWithResponse request with any body
+	CreateTableClassificationHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateTableClassificationHandlerRes, error)
+
+	CreateTableClassificationHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateTableClassificationHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateTableClassificationHandlerRes, error)
+
+	// AiClassifyHandlerWithBodyWithResponse request with any body
+	AiClassifyHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AiClassifyHandlerRes, error)
+
+	AiClassifyHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body AiClassifyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*AiClassifyHandlerRes, error)
+
+	// GetTableClassificationStatsHandlerWithResponse request
+	GetTableClassificationStatsHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTableClassificationStatsHandlerRes, error)
+
+	// DeleteTableClassificationHandlerWithResponse request
+	DeleteTableClassificationHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, classificationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteTableClassificationHandlerRes, error)
+
+	// UpdateTableClassificationHandlerWithBodyWithResponse request with any body
+	UpdateTableClassificationHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, classificationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTableClassificationHandlerRes, error)
+
+	UpdateTableClassificationHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, classificationId openapi_types.UUID, body UpdateTableClassificationHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTableClassificationHandlerRes, error)
+
 	// GetUserContextHandlerWithResponse request
 	GetUserContextHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, userId string, reqEditors ...RequestEditorFn) (*GetUserContextHandlerRes, error)
 
@@ -6992,6 +9742,14 @@ type ClientWithResponsesInterface interface {
 	CreatePipelineWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreatePipelineRes, error)
 
 	CreatePipelineWithResponse(ctx context.Context, body CreatePipelineJSONRequestBody, reqEditors ...RequestEditorFn) (*CreatePipelineRes, error)
+
+	// CountRefsWithBodyWithResponse request with any body
+	CountRefsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CountRefsRes, error)
+
+	CountRefsWithResponse(ctx context.Context, body CountRefsJSONRequestBody, reqEditors ...RequestEditorFn) (*CountRefsRes, error)
+
+	// ListRefsWithResponse request
+	ListRefsWithResponse(ctx context.Context, params *ListRefsParams, reqEditors ...RequestEditorFn) (*ListRefsRes, error)
 
 	// CreateUserWithBodyWithResponse request with any body
 	CreateUserWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateUserRes, error)
@@ -7171,6 +9929,549 @@ func (r UpdateContextualRestrictionHandlerRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r UpdateContextualRestrictionHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateBucketDataContainerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *DataContainerOverview
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateBucketDataContainerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateBucketDataContainerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteBucketFileRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteBucketFileRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteBucketFileRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListBucketFilesRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]BucketFile
+}
+
+// Status returns HTTPResponse.Status
+func (r ListBucketFilesRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListBucketFilesRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UploadBucketFileRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r UploadBucketFileRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UploadBucketFileRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DownloadBucketFileRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DownloadBucketFileRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DownloadBucketFileRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateBucketFolderRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateBucketFolderRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateBucketFolderRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetBucketStatsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *BucketStats
+}
+
+// Status returns HTTPResponse.Status
+func (r GetBucketStatsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetBucketStatsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetFakerFieldTypesRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *GetFakerFieldTypesResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetFakerFieldTypesRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetFakerFieldTypesRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetFakerSchemasRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *GetFakerSchemaResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetFakerSchemasRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetFakerSchemasRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateFakerSchemaRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *FakerSchemaOverview
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateFakerSchemaRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateFakerSchemaRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteFakerSchemaRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteFakerSchemaRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteFakerSchemaRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateFakerTableRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *FakerTableOverview
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateFakerTableRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateFakerTableRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateFakerTableStructuredRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *FakerTableOverview
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateFakerTableStructuredRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateFakerTableStructuredRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetFakerTablesRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *GetFakerTablesResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetFakerTablesRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetFakerTablesRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteFakerTableRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteFakerTableRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteFakerTableRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetFakerTableRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *GetFakerTableResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetFakerTableRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetFakerTableRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateFakerTableRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *FakerTableOverview
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateFakerTableRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateFakerTableRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateIcebergDataContainerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *DataContainerOverview
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateIcebergDataContainerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateIcebergDataContainerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetIcebergDataContainerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *IcebergConnectorDataContainer
+}
+
+// Status returns HTTPResponse.Status
+func (r GetIcebergDataContainerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetIcebergDataContainerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetSchemasRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]IcebergSchemaMetadata
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSchemasRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSchemasRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateSchemaRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *IcebergSchemaMetadata
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateSchemaRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateSchemaRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetTablesRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]IcebergTableResponseData
+}
+
+// Status returns HTTPResponse.Status
+func (r GetTablesRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetTablesRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateTableRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *IcebergTableMetadata
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateTableRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateTableRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteDataContainerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteDataContainerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteDataContainerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetDataContainerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DataContainerOverview
+}
+
+// Status returns HTTPResponse.Status
+func (r GetDataContainerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetDataContainerRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -8350,6 +11651,137 @@ func (r UpdateOrgSecuritySettingsHandlerRes) StatusCode() int {
 	return 0
 }
 
+type ListTableClassificationsHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ListTableClassificationsResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListTableClassificationsHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListTableClassificationsHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateTableClassificationHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *TableClassificationResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateTableClassificationHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateTableClassificationHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AiClassifyHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AiClassifyResponseBody
+}
+
+// Status returns HTTPResponse.Status
+func (r AiClassifyHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AiClassifyHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetTableClassificationStatsHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ClassificationStatsResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetTableClassificationStatsHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetTableClassificationStatsHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteTableClassificationHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteTableClassificationHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteTableClassificationHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateTableClassificationHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TableClassificationResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateTableClassificationHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateTableClassificationHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetUserContextHandlerRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -8387,6 +11819,49 @@ func (r CreatePipelineRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r CreatePipelineRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CountRefsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r CountRefsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CountRefsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListRefsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]Ref
+}
+
+// Status returns HTTPResponse.Status
+func (r ListRefsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListRefsRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -8523,6 +11998,303 @@ func (c *ClientWithResponses) UpdateContextualRestrictionHandlerWithResponse(ctx
 		return nil, err
 	}
 	return ParseUpdateContextualRestrictionHandlerRes(rsp)
+}
+
+// CreateBucketDataContainerWithBodyWithResponse request with arbitrary body returning *CreateBucketDataContainerRes
+func (c *ClientWithResponses) CreateBucketDataContainerWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateBucketDataContainerRes, error) {
+	rsp, err := c.CreateBucketDataContainerWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateBucketDataContainerRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateBucketDataContainerWithResponse(ctx context.Context, body CreateBucketDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateBucketDataContainerRes, error) {
+	rsp, err := c.CreateBucketDataContainer(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateBucketDataContainerRes(rsp)
+}
+
+// DeleteBucketFileWithResponse request returning *DeleteBucketFileRes
+func (c *ClientWithResponses) DeleteBucketFileWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, params *DeleteBucketFileParams, reqEditors ...RequestEditorFn) (*DeleteBucketFileRes, error) {
+	rsp, err := c.DeleteBucketFile(ctx, dataContainerId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteBucketFileRes(rsp)
+}
+
+// ListBucketFilesWithResponse request returning *ListBucketFilesRes
+func (c *ClientWithResponses) ListBucketFilesWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, params *ListBucketFilesParams, reqEditors ...RequestEditorFn) (*ListBucketFilesRes, error) {
+	rsp, err := c.ListBucketFiles(ctx, dataContainerId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListBucketFilesRes(rsp)
+}
+
+// UploadBucketFileWithResponse request returning *UploadBucketFileRes
+func (c *ClientWithResponses) UploadBucketFileWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*UploadBucketFileRes, error) {
+	rsp, err := c.UploadBucketFile(ctx, dataContainerId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUploadBucketFileRes(rsp)
+}
+
+// DownloadBucketFileWithResponse request returning *DownloadBucketFileRes
+func (c *ClientWithResponses) DownloadBucketFileWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, params *DownloadBucketFileParams, reqEditors ...RequestEditorFn) (*DownloadBucketFileRes, error) {
+	rsp, err := c.DownloadBucketFile(ctx, dataContainerId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDownloadBucketFileRes(rsp)
+}
+
+// CreateBucketFolderWithBodyWithResponse request with arbitrary body returning *CreateBucketFolderRes
+func (c *ClientWithResponses) CreateBucketFolderWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateBucketFolderRes, error) {
+	rsp, err := c.CreateBucketFolderWithBody(ctx, dataContainerId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateBucketFolderRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateBucketFolderWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, body CreateBucketFolderJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateBucketFolderRes, error) {
+	rsp, err := c.CreateBucketFolder(ctx, dataContainerId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateBucketFolderRes(rsp)
+}
+
+// GetBucketStatsWithResponse request returning *GetBucketStatsRes
+func (c *ClientWithResponses) GetBucketStatsWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetBucketStatsRes, error) {
+	rsp, err := c.GetBucketStats(ctx, dataContainerId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetBucketStatsRes(rsp)
+}
+
+// GetFakerFieldTypesWithResponse request returning *GetFakerFieldTypesRes
+func (c *ClientWithResponses) GetFakerFieldTypesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetFakerFieldTypesRes, error) {
+	rsp, err := c.GetFakerFieldTypes(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetFakerFieldTypesRes(rsp)
+}
+
+// GetFakerSchemasWithResponse request returning *GetFakerSchemasRes
+func (c *ClientWithResponses) GetFakerSchemasWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetFakerSchemasRes, error) {
+	rsp, err := c.GetFakerSchemas(ctx, dataContainerId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetFakerSchemasRes(rsp)
+}
+
+// CreateFakerSchemaWithBodyWithResponse request with arbitrary body returning *CreateFakerSchemaRes
+func (c *ClientWithResponses) CreateFakerSchemaWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateFakerSchemaRes, error) {
+	rsp, err := c.CreateFakerSchemaWithBody(ctx, dataContainerId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateFakerSchemaRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateFakerSchemaWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, body CreateFakerSchemaJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateFakerSchemaRes, error) {
+	rsp, err := c.CreateFakerSchema(ctx, dataContainerId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateFakerSchemaRes(rsp)
+}
+
+// DeleteFakerSchemaWithResponse request returning *DeleteFakerSchemaRes
+func (c *ClientWithResponses) DeleteFakerSchemaWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteFakerSchemaRes, error) {
+	rsp, err := c.DeleteFakerSchema(ctx, dataContainerId, schemaId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteFakerSchemaRes(rsp)
+}
+
+// CreateFakerTableWithBodyWithResponse request with arbitrary body returning *CreateFakerTableRes
+func (c *ClientWithResponses) CreateFakerTableWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateFakerTableRes, error) {
+	rsp, err := c.CreateFakerTableWithBody(ctx, dataContainerId, schemaId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateFakerTableRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateFakerTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, body CreateFakerTableJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateFakerTableRes, error) {
+	rsp, err := c.CreateFakerTable(ctx, dataContainerId, schemaId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateFakerTableRes(rsp)
+}
+
+// CreateFakerTableStructuredWithBodyWithResponse request with arbitrary body returning *CreateFakerTableStructuredRes
+func (c *ClientWithResponses) CreateFakerTableStructuredWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateFakerTableStructuredRes, error) {
+	rsp, err := c.CreateFakerTableStructuredWithBody(ctx, dataContainerId, schemaId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateFakerTableStructuredRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateFakerTableStructuredWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, body CreateFakerTableStructuredJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateFakerTableStructuredRes, error) {
+	rsp, err := c.CreateFakerTableStructured(ctx, dataContainerId, schemaId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateFakerTableStructuredRes(rsp)
+}
+
+// GetFakerTablesWithResponse request returning *GetFakerTablesRes
+func (c *ClientWithResponses) GetFakerTablesWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetFakerTablesRes, error) {
+	rsp, err := c.GetFakerTables(ctx, dataContainerId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetFakerTablesRes(rsp)
+}
+
+// DeleteFakerTableWithResponse request returning *DeleteFakerTableRes
+func (c *ClientWithResponses) DeleteFakerTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteFakerTableRes, error) {
+	rsp, err := c.DeleteFakerTable(ctx, dataContainerId, tableId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteFakerTableRes(rsp)
+}
+
+// GetFakerTableWithResponse request returning *GetFakerTableRes
+func (c *ClientWithResponses) GetFakerTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetFakerTableRes, error) {
+	rsp, err := c.GetFakerTable(ctx, dataContainerId, tableId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetFakerTableRes(rsp)
+}
+
+// UpdateFakerTableWithBodyWithResponse request with arbitrary body returning *UpdateFakerTableRes
+func (c *ClientWithResponses) UpdateFakerTableWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateFakerTableRes, error) {
+	rsp, err := c.UpdateFakerTableWithBody(ctx, dataContainerId, tableId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateFakerTableRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdateFakerTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, body UpdateFakerTableJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateFakerTableRes, error) {
+	rsp, err := c.UpdateFakerTable(ctx, dataContainerId, tableId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateFakerTableRes(rsp)
+}
+
+// CreateIcebergDataContainerWithBodyWithResponse request with arbitrary body returning *CreateIcebergDataContainerRes
+func (c *ClientWithResponses) CreateIcebergDataContainerWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateIcebergDataContainerRes, error) {
+	rsp, err := c.CreateIcebergDataContainerWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateIcebergDataContainerRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateIcebergDataContainerWithResponse(ctx context.Context, body CreateIcebergDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateIcebergDataContainerRes, error) {
+	rsp, err := c.CreateIcebergDataContainer(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateIcebergDataContainerRes(rsp)
+}
+
+// GetIcebergDataContainerWithResponse request returning *GetIcebergDataContainerRes
+func (c *ClientWithResponses) GetIcebergDataContainerWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetIcebergDataContainerRes, error) {
+	rsp, err := c.GetIcebergDataContainer(ctx, dataContainerId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetIcebergDataContainerRes(rsp)
+}
+
+// GetSchemasWithResponse request returning *GetSchemasRes
+func (c *ClientWithResponses) GetSchemasWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetSchemasRes, error) {
+	rsp, err := c.GetSchemas(ctx, dataContainerId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSchemasRes(rsp)
+}
+
+// CreateSchemaWithBodyWithResponse request with arbitrary body returning *CreateSchemaRes
+func (c *ClientWithResponses) CreateSchemaWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateSchemaRes, error) {
+	rsp, err := c.CreateSchemaWithBody(ctx, dataContainerId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateSchemaRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateSchemaWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, body CreateSchemaJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateSchemaRes, error) {
+	rsp, err := c.CreateSchema(ctx, dataContainerId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateSchemaRes(rsp)
+}
+
+// GetTablesWithResponse request returning *GetTablesRes
+func (c *ClientWithResponses) GetTablesWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTablesRes, error) {
+	rsp, err := c.GetTables(ctx, dataContainerId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetTablesRes(rsp)
+}
+
+// CreateTableWithBodyWithResponse request with arbitrary body returning *CreateTableRes
+func (c *ClientWithResponses) CreateTableWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateTableRes, error) {
+	rsp, err := c.CreateTableWithBody(ctx, dataContainerId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateTableRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, body CreateTableJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateTableRes, error) {
+	rsp, err := c.CreateTable(ctx, dataContainerId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateTableRes(rsp)
+}
+
+// DeleteDataContainerWithResponse request returning *DeleteDataContainerRes
+func (c *ClientWithResponses) DeleteDataContainerWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteDataContainerRes, error) {
+	rsp, err := c.DeleteDataContainer(ctx, dataContainerId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteDataContainerRes(rsp)
+}
+
+// GetDataContainerWithResponse request returning *GetDataContainerRes
+func (c *ClientWithResponses) GetDataContainerWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDataContainerRes, error) {
+	rsp, err := c.GetDataContainer(ctx, dataContainerId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetDataContainerRes(rsp)
 }
 
 // CreateDataDockCrdWithBodyWithResponse request with arbitrary body returning *CreateDataDockCrdRes
@@ -9171,6 +12943,84 @@ func (c *ClientWithResponses) UpdateOrgSecuritySettingsHandlerWithResponse(ctx c
 	return ParseUpdateOrgSecuritySettingsHandlerRes(rsp)
 }
 
+// ListTableClassificationsHandlerWithResponse request returning *ListTableClassificationsHandlerRes
+func (c *ClientWithResponses) ListTableClassificationsHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListTableClassificationsHandlerRes, error) {
+	rsp, err := c.ListTableClassificationsHandler(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListTableClassificationsHandlerRes(rsp)
+}
+
+// CreateTableClassificationHandlerWithBodyWithResponse request with arbitrary body returning *CreateTableClassificationHandlerRes
+func (c *ClientWithResponses) CreateTableClassificationHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateTableClassificationHandlerRes, error) {
+	rsp, err := c.CreateTableClassificationHandlerWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateTableClassificationHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateTableClassificationHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateTableClassificationHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateTableClassificationHandlerRes, error) {
+	rsp, err := c.CreateTableClassificationHandler(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateTableClassificationHandlerRes(rsp)
+}
+
+// AiClassifyHandlerWithBodyWithResponse request with arbitrary body returning *AiClassifyHandlerRes
+func (c *ClientWithResponses) AiClassifyHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AiClassifyHandlerRes, error) {
+	rsp, err := c.AiClassifyHandlerWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAiClassifyHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) AiClassifyHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body AiClassifyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*AiClassifyHandlerRes, error) {
+	rsp, err := c.AiClassifyHandler(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAiClassifyHandlerRes(rsp)
+}
+
+// GetTableClassificationStatsHandlerWithResponse request returning *GetTableClassificationStatsHandlerRes
+func (c *ClientWithResponses) GetTableClassificationStatsHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTableClassificationStatsHandlerRes, error) {
+	rsp, err := c.GetTableClassificationStatsHandler(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetTableClassificationStatsHandlerRes(rsp)
+}
+
+// DeleteTableClassificationHandlerWithResponse request returning *DeleteTableClassificationHandlerRes
+func (c *ClientWithResponses) DeleteTableClassificationHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, classificationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteTableClassificationHandlerRes, error) {
+	rsp, err := c.DeleteTableClassificationHandler(ctx, organizationId, classificationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteTableClassificationHandlerRes(rsp)
+}
+
+// UpdateTableClassificationHandlerWithBodyWithResponse request with arbitrary body returning *UpdateTableClassificationHandlerRes
+func (c *ClientWithResponses) UpdateTableClassificationHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, classificationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTableClassificationHandlerRes, error) {
+	rsp, err := c.UpdateTableClassificationHandlerWithBody(ctx, organizationId, classificationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateTableClassificationHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdateTableClassificationHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, classificationId openapi_types.UUID, body UpdateTableClassificationHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTableClassificationHandlerRes, error) {
+	rsp, err := c.UpdateTableClassificationHandler(ctx, organizationId, classificationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateTableClassificationHandlerRes(rsp)
+}
+
 // GetUserContextHandlerWithResponse request returning *GetUserContextHandlerRes
 func (c *ClientWithResponses) GetUserContextHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, userId string, reqEditors ...RequestEditorFn) (*GetUserContextHandlerRes, error) {
 	rsp, err := c.GetUserContextHandler(ctx, organizationId, userId, reqEditors...)
@@ -9195,6 +13045,32 @@ func (c *ClientWithResponses) CreatePipelineWithResponse(ctx context.Context, bo
 		return nil, err
 	}
 	return ParseCreatePipelineRes(rsp)
+}
+
+// CountRefsWithBodyWithResponse request with arbitrary body returning *CountRefsRes
+func (c *ClientWithResponses) CountRefsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CountRefsRes, error) {
+	rsp, err := c.CountRefsWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCountRefsRes(rsp)
+}
+
+func (c *ClientWithResponses) CountRefsWithResponse(ctx context.Context, body CountRefsJSONRequestBody, reqEditors ...RequestEditorFn) (*CountRefsRes, error) {
+	rsp, err := c.CountRefs(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCountRefsRes(rsp)
+}
+
+// ListRefsWithResponse request returning *ListRefsRes
+func (c *ClientWithResponses) ListRefsWithResponse(ctx context.Context, params *ListRefsParams, reqEditors ...RequestEditorFn) (*ListRefsRes, error) {
+	rsp, err := c.ListRefs(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListRefsRes(rsp)
 }
 
 // CreateUserWithBodyWithResponse request with arbitrary body returning *CreateUserRes
@@ -9399,6 +13275,586 @@ func ParseUpdateContextualRestrictionHandlerRes(rsp *http.Response) (*UpdateCont
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ContextualRestrictionResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateBucketDataContainerRes parses an HTTP response from a CreateBucketDataContainerWithResponse call
+func ParseCreateBucketDataContainerRes(rsp *http.Response) (*CreateBucketDataContainerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateBucketDataContainerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest DataContainerOverview
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteBucketFileRes parses an HTTP response from a DeleteBucketFileWithResponse call
+func ParseDeleteBucketFileRes(rsp *http.Response) (*DeleteBucketFileRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteBucketFileRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseListBucketFilesRes parses an HTTP response from a ListBucketFilesWithResponse call
+func ParseListBucketFilesRes(rsp *http.Response) (*ListBucketFilesRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListBucketFilesRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []BucketFile
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUploadBucketFileRes parses an HTTP response from a UploadBucketFileWithResponse call
+func ParseUploadBucketFileRes(rsp *http.Response) (*UploadBucketFileRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UploadBucketFileRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseDownloadBucketFileRes parses an HTTP response from a DownloadBucketFileWithResponse call
+func ParseDownloadBucketFileRes(rsp *http.Response) (*DownloadBucketFileRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DownloadBucketFileRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseCreateBucketFolderRes parses an HTTP response from a CreateBucketFolderWithResponse call
+func ParseCreateBucketFolderRes(rsp *http.Response) (*CreateBucketFolderRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateBucketFolderRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetBucketStatsRes parses an HTTP response from a GetBucketStatsWithResponse call
+func ParseGetBucketStatsRes(rsp *http.Response) (*GetBucketStatsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetBucketStatsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest BucketStats
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetFakerFieldTypesRes parses an HTTP response from a GetFakerFieldTypesWithResponse call
+func ParseGetFakerFieldTypesRes(rsp *http.Response) (*GetFakerFieldTypesRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetFakerFieldTypesRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest GetFakerFieldTypesResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetFakerSchemasRes parses an HTTP response from a GetFakerSchemasWithResponse call
+func ParseGetFakerSchemasRes(rsp *http.Response) (*GetFakerSchemasRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetFakerSchemasRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest GetFakerSchemaResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateFakerSchemaRes parses an HTTP response from a CreateFakerSchemaWithResponse call
+func ParseCreateFakerSchemaRes(rsp *http.Response) (*CreateFakerSchemaRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateFakerSchemaRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest FakerSchemaOverview
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteFakerSchemaRes parses an HTTP response from a DeleteFakerSchemaWithResponse call
+func ParseDeleteFakerSchemaRes(rsp *http.Response) (*DeleteFakerSchemaRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteFakerSchemaRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseCreateFakerTableRes parses an HTTP response from a CreateFakerTableWithResponse call
+func ParseCreateFakerTableRes(rsp *http.Response) (*CreateFakerTableRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateFakerTableRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest FakerTableOverview
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateFakerTableStructuredRes parses an HTTP response from a CreateFakerTableStructuredWithResponse call
+func ParseCreateFakerTableStructuredRes(rsp *http.Response) (*CreateFakerTableStructuredRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateFakerTableStructuredRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest FakerTableOverview
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetFakerTablesRes parses an HTTP response from a GetFakerTablesWithResponse call
+func ParseGetFakerTablesRes(rsp *http.Response) (*GetFakerTablesRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetFakerTablesRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest GetFakerTablesResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteFakerTableRes parses an HTTP response from a DeleteFakerTableWithResponse call
+func ParseDeleteFakerTableRes(rsp *http.Response) (*DeleteFakerTableRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteFakerTableRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetFakerTableRes parses an HTTP response from a GetFakerTableWithResponse call
+func ParseGetFakerTableRes(rsp *http.Response) (*GetFakerTableRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetFakerTableRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest GetFakerTableResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateFakerTableRes parses an HTTP response from a UpdateFakerTableWithResponse call
+func ParseUpdateFakerTableRes(rsp *http.Response) (*UpdateFakerTableRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateFakerTableRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest FakerTableOverview
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateIcebergDataContainerRes parses an HTTP response from a CreateIcebergDataContainerWithResponse call
+func ParseCreateIcebergDataContainerRes(rsp *http.Response) (*CreateIcebergDataContainerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateIcebergDataContainerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest DataContainerOverview
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetIcebergDataContainerRes parses an HTTP response from a GetIcebergDataContainerWithResponse call
+func ParseGetIcebergDataContainerRes(rsp *http.Response) (*GetIcebergDataContainerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetIcebergDataContainerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest IcebergConnectorDataContainer
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetSchemasRes parses an HTTP response from a GetSchemasWithResponse call
+func ParseGetSchemasRes(rsp *http.Response) (*GetSchemasRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSchemasRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []IcebergSchemaMetadata
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateSchemaRes parses an HTTP response from a CreateSchemaWithResponse call
+func ParseCreateSchemaRes(rsp *http.Response) (*CreateSchemaRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateSchemaRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest IcebergSchemaMetadata
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetTablesRes parses an HTTP response from a GetTablesWithResponse call
+func ParseGetTablesRes(rsp *http.Response) (*GetTablesRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetTablesRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []IcebergTableResponseData
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateTableRes parses an HTTP response from a CreateTableWithResponse call
+func ParseCreateTableRes(rsp *http.Response) (*CreateTableRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateTableRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest IcebergTableMetadata
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteDataContainerRes parses an HTTP response from a DeleteDataContainerWithResponse call
+func ParseDeleteDataContainerRes(rsp *http.Response) (*DeleteDataContainerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteDataContainerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetDataContainerRes parses an HTTP response from a GetDataContainerWithResponse call
+func ParseGetDataContainerRes(rsp *http.Response) (*GetDataContainerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetDataContainerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DataContainerOverview
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -10663,6 +15119,152 @@ func ParseUpdateOrgSecuritySettingsHandlerRes(rsp *http.Response) (*UpdateOrgSec
 	return response, nil
 }
 
+// ParseListTableClassificationsHandlerRes parses an HTTP response from a ListTableClassificationsHandlerWithResponse call
+func ParseListTableClassificationsHandlerRes(rsp *http.Response) (*ListTableClassificationsHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListTableClassificationsHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTableClassificationsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateTableClassificationHandlerRes parses an HTTP response from a CreateTableClassificationHandlerWithResponse call
+func ParseCreateTableClassificationHandlerRes(rsp *http.Response) (*CreateTableClassificationHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateTableClassificationHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest TableClassificationResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAiClassifyHandlerRes parses an HTTP response from a AiClassifyHandlerWithResponse call
+func ParseAiClassifyHandlerRes(rsp *http.Response) (*AiClassifyHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AiClassifyHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AiClassifyResponseBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetTableClassificationStatsHandlerRes parses an HTTP response from a GetTableClassificationStatsHandlerWithResponse call
+func ParseGetTableClassificationStatsHandlerRes(rsp *http.Response) (*GetTableClassificationStatsHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetTableClassificationStatsHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ClassificationStatsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteTableClassificationHandlerRes parses an HTTP response from a DeleteTableClassificationHandlerWithResponse call
+func ParseDeleteTableClassificationHandlerRes(rsp *http.Response) (*DeleteTableClassificationHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteTableClassificationHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseUpdateTableClassificationHandlerRes parses an HTTP response from a UpdateTableClassificationHandlerWithResponse call
+func ParseUpdateTableClassificationHandlerRes(rsp *http.Response) (*UpdateTableClassificationHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateTableClassificationHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TableClassificationResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetUserContextHandlerRes parses an HTTP response from a GetUserContextHandlerWithResponse call
 func ParseGetUserContextHandlerRes(rsp *http.Response) (*GetUserContextHandlerRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -10700,6 +15302,48 @@ func ParseCreatePipelineRes(rsp *http.Response) (*CreatePipelineRes, error) {
 	response := &CreatePipelineRes{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseCountRefsRes parses an HTTP response from a CountRefsWithResponse call
+func ParseCountRefsRes(rsp *http.Response) (*CountRefsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CountRefsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseListRefsRes parses an HTTP response from a ListRefsWithResponse call
+func ParseListRefsRes(rsp *http.Response) (*ListRefsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListRefsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []Ref
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
 	}
 
 	return response, nil
