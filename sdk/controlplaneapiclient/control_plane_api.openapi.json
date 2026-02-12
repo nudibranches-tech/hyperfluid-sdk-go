@@ -1202,6 +1202,52 @@
         }
       }
     },
+    "/api/v1/data-containers/iceberg/{data_container_id}/tables/clone": {
+      "post": {
+        "tags": [
+          "crate::hf_console::inbound::http::handlers::data_containers::iceberg::clone_table"
+        ],
+        "operationId": "clone_table",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloneIcebergTableRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Table cloned successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Table already exists"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/data-containers/{data_container_id}": {
       "get": {
         "tags": [
@@ -4050,7 +4096,7 @@
       }
     },
     "/api/v1/refs/count": {
-      "post": {
+      "get": {
         "tags": [
           "Pipelines"
         ],
@@ -4206,6 +4252,90 @@
             "description": "Internal server error"
           }
         }
+      }
+    },
+    "/api/v1/refs/{key}": {
+      "put": {
+        "tags": [
+          "Pipelines"
+        ],
+        "operationId": "update_ref",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "Reference key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRefRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Reference updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ref"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Reference not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/unified-catalog": {
+      "get": {
+        "tags": [],
+        "summary": "Get unified catalog of all tables from Trino DataDocks",
+        "operationId": "get_unified_catalog",
+        "parameters": [
+          {
+            "name": "harbor_id",
+            "in": "query",
+            "description": "Optional harbor ID to filter data docks by environment",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Unified catalog retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnifiedCatalogResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       }
     },
     "/api/v1/users": {
@@ -4836,6 +4966,29 @@
           }
         }
       },
+      "CloneIcebergTableRequestBody": {
+        "type": "object",
+        "required": [
+          "source_schema_name",
+          "source_table_name",
+          "target_schema_name",
+          "target_table_name"
+        ],
+        "properties": {
+          "source_schema_name": {
+            "type": "string"
+          },
+          "source_table_name": {
+            "type": "string"
+          },
+          "target_schema_name": {
+            "type": "string"
+          },
+          "target_table_name": {
+            "type": "string"
+          }
+        }
+      },
       "CompleteMultipartUploadRequest": {
         "type": "object",
         "required": [
@@ -5055,6 +5208,25 @@
           "destination_prefix": {
             "type": "string",
             "description": "Optional prefix path within the destination bucket",
+            "nullable": true
+          }
+        }
+      },
+      "CopyS3SourceConfig": {
+        "type": "object",
+        "description": "S3 source configuration for S3-to-S3 copy",
+        "required": [
+          "data_container_id"
+        ],
+        "properties": {
+          "data_container_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Data Container ID for the source S3 bucket (DataDock is resolved automatically)"
+          },
+          "source_prefix": {
+            "type": "string",
+            "description": "Optional prefix to filter source files (stripped during copy)",
             "nullable": true
           }
         }
@@ -5663,9 +5835,51 @@
               }
             ],
             "description": "Copy: Import API source → S3 destination"
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateS3CopyPipelineRequest"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "s3_copy"
+                    ]
+                  }
+                }
+              }
+            ],
+            "description": "S3Copy: S3 source → S3 destination"
           }
         ],
         "description": "Discriminated union for pipeline creation requests"
+      },
+      "CreateS3CopyPipelineRequest": {
+        "type": "object",
+        "description": "S3-to-S3 copy pipeline request",
+        "required": [
+          "pipeline",
+          "source",
+          "destination"
+        ],
+        "properties": {
+          "destination": {
+            "$ref": "#/components/schemas/CopyDestinationConfig"
+          },
+          "pipeline": {
+            "$ref": "#/components/schemas/PipelineMetadata"
+          },
+          "source": {
+            "$ref": "#/components/schemas/CopyS3SourceConfig"
+          }
+        }
       },
       "CreateServiceAccountCrdRequestBody": {
         "type": "object",
@@ -7992,6 +8206,86 @@
           }
         }
       },
+      "TableColumnResponse": {
+        "type": "object",
+        "required": [
+          "name",
+          "data_type"
+        ],
+        "properties": {
+          "data_type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "TableDataProductResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "table_name",
+          "catalog_name",
+          "schema_name",
+          "data_dock_id",
+          "data_dock_name",
+          "data_dock_type",
+          "column_count",
+          "columns",
+          "status",
+          "data_dock_host",
+          "data_dock_port"
+        ],
+        "properties": {
+          "catalog_name": {
+            "type": "string"
+          },
+          "column_count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableColumnResponse"
+            }
+          },
+          "data_dock_host": {
+            "type": "string"
+          },
+          "data_dock_id": {
+            "type": "string"
+          },
+          "data_dock_name": {
+            "type": "string"
+          },
+          "data_dock_port": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data_dock_type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "last_refreshed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "schema_name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "table_name": {
+            "type": "string"
+          }
+        }
+      },
       "TemplateFakerField": {
         "type": "object",
         "required": [
@@ -8213,6 +8507,78 @@
           }
         }
       },
+      "UnifiedCatalogResponse": {
+        "type": "object",
+        "required": [
+          "tables",
+          "by_data_dock",
+          "by_catalog",
+          "by_schema",
+          "search_index",
+          "last_updated",
+          "total_count",
+          "data_dock_counts"
+        ],
+        "properties": {
+          "by_catalog": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "by_data_dock": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "by_schema": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "data_dock_counts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "last_updated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "search_index": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "tables": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/TableDataProductResponse"
+            }
+          },
+          "total_count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "UpdateContextProviderBody": {
         "type": "object",
         "description": "Request to update a context provider.",
@@ -8347,6 +8713,44 @@
           "zero_trust_mode": {
             "type": "boolean",
             "nullable": true
+          }
+        }
+      },
+      "UpdateRefRequest": {
+        "type": "object",
+        "required": [
+          "key",
+          "pipeline_id",
+          "pipeline_checksum",
+          "status",
+          "attempts"
+        ],
+        "properties": {
+          "attempts": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "error_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "key": {
+            "type": "string"
+          },
+          "locked_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "pipeline_checksum": {
+            "type": "string"
+          },
+          "pipeline_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/RefStatus"
           }
         }
       },

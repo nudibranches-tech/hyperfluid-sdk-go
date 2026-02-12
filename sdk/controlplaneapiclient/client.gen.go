@@ -68,6 +68,11 @@ const (
 	CreatePipelineRequestV23TypeCopy CreatePipelineRequestV23Type = "copy"
 )
 
+// Defines values for CreatePipelineRequestV24Type.
+const (
+	S3Copy CreatePipelineRequestV24Type = "s3_copy"
+)
+
 // Defines values for DataDockKindRequest0Type.
 const (
 	DataDockKindRequest0TypeTrino DataDockKindRequest0Type = "Trino"
@@ -410,6 +415,14 @@ type ClassificationStatsResponse struct {
 	TotalTables           int64 `json:"total_tables"`
 }
 
+// CloneIcebergTableRequestBody defines model for CloneIcebergTableRequestBody.
+type CloneIcebergTableRequestBody struct {
+	SourceSchemaName string `json:"source_schema_name"`
+	SourceTableName  string `json:"source_table_name"`
+	TargetSchemaName string `json:"target_schema_name"`
+	TargetTableName  string `json:"target_table_name"`
+}
+
 // CompleteMultipartUploadRequest defines model for CompleteMultipartUploadRequest.
 type CompleteMultipartUploadRequest struct {
 	// Bucket The bucket name
@@ -490,6 +503,15 @@ type CopyOutputParameters struct {
 
 	// DestinationPrefix Optional prefix path within the destination bucket
 	DestinationPrefix *string `json:"destination_prefix"`
+}
+
+// CopyS3SourceConfig S3 source configuration for S3-to-S3 copy
+type CopyS3SourceConfig struct {
+	// DataContainerId Data Container ID for the source S3 bucket (DataDock is resolved automatically)
+	DataContainerId openapi_types.UUID `json:"data_container_id"`
+
+	// SourcePrefix Optional prefix to filter source files (stripped during copy)
+	SourcePrefix *string `json:"source_prefix"`
 }
 
 // CopySourceConfig Copy pipeline source configuration (Import API)
@@ -788,6 +810,34 @@ type CreatePipelineRequestV23 struct {
 
 // CreatePipelineRequestV23Type defines model for CreatePipelineRequestV2.3.Type.
 type CreatePipelineRequestV23Type string
+
+// CreatePipelineRequestV24 defines model for .
+type CreatePipelineRequestV24 struct {
+	// Destination Copy pipeline destination configuration (S3 bucket)
+	Destination CopyDestinationConfig `json:"destination"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// Source S3 source configuration for S3-to-S3 copy
+	Source CopyS3SourceConfig           `json:"source"`
+	Type   CreatePipelineRequestV24Type `json:"type"`
+}
+
+// CreatePipelineRequestV24Type defines model for CreatePipelineRequestV2.4.Type.
+type CreatePipelineRequestV24Type string
+
+// CreateS3CopyPipelineRequest S3-to-S3 copy pipeline request
+type CreateS3CopyPipelineRequest struct {
+	// Destination Copy pipeline destination configuration (S3 bucket)
+	Destination CopyDestinationConfig `json:"destination"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// Source S3 source configuration for S3-to-S3 copy
+	Source CopyS3SourceConfig `json:"source"`
+}
 
 // CreateServiceAccountCrdRequestBody defines model for CreateServiceAccountCrdRequestBody.
 type CreateServiceAccountCrdRequestBody struct {
@@ -1798,6 +1848,29 @@ type TableClassificationResponse struct {
 	UpdatedAt   time.Time        `json:"updated_at"`
 }
 
+// TableColumnResponse defines model for TableColumnResponse.
+type TableColumnResponse struct {
+	DataType string `json:"data_type"`
+	Name     string `json:"name"`
+}
+
+// TableDataProductResponse defines model for TableDataProductResponse.
+type TableDataProductResponse struct {
+	CatalogName   string                `json:"catalog_name"`
+	ColumnCount   int32                 `json:"column_count"`
+	Columns       []TableColumnResponse `json:"columns"`
+	DataDockHost  string                `json:"data_dock_host"`
+	DataDockId    string                `json:"data_dock_id"`
+	DataDockName  string                `json:"data_dock_name"`
+	DataDockPort  int32                 `json:"data_dock_port"`
+	DataDockType  string                `json:"data_dock_type"`
+	Id            string                `json:"id"`
+	LastRefreshed *time.Time            `json:"last_refreshed"`
+	SchemaName    string                `json:"schema_name"`
+	Status        string                `json:"status"`
+	TableName     string                `json:"table_name"`
+}
+
 // TemplateFakerField defines model for TemplateFakerField.
 type TemplateFakerField struct {
 	FieldType string  `json:"field_type"`
@@ -1866,6 +1939,18 @@ type TrinoOutputParameters struct {
 	TrinoTable  string             `json:"trino_table"`
 }
 
+// UnifiedCatalogResponse defines model for UnifiedCatalogResponse.
+type UnifiedCatalogResponse struct {
+	ByCatalog      map[string][]string                 `json:"by_catalog"`
+	ByDataDock     map[string][]string                 `json:"by_data_dock"`
+	BySchema       map[string][]string                 `json:"by_schema"`
+	DataDockCounts map[string]int32                    `json:"data_dock_counts"`
+	LastUpdated    time.Time                           `json:"last_updated"`
+	SearchIndex    map[string][]string                 `json:"search_index"`
+	Tables         map[string]TableDataProductResponse `json:"tables"`
+	TotalCount     int32                               `json:"total_count"`
+}
+
 // UpdateContextProviderBody Request to update a context provider.
 type UpdateContextProviderBody struct {
 	Config              interface{} `json:"config,omitempty"`
@@ -1911,6 +1996,17 @@ type UpdateOrgSecuritySettingsBody struct {
 	OfficeHoursEndUtc   *string `json:"office_hours_end_utc"`
 	OfficeHoursStartUtc *string `json:"office_hours_start_utc"`
 	ZeroTrustMode       *bool   `json:"zero_trust_mode"`
+}
+
+// UpdateRefRequest defines model for UpdateRefRequest.
+type UpdateRefRequest struct {
+	Attempts         int64              `json:"attempts"`
+	ErrorMessage     *string            `json:"error_message"`
+	Key              string             `json:"key"`
+	LockedAt         *time.Time         `json:"locked_at"`
+	PipelineChecksum string             `json:"pipeline_checksum"`
+	PipelineId       openapi_types.UUID `json:"pipeline_id"`
+	Status           RefStatus          `json:"status"`
 }
 
 // UpdateServiceAccountCrdRequestBody defines model for UpdateServiceAccountCrdRequestBody.
@@ -2058,6 +2154,12 @@ type ListRefsParams struct {
 	Offset   *int64              `form:"offset,omitempty" json:"offset,omitempty"`
 }
 
+// GetUnifiedCatalogParams defines parameters for GetUnifiedCatalog.
+type GetUnifiedCatalogParams struct {
+	// HarborId Optional harbor ID to filter data docks by environment
+	HarborId *openapi_types.UUID `form:"harbor_id,omitempty" json:"harbor_id,omitempty"`
+}
+
 // UpdateContextProviderHandlerJSONRequestBody defines body for UpdateContextProviderHandler for application/json ContentType.
 type UpdateContextProviderHandlerJSONRequestBody = UpdateContextProviderBody
 
@@ -2090,6 +2192,9 @@ type CreateSchemaJSONRequestBody = CreateMedallionSchemaRequest
 
 // CreateTableJSONRequestBody defines body for CreateTable for application/json ContentType.
 type CreateTableJSONRequestBody = CreateIcebergTableMetadataRequest
+
+// CloneTableJSONRequestBody defines body for CloneTable for application/json ContentType.
+type CloneTableJSONRequestBody = CloneIcebergTableRequestBody
 
 // CreateDataDockCrdJSONRequestBody defines body for CreateDataDockCrd for application/json ContentType.
 type CreateDataDockCrdJSONRequestBody = CreateDataDockRequestBody
@@ -2165,6 +2270,9 @@ type CreatePipelineJSONRequestBody = CreatePipelineRequest
 
 // CountRefsJSONRequestBody defines body for CountRefs for application/json ContentType.
 type CountRefsJSONRequestBody = CountRefRequest
+
+// UpdateRefJSONRequestBody defines body for UpdateRef for application/json ContentType.
+type UpdateRefJSONRequestBody = UpdateRefRequest
 
 // CreateUserJSONRequestBody defines body for CreateUser for application/json ContentType.
 type CreateUserJSONRequestBody = CreateUser
@@ -2266,6 +2374,32 @@ func (t *CreatePipelineRequestV2) FromCreatePipelineRequestV23(v CreatePipelineR
 
 // MergeCreatePipelineRequestV23 performs a merge with any union data inside the CreatePipelineRequestV2, using the provided CreatePipelineRequestV23
 func (t *CreatePipelineRequestV2) MergeCreatePipelineRequestV23(v CreatePipelineRequestV23) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCreatePipelineRequestV24 returns the union data inside the CreatePipelineRequestV2 as a CreatePipelineRequestV24
+func (t CreatePipelineRequestV2) AsCreatePipelineRequestV24() (CreatePipelineRequestV24, error) {
+	var body CreatePipelineRequestV24
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreatePipelineRequestV24 overwrites any union data inside the CreatePipelineRequestV2 as the provided CreatePipelineRequestV24
+func (t *CreatePipelineRequestV2) FromCreatePipelineRequestV24(v CreatePipelineRequestV24) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreatePipelineRequestV24 performs a merge with any union data inside the CreatePipelineRequestV2, using the provided CreatePipelineRequestV24
+func (t *CreatePipelineRequestV2) MergeCreatePipelineRequestV24(v CreatePipelineRequestV24) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -2914,6 +3048,11 @@ type ClientInterface interface {
 
 	CreateTable(ctx context.Context, dataContainerId openapi_types.UUID, body CreateTableJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// CloneTableWithBody request with any body
+	CloneTableWithBody(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CloneTable(ctx context.Context, dataContainerId openapi_types.UUID, body CloneTableJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DeleteDataContainer request
 	DeleteDataContainer(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -3161,6 +3300,14 @@ type ClientInterface interface {
 
 	// ListRefs request
 	ListRefs(ctx context.Context, params *ListRefsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateRefWithBody request with any body
+	UpdateRefWithBody(ctx context.Context, key string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateRef(ctx context.Context, key string, body UpdateRefJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetUnifiedCatalog request
+	GetUnifiedCatalog(ctx context.Context, params *GetUnifiedCatalogParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CreateUserWithBody request with any body
 	CreateUserWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3667,6 +3814,30 @@ func (c *Client) CreateTableWithBody(ctx context.Context, dataContainerId openap
 
 func (c *Client) CreateTable(ctx context.Context, dataContainerId openapi_types.UUID, body CreateTableJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateTableRequest(c.Server, dataContainerId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CloneTableWithBody(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloneTableRequestWithBody(c.Server, dataContainerId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CloneTable(ctx context.Context, dataContainerId openapi_types.UUID, body CloneTableJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloneTableRequest(c.Server, dataContainerId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -4759,6 +4930,42 @@ func (c *Client) CountRefs(ctx context.Context, body CountRefsJSONRequestBody, r
 
 func (c *Client) ListRefs(ctx context.Context, params *ListRefsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListRefsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateRefWithBody(ctx context.Context, key string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateRefRequestWithBody(c.Server, key, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateRef(ctx context.Context, key string, body UpdateRefJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateRefRequest(c.Server, key, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetUnifiedCatalog(ctx context.Context, params *GetUnifiedCatalogParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetUnifiedCatalogRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -6067,6 +6274,53 @@ func NewCreateTableRequestWithBody(server string, dataContainerId openapi_types.
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/data-containers/iceberg/%s/tables", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCloneTableRequest calls the generic CloneTable builder with application/json body
+func NewCloneTableRequest(server string, dataContainerId openapi_types.UUID, body CloneTableJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCloneTableRequestWithBody(server, dataContainerId, "application/json", bodyReader)
+}
+
+// NewCloneTableRequestWithBody generates requests for CloneTable with any type of body
+func NewCloneTableRequestWithBody(server string, dataContainerId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/iceberg/%s/tables/clone", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -9062,7 +9316,7 @@ func NewCountRefsRequestWithBody(server string, contentType string, body io.Read
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", queryURL.String(), body)
+	req, err := http.NewRequest("GET", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -9241,6 +9495,102 @@ func NewListRefsRequest(server string, params *ListRefsParams) (*http.Request, e
 		if params.Offset != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "offset", runtime.ParamLocationQuery, *params.Offset); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateRefRequest calls the generic UpdateRef builder with application/json body
+func NewUpdateRefRequest(server string, key string, body UpdateRefJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateRefRequestWithBody(server, key, "application/json", bodyReader)
+}
+
+// NewUpdateRefRequestWithBody generates requests for UpdateRef with any type of body
+func NewUpdateRefRequestWithBody(server string, key string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "key", runtime.ParamLocationPath, key)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/refs/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetUnifiedCatalogRequest generates requests for GetUnifiedCatalog
+func NewGetUnifiedCatalogRequest(server string, params *GetUnifiedCatalogParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/unified-catalog")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.HarborId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "harbor_id", runtime.ParamLocationQuery, *params.HarborId); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -9503,6 +9853,11 @@ type ClientWithResponsesInterface interface {
 
 	CreateTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, body CreateTableJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateTableRes, error)
 
+	// CloneTableWithBodyWithResponse request with any body
+	CloneTableWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloneTableRes, error)
+
+	CloneTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, body CloneTableJSONRequestBody, reqEditors ...RequestEditorFn) (*CloneTableRes, error)
+
 	// DeleteDataContainerWithResponse request
 	DeleteDataContainerWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteDataContainerRes, error)
 
@@ -9750,6 +10105,14 @@ type ClientWithResponsesInterface interface {
 
 	// ListRefsWithResponse request
 	ListRefsWithResponse(ctx context.Context, params *ListRefsParams, reqEditors ...RequestEditorFn) (*ListRefsRes, error)
+
+	// UpdateRefWithBodyWithResponse request with any body
+	UpdateRefWithBodyWithResponse(ctx context.Context, key string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateRefRes, error)
+
+	UpdateRefWithResponse(ctx context.Context, key string, body UpdateRefJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateRefRes, error)
+
+	// GetUnifiedCatalogWithResponse request
+	GetUnifiedCatalogWithResponse(ctx context.Context, params *GetUnifiedCatalogParams, reqEditors ...RequestEditorFn) (*GetUnifiedCatalogRes, error)
 
 	// CreateUserWithBodyWithResponse request with any body
 	CreateUserWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateUserRes, error)
@@ -10429,6 +10792,27 @@ func (r CreateTableRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r CreateTableRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CloneTableRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r CloneTableRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloneTableRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -11868,6 +12252,50 @@ func (r ListRefsRes) StatusCode() int {
 	return 0
 }
 
+type UpdateRefRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Ref
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateRefRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateRefRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetUnifiedCatalogRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *UnifiedCatalogResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetUnifiedCatalogRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetUnifiedCatalogRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type CreateUserRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -12277,6 +12705,23 @@ func (c *ClientWithResponses) CreateTableWithResponse(ctx context.Context, dataC
 		return nil, err
 	}
 	return ParseCreateTableRes(rsp)
+}
+
+// CloneTableWithBodyWithResponse request with arbitrary body returning *CloneTableRes
+func (c *ClientWithResponses) CloneTableWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloneTableRes, error) {
+	rsp, err := c.CloneTableWithBody(ctx, dataContainerId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloneTableRes(rsp)
+}
+
+func (c *ClientWithResponses) CloneTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, body CloneTableJSONRequestBody, reqEditors ...RequestEditorFn) (*CloneTableRes, error) {
+	rsp, err := c.CloneTable(ctx, dataContainerId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloneTableRes(rsp)
 }
 
 // DeleteDataContainerWithResponse request returning *DeleteDataContainerRes
@@ -13073,6 +13518,32 @@ func (c *ClientWithResponses) ListRefsWithResponse(ctx context.Context, params *
 	return ParseListRefsRes(rsp)
 }
 
+// UpdateRefWithBodyWithResponse request with arbitrary body returning *UpdateRefRes
+func (c *ClientWithResponses) UpdateRefWithBodyWithResponse(ctx context.Context, key string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateRefRes, error) {
+	rsp, err := c.UpdateRefWithBody(ctx, key, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateRefRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdateRefWithResponse(ctx context.Context, key string, body UpdateRefJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateRefRes, error) {
+	rsp, err := c.UpdateRef(ctx, key, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateRefRes(rsp)
+}
+
+// GetUnifiedCatalogWithResponse request returning *GetUnifiedCatalogRes
+func (c *ClientWithResponses) GetUnifiedCatalogWithResponse(ctx context.Context, params *GetUnifiedCatalogParams, reqEditors ...RequestEditorFn) (*GetUnifiedCatalogRes, error) {
+	rsp, err := c.GetUnifiedCatalog(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetUnifiedCatalogRes(rsp)
+}
+
 // CreateUserWithBodyWithResponse request with arbitrary body returning *CreateUserRes
 func (c *ClientWithResponses) CreateUserWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateUserRes, error) {
 	rsp, err := c.CreateUserWithBody(ctx, contentType, body, reqEditors...)
@@ -13818,6 +14289,22 @@ func ParseCreateTableRes(rsp *http.Response) (*CreateTableRes, error) {
 		}
 		response.JSON201 = &dest
 
+	}
+
+	return response, nil
+}
+
+// ParseCloneTableRes parses an HTTP response from a CloneTableWithResponse call
+func ParseCloneTableRes(rsp *http.Response) (*CloneTableRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloneTableRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
 	}
 
 	return response, nil
@@ -15339,6 +15826,58 @@ func ParseListRefsRes(rsp *http.Response) (*ListRefsRes, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest []Ref
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateRefRes parses an HTTP response from a UpdateRefWithResponse call
+func ParseUpdateRefRes(rsp *http.Response) (*UpdateRefRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateRefRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Ref
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetUnifiedCatalogRes parses an HTTP response from a GetUnifiedCatalogWithResponse call
+func ParseGetUnifiedCatalogRes(rsp *http.Response) (*GetUnifiedCatalogRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetUnifiedCatalogRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest UnifiedCatalogResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
