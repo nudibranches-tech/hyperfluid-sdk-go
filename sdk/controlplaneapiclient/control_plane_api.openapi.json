@@ -1366,6 +1366,40 @@
         }
       }
     },
+    "/api/v1/data-docks/{data_dock_id}/data-containers": {
+      "get": {
+        "tags": [
+          "crate::hf_console::inbound::http::handlers::data_docks::data_containers_handlers"
+        ],
+        "operationId": "list_data_containers",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List all data containers in a data dock",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DataContainerOverview"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/data-docks/{data_dock_id}/data-containers/{data_container_id}/archive-export": {
       "post": {
         "tags": [
@@ -3602,6 +3636,38 @@
         }
       }
     },
+    "/api/v1/orgs/{organization_id}/data-docks": {
+      "get": {
+        "tags": [],
+        "operationId": "list_data_docks",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List all data docks in an organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DataDock"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/orgs/{organization_id}/data-docks/refresh": {
       "post": {
         "tags": [],
@@ -3764,6 +3830,86 @@
           },
           "400": {
             "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/api/v1/orgs/{organization_id}/service-accounts": {
+      "get": {
+        "tags": [
+          "Service Accounts"
+        ],
+        "operationId": "list_service_accounts_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List service accounts in an organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListServiceAccountsResponseData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orgs/{organization_id}/service-accounts/{service_account_id}/download": {
+      "get": {
+        "tags": [
+          "Service Accounts"
+        ],
+        "operationId": "download_service_account_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "service_account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Download service account credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DownloadServiceAccountResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4297,6 +4443,463 @@
           },
           "500": {
             "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/tiny-query/cancel/{trino_query_id}": {
+      "post": {
+        "tags": [
+          "Petite Requête"
+        ],
+        "operationId": "cancel_query_handler",
+        "parameters": [
+          {
+            "name": "trino_query_id",
+            "in": "path",
+            "description": "Trino query ID to cancel",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "data_dock_id",
+            "in": "query",
+            "description": "Data Dock ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Query cancelled"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Query not found"
+          }
+        }
+      }
+    },
+    "/api/v1/tiny-query/execute": {
+      "post": {
+        "tags": [
+          "Petite Requête"
+        ],
+        "operationId": "execute_query_handler",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecuteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Query executed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/tiny-query/history": {
+      "get": {
+        "tags": [
+          "Petite Requête"
+        ],
+        "operationId": "get_history_handler",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "query",
+            "description": "Filter by Data Dock",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter: running, completed, failed, cancelled",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "statement_type",
+            "in": "query",
+            "description": "Filter: SELECT, INSERT, CTAS, DDL",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Search in SQL text",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (default 0)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Items per page (default 50, max 200)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query history",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QueryHistoryEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tiny-query/queries": {
+      "get": {
+        "tags": [
+          "Petite Requête"
+        ],
+        "operationId": "list_saved_queries_handler",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "query",
+            "description": "Filter by Data Dock",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "visibility",
+            "in": "query",
+            "description": "Filter: private or team",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Search in title/description",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "mine",
+            "in": "query",
+            "description": "Only my queries",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of saved queries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SavedQuery"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Petite Requête"
+        ],
+        "operationId": "create_saved_query_handler",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSavedQueryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Query saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavedQuery"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/api/v1/tiny-query/queries/{query_id}": {
+      "get": {
+        "tags": [
+          "Petite Requête"
+        ],
+        "operationId": "get_saved_query_handler",
+        "parameters": [
+          {
+            "name": "query_id",
+            "in": "path",
+            "description": "Saved query ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Saved query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavedQuery"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Petite Requête"
+        ],
+        "operationId": "update_saved_query_handler",
+        "parameters": [
+          {
+            "name": "query_id",
+            "in": "path",
+            "description": "Saved query ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSavedQueryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Updated saved query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavedQuery"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Petite Requête"
+        ],
+        "operationId": "delete_saved_query_handler",
+        "parameters": [
+          {
+            "name": "query_id",
+            "in": "path",
+            "description": "Saved query ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/api/v1/tiny-query/results/{query_id}": {
+      "get": {
+        "tags": [
+          "Petite Requête"
+        ],
+        "operationId": "get_results_handler",
+        "parameters": [
+          {
+            "name": "query_id",
+            "in": "path",
+            "description": "Query ID from execute response",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Row offset (default 0)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of rows (default 500)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Results page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultsPage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Results expired or not found"
+          }
+        }
+      }
+    },
+    "/api/v1/tiny-query/schema/{data_dock_id}": {
+      "get": {
+        "tags": [
+          "Petite Requête"
+        ],
+        "operationId": "get_schema_handler",
+        "parameters": [
+          {
+            "name": "data_dock_id",
+            "in": "path",
+            "description": "Data Dock ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Schema metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrinoMetadata"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Data Dock not found"
           }
         }
       }
@@ -4840,6 +5443,98 @@
           "prefix_regex": {
             "type": "string",
             "description": "Regex to extract prefix from source path (single capture group)\nExample: \"(condominium-\\\\d+)/\"",
+            "nullable": true
+          }
+        }
+      },
+      "CephRgwInternalConfig": {
+        "type": "object",
+        "required": [
+          "storage_quota_gb"
+        ],
+        "properties": {
+          "replication_size": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Data replication factor (default: 3)"
+          },
+          "resources": {
+            "$ref": "#/components/schemas/CephRgwResources",
+            "nullable": true
+          },
+          "rgw_instances": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Number of RGW gateway instances for HA (default: 2)"
+          },
+          "storage_quota_gb": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Storage quota in Gigabytes (tenant-level quota)",
+            "minimum": 0
+          }
+        }
+      },
+      "CephRgwInternalConfigResponse": {
+        "type": "object",
+        "required": [
+          "storage_quota_gb",
+          "rgw_instances",
+          "replication_size"
+        ],
+        "properties": {
+          "cpu_limit": {
+            "type": "string",
+            "nullable": true
+          },
+          "cpu_request": {
+            "type": "string",
+            "nullable": true
+          },
+          "memory_limit": {
+            "type": "string",
+            "nullable": true
+          },
+          "memory_request": {
+            "type": "string",
+            "nullable": true
+          },
+          "replication_size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rgw_instances": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "storage_quota_gb": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          }
+        }
+      },
+      "CephRgwResources": {
+        "type": "object",
+        "properties": {
+          "cpu_limit": {
+            "type": "string",
+            "description": "CPU limit (e.g., \"2\")",
+            "nullable": true
+          },
+          "cpu_request": {
+            "type": "string",
+            "description": "CPU request (e.g., \"500m\")",
+            "nullable": true
+          },
+          "memory_limit": {
+            "type": "string",
+            "description": "Memory limit (e.g., \"4Gi\")",
+            "nullable": true
+          },
+          "memory_request": {
+            "type": "string",
+            "description": "Memory request (e.g., \"1Gi\")",
             "nullable": true
           }
         }
@@ -5881,6 +6576,41 @@
           }
         }
       },
+      "CreateSavedQueryRequest": {
+        "type": "object",
+        "required": [
+          "data_dock_id",
+          "title",
+          "sql_text"
+        ],
+        "properties": {
+          "data_dock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "sql_text": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "title": {
+            "type": "string"
+          },
+          "visibility": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "CreateServiceAccountCrdRequestBody": {
         "type": "object",
         "required": [
@@ -6007,6 +6737,189 @@
           }
         }
       },
+      "DataDock": {
+        "type": "object",
+        "required": [
+          "id",
+          "harbor_id",
+          "name",
+          "slug",
+          "description",
+          "host",
+          "port",
+          "kind",
+          "service_account_id",
+          "service_account_secret",
+          "token_issuer_endpoint",
+          "refresh_interval",
+          "status"
+        ],
+        "properties": {
+          "catalog": {
+            "$ref": "#/components/schemas/TrinoMetadata",
+            "nullable": true
+          },
+          "description": {
+            "type": "string"
+          },
+          "harbor_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "host": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "internal_host": {
+            "type": "string",
+            "description": "internal_host and internal_port composes the address to reach the data dock from inside the cluster.\nThis is mainly used for introspection",
+            "nullable": true
+          },
+          "internal_port": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "kind": {
+            "$ref": "#/components/schemas/DataDockKind"
+          },
+          "name": {
+            "type": "string"
+          },
+          "opa_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "port": {
+            "type": "integer",
+            "format": "int32",
+            "description": "This is i16 to match the sqlx type for port but this should never be negative (constraints are already in place in the db)"
+          },
+          "refresh_interval": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "refreshed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "service_account_id": {
+            "type": "string"
+          },
+          "service_account_secret": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/DataDockStatus"
+          },
+          "sts_role_arn": {
+            "type": "string",
+            "description": "IAM role ARN for STS AssumeRoleWithWebIdentity (required for Ceph RGW)\nFormat: arn:aws:iam:::role/<role-name>",
+            "nullable": true
+          },
+          "token_issuer_endpoint": {
+            "type": "string",
+            "description": "token issuer endpoint is the url to get\nthe token related to the service account"
+          }
+        }
+      },
+      "DataDockKind": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "Trino"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/TrinoInternalConfig"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "TrinoInternal"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/MinioInternalConfig"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "MinioInternal"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/PostgresInternalConfig"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "PostgresInternal"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/CephRgwInternalConfig"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "CephRgwInternal"
+                ]
+              }
+            }
+          }
+        ]
+      },
       "DataDockKindRequest": {
         "oneOf": [
           {
@@ -6077,6 +6990,24 @@
                 "type": "string",
                 "enum": [
                   "PostgresInternal"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/CephRgwInternalConfig"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "CephRgwInternal"
                 ]
               }
             }
@@ -6153,6 +7084,24 @@
                 "type": "string",
                 "enum": [
                   "PostgresInternal"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/CephRgwInternalConfigResponse"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "CephRgwInternal"
                 ]
               }
             }
@@ -6336,6 +7285,33 @@
           }
         }
       },
+      "DownloadServiceAccountResponse": {
+        "type": "object",
+        "required": [
+          "client_id",
+          "client_secret",
+          "auth_uri",
+          "token_uri",
+          "issuer"
+        ],
+        "properties": {
+          "auth_uri": {
+            "type": "string"
+          },
+          "client_id": {
+            "type": "string"
+          },
+          "client_secret": {
+            "type": "string"
+          },
+          "issuer": {
+            "type": "string"
+          },
+          "token_uri": {
+            "type": "string"
+          }
+        }
+      },
       "EffectiveSecuritySettingsResponse": {
         "type": "object",
         "description": "Response for effective security settings.",
@@ -6402,6 +7378,33 @@
           },
           "zero_trust_mode": {
             "type": "boolean"
+          }
+        }
+      },
+      "ExecuteRequest": {
+        "type": "object",
+        "required": [
+          "data_dock_id",
+          "sql"
+        ],
+        "properties": {
+          "data_dock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "sql": {
+            "type": "string"
+          },
+          "timeout_seconds": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "nullable": true
           }
         }
       },
@@ -6836,6 +7839,60 @@
           }
         }
       },
+      "HfCollumn": {
+        "type": "object",
+        "required": [
+          "name",
+          "data_type"
+        ],
+        "properties": {
+          "data_type": {
+            "$ref": "#/components/schemas/HfDataType"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "HfDataType": {
+        "type": "string",
+        "enum": [
+          "Int",
+          "String",
+          "Float",
+          "Double",
+          "Boolean",
+          "Date",
+          "Timestamp",
+          "StringArray"
+        ]
+      },
+      "HfTable": {
+        "type": "object",
+        "required": [
+          "catalog_name",
+          "schema_name",
+          "table_name",
+          "columns"
+        ],
+        "properties": {
+          "catalog_name": {
+            "type": "string"
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HfCollumn"
+            }
+          },
+          "schema_name": {
+            "type": "string"
+          },
+          "table_name": {
+            "type": "string"
+          }
+        }
+      },
       "IcebergConnectorDataContainer": {
         "type": "object",
         "required": [
@@ -7070,6 +8127,20 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PipelineRun"
+            }
+          }
+        }
+      },
+      "ListServiceAccountsResponseData": {
+        "type": "object",
+        "required": [
+          "service_accounts"
+        ],
+        "properties": {
+          "service_accounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceAccount"
             }
           }
         }
@@ -7907,6 +8978,143 @@
         ],
         "description": "Response for preparing archive import - either simple upload or multipart"
       },
+      "QueryHistoryEntry": {
+        "type": "object",
+        "required": [
+          "id",
+          "organization_id",
+          "user_id",
+          "data_dock_id",
+          "sql_text",
+          "status",
+          "created_at"
+        ],
+        "properties": {
+          "bytes_scanned": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data_dock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "error_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "execution_time_ms": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rows_returned": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "saved_query_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "scheduled_query_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "sql_text": {
+            "type": "string"
+          },
+          "statement_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "trino_query_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "QueryResult": {
+        "type": "object",
+        "required": [
+          "query_id",
+          "columns",
+          "rows",
+          "total_rows",
+          "has_more",
+          "execution_time_ms"
+        ],
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryResultColumn"
+            }
+          },
+          "execution_time_ms": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "has_more": {
+            "type": "boolean"
+          },
+          "query_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "total_rows": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "trino_query_id": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "QueryResultColumn": {
+        "type": "object",
+        "required": [
+          "name",
+          "data_type"
+        ],
+        "properties": {
+          "data_type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
       "Ref": {
         "type": "object",
         "description": "A reference to a file in a storage bucket\nThis reference is created upon scanning a bucket and is used to track the\nstatus of the file through the pipeline.",
@@ -7994,6 +9202,30 @@
           }
         }
       },
+      "ResultsPage": {
+        "type": "object",
+        "required": [
+          "rows",
+          "total_rows",
+          "has_more"
+        ],
+        "properties": {
+          "has_more": {
+            "type": "boolean"
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "total_rows": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "Role": {
         "type": "object",
         "required": [
@@ -8039,6 +9271,66 @@
       },
       "S3OutputParameters": {
         "type": "object"
+      },
+      "SavedQuery": {
+        "type": "object",
+        "required": [
+          "id",
+          "organization_id",
+          "created_by",
+          "data_dock_id",
+          "title",
+          "sql_text",
+          "visibility",
+          "tags",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "data_dock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sql_text": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "visibility": {
+            "type": "string"
+          }
+        }
       },
       "SensitivityLevel": {
         "type": "string",
@@ -8309,6 +9601,24 @@
           }
         }
       },
+      "TrinoCatalog": {
+        "type": "object",
+        "required": [
+          "catalog_name",
+          "schemas"
+        ],
+        "properties": {
+          "catalog_name": {
+            "type": "string"
+          },
+          "schemas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrinoSchema"
+            }
+          }
+        }
+      },
       "TrinoConfigRequest": {
         "type": "object",
         "required": [
@@ -8464,6 +9774,20 @@
           }
         }
       },
+      "TrinoMetadata": {
+        "type": "object",
+        "required": [
+          "catalogs"
+        ],
+        "properties": {
+          "catalogs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrinoCatalog"
+            }
+          }
+        }
+      },
       "TrinoOutputParameters": {
         "type": "object",
         "required": [
@@ -8504,6 +9828,24 @@
           },
           "trino_table": {
             "type": "string"
+          }
+        }
+      },
+      "TrinoSchema": {
+        "type": "object",
+        "required": [
+          "schema_name",
+          "tables"
+        ],
+        "properties": {
+          "schema_name": {
+            "type": "string"
+          },
+          "tables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HfTable"
+            }
           }
         }
       },
@@ -8754,6 +10096,34 @@
           }
         }
       },
+      "UpdateSavedQueryRequest": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "sql_text": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "visibility": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "UpdateServiceAccountCrdRequestBody": {
         "type": "object",
         "properties": {
@@ -8980,6 +10350,10 @@
     {
       "name": "Table Classifications",
       "description": "Table classification management"
+    },
+    {
+      "name": "Petite Requête",
+      "description": "Petite Requête (tinyQuery) - Execute, save, and manage queries"
     }
   ]
 }

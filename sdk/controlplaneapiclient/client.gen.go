@@ -73,6 +73,31 @@ const (
 	S3Copy CreatePipelineRequestV24Type = "s3_copy"
 )
 
+// Defines values for DataDockKind0Type.
+const (
+	DataDockKind0TypeTrino DataDockKind0Type = "Trino"
+)
+
+// Defines values for DataDockKind1Type.
+const (
+	DataDockKind1TypeTrinoInternal DataDockKind1Type = "TrinoInternal"
+)
+
+// Defines values for DataDockKind2Type.
+const (
+	DataDockKind2TypeMinioInternal DataDockKind2Type = "MinioInternal"
+)
+
+// Defines values for DataDockKind3Type.
+const (
+	DataDockKind3TypePostgresInternal DataDockKind3Type = "PostgresInternal"
+)
+
+// Defines values for DataDockKind4Type.
+const (
+	DataDockKind4TypeCephRgwInternal DataDockKind4Type = "CephRgwInternal"
+)
+
 // Defines values for DataDockKindRequest0Type.
 const (
 	DataDockKindRequest0TypeTrino DataDockKindRequest0Type = "Trino"
@@ -93,6 +118,11 @@ const (
 	DataDockKindRequest3TypePostgresInternal DataDockKindRequest3Type = "PostgresInternal"
 )
 
+// Defines values for DataDockKindRequest4Type.
+const (
+	DataDockKindRequest4TypeCephRgwInternal DataDockKindRequest4Type = "CephRgwInternal"
+)
+
 // Defines values for DataDockKindResponse0Type.
 const (
 	DataDockKindResponse0TypeTrino DataDockKindResponse0Type = "Trino"
@@ -100,17 +130,22 @@ const (
 
 // Defines values for DataDockKindResponse1Type.
 const (
-	DataDockKindResponse1TypeTrinoInternal DataDockKindResponse1Type = "TrinoInternal"
+	TrinoInternal DataDockKindResponse1Type = "TrinoInternal"
 )
 
 // Defines values for DataDockKindResponse2Type.
 const (
-	DataDockKindResponse2TypeMinioInternal DataDockKindResponse2Type = "MinioInternal"
+	MinioInternal DataDockKindResponse2Type = "MinioInternal"
 )
 
 // Defines values for DataDockKindResponse3Type.
 const (
-	DataDockKindResponse3TypePostgresInternal DataDockKindResponse3Type = "PostgresInternal"
+	PostgresInternal DataDockKindResponse3Type = "PostgresInternal"
+)
+
+// Defines values for DataDockKindResponse4Type.
+const (
+	CephRgwInternal DataDockKindResponse4Type = "CephRgwInternal"
 )
 
 // Defines values for DataDockStatus.
@@ -119,6 +154,18 @@ const (
 	DataDockStatusOnline   DataDockStatus = "Online"
 	DataDockStatusPending  DataDockStatus = "Pending"
 	DataDockStatusSleeping DataDockStatus = "Sleeping"
+)
+
+// Defines values for HfDataType.
+const (
+	Boolean     HfDataType = "Boolean"
+	Date        HfDataType = "Date"
+	Double      HfDataType = "Double"
+	Float       HfDataType = "Float"
+	Int         HfDataType = "Int"
+	String      HfDataType = "String"
+	StringArray HfDataType = "StringArray"
+	Timestamp   HfDataType = "Timestamp"
 )
 
 // Defines values for ModelRuntime.
@@ -144,7 +191,7 @@ const (
 
 // Defines values for PipelineOutputParameters0Type.
 const (
-	PipelineOutputParameters0TypeTrino PipelineOutputParameters0Type = "trino"
+	Trino PipelineOutputParameters0Type = "trino"
 )
 
 // Defines values for PipelineOutputParameters1Type.
@@ -374,6 +421,45 @@ type CategoryRouterConfig struct {
 	// PrefixRegex Regex to extract prefix from source path (single capture group)
 	// Example: "(condominium-\\d+)/"
 	PrefixRegex *string `json:"prefix_regex"`
+}
+
+// CephRgwInternalConfig defines model for CephRgwInternalConfig.
+type CephRgwInternalConfig struct {
+	// ReplicationSize Data replication factor (default: 3)
+	ReplicationSize *int32            `json:"replication_size,omitempty"`
+	Resources       *CephRgwResources `json:"resources,omitempty"`
+
+	// RgwInstances Number of RGW gateway instances for HA (default: 2)
+	RgwInstances *int32 `json:"rgw_instances,omitempty"`
+
+	// StorageQuotaGb Storage quota in Gigabytes (tenant-level quota)
+	StorageQuotaGb int32 `json:"storage_quota_gb"`
+}
+
+// CephRgwInternalConfigResponse defines model for CephRgwInternalConfigResponse.
+type CephRgwInternalConfigResponse struct {
+	CpuLimit        *string `json:"cpu_limit"`
+	CpuRequest      *string `json:"cpu_request"`
+	MemoryLimit     *string `json:"memory_limit"`
+	MemoryRequest   *string `json:"memory_request"`
+	ReplicationSize int32   `json:"replication_size"`
+	RgwInstances    int32   `json:"rgw_instances"`
+	StorageQuotaGb  int32   `json:"storage_quota_gb"`
+}
+
+// CephRgwResources defines model for CephRgwResources.
+type CephRgwResources struct {
+	// CpuLimit CPU limit (e.g., "2")
+	CpuLimit *string `json:"cpu_limit"`
+
+	// CpuRequest CPU request (e.g., "500m")
+	CpuRequest *string `json:"cpu_request"`
+
+	// MemoryLimit Memory limit (e.g., "4Gi")
+	MemoryLimit *string `json:"memory_limit"`
+
+	// MemoryRequest Memory request (e.g., "1Gi")
+	MemoryRequest *string `json:"memory_request"`
 }
 
 // CheckNameAvailabilityResponseData defines model for CheckNameAvailabilityResponseData.
@@ -839,6 +925,16 @@ type CreateS3CopyPipelineRequest struct {
 	Source CopyS3SourceConfig `json:"source"`
 }
 
+// CreateSavedQueryRequest defines model for CreateSavedQueryRequest.
+type CreateSavedQueryRequest struct {
+	DataDockId  openapi_types.UUID `json:"data_dock_id"`
+	Description *string            `json:"description"`
+	SqlText     string             `json:"sql_text"`
+	Tags        *[]string          `json:"tags"`
+	Title       string             `json:"title"`
+	Visibility  *string            `json:"visibility"`
+}
+
 // CreateServiceAccountCrdRequestBody defines model for CreateServiceAccountCrdRequestBody.
 type CreateServiceAccountCrdRequestBody struct {
 	ClientId    string  `json:"client_id"`
@@ -890,6 +986,89 @@ type DataContainerOverview struct {
 	Name       string             `json:"name"`
 }
 
+// DataDock defines model for DataDock.
+type DataDock struct {
+	Catalog     *TrinoMetadata     `json:"catalog,omitempty"`
+	Description string             `json:"description"`
+	HarborId    openapi_types.UUID `json:"harbor_id"`
+	Host        string             `json:"host"`
+	Id          openapi_types.UUID `json:"id"`
+
+	// InternalHost internal_host and internal_port composes the address to reach the data dock from inside the cluster.
+	// This is mainly used for introspection
+	InternalHost *string      `json:"internal_host"`
+	InternalPort *int32       `json:"internal_port"`
+	Kind         DataDockKind `json:"kind"`
+	Name         string       `json:"name"`
+	OpaUri       *string      `json:"opa_uri"`
+
+	// Port This is i16 to match the sqlx type for port but this should never be negative (constraints are already in place in the db)
+	Port                 int32          `json:"port"`
+	RefreshInterval      int32          `json:"refresh_interval"`
+	RefreshedAt          *time.Time     `json:"refreshed_at"`
+	ServiceAccountId     string         `json:"service_account_id"`
+	ServiceAccountSecret string         `json:"service_account_secret"`
+	Slug                 string         `json:"slug"`
+	Status               DataDockStatus `json:"status"`
+
+	// StsRoleArn IAM role ARN for STS AssumeRoleWithWebIdentity (required for Ceph RGW)
+	// Format: arn:aws:iam:::role/<role-name>
+	StsRoleArn *string `json:"sts_role_arn"`
+
+	// TokenIssuerEndpoint token issuer endpoint is the url to get
+	// the token related to the service account
+	TokenIssuerEndpoint string `json:"token_issuer_endpoint"`
+}
+
+// DataDockKind defines model for DataDockKind.
+type DataDockKind struct {
+	union json.RawMessage
+}
+
+// DataDockKind0 defines model for .
+type DataDockKind0 struct {
+	Type DataDockKind0Type `json:"type"`
+}
+
+// DataDockKind0Type defines model for DataDockKind.0.Type.
+type DataDockKind0Type string
+
+// DataDockKind1 defines model for .
+type DataDockKind1 struct {
+	Content TrinoInternalConfig `json:"content"`
+	Type    DataDockKind1Type   `json:"type"`
+}
+
+// DataDockKind1Type defines model for DataDockKind.1.Type.
+type DataDockKind1Type string
+
+// DataDockKind2 defines model for .
+type DataDockKind2 struct {
+	Content MinioInternalConfig `json:"content"`
+	Type    DataDockKind2Type   `json:"type"`
+}
+
+// DataDockKind2Type defines model for DataDockKind.2.Type.
+type DataDockKind2Type string
+
+// DataDockKind3 defines model for .
+type DataDockKind3 struct {
+	Content PostgresInternalConfig `json:"content"`
+	Type    DataDockKind3Type      `json:"type"`
+}
+
+// DataDockKind3Type defines model for DataDockKind.3.Type.
+type DataDockKind3Type string
+
+// DataDockKind4 defines model for .
+type DataDockKind4 struct {
+	Content CephRgwInternalConfig `json:"content"`
+	Type    DataDockKind4Type     `json:"type"`
+}
+
+// DataDockKind4Type defines model for DataDockKind.4.Type.
+type DataDockKind4Type string
+
 // DataDockKindRequest defines model for DataDockKindRequest.
 type DataDockKindRequest struct {
 	union json.RawMessage
@@ -931,6 +1110,15 @@ type DataDockKindRequest3 struct {
 // DataDockKindRequest3Type defines model for DataDockKindRequest.3.Type.
 type DataDockKindRequest3Type string
 
+// DataDockKindRequest4 defines model for .
+type DataDockKindRequest4 struct {
+	Content CephRgwInternalConfig    `json:"content"`
+	Type    DataDockKindRequest4Type `json:"type"`
+}
+
+// DataDockKindRequest4Type defines model for DataDockKindRequest.4.Type.
+type DataDockKindRequest4Type string
+
 // DataDockKindResponse defines model for DataDockKindResponse.
 type DataDockKindResponse struct {
 	union json.RawMessage
@@ -971,6 +1159,15 @@ type DataDockKindResponse3 struct {
 
 // DataDockKindResponse3Type defines model for DataDockKindResponse.3.Type.
 type DataDockKindResponse3Type string
+
+// DataDockKindResponse4 defines model for .
+type DataDockKindResponse4 struct {
+	Content CephRgwInternalConfigResponse `json:"content"`
+	Type    DataDockKindResponse4Type     `json:"type"`
+}
+
+// DataDockKindResponse4Type defines model for DataDockKindResponse.4.Type.
+type DataDockKindResponse4Type string
 
 // DataDockResponseData defines model for DataDockResponseData.
 type DataDockResponseData struct {
@@ -1030,6 +1227,15 @@ type DestinationConfig struct {
 	Prefix string `json:"prefix"`
 }
 
+// DownloadServiceAccountResponse defines model for DownloadServiceAccountResponse.
+type DownloadServiceAccountResponse struct {
+	AuthUri      string `json:"auth_uri"`
+	ClientId     string `json:"client_id"`
+	ClientSecret string `json:"client_secret"`
+	Issuer       string `json:"issuer"`
+	TokenUri     string `json:"token_uri"`
+}
+
 // EffectiveSecuritySettingsResponse Response for effective security settings.
 type EffectiveSecuritySettingsResponse struct {
 	ColumnLabelMatching           bool     `json:"column_label_matching"`
@@ -1045,6 +1251,14 @@ type EffectiveSecuritySettingsResponse struct {
 	SensitivityEnforcement        bool     `json:"sensitivity_enforcement"`
 	TableLabelMatching            bool     `json:"table_label_matching"`
 	ZeroTrustMode                 bool     `json:"zero_trust_mode"`
+}
+
+// ExecuteRequest defines model for ExecuteRequest.
+type ExecuteRequest struct {
+	DataDockId     openapi_types.UUID `json:"data_dock_id"`
+	Limit          *int64             `json:"limit"`
+	Sql            string             `json:"sql"`
+	TimeoutSeconds *int64             `json:"timeout_seconds"`
 }
 
 // FakerFieldType defines model for FakerFieldType.
@@ -1233,6 +1447,23 @@ type Harbor struct {
 	Slug           string              `json:"slug"`
 }
 
+// HfCollumn defines model for HfCollumn.
+type HfCollumn struct {
+	DataType HfDataType `json:"data_type"`
+	Name     string     `json:"name"`
+}
+
+// HfDataType defines model for HfDataType.
+type HfDataType string
+
+// HfTable defines model for HfTable.
+type HfTable struct {
+	CatalogName string      `json:"catalog_name"`
+	Columns     []HfCollumn `json:"columns"`
+	SchemaName  string      `json:"schema_name"`
+	TableName   string      `json:"table_name"`
+}
+
 // IcebergConnectorDataContainer defines model for IcebergConnectorDataContainer.
 type IcebergConnectorDataContainer struct {
 	DataDockId      openapi_types.UUID `json:"data_dock_id"`
@@ -1321,6 +1552,11 @@ type ListContextualRestrictionsResponse struct {
 // ListRunsResponse defines model for ListRunsResponse.
 type ListRunsResponse struct {
 	Runs []PipelineRun `json:"runs"`
+}
+
+// ListServiceAccountsResponseData defines model for ListServiceAccountsResponseData.
+type ListServiceAccountsResponseData struct {
+	ServiceAccounts []ServiceAccount `json:"service_accounts"`
 }
 
 // ListTableClassificationsResponse Response for list of table classifications.
@@ -1745,6 +1981,42 @@ type PrepareArchiveImportResponse1 struct {
 // PrepareArchiveImportResponse1UploadType defines model for PrepareArchiveImportResponse.1.UploadType.
 type PrepareArchiveImportResponse1UploadType string
 
+// QueryHistoryEntry defines model for QueryHistoryEntry.
+type QueryHistoryEntry struct {
+	BytesScanned     *int64              `json:"bytes_scanned"`
+	CreatedAt        time.Time           `json:"created_at"`
+	DataDockId       openapi_types.UUID  `json:"data_dock_id"`
+	ErrorMessage     *string             `json:"error_message"`
+	ExecutionTimeMs  *int64              `json:"execution_time_ms"`
+	Id               openapi_types.UUID  `json:"id"`
+	OrganizationId   openapi_types.UUID  `json:"organization_id"`
+	RowsReturned     *int64              `json:"rows_returned"`
+	SavedQueryId     *openapi_types.UUID `json:"saved_query_id"`
+	ScheduledQueryId *openapi_types.UUID `json:"scheduled_query_id"`
+	SqlText          string              `json:"sql_text"`
+	StatementType    *string             `json:"statement_type"`
+	Status           string              `json:"status"`
+	TrinoQueryId     *string             `json:"trino_query_id"`
+	UserId           openapi_types.UUID  `json:"user_id"`
+}
+
+// QueryResult defines model for QueryResult.
+type QueryResult struct {
+	Columns         []QueryResultColumn `json:"columns"`
+	ExecutionTimeMs int64               `json:"execution_time_ms"`
+	HasMore         bool                `json:"has_more"`
+	QueryId         openapi_types.UUID  `json:"query_id"`
+	Rows            [][]interface{}     `json:"rows"`
+	TotalRows       int64               `json:"total_rows"`
+	TrinoQueryId    *string             `json:"trino_query_id"`
+}
+
+// QueryResultColumn defines model for QueryResultColumn.
+type QueryResultColumn struct {
+	DataType string `json:"data_type"`
+	Name     string `json:"name"`
+}
+
 // Ref A reference to a file in a storage bucket
 // This reference is created upon scanning a bucket and is used to track the
 // status of the file through the pipeline.
@@ -1776,6 +2048,13 @@ type RefreshDataDocksResponse struct {
 	TotalCount     int32  `json:"total_count"`
 }
 
+// ResultsPage defines model for ResultsPage.
+type ResultsPage struct {
+	HasMore   bool            `json:"has_more"`
+	Rows      [][]interface{} `json:"rows"`
+	TotalRows int64           `json:"total_rows"`
+}
+
 // Role defines model for Role.
 type Role struct {
 	Color          *string            `json:"color"`
@@ -1790,6 +2069,21 @@ type Role struct {
 
 // S3OutputParameters defines model for S3OutputParameters.
 type S3OutputParameters = map[string]interface{}
+
+// SavedQuery defines model for SavedQuery.
+type SavedQuery struct {
+	CreatedAt      time.Time          `json:"created_at"`
+	CreatedBy      openapi_types.UUID `json:"created_by"`
+	DataDockId     openapi_types.UUID `json:"data_dock_id"`
+	Description    *string            `json:"description"`
+	Id             openapi_types.UUID `json:"id"`
+	OrganizationId openapi_types.UUID `json:"organization_id"`
+	SqlText        string             `json:"sql_text"`
+	Tags           []string           `json:"tags"`
+	Title          string             `json:"title"`
+	UpdatedAt      time.Time          `json:"updated_at"`
+	Visibility     string             `json:"visibility"`
+}
 
 // SensitivityLevel Sensitivity level for data classification
 type SensitivityLevel string
@@ -1879,6 +2173,12 @@ type TemplateFakerField struct {
 	TypeName  string  `json:"type_name"`
 }
 
+// TrinoCatalog defines model for TrinoCatalog.
+type TrinoCatalog struct {
+	CatalogName string        `json:"catalog_name"`
+	Schemas     []TrinoSchema `json:"schemas"`
+}
+
 // TrinoConfigRequest defines model for TrinoConfigRequest.
 type TrinoConfigRequest struct {
 	Host                 string `json:"host"`
@@ -1925,6 +2225,11 @@ type TrinoInternalConfigResponse struct {
 	WorkerReplicas        int32                      `json:"worker_replicas"`
 }
 
+// TrinoMetadata defines model for TrinoMetadata.
+type TrinoMetadata struct {
+	Catalogs []TrinoCatalog `json:"catalogs"`
+}
+
 // TrinoOutputParameters defines model for TrinoOutputParameters.
 type TrinoOutputParameters struct {
 	// DcIcebergId UUID of the Iceberg catalog Data Container
@@ -1937,6 +2242,12 @@ type TrinoOutputParameters struct {
 	ModelName   *string            `json:"model_name"`
 	TrinoSchema string             `json:"trino_schema"`
 	TrinoTable  string             `json:"trino_table"`
+}
+
+// TrinoSchema defines model for TrinoSchema.
+type TrinoSchema struct {
+	SchemaName string    `json:"schema_name"`
+	Tables     []HfTable `json:"tables"`
 }
 
 // UnifiedCatalogResponse defines model for UnifiedCatalogResponse.
@@ -2007,6 +2318,15 @@ type UpdateRefRequest struct {
 	PipelineChecksum string             `json:"pipeline_checksum"`
 	PipelineId       openapi_types.UUID `json:"pipeline_id"`
 	Status           RefStatus          `json:"status"`
+}
+
+// UpdateSavedQueryRequest defines model for UpdateSavedQueryRequest.
+type UpdateSavedQueryRequest struct {
+	Description *string   `json:"description"`
+	SqlText     *string   `json:"sql_text"`
+	Tags        *[]string `json:"tags"`
+	Title       *string   `json:"title"`
+	Visibility  *string   `json:"visibility"`
 }
 
 // UpdateServiceAccountCrdRequestBody defines model for UpdateServiceAccountCrdRequestBody.
@@ -2138,6 +2458,11 @@ type CreateContextualRestrictionHandlerParams struct {
 	DataDockId *openapi_types.UUID `form:"data_dock_id,omitempty" json:"data_dock_id,omitempty"`
 }
 
+// ListServiceAccountsHandlerParams defines parameters for ListServiceAccountsHandler.
+type ListServiceAccountsHandlerParams struct {
+	Name *string `form:"name,omitempty" json:"name,omitempty"`
+}
+
 // ListRefsParams defines parameters for ListRefs.
 type ListRefsParams struct {
 	PipelineId       *openapi_types.UUID `form:"pipeline_id,omitempty" json:"pipeline_id,omitempty"`
@@ -2152,6 +2477,57 @@ type ListRefsParams struct {
 	LockedBy *openapi_types.UUID `form:"locked_by,omitempty" json:"locked_by,omitempty"`
 	Limit    *int64              `form:"limit,omitempty" json:"limit,omitempty"`
 	Offset   *int64              `form:"offset,omitempty" json:"offset,omitempty"`
+}
+
+// CancelQueryHandlerParams defines parameters for CancelQueryHandler.
+type CancelQueryHandlerParams struct {
+	// DataDockId Data Dock ID
+	DataDockId openapi_types.UUID `form:"data_dock_id" json:"data_dock_id"`
+}
+
+// GetHistoryHandlerParams defines parameters for GetHistoryHandler.
+type GetHistoryHandlerParams struct {
+	// DataDockId Filter by Data Dock
+	DataDockId *openapi_types.UUID `form:"data_dock_id,omitempty" json:"data_dock_id,omitempty"`
+
+	// Status Filter: running, completed, failed, cancelled
+	Status *string `form:"status,omitempty" json:"status,omitempty"`
+
+	// StatementType Filter: SELECT, INSERT, CTAS, DDL
+	StatementType *string `form:"statement_type,omitempty" json:"statement_type,omitempty"`
+
+	// Search Search in SQL text
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// Page Page number (default 0)
+	Page *int64 `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage Items per page (default 50, max 200)
+	PerPage *int64 `form:"per_page,omitempty" json:"per_page,omitempty"`
+}
+
+// ListSavedQueriesHandlerParams defines parameters for ListSavedQueriesHandler.
+type ListSavedQueriesHandlerParams struct {
+	// DataDockId Filter by Data Dock
+	DataDockId *openapi_types.UUID `form:"data_dock_id,omitempty" json:"data_dock_id,omitempty"`
+
+	// Visibility Filter: private or team
+	Visibility *string `form:"visibility,omitempty" json:"visibility,omitempty"`
+
+	// Search Search in title/description
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// Mine Only my queries
+	Mine *bool `form:"mine,omitempty" json:"mine,omitempty"`
+}
+
+// GetResultsHandlerParams defines parameters for GetResultsHandler.
+type GetResultsHandlerParams struct {
+	// Offset Row offset (default 0)
+	Offset *int64 `form:"offset,omitempty" json:"offset,omitempty"`
+
+	// Limit Number of rows (default 500)
+	Limit *int64 `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
 // GetUnifiedCatalogParams defines parameters for GetUnifiedCatalog.
@@ -2273,6 +2649,15 @@ type CountRefsJSONRequestBody = CountRefRequest
 
 // UpdateRefJSONRequestBody defines body for UpdateRef for application/json ContentType.
 type UpdateRefJSONRequestBody = UpdateRefRequest
+
+// ExecuteQueryHandlerJSONRequestBody defines body for ExecuteQueryHandler for application/json ContentType.
+type ExecuteQueryHandlerJSONRequestBody = ExecuteRequest
+
+// CreateSavedQueryHandlerJSONRequestBody defines body for CreateSavedQueryHandler for application/json ContentType.
+type CreateSavedQueryHandlerJSONRequestBody = CreateSavedQueryRequest
+
+// UpdateSavedQueryHandlerJSONRequestBody defines body for UpdateSavedQueryHandler for application/json ContentType.
+type UpdateSavedQueryHandlerJSONRequestBody = UpdateSavedQueryRequest
 
 // CreateUserJSONRequestBody defines body for CreateUser for application/json ContentType.
 type CreateUserJSONRequestBody = CreateUser
@@ -2420,6 +2805,146 @@ func (t *CreatePipelineRequestV2) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsDataDockKind0 returns the union data inside the DataDockKind as a DataDockKind0
+func (t DataDockKind) AsDataDockKind0() (DataDockKind0, error) {
+	var body DataDockKind0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDataDockKind0 overwrites any union data inside the DataDockKind as the provided DataDockKind0
+func (t *DataDockKind) FromDataDockKind0(v DataDockKind0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDataDockKind0 performs a merge with any union data inside the DataDockKind, using the provided DataDockKind0
+func (t *DataDockKind) MergeDataDockKind0(v DataDockKind0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsDataDockKind1 returns the union data inside the DataDockKind as a DataDockKind1
+func (t DataDockKind) AsDataDockKind1() (DataDockKind1, error) {
+	var body DataDockKind1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDataDockKind1 overwrites any union data inside the DataDockKind as the provided DataDockKind1
+func (t *DataDockKind) FromDataDockKind1(v DataDockKind1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDataDockKind1 performs a merge with any union data inside the DataDockKind, using the provided DataDockKind1
+func (t *DataDockKind) MergeDataDockKind1(v DataDockKind1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsDataDockKind2 returns the union data inside the DataDockKind as a DataDockKind2
+func (t DataDockKind) AsDataDockKind2() (DataDockKind2, error) {
+	var body DataDockKind2
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDataDockKind2 overwrites any union data inside the DataDockKind as the provided DataDockKind2
+func (t *DataDockKind) FromDataDockKind2(v DataDockKind2) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDataDockKind2 performs a merge with any union data inside the DataDockKind, using the provided DataDockKind2
+func (t *DataDockKind) MergeDataDockKind2(v DataDockKind2) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsDataDockKind3 returns the union data inside the DataDockKind as a DataDockKind3
+func (t DataDockKind) AsDataDockKind3() (DataDockKind3, error) {
+	var body DataDockKind3
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDataDockKind3 overwrites any union data inside the DataDockKind as the provided DataDockKind3
+func (t *DataDockKind) FromDataDockKind3(v DataDockKind3) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDataDockKind3 performs a merge with any union data inside the DataDockKind, using the provided DataDockKind3
+func (t *DataDockKind) MergeDataDockKind3(v DataDockKind3) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsDataDockKind4 returns the union data inside the DataDockKind as a DataDockKind4
+func (t DataDockKind) AsDataDockKind4() (DataDockKind4, error) {
+	var body DataDockKind4
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDataDockKind4 overwrites any union data inside the DataDockKind as the provided DataDockKind4
+func (t *DataDockKind) FromDataDockKind4(v DataDockKind4) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDataDockKind4 performs a merge with any union data inside the DataDockKind, using the provided DataDockKind4
+func (t *DataDockKind) MergeDataDockKind4(v DataDockKind4) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t DataDockKind) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *DataDockKind) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsDataDockKindRequest0 returns the union data inside the DataDockKindRequest as a DataDockKindRequest0
 func (t DataDockKindRequest) AsDataDockKindRequest0() (DataDockKindRequest0, error) {
 	var body DataDockKindRequest0
@@ -2514,6 +3039,32 @@ func (t *DataDockKindRequest) FromDataDockKindRequest3(v DataDockKindRequest3) e
 
 // MergeDataDockKindRequest3 performs a merge with any union data inside the DataDockKindRequest, using the provided DataDockKindRequest3
 func (t *DataDockKindRequest) MergeDataDockKindRequest3(v DataDockKindRequest3) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsDataDockKindRequest4 returns the union data inside the DataDockKindRequest as a DataDockKindRequest4
+func (t DataDockKindRequest) AsDataDockKindRequest4() (DataDockKindRequest4, error) {
+	var body DataDockKindRequest4
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDataDockKindRequest4 overwrites any union data inside the DataDockKindRequest as the provided DataDockKindRequest4
+func (t *DataDockKindRequest) FromDataDockKindRequest4(v DataDockKindRequest4) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDataDockKindRequest4 performs a merge with any union data inside the DataDockKindRequest, using the provided DataDockKindRequest4
+func (t *DataDockKindRequest) MergeDataDockKindRequest4(v DataDockKindRequest4) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -2628,6 +3179,32 @@ func (t *DataDockKindResponse) FromDataDockKindResponse3(v DataDockKindResponse3
 
 // MergeDataDockKindResponse3 performs a merge with any union data inside the DataDockKindResponse, using the provided DataDockKindResponse3
 func (t *DataDockKindResponse) MergeDataDockKindResponse3(v DataDockKindResponse3) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsDataDockKindResponse4 returns the union data inside the DataDockKindResponse as a DataDockKindResponse4
+func (t DataDockKindResponse) AsDataDockKindResponse4() (DataDockKindResponse4, error) {
+	var body DataDockKindResponse4
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDataDockKindResponse4 overwrites any union data inside the DataDockKindResponse as the provided DataDockKindResponse4
+func (t *DataDockKindResponse) FromDataDockKindResponse4(v DataDockKindResponse4) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDataDockKindResponse4 performs a merge with any union data inside the DataDockKindResponse, using the provided DataDockKindResponse4
+func (t *DataDockKindResponse) MergeDataDockKindResponse4(v DataDockKindResponse4) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -3067,6 +3644,9 @@ type ClientInterface interface {
 	// DeleteDataDockCrd request
 	DeleteDataDockCrd(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListDataContainers request
+	ListDataContainers(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ArchiveExportDataContainerWithBody request with any body
 	ArchiveExportDataContainerWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -3247,6 +3827,9 @@ type ClientInterface interface {
 
 	CreateContextualRestrictionHandler(ctx context.Context, organizationId openapi_types.UUID, params *CreateContextualRestrictionHandlerParams, body CreateContextualRestrictionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListDataDocks request
+	ListDataDocks(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// RefreshOrgDataDocks request
 	RefreshOrgDataDocks(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -3260,6 +3843,12 @@ type ClientInterface interface {
 	UpdateOrgSecuritySettingsHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	UpdateOrgSecuritySettingsHandler(ctx context.Context, organizationId openapi_types.UUID, body UpdateOrgSecuritySettingsHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListServiceAccountsHandler request
+	ListServiceAccountsHandler(ctx context.Context, organizationId openapi_types.UUID, params *ListServiceAccountsHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DownloadServiceAccountHandler request
+	DownloadServiceAccountHandler(ctx context.Context, organizationId openapi_types.UUID, serviceAccountId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListTableClassificationsHandler request
 	ListTableClassificationsHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3305,6 +3894,42 @@ type ClientInterface interface {
 	UpdateRefWithBody(ctx context.Context, key string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	UpdateRef(ctx context.Context, key string, body UpdateRefJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CancelQueryHandler request
+	CancelQueryHandler(ctx context.Context, trinoQueryId string, params *CancelQueryHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ExecuteQueryHandlerWithBody request with any body
+	ExecuteQueryHandlerWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ExecuteQueryHandler(ctx context.Context, body ExecuteQueryHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetHistoryHandler request
+	GetHistoryHandler(ctx context.Context, params *GetHistoryHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListSavedQueriesHandler request
+	ListSavedQueriesHandler(ctx context.Context, params *ListSavedQueriesHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateSavedQueryHandlerWithBody request with any body
+	CreateSavedQueryHandlerWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateSavedQueryHandler(ctx context.Context, body CreateSavedQueryHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteSavedQueryHandler request
+	DeleteSavedQueryHandler(ctx context.Context, queryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSavedQueryHandler request
+	GetSavedQueryHandler(ctx context.Context, queryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateSavedQueryHandlerWithBody request with any body
+	UpdateSavedQueryHandlerWithBody(ctx context.Context, queryId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateSavedQueryHandler(ctx context.Context, queryId openapi_types.UUID, body UpdateSavedQueryHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetResultsHandler request
+	GetResultsHandler(ctx context.Context, queryId openapi_types.UUID, params *GetResultsHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSchemaHandler request
+	GetSchemaHandler(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetUnifiedCatalog request
 	GetUnifiedCatalog(ctx context.Context, params *GetUnifiedCatalogParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3898,6 +4523,18 @@ func (c *Client) CreateDataDockCrd(ctx context.Context, body CreateDataDockCrdJS
 
 func (c *Client) DeleteDataDockCrd(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteDataDockCrdRequest(c.Server, dataDockId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListDataContainers(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListDataContainersRequest(c.Server, dataDockId)
 	if err != nil {
 		return nil, err
 	}
@@ -4700,6 +5337,18 @@ func (c *Client) CreateContextualRestrictionHandler(ctx context.Context, organiz
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListDataDocks(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListDataDocksRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) RefreshOrgDataDocks(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewRefreshOrgDataDocksRequest(c.Server, organizationId)
 	if err != nil {
@@ -4750,6 +5399,30 @@ func (c *Client) UpdateOrgSecuritySettingsHandlerWithBody(ctx context.Context, o
 
 func (c *Client) UpdateOrgSecuritySettingsHandler(ctx context.Context, organizationId openapi_types.UUID, body UpdateOrgSecuritySettingsHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateOrgSecuritySettingsHandlerRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListServiceAccountsHandler(ctx context.Context, organizationId openapi_types.UUID, params *ListServiceAccountsHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListServiceAccountsHandlerRequest(c.Server, organizationId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DownloadServiceAccountHandler(ctx context.Context, organizationId openapi_types.UUID, serviceAccountId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDownloadServiceAccountHandlerRequest(c.Server, organizationId, serviceAccountId)
 	if err != nil {
 		return nil, err
 	}
@@ -4954,6 +5627,162 @@ func (c *Client) UpdateRefWithBody(ctx context.Context, key string, contentType 
 
 func (c *Client) UpdateRef(ctx context.Context, key string, body UpdateRefJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateRefRequest(c.Server, key, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CancelQueryHandler(ctx context.Context, trinoQueryId string, params *CancelQueryHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCancelQueryHandlerRequest(c.Server, trinoQueryId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ExecuteQueryHandlerWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewExecuteQueryHandlerRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ExecuteQueryHandler(ctx context.Context, body ExecuteQueryHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewExecuteQueryHandlerRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetHistoryHandler(ctx context.Context, params *GetHistoryHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetHistoryHandlerRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListSavedQueriesHandler(ctx context.Context, params *ListSavedQueriesHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListSavedQueriesHandlerRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateSavedQueryHandlerWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateSavedQueryHandlerRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateSavedQueryHandler(ctx context.Context, body CreateSavedQueryHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateSavedQueryHandlerRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteSavedQueryHandler(ctx context.Context, queryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteSavedQueryHandlerRequest(c.Server, queryId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetSavedQueryHandler(ctx context.Context, queryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSavedQueryHandlerRequest(c.Server, queryId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateSavedQueryHandlerWithBody(ctx context.Context, queryId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateSavedQueryHandlerRequestWithBody(c.Server, queryId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateSavedQueryHandler(ctx context.Context, queryId openapi_types.UUID, body UpdateSavedQueryHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateSavedQueryHandlerRequest(c.Server, queryId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetResultsHandler(ctx context.Context, queryId openapi_types.UUID, params *GetResultsHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetResultsHandlerRequest(c.Server, queryId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetSchemaHandler(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSchemaHandlerRequest(c.Server, dataDockId)
 	if err != nil {
 		return nil, err
 	}
@@ -6475,6 +7304,40 @@ func NewDeleteDataDockCrdRequest(server string, dataDockId openapi_types.UUID) (
 	}
 
 	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListDataContainersRequest generates requests for ListDataContainers
+func NewListDataContainersRequest(server string, dataDockId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_dock_id", runtime.ParamLocationPath, dataDockId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-docks/%s/data-containers", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8792,6 +9655,40 @@ func NewCreateContextualRestrictionHandlerRequestWithBody(server string, organiz
 	return req, nil
 }
 
+// NewListDataDocksRequest generates requests for ListDataDocks
+func NewListDataDocksRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/data-docks", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewRefreshOrgDataDocksRequest generates requests for RefreshOrgDataDocks
 func NewRefreshOrgDataDocksRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -8944,6 +9841,103 @@ func NewUpdateOrgSecuritySettingsHandlerRequestWithBody(server string, organizat
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListServiceAccountsHandlerRequest generates requests for ListServiceAccountsHandler
+func NewListServiceAccountsHandlerRequest(server string, organizationId openapi_types.UUID, params *ListServiceAccountsHandlerParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/service-accounts", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Name != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "name", runtime.ParamLocationQuery, *params.Name); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDownloadServiceAccountHandlerRequest generates requests for DownloadServiceAccountHandler
+func NewDownloadServiceAccountHandlerRequest(server string, organizationId openapi_types.UUID, serviceAccountId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "service_account_id", runtime.ParamLocationPath, serviceAccountId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/service-accounts/%s/download", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -9566,6 +10560,585 @@ func NewUpdateRefRequestWithBody(server string, key string, contentType string, 
 	return req, nil
 }
 
+// NewCancelQueryHandlerRequest generates requests for CancelQueryHandler
+func NewCancelQueryHandlerRequest(server string, trinoQueryId string, params *CancelQueryHandlerParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "trino_query_id", runtime.ParamLocationPath, trinoQueryId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/tiny-query/cancel/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "data_dock_id", runtime.ParamLocationQuery, params.DataDockId); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewExecuteQueryHandlerRequest calls the generic ExecuteQueryHandler builder with application/json body
+func NewExecuteQueryHandlerRequest(server string, body ExecuteQueryHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewExecuteQueryHandlerRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewExecuteQueryHandlerRequestWithBody generates requests for ExecuteQueryHandler with any type of body
+func NewExecuteQueryHandlerRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/tiny-query/execute")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetHistoryHandlerRequest generates requests for GetHistoryHandler
+func NewGetHistoryHandlerRequest(server string, params *GetHistoryHandlerParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/tiny-query/history")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.DataDockId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "data_dock_id", runtime.ParamLocationQuery, *params.DataDockId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Status != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "status", runtime.ParamLocationQuery, *params.Status); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.StatementType != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "statement_type", runtime.ParamLocationQuery, *params.StatementType); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Search != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "search", runtime.ParamLocationQuery, *params.Search); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PerPage != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "per_page", runtime.ParamLocationQuery, *params.PerPage); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListSavedQueriesHandlerRequest generates requests for ListSavedQueriesHandler
+func NewListSavedQueriesHandlerRequest(server string, params *ListSavedQueriesHandlerParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/tiny-query/queries")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.DataDockId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "data_dock_id", runtime.ParamLocationQuery, *params.DataDockId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Visibility != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "visibility", runtime.ParamLocationQuery, *params.Visibility); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Search != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "search", runtime.ParamLocationQuery, *params.Search); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Mine != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "mine", runtime.ParamLocationQuery, *params.Mine); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateSavedQueryHandlerRequest calls the generic CreateSavedQueryHandler builder with application/json body
+func NewCreateSavedQueryHandlerRequest(server string, body CreateSavedQueryHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateSavedQueryHandlerRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreateSavedQueryHandlerRequestWithBody generates requests for CreateSavedQueryHandler with any type of body
+func NewCreateSavedQueryHandlerRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/tiny-query/queries")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteSavedQueryHandlerRequest generates requests for DeleteSavedQueryHandler
+func NewDeleteSavedQueryHandlerRequest(server string, queryId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "query_id", runtime.ParamLocationPath, queryId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/tiny-query/queries/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetSavedQueryHandlerRequest generates requests for GetSavedQueryHandler
+func NewGetSavedQueryHandlerRequest(server string, queryId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "query_id", runtime.ParamLocationPath, queryId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/tiny-query/queries/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateSavedQueryHandlerRequest calls the generic UpdateSavedQueryHandler builder with application/json body
+func NewUpdateSavedQueryHandlerRequest(server string, queryId openapi_types.UUID, body UpdateSavedQueryHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateSavedQueryHandlerRequestWithBody(server, queryId, "application/json", bodyReader)
+}
+
+// NewUpdateSavedQueryHandlerRequestWithBody generates requests for UpdateSavedQueryHandler with any type of body
+func NewUpdateSavedQueryHandlerRequestWithBody(server string, queryId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "query_id", runtime.ParamLocationPath, queryId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/tiny-query/queries/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetResultsHandlerRequest generates requests for GetResultsHandler
+func NewGetResultsHandlerRequest(server string, queryId openapi_types.UUID, params *GetResultsHandlerParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "query_id", runtime.ParamLocationPath, queryId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/tiny-query/results/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Offset != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "offset", runtime.ParamLocationQuery, *params.Offset); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetSchemaHandlerRequest generates requests for GetSchemaHandler
+func NewGetSchemaHandlerRequest(server string, dataDockId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_dock_id", runtime.ParamLocationPath, dataDockId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/tiny-query/schema/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetUnifiedCatalogRequest generates requests for GetUnifiedCatalog
 func NewGetUnifiedCatalogRequest(server string, params *GetUnifiedCatalogParams) (*http.Request, error) {
 	var err error
@@ -9872,6 +11445,9 @@ type ClientWithResponsesInterface interface {
 	// DeleteDataDockCrdWithResponse request
 	DeleteDataDockCrdWithResponse(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteDataDockCrdRes, error)
 
+	// ListDataContainersWithResponse request
+	ListDataContainersWithResponse(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDataContainersRes, error)
+
 	// ArchiveExportDataContainerWithBodyWithResponse request with any body
 	ArchiveExportDataContainerWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ArchiveExportDataContainerRes, error)
 
@@ -10052,6 +11628,9 @@ type ClientWithResponsesInterface interface {
 
 	CreateContextualRestrictionHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *CreateContextualRestrictionHandlerParams, body CreateContextualRestrictionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateContextualRestrictionHandlerRes, error)
 
+	// ListDataDocksWithResponse request
+	ListDataDocksWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDataDocksRes, error)
+
 	// RefreshOrgDataDocksWithResponse request
 	RefreshOrgDataDocksWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RefreshOrgDataDocksRes, error)
 
@@ -10065,6 +11644,12 @@ type ClientWithResponsesInterface interface {
 	UpdateOrgSecuritySettingsHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateOrgSecuritySettingsHandlerRes, error)
 
 	UpdateOrgSecuritySettingsHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body UpdateOrgSecuritySettingsHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateOrgSecuritySettingsHandlerRes, error)
+
+	// ListServiceAccountsHandlerWithResponse request
+	ListServiceAccountsHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *ListServiceAccountsHandlerParams, reqEditors ...RequestEditorFn) (*ListServiceAccountsHandlerRes, error)
+
+	// DownloadServiceAccountHandlerWithResponse request
+	DownloadServiceAccountHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, serviceAccountId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DownloadServiceAccountHandlerRes, error)
 
 	// ListTableClassificationsHandlerWithResponse request
 	ListTableClassificationsHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListTableClassificationsHandlerRes, error)
@@ -10110,6 +11695,42 @@ type ClientWithResponsesInterface interface {
 	UpdateRefWithBodyWithResponse(ctx context.Context, key string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateRefRes, error)
 
 	UpdateRefWithResponse(ctx context.Context, key string, body UpdateRefJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateRefRes, error)
+
+	// CancelQueryHandlerWithResponse request
+	CancelQueryHandlerWithResponse(ctx context.Context, trinoQueryId string, params *CancelQueryHandlerParams, reqEditors ...RequestEditorFn) (*CancelQueryHandlerRes, error)
+
+	// ExecuteQueryHandlerWithBodyWithResponse request with any body
+	ExecuteQueryHandlerWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ExecuteQueryHandlerRes, error)
+
+	ExecuteQueryHandlerWithResponse(ctx context.Context, body ExecuteQueryHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*ExecuteQueryHandlerRes, error)
+
+	// GetHistoryHandlerWithResponse request
+	GetHistoryHandlerWithResponse(ctx context.Context, params *GetHistoryHandlerParams, reqEditors ...RequestEditorFn) (*GetHistoryHandlerRes, error)
+
+	// ListSavedQueriesHandlerWithResponse request
+	ListSavedQueriesHandlerWithResponse(ctx context.Context, params *ListSavedQueriesHandlerParams, reqEditors ...RequestEditorFn) (*ListSavedQueriesHandlerRes, error)
+
+	// CreateSavedQueryHandlerWithBodyWithResponse request with any body
+	CreateSavedQueryHandlerWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateSavedQueryHandlerRes, error)
+
+	CreateSavedQueryHandlerWithResponse(ctx context.Context, body CreateSavedQueryHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateSavedQueryHandlerRes, error)
+
+	// DeleteSavedQueryHandlerWithResponse request
+	DeleteSavedQueryHandlerWithResponse(ctx context.Context, queryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteSavedQueryHandlerRes, error)
+
+	// GetSavedQueryHandlerWithResponse request
+	GetSavedQueryHandlerWithResponse(ctx context.Context, queryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetSavedQueryHandlerRes, error)
+
+	// UpdateSavedQueryHandlerWithBodyWithResponse request with any body
+	UpdateSavedQueryHandlerWithBodyWithResponse(ctx context.Context, queryId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateSavedQueryHandlerRes, error)
+
+	UpdateSavedQueryHandlerWithResponse(ctx context.Context, queryId openapi_types.UUID, body UpdateSavedQueryHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateSavedQueryHandlerRes, error)
+
+	// GetResultsHandlerWithResponse request
+	GetResultsHandlerWithResponse(ctx context.Context, queryId openapi_types.UUID, params *GetResultsHandlerParams, reqEditors ...RequestEditorFn) (*GetResultsHandlerRes, error)
+
+	// GetSchemaHandlerWithResponse request
+	GetSchemaHandlerWithResponse(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetSchemaHandlerRes, error)
 
 	// GetUnifiedCatalogWithResponse request
 	GetUnifiedCatalogWithResponse(ctx context.Context, params *GetUnifiedCatalogParams, reqEditors ...RequestEditorFn) (*GetUnifiedCatalogRes, error)
@@ -10899,6 +12520,28 @@ func (r DeleteDataDockCrdRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r DeleteDataDockCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListDataContainersRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]DataContainerOverview
+}
+
+// Status returns HTTPResponse.Status
+func (r ListDataContainersRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListDataContainersRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -11947,6 +13590,28 @@ func (r CreateContextualRestrictionHandlerRes) StatusCode() int {
 	return 0
 }
 
+type ListDataDocksRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]DataDock
+}
+
+// Status returns HTTPResponse.Status
+func (r ListDataDocksRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListDataDocksRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type RefreshOrgDataDocksRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -12029,6 +13694,50 @@ func (r UpdateOrgSecuritySettingsHandlerRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r UpdateOrgSecuritySettingsHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListServiceAccountsHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ListServiceAccountsResponseData
+}
+
+// Status returns HTTPResponse.Status
+func (r ListServiceAccountsHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListServiceAccountsHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DownloadServiceAccountHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DownloadServiceAccountResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DownloadServiceAccountHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DownloadServiceAccountHandlerRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -12268,6 +13977,224 @@ func (r UpdateRefRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r UpdateRefRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CancelQueryHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r CancelQueryHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CancelQueryHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ExecuteQueryHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *QueryResult
+}
+
+// Status returns HTTPResponse.Status
+func (r ExecuteQueryHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ExecuteQueryHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetHistoryHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]QueryHistoryEntry
+}
+
+// Status returns HTTPResponse.Status
+func (r GetHistoryHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetHistoryHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListSavedQueriesHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]SavedQuery
+}
+
+// Status returns HTTPResponse.Status
+func (r ListSavedQueriesHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListSavedQueriesHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateSavedQueryHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *SavedQuery
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateSavedQueryHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateSavedQueryHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteSavedQueryHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteSavedQueryHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteSavedQueryHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetSavedQueryHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SavedQuery
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSavedQueryHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSavedQueryHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateSavedQueryHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SavedQuery
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateSavedQueryHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateSavedQueryHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetResultsHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ResultsPage
+}
+
+// Status returns HTTPResponse.Status
+func (r GetResultsHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetResultsHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetSchemaHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TrinoMetadata
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSchemaHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSchemaHandlerRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -12766,6 +14693,15 @@ func (c *ClientWithResponses) DeleteDataDockCrdWithResponse(ctx context.Context,
 		return nil, err
 	}
 	return ParseDeleteDataDockCrdRes(rsp)
+}
+
+// ListDataContainersWithResponse request returning *ListDataContainersRes
+func (c *ClientWithResponses) ListDataContainersWithResponse(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDataContainersRes, error) {
+	rsp, err := c.ListDataContainers(ctx, dataDockId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListDataContainersRes(rsp)
 }
 
 // ArchiveExportDataContainerWithBodyWithResponse request with arbitrary body returning *ArchiveExportDataContainerRes
@@ -13344,6 +15280,15 @@ func (c *ClientWithResponses) CreateContextualRestrictionHandlerWithResponse(ctx
 	return ParseCreateContextualRestrictionHandlerRes(rsp)
 }
 
+// ListDataDocksWithResponse request returning *ListDataDocksRes
+func (c *ClientWithResponses) ListDataDocksWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDataDocksRes, error) {
+	rsp, err := c.ListDataDocks(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListDataDocksRes(rsp)
+}
+
 // RefreshOrgDataDocksWithResponse request returning *RefreshOrgDataDocksRes
 func (c *ClientWithResponses) RefreshOrgDataDocksWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RefreshOrgDataDocksRes, error) {
 	rsp, err := c.RefreshOrgDataDocks(ctx, organizationId, reqEditors...)
@@ -13386,6 +15331,24 @@ func (c *ClientWithResponses) UpdateOrgSecuritySettingsHandlerWithResponse(ctx c
 		return nil, err
 	}
 	return ParseUpdateOrgSecuritySettingsHandlerRes(rsp)
+}
+
+// ListServiceAccountsHandlerWithResponse request returning *ListServiceAccountsHandlerRes
+func (c *ClientWithResponses) ListServiceAccountsHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *ListServiceAccountsHandlerParams, reqEditors ...RequestEditorFn) (*ListServiceAccountsHandlerRes, error) {
+	rsp, err := c.ListServiceAccountsHandler(ctx, organizationId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListServiceAccountsHandlerRes(rsp)
+}
+
+// DownloadServiceAccountHandlerWithResponse request returning *DownloadServiceAccountHandlerRes
+func (c *ClientWithResponses) DownloadServiceAccountHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, serviceAccountId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DownloadServiceAccountHandlerRes, error) {
+	rsp, err := c.DownloadServiceAccountHandler(ctx, organizationId, serviceAccountId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDownloadServiceAccountHandlerRes(rsp)
 }
 
 // ListTableClassificationsHandlerWithResponse request returning *ListTableClassificationsHandlerRes
@@ -13533,6 +15496,120 @@ func (c *ClientWithResponses) UpdateRefWithResponse(ctx context.Context, key str
 		return nil, err
 	}
 	return ParseUpdateRefRes(rsp)
+}
+
+// CancelQueryHandlerWithResponse request returning *CancelQueryHandlerRes
+func (c *ClientWithResponses) CancelQueryHandlerWithResponse(ctx context.Context, trinoQueryId string, params *CancelQueryHandlerParams, reqEditors ...RequestEditorFn) (*CancelQueryHandlerRes, error) {
+	rsp, err := c.CancelQueryHandler(ctx, trinoQueryId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCancelQueryHandlerRes(rsp)
+}
+
+// ExecuteQueryHandlerWithBodyWithResponse request with arbitrary body returning *ExecuteQueryHandlerRes
+func (c *ClientWithResponses) ExecuteQueryHandlerWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ExecuteQueryHandlerRes, error) {
+	rsp, err := c.ExecuteQueryHandlerWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExecuteQueryHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) ExecuteQueryHandlerWithResponse(ctx context.Context, body ExecuteQueryHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*ExecuteQueryHandlerRes, error) {
+	rsp, err := c.ExecuteQueryHandler(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExecuteQueryHandlerRes(rsp)
+}
+
+// GetHistoryHandlerWithResponse request returning *GetHistoryHandlerRes
+func (c *ClientWithResponses) GetHistoryHandlerWithResponse(ctx context.Context, params *GetHistoryHandlerParams, reqEditors ...RequestEditorFn) (*GetHistoryHandlerRes, error) {
+	rsp, err := c.GetHistoryHandler(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetHistoryHandlerRes(rsp)
+}
+
+// ListSavedQueriesHandlerWithResponse request returning *ListSavedQueriesHandlerRes
+func (c *ClientWithResponses) ListSavedQueriesHandlerWithResponse(ctx context.Context, params *ListSavedQueriesHandlerParams, reqEditors ...RequestEditorFn) (*ListSavedQueriesHandlerRes, error) {
+	rsp, err := c.ListSavedQueriesHandler(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListSavedQueriesHandlerRes(rsp)
+}
+
+// CreateSavedQueryHandlerWithBodyWithResponse request with arbitrary body returning *CreateSavedQueryHandlerRes
+func (c *ClientWithResponses) CreateSavedQueryHandlerWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateSavedQueryHandlerRes, error) {
+	rsp, err := c.CreateSavedQueryHandlerWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateSavedQueryHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateSavedQueryHandlerWithResponse(ctx context.Context, body CreateSavedQueryHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateSavedQueryHandlerRes, error) {
+	rsp, err := c.CreateSavedQueryHandler(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateSavedQueryHandlerRes(rsp)
+}
+
+// DeleteSavedQueryHandlerWithResponse request returning *DeleteSavedQueryHandlerRes
+func (c *ClientWithResponses) DeleteSavedQueryHandlerWithResponse(ctx context.Context, queryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteSavedQueryHandlerRes, error) {
+	rsp, err := c.DeleteSavedQueryHandler(ctx, queryId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteSavedQueryHandlerRes(rsp)
+}
+
+// GetSavedQueryHandlerWithResponse request returning *GetSavedQueryHandlerRes
+func (c *ClientWithResponses) GetSavedQueryHandlerWithResponse(ctx context.Context, queryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetSavedQueryHandlerRes, error) {
+	rsp, err := c.GetSavedQueryHandler(ctx, queryId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSavedQueryHandlerRes(rsp)
+}
+
+// UpdateSavedQueryHandlerWithBodyWithResponse request with arbitrary body returning *UpdateSavedQueryHandlerRes
+func (c *ClientWithResponses) UpdateSavedQueryHandlerWithBodyWithResponse(ctx context.Context, queryId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateSavedQueryHandlerRes, error) {
+	rsp, err := c.UpdateSavedQueryHandlerWithBody(ctx, queryId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateSavedQueryHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdateSavedQueryHandlerWithResponse(ctx context.Context, queryId openapi_types.UUID, body UpdateSavedQueryHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateSavedQueryHandlerRes, error) {
+	rsp, err := c.UpdateSavedQueryHandler(ctx, queryId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateSavedQueryHandlerRes(rsp)
+}
+
+// GetResultsHandlerWithResponse request returning *GetResultsHandlerRes
+func (c *ClientWithResponses) GetResultsHandlerWithResponse(ctx context.Context, queryId openapi_types.UUID, params *GetResultsHandlerParams, reqEditors ...RequestEditorFn) (*GetResultsHandlerRes, error) {
+	rsp, err := c.GetResultsHandler(ctx, queryId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetResultsHandlerRes(rsp)
+}
+
+// GetSchemaHandlerWithResponse request returning *GetSchemaHandlerRes
+func (c *ClientWithResponses) GetSchemaHandlerWithResponse(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetSchemaHandlerRes, error) {
+	rsp, err := c.GetSchemaHandler(ctx, dataDockId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSchemaHandlerRes(rsp)
 }
 
 // GetUnifiedCatalogWithResponse request returning *GetUnifiedCatalogRes
@@ -14389,6 +16466,32 @@ func ParseDeleteDataDockCrdRes(rsp *http.Response) (*DeleteDataDockCrdRes, error
 	response := &DeleteDataDockCrdRes{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseListDataContainersRes parses an HTTP response from a ListDataContainersWithResponse call
+func ParseListDataContainersRes(rsp *http.Response) (*ListDataContainersRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListDataContainersRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []DataContainerOverview
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
 	}
 
 	return response, nil
@@ -15502,6 +17605,32 @@ func ParseCreateContextualRestrictionHandlerRes(rsp *http.Response) (*CreateCont
 	return response, nil
 }
 
+// ParseListDataDocksRes parses an HTTP response from a ListDataDocksWithResponse call
+func ParseListDataDocksRes(rsp *http.Response) (*ListDataDocksRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListDataDocksRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []DataDock
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseRefreshOrgDataDocksRes parses an HTTP response from a RefreshOrgDataDocksWithResponse call
 func ParseRefreshOrgDataDocksRes(rsp *http.Response) (*RefreshOrgDataDocksRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -15596,6 +17725,58 @@ func ParseUpdateOrgSecuritySettingsHandlerRes(rsp *http.Response) (*UpdateOrgSec
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest OrgSecuritySettingsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListServiceAccountsHandlerRes parses an HTTP response from a ListServiceAccountsHandlerWithResponse call
+func ParseListServiceAccountsHandlerRes(rsp *http.Response) (*ListServiceAccountsHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListServiceAccountsHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListServiceAccountsResponseData
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDownloadServiceAccountHandlerRes parses an HTTP response from a DownloadServiceAccountHandlerWithResponse call
+func ParseDownloadServiceAccountHandlerRes(rsp *http.Response) (*DownloadServiceAccountHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DownloadServiceAccountHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DownloadServiceAccountResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -15852,6 +18033,246 @@ func ParseUpdateRefRes(rsp *http.Response) (*UpdateRefRes, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Ref
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCancelQueryHandlerRes parses an HTTP response from a CancelQueryHandlerWithResponse call
+func ParseCancelQueryHandlerRes(rsp *http.Response) (*CancelQueryHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CancelQueryHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseExecuteQueryHandlerRes parses an HTTP response from a ExecuteQueryHandlerWithResponse call
+func ParseExecuteQueryHandlerRes(rsp *http.Response) (*ExecuteQueryHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ExecuteQueryHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest QueryResult
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetHistoryHandlerRes parses an HTTP response from a GetHistoryHandlerWithResponse call
+func ParseGetHistoryHandlerRes(rsp *http.Response) (*GetHistoryHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetHistoryHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []QueryHistoryEntry
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListSavedQueriesHandlerRes parses an HTTP response from a ListSavedQueriesHandlerWithResponse call
+func ParseListSavedQueriesHandlerRes(rsp *http.Response) (*ListSavedQueriesHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListSavedQueriesHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []SavedQuery
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateSavedQueryHandlerRes parses an HTTP response from a CreateSavedQueryHandlerWithResponse call
+func ParseCreateSavedQueryHandlerRes(rsp *http.Response) (*CreateSavedQueryHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateSavedQueryHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest SavedQuery
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteSavedQueryHandlerRes parses an HTTP response from a DeleteSavedQueryHandlerWithResponse call
+func ParseDeleteSavedQueryHandlerRes(rsp *http.Response) (*DeleteSavedQueryHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteSavedQueryHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetSavedQueryHandlerRes parses an HTTP response from a GetSavedQueryHandlerWithResponse call
+func ParseGetSavedQueryHandlerRes(rsp *http.Response) (*GetSavedQueryHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSavedQueryHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SavedQuery
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateSavedQueryHandlerRes parses an HTTP response from a UpdateSavedQueryHandlerWithResponse call
+func ParseUpdateSavedQueryHandlerRes(rsp *http.Response) (*UpdateSavedQueryHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateSavedQueryHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SavedQuery
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetResultsHandlerRes parses an HTTP response from a GetResultsHandlerWithResponse call
+func ParseGetResultsHandlerRes(rsp *http.Response) (*GetResultsHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetResultsHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ResultsPage
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetSchemaHandlerRes parses an HTTP response from a GetSchemaHandlerWithResponse call
+func ParseGetSchemaHandlerRes(rsp *http.Response) (*GetSchemaHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSchemaHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TrinoMetadata
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
