@@ -189,6 +189,16 @@ const (
 	Generation ModelType = "generation"
 )
 
+// Defines values for OcrProviderConfig0Type.
+const (
+	Mistral OcrProviderConfig0Type = "mistral"
+)
+
+// Defines values for OcrProviderConfig1Type.
+const (
+	Local OcrProviderConfig1Type = "local"
+)
+
 // Defines values for PipelineOutputParameters0Type.
 const (
 	Trino PipelineOutputParameters0Type = "trino"
@@ -482,6 +492,9 @@ type ClassificationConfig struct {
 
 	// ModelName Model name (e.g., "mistral-large-latest")
 	ModelName string `json:"model_name"`
+
+	// OcrProvider OCR provider configuration for PDF processing
+	OcrProvider *OcrProviderConfig `json:"ocr_provider,omitempty"`
 }
 
 // ClassificationStatsResponse Response for classification statistics.
@@ -1361,6 +1374,9 @@ type FileSorterOutputParameters struct {
 	// ModelName Model name (e.g., "mistral-medium", "mistral-large-latest")
 	ModelName string `json:"model_name"`
 
+	// OcrProvider OCR provider configuration for PDF processing
+	OcrProvider *OcrProviderConfig `json:"ocr_provider,omitempty"`
+
 	// Router Category router configuration (CategoryRouterMetadataAware step)
 	Router CategoryRouterConfig `json:"router"`
 
@@ -1674,6 +1690,30 @@ type MultipartPartUrl struct {
 	UploadUrl string `json:"upload_url"`
 }
 
+// OcrProviderConfig OCR provider configuration for PDF processing
+type OcrProviderConfig struct {
+	union json.RawMessage
+}
+
+// OcrProviderConfig0 Use Mistral OCR API (api_key from ClassificationConfig.api_key)
+type OcrProviderConfig0 struct {
+	Type OcrProviderConfig0Type `json:"type"`
+}
+
+// OcrProviderConfig0Type defines model for OcrProviderConfig.0.Type.
+type OcrProviderConfig0Type string
+
+// OcrProviderConfig1 Use a local vLLM OCR model (e.g. DeepSeek-OCR on GPU)
+type OcrProviderConfig1 struct {
+	ApiKey *string                `json:"api_key"`
+	Model  *string                `json:"model"`
+	Type   OcrProviderConfig1Type `json:"type"`
+	Url    string                 `json:"url"`
+}
+
+// OcrProviderConfig1Type defines model for OcrProviderConfig.1.Type.
+type OcrProviderConfig1Type string
+
 // Org An organization is a collection of [Users](super::user::User) and [DataDocks](super::datadock::DataDock)
 type Org struct {
 	CreatedAt time.Time          `json:"created_at"`
@@ -1758,10 +1798,13 @@ type PipelineOutputParameters0 struct {
 	DcIcebergId openapi_types.UUID `json:"dc_iceberg_id"`
 
 	// DdTrinoInt UUID of the Trino Data Dock
-	DdTrinoInt  openapi_types.UUID            `json:"dd_trino_int"`
-	Labels      *map[string]string            `json:"labels"`
-	ModelApiKey *string                       `json:"model_api_key"`
-	ModelName   *string                       `json:"model_name"`
+	DdTrinoInt  openapi_types.UUID `json:"dd_trino_int"`
+	Labels      *map[string]string `json:"labels"`
+	ModelApiKey *string            `json:"model_api_key"`
+	ModelName   *string            `json:"model_name"`
+
+	// OcrProvider OCR provider configuration for PDF processing
+	OcrProvider *OcrProviderConfig            `json:"ocr_provider,omitempty"`
 	TrinoSchema string                        `json:"trino_schema"`
 	TrinoTable  string                        `json:"trino_table"`
 	Type        PipelineOutputParameters0Type `json:"type"`
@@ -1819,6 +1862,9 @@ type PipelineOutputParameters2 struct {
 
 	// ModelName Model name (e.g., "mistral-medium", "mistral-large-latest")
 	ModelName string `json:"model_name"`
+
+	// OcrProvider OCR provider configuration for PDF processing
+	OcrProvider *OcrProviderConfig `json:"ocr_provider,omitempty"`
 
 	// Router Category router configuration (CategoryRouterMetadataAware step)
 	Router CategoryRouterConfig `json:"router"`
@@ -2240,6 +2286,9 @@ type TrinoOutputParameters struct {
 	Labels      *map[string]string `json:"labels"`
 	ModelApiKey *string            `json:"model_api_key"`
 	ModelName   *string            `json:"model_name"`
+
+	// OcrProvider OCR provider configuration for PDF processing
+	OcrProvider *OcrProviderConfig `json:"ocr_provider,omitempty"`
 	TrinoSchema string             `json:"trino_schema"`
 	TrinoTable  string             `json:"trino_table"`
 }
@@ -3257,6 +3306,68 @@ func (t DedupingStrategy) MarshalJSON() ([]byte, error) {
 }
 
 func (t *DedupingStrategy) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsOcrProviderConfig0 returns the union data inside the OcrProviderConfig as a OcrProviderConfig0
+func (t OcrProviderConfig) AsOcrProviderConfig0() (OcrProviderConfig0, error) {
+	var body OcrProviderConfig0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromOcrProviderConfig0 overwrites any union data inside the OcrProviderConfig as the provided OcrProviderConfig0
+func (t *OcrProviderConfig) FromOcrProviderConfig0(v OcrProviderConfig0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeOcrProviderConfig0 performs a merge with any union data inside the OcrProviderConfig, using the provided OcrProviderConfig0
+func (t *OcrProviderConfig) MergeOcrProviderConfig0(v OcrProviderConfig0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsOcrProviderConfig1 returns the union data inside the OcrProviderConfig as a OcrProviderConfig1
+func (t OcrProviderConfig) AsOcrProviderConfig1() (OcrProviderConfig1, error) {
+	var body OcrProviderConfig1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromOcrProviderConfig1 overwrites any union data inside the OcrProviderConfig as the provided OcrProviderConfig1
+func (t *OcrProviderConfig) FromOcrProviderConfig1(v OcrProviderConfig1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeOcrProviderConfig1 performs a merge with any union data inside the OcrProviderConfig, using the provided OcrProviderConfig1
+func (t *OcrProviderConfig) MergeOcrProviderConfig1(v OcrProviderConfig1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OcrProviderConfig) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OcrProviderConfig) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }

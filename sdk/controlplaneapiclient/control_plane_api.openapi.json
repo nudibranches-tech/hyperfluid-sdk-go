@@ -5585,6 +5585,10 @@
           "model_name": {
             "type": "string",
             "description": "Model name (e.g., \"mistral-large-latest\")"
+          },
+          "ocr_provider": {
+            "$ref": "#/components/schemas/OcrProviderConfig",
+            "nullable": true
           }
         }
       },
@@ -7630,6 +7634,10 @@
             "type": "string",
             "description": "Model name (e.g., \"mistral-medium\", \"mistral-large-latest\")"
           },
+          "ocr_provider": {
+            "$ref": "#/components/schemas/OcrProviderConfig",
+            "nullable": true
+          },
           "router": {
             "$ref": "#/components/schemas/CategoryRouterConfig"
           },
@@ -8381,6 +8389,53 @@
             "description": "Presigned URL for uploading this part"
           }
         }
+      },
+      "OcrProviderConfig": {
+        "oneOf": [
+          {
+            "type": "object",
+            "description": "Use Mistral OCR API (api_key from ClassificationConfig.api_key)",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "mistral"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Use a local vLLM OCR model (e.g. DeepSeek-OCR on GPU)",
+            "required": [
+              "url",
+              "type"
+            ],
+            "properties": {
+              "api_key": {
+                "type": "string",
+                "nullable": true
+              },
+              "model": {
+                "type": "string",
+                "nullable": true
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "local"
+                ]
+              },
+              "url": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "description": "OCR provider configuration for PDF processing"
       },
       "Org": {
         "type": "object",
@@ -9821,6 +9876,10 @@
           },
           "model_name": {
             "type": "string",
+            "nullable": true
+          },
+          "ocr_provider": {
+            "$ref": "#/components/schemas/OcrProviderConfig",
             "nullable": true
           },
           "trino_schema": {
