@@ -4447,6 +4447,258 @@
         }
       }
     },
+    "/api/v1/shared-models": {
+      "get": {
+        "tags": [
+          "Shared Models"
+        ],
+        "operationId": "list_shared_models",
+        "responses": {
+          "200": {
+            "description": "List platform shared models",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SharedModelResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/shared-models/{name}": {
+      "get": {
+        "tags": [
+          "Shared Models"
+        ],
+        "operationId": "get_shared_model",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Shared model details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SharedModelResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/shared-models/{name}/metrics": {
+      "get": {
+        "tags": [
+          "Shared Models"
+        ],
+        "operationId": "get_shared_model_metrics",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "range",
+            "in": "query",
+            "description": "Time range for metrics: 1h, 6h, 24h, 7d",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/MetricsRange"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Shared model metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelMetricsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/tiny-query/analytics/slow-queries": {
+      "get": {
+        "tags": [
+          "Petite Requête"
+        ],
+        "operationId": "analytics_slow_queries_handler",
+        "parameters": [
+          {
+            "name": "time_range",
+            "in": "query",
+            "description": "Time range: 1h, 6h, 24h, 7d, 30d (default 24h)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "data_dock_id",
+            "in": "query",
+            "description": "Filter by Data Dock",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Max results (default 10, max 50)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "description": "Sort by: execution_time, peak_memory, bytes_scanned",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Slow queries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QueryHistoryEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tiny-query/analytics/summary": {
+      "get": {
+        "tags": [
+          "Petite Requête"
+        ],
+        "operationId": "analytics_summary_handler",
+        "parameters": [
+          {
+            "name": "time_range",
+            "in": "query",
+            "description": "Time range: 1h, 6h, 24h, 7d, 30d (default 24h)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "data_dock_id",
+            "in": "query",
+            "description": "Filter by Data Dock",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Analytics summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsSummary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tiny-query/analytics/trends": {
+      "get": {
+        "tags": [
+          "Petite Requête"
+        ],
+        "operationId": "analytics_trends_handler",
+        "parameters": [
+          {
+            "name": "time_range",
+            "in": "query",
+            "description": "Time range: 1h, 6h, 24h, 7d, 30d (default 24h)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "data_dock_id",
+            "in": "query",
+            "description": "Filter by Data Dock",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Analytics trends",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsTrends"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/tiny-query/cancel/{trino_query_id}": {
       "post": {
         "tags": [
@@ -5149,6 +5401,98 @@
           }
         }
       },
+      "AnalyticsSummary": {
+        "type": "object",
+        "required": [
+          "total_queries",
+          "successful_queries",
+          "failed_queries",
+          "success_rate"
+        ],
+        "properties": {
+          "avg_execution_time_ms": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "avg_peak_memory_bytes": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "failed_queries": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "p95_execution_time_ms": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "success_rate": {
+            "type": "number",
+            "format": "double"
+          },
+          "successful_queries": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total_bytes_scanned": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "total_queries": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "AnalyticsTrendPoint": {
+        "type": "object",
+        "required": [
+          "bucket",
+          "query_count",
+          "failed_count"
+        ],
+        "properties": {
+          "avg_execution_time_ms": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "bucket": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "failed_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "query_count": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "AnalyticsTrends": {
+        "type": "object",
+        "required": [
+          "points",
+          "granularity"
+        ],
+        "properties": {
+          "granularity": {
+            "type": "string"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AnalyticsTrendPoint"
+            }
+          }
+        }
+      },
       "ApiKeyResponse": {
         "type": "object",
         "required": [
@@ -5581,6 +5925,11 @@
               "$ref": "#/components/schemas/LabelDefinition"
             },
             "description": "Document classification labels"
+          },
+          "model_base_url": {
+            "type": "string",
+            "description": "Base URL for the model API. Defaults to Mistral API when not set.\nSet to a vLLM/KServe endpoint for self-hosted models (e.g., \"http://ministral-3-8b-rocm-predictor.kserve.svc.cluster.local/v1\").",
+            "nullable": true
           },
           "model_name": {
             "type": "string",
@@ -7628,11 +7977,16 @@
           "model_api_key": {
             "type": "string",
             "format": "password",
-            "description": "Mistral API key for OCR and classification"
+            "description": "API key for OCR and classification model"
+          },
+          "model_base_url": {
+            "type": "string",
+            "description": "Base URL for the model API (e.g., vLLM endpoint). Defaults to Mistral API when not set.",
+            "nullable": true
           },
           "model_name": {
             "type": "string",
-            "description": "Model name (e.g., \"mistral-medium\", \"mistral-large-latest\")"
+            "description": "Model name (e.g., \"mistral-large-latest\", \"ministral-3-8b-rocm\")"
           },
           "ocr_provider": {
             "$ref": "#/components/schemas/OcrProviderConfig",
@@ -8208,6 +8562,81 @@
           }
         }
       },
+      "MetricsDataPoint": {
+        "type": "object",
+        "required": [
+          "timestamp",
+          "requests",
+          "errors",
+          "latency_avg"
+        ],
+        "properties": {
+          "cpu_millicores": {
+            "type": "integer",
+            "format": "int64",
+            "description": "CPU usage in millicores",
+            "minimum": 0
+          },
+          "errors": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Error count at this point",
+            "minimum": 0
+          },
+          "generation_tokens": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Generation tokens at this point",
+            "minimum": 0
+          },
+          "gpu_cache_pct": {
+            "type": "number",
+            "format": "double",
+            "description": "GPU cache usage percentage"
+          },
+          "latency_avg": {
+            "type": "number",
+            "format": "double",
+            "description": "Average latency at this point"
+          },
+          "latency_p95": {
+            "type": "number",
+            "format": "double",
+            "description": "p95 latency at this point"
+          },
+          "memory_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Memory usage in bytes",
+            "minimum": 0
+          },
+          "prompt_tokens": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Prompt tokens at this point",
+            "minimum": 0
+          },
+          "requests": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Request count at this point",
+            "minimum": 0
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "ISO 8601 timestamp"
+          }
+        }
+      },
+      "MetricsRange": {
+        "type": "string",
+        "enum": [
+          "1h",
+          "6h",
+          "24h",
+          "7d"
+        ]
+      },
       "MinioInternalConfig": {
         "type": "object",
         "required": [
@@ -8260,6 +8689,113 @@
             "type": "string",
             "description": "Custom storage URI (e.g. s3:// or pvc://)",
             "nullable": true
+          }
+        }
+      },
+      "ModelMetricsResponse": {
+        "type": "object",
+        "required": [
+          "total_requests",
+          "error_count",
+          "avg_latency_secs",
+          "p50_latency_secs",
+          "p95_latency_secs",
+          "p99_latency_secs",
+          "total_input_tokens",
+          "total_output_tokens",
+          "time_series"
+        ],
+        "properties": {
+          "avg_latency_secs": {
+            "type": "number",
+            "format": "double",
+            "description": "Average latency in seconds"
+          },
+          "cpu_usage_millicores": {
+            "type": "integer",
+            "format": "int64",
+            "description": "CPU usage in millicores",
+            "minimum": 0
+          },
+          "error_count": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Error count in the time range",
+            "minimum": 0
+          },
+          "gpu_cache_usage_pct": {
+            "type": "number",
+            "format": "double",
+            "description": "GPU cache usage percentage"
+          },
+          "memory_limit_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Memory limit in bytes",
+            "minimum": 0
+          },
+          "memory_usage_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Memory usage in bytes",
+            "minimum": 0
+          },
+          "p50_latency_secs": {
+            "type": "number",
+            "format": "double",
+            "description": "p50 latency in seconds"
+          },
+          "p95_latency_secs": {
+            "type": "number",
+            "format": "double",
+            "description": "p95 latency in seconds"
+          },
+          "p99_latency_secs": {
+            "type": "number",
+            "format": "double",
+            "description": "p99 latency in seconds"
+          },
+          "requests_running": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Currently running requests",
+            "minimum": 0
+          },
+          "requests_waiting": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Currently waiting requests",
+            "minimum": 0
+          },
+          "throughput_toks_per_s": {
+            "type": "number",
+            "format": "double",
+            "description": "Token throughput (tokens/second)"
+          },
+          "time_series": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MetricsDataPoint"
+            },
+            "description": "Time series data points for charts"
+          },
+          "total_input_tokens": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Total input tokens processed",
+            "minimum": 0
+          },
+          "total_output_tokens": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Total output tokens processed",
+            "minimum": 0
+          },
+          "total_requests": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Total request count in the time range",
+            "minimum": 0
           }
         }
       },
@@ -9045,7 +9581,17 @@
           "created_at"
         ],
         "properties": {
+          "analysis_time_ms": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
           "bytes_scanned": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "cpu_time_ms": {
             "type": "integer",
             "format": "int64",
             "nullable": true
@@ -9074,6 +9620,41 @@
           "organization_id": {
             "type": "string",
             "format": "uuid"
+          },
+          "output_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "output_rows": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "peak_memory_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "physical_input_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "physical_input_rows": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "planning_time_ms": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "queued_time_ms": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
           },
           "rows_returned": {
             "type": "integer",
@@ -9482,6 +10063,60 @@
           }
         }
       },
+      "SharedModelResponse": {
+        "type": "object",
+        "required": [
+          "name",
+          "model_type",
+          "runtime",
+          "phase",
+          "cpu",
+          "memory",
+          "gpu"
+        ],
+        "properties": {
+          "cpu": {
+            "type": "string",
+            "description": "CPU resources"
+          },
+          "endpoint": {
+            "type": "string",
+            "description": "Endpoint URL (from KServe status)",
+            "nullable": true
+          },
+          "gpu": {
+            "type": "integer",
+            "format": "int32",
+            "description": "GPU count",
+            "minimum": 0
+          },
+          "memory": {
+            "type": "string",
+            "description": "Memory resources"
+          },
+          "model_type": {
+            "type": "string",
+            "description": "Model type (generation, embedding)"
+          },
+          "name": {
+            "type": "string",
+            "description": "InferenceService name"
+          },
+          "phase": {
+            "type": "string",
+            "description": "Current phase (Ready, Provisioning, Failed)"
+          },
+          "runtime": {
+            "type": "string",
+            "description": "Runtime engine (vllm, tgi, etc.)"
+          },
+          "served_model_name": {
+            "type": "string",
+            "description": "Served model name (from --served-model-name arg)",
+            "nullable": true
+          }
+        }
+      },
       "TableClassificationResponse": {
         "type": "object",
         "description": "Response for a table classification.",
@@ -9872,6 +10507,11 @@
           "model_api_key": {
             "type": "string",
             "format": "password",
+            "nullable": true
+          },
+          "model_base_url": {
+            "type": "string",
+            "description": "Base URL for the model API (e.g., vLLM endpoint). Defaults to Mistral API when not set.",
             "nullable": true
           },
           "model_name": {
@@ -10401,6 +11041,10 @@
     {
       "name": "Model Serving",
       "description": "LLMaaS model serving operations"
+    },
+    {
+      "name": "Shared Models",
+      "description": "Platform-wide shared model status (read-only)"
     },
     {
       "name": "API Keys",

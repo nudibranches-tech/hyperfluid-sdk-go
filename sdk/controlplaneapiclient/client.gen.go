@@ -168,6 +168,14 @@ const (
 	Timestamp   HfDataType = "Timestamp"
 )
 
+// Defines values for MetricsRange.
+const (
+	N1h  MetricsRange = "1h"
+	N24h MetricsRange = "24h"
+	N6h  MetricsRange = "6h"
+	N7d  MetricsRange = "7d"
+)
+
 // Defines values for ModelRuntime.
 const (
 	Tgi  ModelRuntime = "tgi"
@@ -317,6 +325,32 @@ type AiClassifyResponseBody struct {
 	ClassifiedCount int                              `json:"classified_count"`
 	FailedCount     int                              `json:"failed_count"`
 	Results         []AiClassificationResultResponse `json:"results"`
+}
+
+// AnalyticsSummary defines model for AnalyticsSummary.
+type AnalyticsSummary struct {
+	AvgExecutionTimeMs *float64 `json:"avg_execution_time_ms"`
+	AvgPeakMemoryBytes *float64 `json:"avg_peak_memory_bytes"`
+	FailedQueries      int64    `json:"failed_queries"`
+	P95ExecutionTimeMs *float64 `json:"p95_execution_time_ms"`
+	SuccessRate        float64  `json:"success_rate"`
+	SuccessfulQueries  int64    `json:"successful_queries"`
+	TotalBytesScanned  *int64   `json:"total_bytes_scanned"`
+	TotalQueries       int64    `json:"total_queries"`
+}
+
+// AnalyticsTrendPoint defines model for AnalyticsTrendPoint.
+type AnalyticsTrendPoint struct {
+	AvgExecutionTimeMs *float64  `json:"avg_execution_time_ms"`
+	Bucket             time.Time `json:"bucket"`
+	FailedCount        int64     `json:"failed_count"`
+	QueryCount         int64     `json:"query_count"`
+}
+
+// AnalyticsTrends defines model for AnalyticsTrends.
+type AnalyticsTrends struct {
+	Granularity string                `json:"granularity"`
+	Points      []AnalyticsTrendPoint `json:"points"`
 }
 
 // ApiKeyResponse defines model for ApiKeyResponse.
@@ -489,6 +523,10 @@ type ClassificationConfig struct {
 
 	// Labels Document classification labels
 	Labels []LabelDefinition `json:"labels"`
+
+	// ModelBaseUrl Base URL for the model API. Defaults to Mistral API when not set.
+	// Set to a vLLM/KServe endpoint for self-hosted models (e.g., "http://ministral-3-8b-rocm-predictor.kserve.svc.cluster.local/v1").
+	ModelBaseUrl *string `json:"model_base_url"`
 
 	// ModelName Model name (e.g., "mistral-large-latest")
 	ModelName string `json:"model_name"`
@@ -1368,10 +1406,13 @@ type FileSorterOutputParameters struct {
 	// ```
 	LabelsYaml string `json:"labels_yaml"`
 
-	// ModelApiKey Mistral API key for OCR and classification
+	// ModelApiKey API key for OCR and classification model
 	ModelApiKey string `json:"model_api_key"`
 
-	// ModelName Model name (e.g., "mistral-medium", "mistral-large-latest")
+	// ModelBaseUrl Base URL for the model API (e.g., vLLM endpoint). Defaults to Mistral API when not set.
+	ModelBaseUrl *string `json:"model_base_url"`
+
+	// ModelName Model name (e.g., "mistral-large-latest", "ministral-3-8b-rocm")
 	ModelName string `json:"model_name"`
 
 	// OcrProvider OCR provider configuration for PDF processing
@@ -1598,6 +1639,42 @@ type MetadataStorageConfig struct {
 	TableName string `json:"table_name"`
 }
 
+// MetricsDataPoint defines model for MetricsDataPoint.
+type MetricsDataPoint struct {
+	// CpuMillicores CPU usage in millicores
+	CpuMillicores *int64 `json:"cpu_millicores,omitempty"`
+
+	// Errors Error count at this point
+	Errors int64 `json:"errors"`
+
+	// GenerationTokens Generation tokens at this point
+	GenerationTokens *int64 `json:"generation_tokens,omitempty"`
+
+	// GpuCachePct GPU cache usage percentage
+	GpuCachePct *float64 `json:"gpu_cache_pct,omitempty"`
+
+	// LatencyAvg Average latency at this point
+	LatencyAvg float64 `json:"latency_avg"`
+
+	// LatencyP95 p95 latency at this point
+	LatencyP95 *float64 `json:"latency_p95,omitempty"`
+
+	// MemoryBytes Memory usage in bytes
+	MemoryBytes *int64 `json:"memory_bytes,omitempty"`
+
+	// PromptTokens Prompt tokens at this point
+	PromptTokens *int64 `json:"prompt_tokens,omitempty"`
+
+	// Requests Request count at this point
+	Requests int64 `json:"requests"`
+
+	// Timestamp ISO 8601 timestamp
+	Timestamp string `json:"timestamp"`
+}
+
+// MetricsRange defines model for MetricsRange.
+type MetricsRange string
+
 // MinioInternalConfig defines model for MinioInternalConfig.
 type MinioInternalConfig struct {
 	// StorageSize Storage size in Gigabytes
@@ -1622,6 +1699,57 @@ type ModelConfig struct {
 
 	// StorageUri Custom storage URI (e.g. s3:// or pvc://)
 	StorageUri *string `json:"storageUri"`
+}
+
+// ModelMetricsResponse defines model for ModelMetricsResponse.
+type ModelMetricsResponse struct {
+	// AvgLatencySecs Average latency in seconds
+	AvgLatencySecs float64 `json:"avg_latency_secs"`
+
+	// CpuUsageMillicores CPU usage in millicores
+	CpuUsageMillicores *int64 `json:"cpu_usage_millicores,omitempty"`
+
+	// ErrorCount Error count in the time range
+	ErrorCount int64 `json:"error_count"`
+
+	// GpuCacheUsagePct GPU cache usage percentage
+	GpuCacheUsagePct *float64 `json:"gpu_cache_usage_pct,omitempty"`
+
+	// MemoryLimitBytes Memory limit in bytes
+	MemoryLimitBytes *int64 `json:"memory_limit_bytes,omitempty"`
+
+	// MemoryUsageBytes Memory usage in bytes
+	MemoryUsageBytes *int64 `json:"memory_usage_bytes,omitempty"`
+
+	// P50LatencySecs p50 latency in seconds
+	P50LatencySecs float64 `json:"p50_latency_secs"`
+
+	// P95LatencySecs p95 latency in seconds
+	P95LatencySecs float64 `json:"p95_latency_secs"`
+
+	// P99LatencySecs p99 latency in seconds
+	P99LatencySecs float64 `json:"p99_latency_secs"`
+
+	// RequestsRunning Currently running requests
+	RequestsRunning *int32 `json:"requests_running,omitempty"`
+
+	// RequestsWaiting Currently waiting requests
+	RequestsWaiting *int32 `json:"requests_waiting,omitempty"`
+
+	// ThroughputToksPerS Token throughput (tokens/second)
+	ThroughputToksPerS *float64 `json:"throughput_toks_per_s,omitempty"`
+
+	// TimeSeries Time series data points for charts
+	TimeSeries []MetricsDataPoint `json:"time_series"`
+
+	// TotalInputTokens Total input tokens processed
+	TotalInputTokens int64 `json:"total_input_tokens"`
+
+	// TotalOutputTokens Total output tokens processed
+	TotalOutputTokens int64 `json:"total_output_tokens"`
+
+	// TotalRequests Total request count in the time range
+	TotalRequests int64 `json:"total_requests"`
 }
 
 // ModelResources Resource requests for the model serving instance.
@@ -1801,7 +1929,10 @@ type PipelineOutputParameters0 struct {
 	DdTrinoInt  openapi_types.UUID `json:"dd_trino_int"`
 	Labels      *map[string]string `json:"labels"`
 	ModelApiKey *string            `json:"model_api_key"`
-	ModelName   *string            `json:"model_name"`
+
+	// ModelBaseUrl Base URL for the model API (e.g., vLLM endpoint). Defaults to Mistral API when not set.
+	ModelBaseUrl *string `json:"model_base_url"`
+	ModelName    *string `json:"model_name"`
 
 	// OcrProvider OCR provider configuration for PDF processing
 	OcrProvider *OcrProviderConfig            `json:"ocr_provider,omitempty"`
@@ -1857,10 +1988,13 @@ type PipelineOutputParameters2 struct {
 	// ```
 	LabelsYaml string `json:"labels_yaml"`
 
-	// ModelApiKey Mistral API key for OCR and classification
+	// ModelApiKey API key for OCR and classification model
 	ModelApiKey string `json:"model_api_key"`
 
-	// ModelName Model name (e.g., "mistral-medium", "mistral-large-latest")
+	// ModelBaseUrl Base URL for the model API (e.g., vLLM endpoint). Defaults to Mistral API when not set.
+	ModelBaseUrl *string `json:"model_base_url"`
+
+	// ModelName Model name (e.g., "mistral-large-latest", "ministral-3-8b-rocm")
 	ModelName string `json:"model_name"`
 
 	// OcrProvider OCR provider configuration for PDF processing
@@ -2029,21 +2163,30 @@ type PrepareArchiveImportResponse1UploadType string
 
 // QueryHistoryEntry defines model for QueryHistoryEntry.
 type QueryHistoryEntry struct {
-	BytesScanned     *int64              `json:"bytes_scanned"`
-	CreatedAt        time.Time           `json:"created_at"`
-	DataDockId       openapi_types.UUID  `json:"data_dock_id"`
-	ErrorMessage     *string             `json:"error_message"`
-	ExecutionTimeMs  *int64              `json:"execution_time_ms"`
-	Id               openapi_types.UUID  `json:"id"`
-	OrganizationId   openapi_types.UUID  `json:"organization_id"`
-	RowsReturned     *int64              `json:"rows_returned"`
-	SavedQueryId     *openapi_types.UUID `json:"saved_query_id"`
-	ScheduledQueryId *openapi_types.UUID `json:"scheduled_query_id"`
-	SqlText          string              `json:"sql_text"`
-	StatementType    *string             `json:"statement_type"`
-	Status           string              `json:"status"`
-	TrinoQueryId     *string             `json:"trino_query_id"`
-	UserId           openapi_types.UUID  `json:"user_id"`
+	AnalysisTimeMs     *int64              `json:"analysis_time_ms"`
+	BytesScanned       *int64              `json:"bytes_scanned"`
+	CpuTimeMs          *int64              `json:"cpu_time_ms"`
+	CreatedAt          time.Time           `json:"created_at"`
+	DataDockId         openapi_types.UUID  `json:"data_dock_id"`
+	ErrorMessage       *string             `json:"error_message"`
+	ExecutionTimeMs    *int64              `json:"execution_time_ms"`
+	Id                 openapi_types.UUID  `json:"id"`
+	OrganizationId     openapi_types.UUID  `json:"organization_id"`
+	OutputBytes        *int64              `json:"output_bytes"`
+	OutputRows         *int64              `json:"output_rows"`
+	PeakMemoryBytes    *int64              `json:"peak_memory_bytes"`
+	PhysicalInputBytes *int64              `json:"physical_input_bytes"`
+	PhysicalInputRows  *int64              `json:"physical_input_rows"`
+	PlanningTimeMs     *int64              `json:"planning_time_ms"`
+	QueuedTimeMs       *int64              `json:"queued_time_ms"`
+	RowsReturned       *int64              `json:"rows_returned"`
+	SavedQueryId       *openapi_types.UUID `json:"saved_query_id"`
+	ScheduledQueryId   *openapi_types.UUID `json:"scheduled_query_id"`
+	SqlText            string              `json:"sql_text"`
+	StatementType      *string             `json:"statement_type"`
+	Status             string              `json:"status"`
+	TrinoQueryId       *string             `json:"trino_query_id"`
+	UserId             openapi_types.UUID  `json:"user_id"`
 }
 
 // QueryResult defines model for QueryResult.
@@ -2169,6 +2312,36 @@ type Sha256HashDedupingStrategy struct {
 	Length int `json:"length"`
 }
 
+// SharedModelResponse defines model for SharedModelResponse.
+type SharedModelResponse struct {
+	// Cpu CPU resources
+	Cpu string `json:"cpu"`
+
+	// Endpoint Endpoint URL (from KServe status)
+	Endpoint *string `json:"endpoint"`
+
+	// Gpu GPU count
+	Gpu int32 `json:"gpu"`
+
+	// Memory Memory resources
+	Memory string `json:"memory"`
+
+	// ModelType Model type (generation, embedding)
+	ModelType string `json:"model_type"`
+
+	// Name InferenceService name
+	Name string `json:"name"`
+
+	// Phase Current phase (Ready, Provisioning, Failed)
+	Phase string `json:"phase"`
+
+	// Runtime Runtime engine (vllm, tgi, etc.)
+	Runtime string `json:"runtime"`
+
+	// ServedModelName Served model name (from --served-model-name arg)
+	ServedModelName *string `json:"served_model_name"`
+}
+
 // TableClassificationResponse Response for a table classification.
 type TableClassificationResponse struct {
 	AiConfidence   *float32            `json:"ai_confidence"`
@@ -2285,7 +2458,10 @@ type TrinoOutputParameters struct {
 	DdTrinoInt  openapi_types.UUID `json:"dd_trino_int"`
 	Labels      *map[string]string `json:"labels"`
 	ModelApiKey *string            `json:"model_api_key"`
-	ModelName   *string            `json:"model_name"`
+
+	// ModelBaseUrl Base URL for the model API (e.g., vLLM endpoint). Defaults to Mistral API when not set.
+	ModelBaseUrl *string `json:"model_base_url"`
+	ModelName    *string `json:"model_name"`
 
 	// OcrProvider OCR provider configuration for PDF processing
 	OcrProvider *OcrProviderConfig `json:"ocr_provider,omitempty"`
@@ -2526,6 +2702,45 @@ type ListRefsParams struct {
 	LockedBy *openapi_types.UUID `form:"locked_by,omitempty" json:"locked_by,omitempty"`
 	Limit    *int64              `form:"limit,omitempty" json:"limit,omitempty"`
 	Offset   *int64              `form:"offset,omitempty" json:"offset,omitempty"`
+}
+
+// GetSharedModelMetricsParams defines parameters for GetSharedModelMetrics.
+type GetSharedModelMetricsParams struct {
+	// Range Time range for metrics: 1h, 6h, 24h, 7d
+	Range *MetricsRange `form:"range,omitempty" json:"range,omitempty"`
+}
+
+// AnalyticsSlowQueriesHandlerParams defines parameters for AnalyticsSlowQueriesHandler.
+type AnalyticsSlowQueriesHandlerParams struct {
+	// TimeRange Time range: 1h, 6h, 24h, 7d, 30d (default 24h)
+	TimeRange *string `form:"time_range,omitempty" json:"time_range,omitempty"`
+
+	// DataDockId Filter by Data Dock
+	DataDockId *openapi_types.UUID `form:"data_dock_id,omitempty" json:"data_dock_id,omitempty"`
+
+	// Limit Max results (default 10, max 50)
+	Limit *int64 `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// SortBy Sort by: execution_time, peak_memory, bytes_scanned
+	SortBy *string `form:"sort_by,omitempty" json:"sort_by,omitempty"`
+}
+
+// AnalyticsSummaryHandlerParams defines parameters for AnalyticsSummaryHandler.
+type AnalyticsSummaryHandlerParams struct {
+	// TimeRange Time range: 1h, 6h, 24h, 7d, 30d (default 24h)
+	TimeRange *string `form:"time_range,omitempty" json:"time_range,omitempty"`
+
+	// DataDockId Filter by Data Dock
+	DataDockId *openapi_types.UUID `form:"data_dock_id,omitempty" json:"data_dock_id,omitempty"`
+}
+
+// AnalyticsTrendsHandlerParams defines parameters for AnalyticsTrendsHandler.
+type AnalyticsTrendsHandlerParams struct {
+	// TimeRange Time range: 1h, 6h, 24h, 7d, 30d (default 24h)
+	TimeRange *string `form:"time_range,omitempty" json:"time_range,omitempty"`
+
+	// DataDockId Filter by Data Dock
+	DataDockId *openapi_types.UUID `form:"data_dock_id,omitempty" json:"data_dock_id,omitempty"`
 }
 
 // CancelQueryHandlerParams defines parameters for CancelQueryHandler.
@@ -4005,6 +4220,24 @@ type ClientInterface interface {
 	UpdateRefWithBody(ctx context.Context, key string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	UpdateRef(ctx context.Context, key string, body UpdateRefJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListSharedModels request
+	ListSharedModels(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSharedModel request
+	GetSharedModel(ctx context.Context, name string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSharedModelMetrics request
+	GetSharedModelMetrics(ctx context.Context, name string, params *GetSharedModelMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AnalyticsSlowQueriesHandler request
+	AnalyticsSlowQueriesHandler(ctx context.Context, params *AnalyticsSlowQueriesHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AnalyticsSummaryHandler request
+	AnalyticsSummaryHandler(ctx context.Context, params *AnalyticsSummaryHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AnalyticsTrendsHandler request
+	AnalyticsTrendsHandler(ctx context.Context, params *AnalyticsTrendsHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CancelQueryHandler request
 	CancelQueryHandler(ctx context.Context, trinoQueryId string, params *CancelQueryHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -5738,6 +5971,78 @@ func (c *Client) UpdateRefWithBody(ctx context.Context, key string, contentType 
 
 func (c *Client) UpdateRef(ctx context.Context, key string, body UpdateRefJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateRefRequest(c.Server, key, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListSharedModels(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListSharedModelsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetSharedModel(ctx context.Context, name string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSharedModelRequest(c.Server, name)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetSharedModelMetrics(ctx context.Context, name string, params *GetSharedModelMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSharedModelMetricsRequest(c.Server, name, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AnalyticsSlowQueriesHandler(ctx context.Context, params *AnalyticsSlowQueriesHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAnalyticsSlowQueriesHandlerRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AnalyticsSummaryHandler(ctx context.Context, params *AnalyticsSummaryHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAnalyticsSummaryHandlerRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AnalyticsTrendsHandler(ctx context.Context, params *AnalyticsTrendsHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAnalyticsTrendsHandlerRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -10671,6 +10976,350 @@ func NewUpdateRefRequestWithBody(server string, key string, contentType string, 
 	return req, nil
 }
 
+// NewListSharedModelsRequest generates requests for ListSharedModels
+func NewListSharedModelsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/shared-models")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetSharedModelRequest generates requests for GetSharedModel
+func NewGetSharedModelRequest(server string, name string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "name", runtime.ParamLocationPath, name)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/shared-models/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetSharedModelMetricsRequest generates requests for GetSharedModelMetrics
+func NewGetSharedModelMetricsRequest(server string, name string, params *GetSharedModelMetricsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "name", runtime.ParamLocationPath, name)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/shared-models/%s/metrics", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Range != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "range", runtime.ParamLocationQuery, *params.Range); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAnalyticsSlowQueriesHandlerRequest generates requests for AnalyticsSlowQueriesHandler
+func NewAnalyticsSlowQueriesHandlerRequest(server string, params *AnalyticsSlowQueriesHandlerParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/tiny-query/analytics/slow-queries")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.TimeRange != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "time_range", runtime.ParamLocationQuery, *params.TimeRange); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.DataDockId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "data_dock_id", runtime.ParamLocationQuery, *params.DataDockId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.SortBy != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "sort_by", runtime.ParamLocationQuery, *params.SortBy); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAnalyticsSummaryHandlerRequest generates requests for AnalyticsSummaryHandler
+func NewAnalyticsSummaryHandlerRequest(server string, params *AnalyticsSummaryHandlerParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/tiny-query/analytics/summary")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.TimeRange != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "time_range", runtime.ParamLocationQuery, *params.TimeRange); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.DataDockId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "data_dock_id", runtime.ParamLocationQuery, *params.DataDockId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAnalyticsTrendsHandlerRequest generates requests for AnalyticsTrendsHandler
+func NewAnalyticsTrendsHandlerRequest(server string, params *AnalyticsTrendsHandlerParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/tiny-query/analytics/trends")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.TimeRange != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "time_range", runtime.ParamLocationQuery, *params.TimeRange); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.DataDockId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "data_dock_id", runtime.ParamLocationQuery, *params.DataDockId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewCancelQueryHandlerRequest generates requests for CancelQueryHandler
 func NewCancelQueryHandlerRequest(server string, trinoQueryId string, params *CancelQueryHandlerParams) (*http.Request, error) {
 	var err error
@@ -11806,6 +12455,24 @@ type ClientWithResponsesInterface interface {
 	UpdateRefWithBodyWithResponse(ctx context.Context, key string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateRefRes, error)
 
 	UpdateRefWithResponse(ctx context.Context, key string, body UpdateRefJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateRefRes, error)
+
+	// ListSharedModelsWithResponse request
+	ListSharedModelsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListSharedModelsRes, error)
+
+	// GetSharedModelWithResponse request
+	GetSharedModelWithResponse(ctx context.Context, name string, reqEditors ...RequestEditorFn) (*GetSharedModelRes, error)
+
+	// GetSharedModelMetricsWithResponse request
+	GetSharedModelMetricsWithResponse(ctx context.Context, name string, params *GetSharedModelMetricsParams, reqEditors ...RequestEditorFn) (*GetSharedModelMetricsRes, error)
+
+	// AnalyticsSlowQueriesHandlerWithResponse request
+	AnalyticsSlowQueriesHandlerWithResponse(ctx context.Context, params *AnalyticsSlowQueriesHandlerParams, reqEditors ...RequestEditorFn) (*AnalyticsSlowQueriesHandlerRes, error)
+
+	// AnalyticsSummaryHandlerWithResponse request
+	AnalyticsSummaryHandlerWithResponse(ctx context.Context, params *AnalyticsSummaryHandlerParams, reqEditors ...RequestEditorFn) (*AnalyticsSummaryHandlerRes, error)
+
+	// AnalyticsTrendsHandlerWithResponse request
+	AnalyticsTrendsHandlerWithResponse(ctx context.Context, params *AnalyticsTrendsHandlerParams, reqEditors ...RequestEditorFn) (*AnalyticsTrendsHandlerRes, error)
 
 	// CancelQueryHandlerWithResponse request
 	CancelQueryHandlerWithResponse(ctx context.Context, trinoQueryId string, params *CancelQueryHandlerParams, reqEditors ...RequestEditorFn) (*CancelQueryHandlerRes, error)
@@ -14094,6 +14761,138 @@ func (r UpdateRefRes) StatusCode() int {
 	return 0
 }
 
+type ListSharedModelsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]SharedModelResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListSharedModelsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListSharedModelsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetSharedModelRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SharedModelResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSharedModelRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSharedModelRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetSharedModelMetricsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ModelMetricsResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSharedModelMetricsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSharedModelMetricsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AnalyticsSlowQueriesHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]QueryHistoryEntry
+}
+
+// Status returns HTTPResponse.Status
+func (r AnalyticsSlowQueriesHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AnalyticsSlowQueriesHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AnalyticsSummaryHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AnalyticsSummary
+}
+
+// Status returns HTTPResponse.Status
+func (r AnalyticsSummaryHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AnalyticsSummaryHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AnalyticsTrendsHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AnalyticsTrends
+}
+
+// Status returns HTTPResponse.Status
+func (r AnalyticsTrendsHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AnalyticsTrendsHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type CancelQueryHandlerRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -15607,6 +16406,60 @@ func (c *ClientWithResponses) UpdateRefWithResponse(ctx context.Context, key str
 		return nil, err
 	}
 	return ParseUpdateRefRes(rsp)
+}
+
+// ListSharedModelsWithResponse request returning *ListSharedModelsRes
+func (c *ClientWithResponses) ListSharedModelsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListSharedModelsRes, error) {
+	rsp, err := c.ListSharedModels(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListSharedModelsRes(rsp)
+}
+
+// GetSharedModelWithResponse request returning *GetSharedModelRes
+func (c *ClientWithResponses) GetSharedModelWithResponse(ctx context.Context, name string, reqEditors ...RequestEditorFn) (*GetSharedModelRes, error) {
+	rsp, err := c.GetSharedModel(ctx, name, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSharedModelRes(rsp)
+}
+
+// GetSharedModelMetricsWithResponse request returning *GetSharedModelMetricsRes
+func (c *ClientWithResponses) GetSharedModelMetricsWithResponse(ctx context.Context, name string, params *GetSharedModelMetricsParams, reqEditors ...RequestEditorFn) (*GetSharedModelMetricsRes, error) {
+	rsp, err := c.GetSharedModelMetrics(ctx, name, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSharedModelMetricsRes(rsp)
+}
+
+// AnalyticsSlowQueriesHandlerWithResponse request returning *AnalyticsSlowQueriesHandlerRes
+func (c *ClientWithResponses) AnalyticsSlowQueriesHandlerWithResponse(ctx context.Context, params *AnalyticsSlowQueriesHandlerParams, reqEditors ...RequestEditorFn) (*AnalyticsSlowQueriesHandlerRes, error) {
+	rsp, err := c.AnalyticsSlowQueriesHandler(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAnalyticsSlowQueriesHandlerRes(rsp)
+}
+
+// AnalyticsSummaryHandlerWithResponse request returning *AnalyticsSummaryHandlerRes
+func (c *ClientWithResponses) AnalyticsSummaryHandlerWithResponse(ctx context.Context, params *AnalyticsSummaryHandlerParams, reqEditors ...RequestEditorFn) (*AnalyticsSummaryHandlerRes, error) {
+	rsp, err := c.AnalyticsSummaryHandler(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAnalyticsSummaryHandlerRes(rsp)
+}
+
+// AnalyticsTrendsHandlerWithResponse request returning *AnalyticsTrendsHandlerRes
+func (c *ClientWithResponses) AnalyticsTrendsHandlerWithResponse(ctx context.Context, params *AnalyticsTrendsHandlerParams, reqEditors ...RequestEditorFn) (*AnalyticsTrendsHandlerRes, error) {
+	rsp, err := c.AnalyticsTrendsHandler(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAnalyticsTrendsHandlerRes(rsp)
 }
 
 // CancelQueryHandlerWithResponse request returning *CancelQueryHandlerRes
@@ -18144,6 +18997,162 @@ func ParseUpdateRefRes(rsp *http.Response) (*UpdateRefRes, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Ref
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListSharedModelsRes parses an HTTP response from a ListSharedModelsWithResponse call
+func ParseListSharedModelsRes(rsp *http.Response) (*ListSharedModelsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListSharedModelsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []SharedModelResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetSharedModelRes parses an HTTP response from a GetSharedModelWithResponse call
+func ParseGetSharedModelRes(rsp *http.Response) (*GetSharedModelRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSharedModelRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SharedModelResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetSharedModelMetricsRes parses an HTTP response from a GetSharedModelMetricsWithResponse call
+func ParseGetSharedModelMetricsRes(rsp *http.Response) (*GetSharedModelMetricsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSharedModelMetricsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ModelMetricsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAnalyticsSlowQueriesHandlerRes parses an HTTP response from a AnalyticsSlowQueriesHandlerWithResponse call
+func ParseAnalyticsSlowQueriesHandlerRes(rsp *http.Response) (*AnalyticsSlowQueriesHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AnalyticsSlowQueriesHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []QueryHistoryEntry
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAnalyticsSummaryHandlerRes parses an HTTP response from a AnalyticsSummaryHandlerWithResponse call
+func ParseAnalyticsSummaryHandlerRes(rsp *http.Response) (*AnalyticsSummaryHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AnalyticsSummaryHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AnalyticsSummary
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAnalyticsTrendsHandlerRes parses an HTTP response from a AnalyticsTrendsHandlerWithResponse call
+func ParseAnalyticsTrendsHandlerRes(rsp *http.Response) (*AnalyticsTrendsHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AnalyticsTrendsHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AnalyticsTrends
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
