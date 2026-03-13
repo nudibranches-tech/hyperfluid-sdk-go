@@ -9,9 +9,10 @@ import (
 )
 
 type OriginalFilePayload struct {
-	OriginalFilePath string `json:"original_file_path"`
-	SourceDataDockID string `json:"source_data_dock_id"`
-	SourceFileName   string `json:"source_filename"`
+	OriginalFilePath string  `json:"original_file_path"`
+	SourceDataDockID string  `json:"source_data_dock_id"`
+	SourceFileName   string  `json:"source_filename"`
+	ProviderSlug     *string `json:"provider_slug"`
 }
 
 type DocumentRecord struct {
