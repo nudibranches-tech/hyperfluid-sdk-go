@@ -111,3 +111,15 @@ func (d *DataDockBuilder) Search(query string) *SearchBuilder {
 		limitVal:       20, // Default limit
 	}
 }
+
+// HybridSearch starts a hybrid search builder for this datadock.
+// Combines FTS (BM25) and vector similarity search with configurable fusion.
+func (d *DataDockBuilder) HybridSearch(query string) *HybridSearchBuilder {
+	return &HybridSearchBuilder{
+		client:         d.client,
+		dataDockID:     d.dataDockID,
+		searchQuery:    query,
+		columnsToIndex: []string{},
+		limitVal:       20,
+	}
+}

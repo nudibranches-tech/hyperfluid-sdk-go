@@ -199,3 +199,20 @@ func (c *Client) OrgFromConfig() *progressive.OrgBuilder {
 func (c *Client) Search() *fluent.SearchBuilder {
 	return fluent.NewSearchBuilder(c)
 }
+
+// HybridSearch creates a new HybridSearchBuilder for combined FTS + vector search queries.
+// This combines full-text search (BM25) and vector similarity search with configurable fusion.
+// Example:
+//
+//	resp, err := client.HybridSearch().
+//	    Query("machine learning pipelines").
+//	    DataDock("data-dock-id").
+//	    Catalog("catalog").
+//	    Schema("public").
+//	    Table("documents").
+//	    Columns("title", "content", "summary").
+//	    Limit(10).
+//	    Execute(ctx)
+func (c *Client) HybridSearch() *fluent.HybridSearchBuilder {
+	return fluent.NewHybridSearchBuilder(c)
+}
