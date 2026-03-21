@@ -7,7 +7,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.32.6
 	github.com/aws/aws-sdk-go-v2/credentials v1.19.6
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.97.1
-	github.com/aws/aws-sdk-go-v2/service/sts v1.41.5
+	github.com/aws/aws-sdk-go-v2/service/sts v1.41.9
 	github.com/google/uuid v1.5.0
 	github.com/joho/godotenv v1.5.1
 	github.com/oapi-codegen/runtime v1.1.2
