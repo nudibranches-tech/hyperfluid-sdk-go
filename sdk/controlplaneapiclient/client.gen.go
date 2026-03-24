@@ -73,6 +73,16 @@ const (
 	S3Copy CreatePipelineRequestV24Type = "s3_copy"
 )
 
+// Defines values for CreatePipelineRequestV25Type.
+const (
+	PageSplitter CreatePipelineRequestV25Type = "page_splitter"
+)
+
+// Defines values for CreatePipelineRequestV26Type.
+const (
+	ContextEnricher CreatePipelineRequestV26Type = "context_enricher"
+)
+
 // Defines values for DataDockKind0Type.
 const (
 	DataDockKind0TypeTrino DataDockKind0Type = "Trino"
@@ -237,12 +247,15 @@ const (
 
 // Defines values for PipelineType.
 const (
+	PipelineTypeContextEnricher  PipelineType = "ContextEnricher"
 	PipelineTypeCopy             PipelineType = "Copy"
 	PipelineTypeFileRouter       PipelineType = "FileRouter"
 	PipelineTypeFileSorter       PipelineType = "FileSorter"
 	PipelineTypeHephaistosPdfeed PipelineType = "HephaistosPdfeed"
 	PipelineTypeLabelizer        PipelineType = "Labelizer"
 	PipelineTypeMarkitdown       PipelineType = "Markitdown"
+	PipelineTypeOmnifeed         PipelineType = "Omnifeed"
+	PipelineTypePageSplitter     PipelineType = "PageSplitter"
 )
 
 // Defines values for PrepareArchiveImportResponse0UploadType.
@@ -255,12 +268,68 @@ const (
 	Multipart PrepareArchiveImportResponse1UploadType = "multipart"
 )
 
+// Defines values for QuotaResourceType.
+const (
+	QuotaResourceTypeApiKey         QuotaResourceType = "api_key"
+	QuotaResourceTypeDataDock       QuotaResourceType = "data_dock"
+	QuotaResourceTypeHarbor         QuotaResourceType = "harbor"
+	QuotaResourceTypeModelServing   QuotaResourceType = "model_serving"
+	QuotaResourceTypePipeline       QuotaResourceType = "pipeline"
+	QuotaResourceTypeServiceAccount QuotaResourceType = "service_account"
+	QuotaResourceTypeUser           QuotaResourceType = "user"
+)
+
+// Defines values for QuotaStatus.
+const (
+	Exceeded QuotaStatus = "exceeded"
+	Ok       QuotaStatus = "ok"
+	Warning  QuotaStatus = "warning"
+)
+
 // Defines values for RefStatus.
 const (
 	Done    RefStatus = "done"
 	Failed  RefStatus = "failed"
 	Pending RefStatus = "pending"
 	Skipped RefStatus = "skipped"
+)
+
+// Defines values for ResourceTier.
+const (
+	Large  ResourceTier = "large"
+	Medium ResourceTier = "medium"
+	Micro  ResourceTier = "micro"
+	Nano   ResourceTier = "nano"
+	Small  ResourceTier = "small"
+	Xlarge ResourceTier = "xlarge"
+)
+
+// Defines values for SecretType.
+const (
+	SecretTypeJson              SecretType = "json"
+	SecretTypeOciRegistryConfig SecretType = "oci_registry_config"
+	SecretTypePlaintext         SecretType = "plaintext"
+	SecretTypeS3Config          SecretType = "s3_config"
+)
+
+// Defines values for SecretValue0Type.
+const (
+	SecretValue0TypePlaintext SecretValue0Type = "plaintext"
+)
+
+// Defines values for SecretValue1Type.
+const (
+	Json SecretValue1Type = "json"
+)
+
+// Defines values for SecretValue2Type.
+const (
+	OciRegistryConfig SecretValue2Type = "oci_registry_config"
+)
+
+// Defines values for SecretValue3Type.
+const (
+	S3Config SecretValue3Type = "s3_config"
 )
 
 // Defines values for SensitivityLevel.
@@ -404,6 +473,12 @@ type ArchiveOperationStatus string
 // ArchiveOperationType defines model for ArchiveOperationType.
 type ArchiveOperationType string
 
+// AssignSubscriptionBody defines model for AssignSubscriptionBody.
+type AssignSubscriptionBody struct {
+	CustomLimits   interface{}        `json:"custom_limits,omitempty"`
+	QuotaProfileId openapi_types.UUID `json:"quota_profile_id"`
+}
+
 // BucketArchiveOperation defines model for BucketArchiveOperation.
 type BucketArchiveOperation struct {
 	CreatedAt time.Time `json:"created_at"`
@@ -416,6 +491,10 @@ type BucketArchiveOperation struct {
 	// or where the files will be extracted from when exporting
 	DestinationDataContainerId openapi_types.UUID `json:"destination_data_container_id"`
 	ErrorMessage               *string            `json:"error_message"`
+
+	// ExternalSource Configuration for importing a ZIP archive from an external S3-compatible source.
+	// Credentials are resolved at execution time from the platform's secret manager.
+	ExternalSource *ExternalS3Source `json:"external_source,omitempty"`
 
 	// FileName The name of the archive file
 	FileName string `json:"file_name"`
@@ -521,8 +600,24 @@ type ClassificationConfig struct {
 	// ApiKey API key for the AI model (e.g., Mistral)
 	ApiKey string `json:"api_key"`
 
-	// Labels Document classification labels
-	Labels []LabelDefinition `json:"labels"`
+	// LabelsYaml Label definitions as a YAML string, supporting static and dynamic
+	// labels with format strings, placeholders, and rules.
+	// Required for FileSorter and Labelizer pipelines.
+	//
+	// Example:
+	// ```yaml
+	// - id: ASSEMBLEES GENERALES/{YYMMDD} AGO/CONVOCATION
+	//   type: dynamic
+	//   description: "Convocation à l'assemblée générale ordinaire"
+	//   format: "ASSEMBLEES GENERALES/{YYMMDD} AGO/CONVOCATION"
+	//   placeholders:
+	//     - id: YYMMDD
+	//       source: "date de l'assemblée"
+	//       format: "YYMMDD"
+	//       rules:
+	//         - "must be a valid date"
+	// ```
+	LabelsYaml *string `json:"labels_yaml"`
 
 	// ModelBaseUrl Base URL for the model API. Defaults to Mistral API when not set.
 	// Set to a vLLM/KServe endpoint for self-hosted models (e.g., "http://ministral-3-8b-rocm-predictor.kserve.svc.cluster.local/v1").
@@ -590,6 +685,49 @@ type CompletedPartInfo struct {
 // ConsoleConfigFeatureFlag defines model for ConsoleConfigFeatureFlag.
 type ConsoleConfigFeatureFlag string
 
+// ContainerAppCrdSpecResponse defines model for ContainerAppCrdSpecResponse.
+type ContainerAppCrdSpecResponse struct {
+	CpuLimit         *string                 `json:"cpu_limit"`
+	CpuRequest       *string                 `json:"cpu_request"`
+	Enabled          bool                    `json:"enabled"`
+	Env              []EnvVarSpecResponse    `json:"env"`
+	HealthCheckPath  *string                 `json:"health_check_path"`
+	HealthCheckPort  *int32                  `json:"health_check_port"`
+	ImagePullSecrets []string                `json:"image_pull_secrets"`
+	ImageRepository  string                  `json:"image_repository"`
+	ImageTag         string                  `json:"image_tag"`
+	MemoryLimit      *string                 `json:"memory_limit"`
+	MemoryRequest    *string                 `json:"memory_request"`
+	Port             int32                   `json:"port"`
+	Replicas         int32                   `json:"replicas"`
+	SecretRefs       []SecretRefSpecResponse `json:"secret_refs"`
+}
+
+// ContainerAppPodInfo defines model for ContainerAppPodInfo.
+type ContainerAppPodInfo struct {
+	Name      string  `json:"name"`
+	Phase     string  `json:"phase"`
+	Ready     bool    `json:"ready"`
+	Restarts  int32   `json:"restarts"`
+	StartedAt *string `json:"started_at"`
+}
+
+// ContainerAppResponse defines model for ContainerAppResponse.
+type ContainerAppResponse struct {
+	AvailableReplicas int32              `json:"available_replicas"`
+	Conditions        interface{}        `json:"conditions,omitempty"`
+	CreatedAt         time.Time          `json:"created_at"`
+	DesiredReplicas   int32              `json:"desired_replicas"`
+	Endpoint          *string            `json:"endpoint"`
+	HarborId          openapi_types.UUID `json:"harbor_id"`
+	Id                openapi_types.UUID `json:"id"`
+	Name              string             `json:"name"`
+	OrganizationId    openapi_types.UUID `json:"organization_id"`
+	Phase             *string            `json:"phase"`
+	Slug              string             `json:"slug"`
+	UpdatedAt         time.Time          `json:"updated_at"`
+}
+
 // ContextProviderResponse Response for a context provider.
 type ContextProviderResponse struct {
 	CreatedAt           time.Time          `json:"created_at"`
@@ -653,6 +791,9 @@ type CopyS3SourceConfig struct {
 
 // CopySourceConfig Copy pipeline source configuration (Import API)
 type CopySourceConfig struct {
+	// ExtraFilter Filter on a field within the `extra` JSON object returned by the Import API.
+	ExtraFilter *ImportApiExtraFilter `json:"extra_filter,omitempty"`
+
 	// ImportApiKey Import API Key for authentication
 	ImportApiKey string `json:"import_api_key"`
 
@@ -667,6 +808,11 @@ type CountRefRequest struct {
 	Status          *RefStatus `json:"status,omitempty"`
 	UpdatedAtAfter  *time.Time `json:"updated_at_after"`
 	UpdatedAtBefore *time.Time `json:"updated_at_before"`
+}
+
+// CountSecretsResponse defines model for CountSecretsResponse.
+type CountSecretsResponse struct {
+	Count int64 `json:"count"`
 }
 
 // CreateApiKeyRequest defines model for CreateApiKeyRequest.
@@ -696,6 +842,46 @@ type CreateBucketDataContainerRequestBody struct {
 // CreateBucketFolderRequest defines model for CreateBucketFolderRequest.
 type CreateBucketFolderRequest struct {
 	Path string `json:"path"`
+}
+
+// CreateContainerAppCrdRequestBody defines model for CreateContainerAppCrdRequestBody.
+type CreateContainerAppCrdRequestBody struct {
+	Enabled         bool           `json:"enabled"`
+	Env             *[]EnvVarInput `json:"env,omitempty"`
+	HealthCheckPath *string        `json:"health_check_path"`
+	HealthCheckPort *int32         `json:"health_check_port"`
+
+	// ImagePullSecrets Names of secrets from the secret store to use as image pull secrets.
+	ImagePullSecrets *[]string `json:"image_pull_secrets,omitempty"`
+	ImageRepository  string    `json:"image_repository"`
+	ImageTag         string    `json:"image_tag"`
+
+	// Name Must be a valid slug: lowercase letters, digits, and hyphens only; cannot start or end with a hyphen.
+	Name     string `json:"name"`
+	Port     *int32 `json:"port,omitempty"`
+	Replicas *int32 `json:"replicas,omitempty"`
+
+	// ResourceTier Predefined resource tiers for container apps.
+	// Memory limits are always equal to memory requests.
+	ResourceTier *ResourceTier     `json:"resource_tier,omitempty"`
+	SecretRefs   *[]SecretRefInput `json:"secret_refs,omitempty"`
+}
+
+// CreateContextEnricherPipelineRequest Context Enricher pipeline request: enrich Iceberg table with L0/L1 abstracts via LLM.
+// Reads content (L2) from a source table, writes enriched rows (content + L0 + L1) to a destination table.
+// Enables lineage: minio → OCR → ice_raw → hippocampe → ice_enriched
+type CreateContextEnricherPipelineRequest struct {
+	// Classification Classification configuration for AI processing
+	Classification ClassificationConfig `json:"classification"`
+
+	// Destination Metadata storage configuration (Trino/Iceberg for document metadata)
+	Destination MetadataStorageConfig `json:"destination"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// Source Metadata storage configuration (Trino/Iceberg for document metadata)
+	Source MetadataStorageConfig `json:"source"`
 }
 
 // CreateContextProviderBody Request to create a context provider.
@@ -817,6 +1003,21 @@ type CreateIcebergTableMetadataRequest struct {
 	TableName    string             `json:"table_name"`
 }
 
+// CreateKafkaHFServiceRequest defines model for CreateKafkaHFServiceRequest.
+type CreateKafkaHFServiceRequest struct {
+	BrokerReplicas        *int32  `json:"broker_replicas,omitempty"`
+	CpuLimit              *string `json:"cpu_limit"`
+	CpuRequest            *string `json:"cpu_request"`
+	Description           *string `json:"description,omitempty"`
+	MemoryLimit           *string `json:"memory_limit"`
+	MemoryRequest         *string `json:"memory_request"`
+	MinInsyncReplicas     *int32  `json:"min_insync_replicas,omitempty"`
+	Name                  string  `json:"name"`
+	ReplicationFactor     *int32  `json:"replication_factor,omitempty"`
+	SchemaRegistryEnabled *bool   `json:"schema_registry_enabled,omitempty"`
+	StorageSizeGb         *int32  `json:"storage_size_gb,omitempty"`
+}
+
 // CreateMedallionSchemaRequest defines model for CreateMedallionSchemaRequest.
 type CreateMedallionSchemaRequest struct {
 	CdcEnabled  *bool   `json:"cdc_enabled"`
@@ -851,8 +1052,21 @@ type CreateModelServingRequest struct {
 
 // CreateOrganizationRequestBody defines model for CreateOrganizationRequestBody.
 type CreateOrganizationRequestBody struct {
-	Name string `json:"name"`
-	Slug string `json:"slug"`
+	Name             string  `json:"name"`
+	QuotaProfileSlug *string `json:"quota_profile_slug"`
+	Slug             string  `json:"slug"`
+}
+
+// CreatePageSplitterPipelineRequest PageSplitter pipeline request: splits OCR'd documents by page markers
+type CreatePageSplitterPipelineRequest struct {
+	// Destination Metadata storage configuration (Trino/Iceberg for document metadata)
+	Destination MetadataStorageConfig `json:"destination"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// Source Metadata storage configuration (Trino/Iceberg for document metadata)
+	Source MetadataStorageConfig `json:"source"`
 }
 
 // CreatePipelineRequest defines model for CreatePipelineRequest.
@@ -900,13 +1114,20 @@ type CreatePipelineRequestV21 struct {
 	// MetadataStorage Metadata storage configuration (Trino/Iceberg for document metadata)
 	MetadataStorage MetadataStorageConfig `json:"metadata_storage"`
 
+	// OcrProvider OCR provider configuration for PDF processing
+	OcrProvider *OcrProviderConfig `json:"ocr_provider,omitempty"`
+
 	// Pipeline Pipeline metadata configuration (common to all pipeline types)
 	Pipeline     PipelineMetadata `json:"pipeline"`
 	PipelineType PipelineType     `json:"pipeline_type"`
 
 	// Source FileSorter source configuration (S3 bucket for unsorted files)
-	Source FileSorterSourceConfig       `json:"source"`
-	Type   CreatePipelineRequestV21Type `json:"type"`
+	Source FileSorterSourceConfig `json:"source"`
+
+	// SplitByPage When true, adds a PageSplitter step after OCR to split documents by page markers.
+	// The split pages are written to a table named `{table_name}_split_pages` in the same schema.
+	SplitByPage *bool                        `json:"split_by_page,omitempty"`
+	Type        CreatePipelineRequestV21Type `json:"type"`
 }
 
 // CreatePipelineRequestV21Type defines model for CreatePipelineRequestV2.1.Type.
@@ -964,6 +1185,41 @@ type CreatePipelineRequestV24 struct {
 // CreatePipelineRequestV24Type defines model for CreatePipelineRequestV2.4.Type.
 type CreatePipelineRequestV24Type string
 
+// CreatePipelineRequestV25 defines model for .
+type CreatePipelineRequestV25 struct {
+	// Destination Metadata storage configuration (Trino/Iceberg for document metadata)
+	Destination MetadataStorageConfig `json:"destination"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// Source Metadata storage configuration (Trino/Iceberg for document metadata)
+	Source MetadataStorageConfig        `json:"source"`
+	Type   CreatePipelineRequestV25Type `json:"type"`
+}
+
+// CreatePipelineRequestV25Type defines model for CreatePipelineRequestV2.5.Type.
+type CreatePipelineRequestV25Type string
+
+// CreatePipelineRequestV26 defines model for .
+type CreatePipelineRequestV26 struct {
+	// Classification Classification configuration for AI processing
+	Classification ClassificationConfig `json:"classification"`
+
+	// Destination Metadata storage configuration (Trino/Iceberg for document metadata)
+	Destination MetadataStorageConfig `json:"destination"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// Source Metadata storage configuration (Trino/Iceberg for document metadata)
+	Source MetadataStorageConfig        `json:"source"`
+	Type   CreatePipelineRequestV26Type `json:"type"`
+}
+
+// CreatePipelineRequestV26Type defines model for CreatePipelineRequestV2.6.Type.
+type CreatePipelineRequestV26Type string
+
 // CreateS3CopyPipelineRequest S3-to-S3 copy pipeline request
 type CreateS3CopyPipelineRequest struct {
 	// Destination Copy pipeline destination configuration (S3 bucket)
@@ -986,6 +1242,17 @@ type CreateSavedQueryRequest struct {
 	Visibility  *string            `json:"visibility"`
 }
 
+// CreateSecretRequestBody defines model for CreateSecretRequestBody.
+type CreateSecretRequestBody struct {
+	Description *string `json:"description"`
+	Name        string  `json:"name"`
+
+	// SecretType The type of value stored in the secret.
+	SecretType SecretType  `json:"secret_type"`
+	Tags       *[]string   `json:"tags,omitempty"`
+	Value      interface{} `json:"value"`
+}
+
 // CreateServiceAccountCrdRequestBody defines model for CreateServiceAccountCrdRequestBody.
 type CreateServiceAccountCrdRequestBody struct {
 	ClientId    string  `json:"client_id"`
@@ -1004,7 +1271,7 @@ type CreateTableClassificationBody struct {
 	TableFqdn string `json:"table_fqdn"`
 }
 
-// CreateTrinoPipelineRequest Trino-based pipeline request (Markitdown, HephaistosPdfeed, Labelizer)
+// CreateTrinoPipelineRequest Trino-based pipeline request (Markitdown, HephaistosPdfeed, Labelizer, Omnifeed)
 type CreateTrinoPipelineRequest struct {
 	// Classification Classification configuration for AI processing
 	Classification *ClassificationConfig `json:"classification,omitempty"`
@@ -1012,12 +1279,19 @@ type CreateTrinoPipelineRequest struct {
 	// MetadataStorage Metadata storage configuration (Trino/Iceberg for document metadata)
 	MetadataStorage MetadataStorageConfig `json:"metadata_storage"`
 
+	// OcrProvider OCR provider configuration for PDF processing
+	OcrProvider *OcrProviderConfig `json:"ocr_provider,omitempty"`
+
 	// Pipeline Pipeline metadata configuration (common to all pipeline types)
 	Pipeline     PipelineMetadata `json:"pipeline"`
 	PipelineType PipelineType     `json:"pipeline_type"`
 
 	// Source FileSorter source configuration (S3 bucket for unsorted files)
 	Source FileSorterSourceConfig `json:"source"`
+
+	// SplitByPage When true, adds a PageSplitter step after OCR to split documents by page markers.
+	// The split pages are written to a table named `{table_name}_split_pages` in the same schema.
+	SplitByPage *bool `json:"split_by_page,omitempty"`
 }
 
 // CreateUser defines model for CreateUser.
@@ -1304,12 +1578,71 @@ type EffectiveSecuritySettingsResponse struct {
 	ZeroTrustMode                 bool     `json:"zero_trust_mode"`
 }
 
+// EnvVarInput defines model for EnvVarInput.
+type EnvVarInput struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
+}
+
+// EnvVarSpecResponse defines model for EnvVarSpecResponse.
+type EnvVarSpecResponse struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
+}
+
 // ExecuteRequest defines model for ExecuteRequest.
 type ExecuteRequest struct {
 	DataDockId     openapi_types.UUID `json:"data_dock_id"`
 	Limit          *int64             `json:"limit"`
 	Sql            string             `json:"sql"`
 	TimeoutSeconds *int64             `json:"timeout_seconds"`
+}
+
+// ExternalArchiveImportRequest defines model for ExternalArchiveImportRequest.
+type ExternalArchiveImportRequest struct {
+	// Bucket External S3 bucket name
+	Bucket           string            `json:"bucket"`
+	DedupingStrategy *DedupingStrategy `json:"deduping_strategy,omitempty"`
+
+	// Endpoint Custom S3-compatible endpoint URL
+	Endpoint *string `json:"endpoint"`
+
+	// ForcePathStyle Use path-style addressing (required for MinIO-style endpoints)
+	ForcePathStyle *bool `json:"force_path_style"`
+
+	// Key Object key (path) to the ZIP file on the external S3
+	Key string `json:"key"`
+
+	// Prefix Optional prefix where files will be extracted in the target bucket
+	Prefix *string `json:"prefix"`
+
+	// Region AWS region (defaults to `us-east-1`)
+	Region *string `json:"region"`
+
+	// SecretName Name of the `s3_config` secret containing external S3 credentials
+	SecretName string `json:"secret_name"`
+}
+
+// ExternalS3Source Configuration for importing a ZIP archive from an external S3-compatible source.
+// Credentials are resolved at execution time from the platform's secret manager.
+type ExternalS3Source struct {
+	// Bucket External S3 bucket name
+	Bucket string `json:"bucket"`
+
+	// Endpoint Custom S3-compatible endpoint URL (e.g. `https://s3.amazonaws.com`)
+	Endpoint *string `json:"endpoint"`
+
+	// ForcePathStyle Use path-style addressing (required for MinIO-style endpoints)
+	ForcePathStyle *bool `json:"force_path_style"`
+
+	// Key Object key (path) to the ZIP file on the external S3
+	Key string `json:"key"`
+
+	// Region AWS region (defaults to `us-east-1` when absent)
+	Region *string `json:"region"`
+
+	// SecretName Name of the `s3_config` secret containing the S3 credentials
+	SecretName string `json:"secret_name"`
 }
 
 // FakerFieldType defines model for FakerFieldType.
@@ -1530,6 +1863,41 @@ type IcebergConnectorDataContainer struct {
 	StorageDataDock openapi_types.UUID `json:"storage_data_dock"`
 }
 
+// IcebergOptimizeConfig defines model for IcebergOptimizeConfig.
+type IcebergOptimizeConfig struct {
+	AnalyzeStatisticsEnabled   bool               `json:"analyze_statistics_enabled"`
+	CompactFilesEnabled        bool               `json:"compact_files_enabled"`
+	CompactFilesSizeThreshold  *string            `json:"compact_files_size_threshold"`
+	CreatedAt                  time.Time          `json:"created_at"`
+	DataContainerId            openapi_types.UUID `json:"data_container_id"`
+	ExpireSnapshotsEnabled     bool               `json:"expire_snapshots_enabled"`
+	ExpireSnapshotsRetention   *string            `json:"expire_snapshots_retention"`
+	Id                         openapi_types.UUID `json:"id"`
+	LastRunAt                  *time.Time         `json:"last_run_at"`
+	LastRunStatus              *string            `json:"last_run_status"`
+	RemoveOrphanFilesEnabled   bool               `json:"remove_orphan_files_enabled"`
+	RemoveOrphanFilesRetention *string            `json:"remove_orphan_files_retention"`
+	Schedule                   string             `json:"schedule"`
+	Suspend                    bool               `json:"suspend"`
+	TablesOptimized            *int32             `json:"tables_optimized"`
+	UpdatedAt                  time.Time          `json:"updated_at"`
+}
+
+// IcebergOptimizeRun defines model for IcebergOptimizeRun.
+type IcebergOptimizeRun struct {
+	CompletedAt      *time.Time         `json:"completed_at"`
+	CreatedAt        time.Time          `json:"created_at"`
+	ErrorDetails     interface{}        `json:"error_details,omitempty"`
+	Id               openapi_types.UUID `json:"id"`
+	LogOutput        *string            `json:"log_output"`
+	OptimizeConfigId openapi_types.UUID `json:"optimize_config_id"`
+	StartedAt        time.Time          `json:"started_at"`
+	Status           string             `json:"status"`
+	TablesFailed     *int32             `json:"tables_failed"`
+	TablesProcessed  *int32             `json:"tables_processed"`
+	TablesSucceeded  *int32             `json:"tables_succeeded"`
+}
+
 // IcebergSchemaMetadata defines model for IcebergSchemaMetadata.
 type IcebergSchemaMetadata struct {
 	CdcEnabled      bool               `json:"cdc_enabled"`
@@ -1569,31 +1937,65 @@ type IcebergTableResponseData struct {
 	UpdatedAt       time.Time          `json:"updated_at"`
 }
 
-// LabelDefinition Label definition for document classification (Labelize step)
-// Supports both static labels (id + description) and dynamic labels with placeholders.
-//
-// Example YAML format:
-// ```yaml
-//   - id: facture_eau
-//     type: static
-//     description: "Water utility invoices"
-//   - id: travaux
-//     type: dynamic
-//     description: "Construction work documents"
-//     format: "TRAVAUX/{year}/{date}-{work_name}"
-//     placeholders:
-//   - id: year
-//     source: "Extract the year from the document"
-//     format: "YYYY"
-//     rules: ["Must be 4 digits"]
-//
-// ```
-type LabelDefinition struct {
-	// Category Label category key (e.g., "Factures/Eau", "Contrats/Entretien")
-	Category string `json:"category"`
+// ImportApiExtraFilter Filter on a field within the `extra` JSON object returned by the Import API.
+type ImportApiExtraFilter struct {
+	// Field Key within `extra` to filter on (e.g. "rubrique_parent_title")
+	Field string `json:"field"`
 
-	// Description Human-readable description for LLM classification
-	Description string `json:"description"`
+	// Value Expected string value
+	Value string `json:"value"`
+}
+
+// KafkaConsumerGroup defines model for KafkaConsumerGroup.
+type KafkaConsumerGroup struct {
+	GroupId string    `json:"group_id"`
+	Members int32     `json:"members"`
+	State   string    `json:"state"`
+	Topics  *[]string `json:"topics,omitempty"`
+}
+
+// KafkaHFServiceResponse defines model for KafkaHFServiceResponse.
+type KafkaHFServiceResponse struct {
+	BootstrapServers         *string            `json:"bootstrap_servers"`
+	BrokerReplicas           int32              `json:"broker_replicas"`
+	CpuLimit                 *string            `json:"cpu_limit"`
+	CpuRequest               *string            `json:"cpu_request"`
+	CreatedAt                time.Time          `json:"created_at"`
+	Description              string             `json:"description"`
+	HarborId                 openapi_types.UUID `json:"harbor_id"`
+	Id                       openapi_types.UUID `json:"id"`
+	InternalBootstrapServers *string            `json:"internal_bootstrap_servers"`
+	KeycloakClientId         *string            `json:"keycloak_client_id"`
+	MemoryLimit              *string            `json:"memory_limit"`
+	MemoryRequest            *string            `json:"memory_request"`
+	MinInsyncReplicas        int32              `json:"min_insync_replicas"`
+	Name                     string             `json:"name"`
+	OpaUri                   *string            `json:"opa_uri"`
+	RefreshedAt              *time.Time         `json:"refreshed_at"`
+	ReplicationFactor        int32              `json:"replication_factor"`
+	SchemaRegistryEnabled    bool               `json:"schema_registry_enabled"`
+	SchemaRegistryUrl        *string            `json:"schema_registry_url"`
+	Slug                     string             `json:"slug"`
+	Status                   string             `json:"status"`
+	StorageSizeGb            int32              `json:"storage_size_gb"`
+	TokenIssuerEndpoint      *string            `json:"token_issuer_endpoint"`
+	UpdatedAt                time.Time          `json:"updated_at"`
+}
+
+// KafkaMetadata Dynamic metadata about the Kafka cluster (stored as JSONB)
+type KafkaMetadata struct {
+	ClusterId      *string               `json:"cluster_id"`
+	ConsumerGroups *[]KafkaConsumerGroup `json:"consumer_groups,omitempty"`
+	Topics         *[]KafkaTopicInfo     `json:"topics,omitempty"`
+}
+
+// KafkaTopicInfo defines model for KafkaTopicInfo.
+type KafkaTopicInfo struct {
+	CleanupPolicy     *string `json:"cleanup_policy"`
+	Name              string  `json:"name"`
+	Partitions        int32   `json:"partitions"`
+	ReplicationFactor int32   `json:"replication_factor"`
+	RetentionMs       *int64  `json:"retention_ms"`
 }
 
 // ListContextProvidersResponse Response for list of context providers.
@@ -1606,9 +2008,19 @@ type ListContextualRestrictionsResponse struct {
 	Restrictions []ContextualRestrictionResponse `json:"restrictions"`
 }
 
+// ListQuotaProfilesResponse defines model for ListQuotaProfilesResponse.
+type ListQuotaProfilesResponse struct {
+	Profiles []QuotaProfileResponse `json:"profiles"`
+}
+
 // ListRunsResponse defines model for ListRunsResponse.
 type ListRunsResponse struct {
 	Runs []PipelineRun `json:"runs"`
+}
+
+// ListSecretsResponse defines model for ListSecretsResponse.
+type ListSecretsResponse struct {
+	Secrets []SecretMetadataResponse `json:"secrets"`
 }
 
 // ListServiceAccountsResponseData defines model for ListServiceAccountsResponseData.
@@ -1818,6 +2230,18 @@ type MultipartPartUrl struct {
 	UploadUrl string `json:"upload_url"`
 }
 
+// OciRegistryAuth defines model for OciRegistryAuth.
+type OciRegistryAuth struct {
+	Auth     string `json:"auth"`
+	Password string `json:"password"`
+	Username string `json:"username"`
+}
+
+// OciRegistryConfigValue defines model for OciRegistryConfigValue.
+type OciRegistryConfigValue struct {
+	Auths map[string]OciRegistryAuth `json:"auths"`
+}
+
 // OcrProviderConfig OCR provider configuration for PDF processing
 type OcrProviderConfig struct {
 	union json.RawMessage
@@ -1867,6 +2291,32 @@ type OrgUserAttributesResponse struct {
 	Users []UserAttributesEntry `json:"users"`
 }
 
+// OrganizationQuotaResponse defines model for OrganizationQuotaResponse.
+type OrganizationQuotaResponse struct {
+	Profile QuotaProfileResponse     `json:"profile"`
+	Usage   []QuotaUsageItemResponse `json:"usage"`
+}
+
+// PatchContainerAppCrdRequestBody defines model for PatchContainerAppCrdRequestBody.
+type PatchContainerAppCrdRequestBody struct {
+	Enabled         *bool          `json:"enabled"`
+	Env             *[]EnvVarInput `json:"env"`
+	HealthCheckPath *string        `json:"health_check_path"`
+	HealthCheckPort *int32         `json:"health_check_port"`
+
+	// ImagePullSecrets Names of secrets from the secret store to use as image pull secrets. Replaces existing pull secrets when set.
+	ImagePullSecrets *[]string `json:"image_pull_secrets"`
+	ImageRepository  *string   `json:"image_repository"`
+	ImageTag         *string   `json:"image_tag"`
+	Port             *int32    `json:"port"`
+	Replicas         *int32    `json:"replicas"`
+
+	// ResourceTier Predefined resource tiers for container apps.
+	// Memory limits are always equal to memory requests.
+	ResourceTier *ResourceTier     `json:"resource_tier,omitempty"`
+	SecretRefs   *[]SecretRefInput `json:"secret_refs"`
+}
+
 // PatchModelServingRequest defines model for PatchModelServingRequest.
 type PatchModelServingRequest struct {
 	// Replicas Target replica count for scaling
@@ -1885,6 +2335,12 @@ type PipelineInputParameters struct {
 	// Allows routing to different Data Docks with specific prefixes
 	DefaultRoute *DestinationConfig `json:"default_route,omitempty"`
 	Folder       *string            `json:"folder"`
+
+	// ImportApiExtraFilterField Copy pipeline: optional extra field filter key (e.g. "rubrique_parent_title")
+	ImportApiExtraFilterField *string `json:"import_api_extra_filter_field"`
+
+	// ImportApiExtraFilterValue Copy pipeline: optional extra field filter value
+	ImportApiExtraFilterValue *string `json:"import_api_extra_filter_value"`
 
 	// ImportApiKey Copy pipeline: Import API Key (source)
 	ImportApiKey *string `json:"import_api_key"`
@@ -2206,6 +2662,44 @@ type QueryResultColumn struct {
 	Name     string `json:"name"`
 }
 
+// QuotaProfileResponse defines model for QuotaProfileResponse.
+type QuotaProfileResponse struct {
+	Description            *string            `json:"description"`
+	Id                     openapi_types.UUID `json:"id"`
+	MaxApiCallsDaily       int64              `json:"max_api_calls_daily"`
+	MaxApiKeys             int32              `json:"max_api_keys"`
+	MaxDataDocks           int32              `json:"max_data_docks"`
+	MaxHarbors             int32              `json:"max_harbors"`
+	MaxLlmTokensMonthly    int64              `json:"max_llm_tokens_monthly"`
+	MaxModelServings       int32              `json:"max_model_servings"`
+	MaxPipelineRunsMonthly int32              `json:"max_pipeline_runs_monthly"`
+	MaxPipelines           int32              `json:"max_pipelines"`
+	MaxRamGb               int32              `json:"max_ram_gb"`
+	MaxServiceAccounts     int32              `json:"max_service_accounts"`
+	MaxStorageGb           int32              `json:"max_storage_gb"`
+	MaxUsers               int32              `json:"max_users"`
+	MaxVcpu                int32              `json:"max_vcpu"`
+	Name                   string             `json:"name"`
+	Slug                   string             `json:"slug"`
+}
+
+// QuotaResourceType defines model for QuotaResourceType.
+type QuotaResourceType string
+
+// QuotaStatus defines model for QuotaStatus.
+type QuotaStatus string
+
+// QuotaUsageItemResponse defines model for QuotaUsageItemResponse.
+type QuotaUsageItemResponse struct {
+	Current int64 `json:"current"`
+	Limit   int64 `json:"limit"`
+
+	// Percentage Usage percentage (0-100+), -1 if unlimited
+	Percentage   float64           `json:"percentage"`
+	ResourceType QuotaResourceType `json:"resource_type"`
+	Status       QuotaStatus       `json:"status"`
+}
+
 // Ref A reference to a file in a storage bucket
 // This reference is created upon scanning a bucket and is used to track the
 // status of the file through the pipeline.
@@ -2237,6 +2731,10 @@ type RefreshDataDocksResponse struct {
 	TotalCount     int32  `json:"total_count"`
 }
 
+// ResourceTier Predefined resource tiers for container apps.
+// Memory limits are always equal to memory requests.
+type ResourceTier string
+
 // ResultsPage defines model for ResultsPage.
 type ResultsPage struct {
 	HasMore   bool            `json:"has_more"`
@@ -2256,6 +2754,14 @@ type Role struct {
 	UpdatedAt      time.Time          `json:"updated_at"`
 }
 
+// S3ConfigValue defines model for S3ConfigValue.
+type S3ConfigValue struct {
+	AccessKey string  `json:"access_key"`
+	Endpoint  *string `json:"endpoint"`
+	Region    *string `json:"region"`
+	SecretKey string  `json:"secret_key"`
+}
+
 // S3OutputParameters defines model for S3OutputParameters.
 type S3OutputParameters = map[string]interface{}
 
@@ -2272,6 +2778,83 @@ type SavedQuery struct {
 	Title          string             `json:"title"`
 	UpdatedAt      time.Time          `json:"updated_at"`
 	Visibility     string             `json:"visibility"`
+}
+
+// SecretMetadataResponse defines model for SecretMetadataResponse.
+type SecretMetadataResponse struct {
+	CreatedAt   time.Time          `json:"created_at"`
+	CreatedBy   openapi_types.UUID `json:"created_by"`
+	Description *string            `json:"description"`
+	Id          openapi_types.UUID `json:"id"`
+	Name        string             `json:"name"`
+	SecretPath  string             `json:"secret_path"`
+
+	// SecretType The type of value stored in the secret.
+	SecretType SecretType `json:"secret_type"`
+	Tags       []string   `json:"tags"`
+	UpdatedAt  time.Time  `json:"updated_at"`
+}
+
+// SecretRefInput defines model for SecretRefInput.
+type SecretRefInput struct {
+	EnvVarName string `json:"env_var_name"`
+	SecretName string `json:"secret_name"`
+}
+
+// SecretRefSpecResponse defines model for SecretRefSpecResponse.
+type SecretRefSpecResponse struct {
+	EnvVarName string `json:"env_var_name"`
+	SecretName string `json:"secret_name"`
+}
+
+// SecretType The type of value stored in the secret.
+type SecretType string
+
+// SecretValue defines model for SecretValue.
+type SecretValue struct {
+	union json.RawMessage
+}
+
+// SecretValue0 defines model for .
+type SecretValue0 struct {
+	Type  SecretValue0Type `json:"type"`
+	Value string           `json:"value"`
+}
+
+// SecretValue0Type defines model for SecretValue.0.Type.
+type SecretValue0Type string
+
+// SecretValue1 defines model for .
+type SecretValue1 struct {
+	Type  SecretValue1Type `json:"type"`
+	Value interface{}      `json:"value"`
+}
+
+// SecretValue1Type defines model for SecretValue.1.Type.
+type SecretValue1Type string
+
+// SecretValue2 defines model for .
+type SecretValue2 struct {
+	Type  SecretValue2Type       `json:"type"`
+	Value OciRegistryConfigValue `json:"value"`
+}
+
+// SecretValue2Type defines model for SecretValue.2.Type.
+type SecretValue2Type string
+
+// SecretValue3 defines model for .
+type SecretValue3 struct {
+	Type  SecretValue3Type `json:"type"`
+	Value S3ConfigValue    `json:"value"`
+}
+
+// SecretValue3Type defines model for SecretValue.3.Type.
+type SecretValue3Type string
+
+// SecretValueResponse defines model for SecretValueResponse.
+type SecretValueResponse struct {
+	Name  string      `json:"name"`
+	Value SecretValue `json:"value"`
 }
 
 // SensitivityLevel Sensitivity level for data classification
@@ -2526,6 +3109,31 @@ type UpdateFakerTableRequest struct {
 	Fields []FakerTableFields `json:"fields"`
 }
 
+// UpdateKafkaHFServiceRequest defines model for UpdateKafkaHFServiceRequest.
+type UpdateKafkaHFServiceRequest struct {
+	BrokerReplicas        *int32  `json:"broker_replicas"`
+	CpuLimit              *string `json:"cpu_limit"`
+	CpuRequest            *string `json:"cpu_request"`
+	Description           *string `json:"description"`
+	MemoryLimit           *string `json:"memory_limit"`
+	MemoryRequest         *string `json:"memory_request"`
+	MinInsyncReplicas     *int32  `json:"min_insync_replicas"`
+	ReplicationFactor     *int32  `json:"replication_factor"`
+	SchemaRegistryEnabled *bool   `json:"schema_registry_enabled"`
+	StorageSizeGb         *int32  `json:"storage_size_gb"`
+}
+
+// UpdateOptimizeRunStatusRequest defines model for UpdateOptimizeRunStatusRequest.
+type UpdateOptimizeRunStatusRequest struct {
+	Errors          *[]interface{} `json:"errors"`
+	Logs            *[]string      `json:"logs"`
+	Status          string         `json:"status"`
+	TableResults    *[]interface{} `json:"table_results"`
+	TablesFailed    *int32         `json:"tables_failed"`
+	TablesProcessed *int32         `json:"tables_processed"`
+	TablesSucceeded *int32         `json:"tables_succeeded"`
+}
+
 // UpdateOrgSecuritySettingsBody Request to update organization security settings.
 type UpdateOrgSecuritySettingsBody struct {
 	OfficeHoursEnabled  *bool   `json:"office_hours_enabled"`
@@ -2554,6 +3162,14 @@ type UpdateSavedQueryRequest struct {
 	Visibility  *string   `json:"visibility"`
 }
 
+// UpdateSecretRequestBody defines model for UpdateSecretRequestBody.
+type UpdateSecretRequestBody struct {
+	// Description `null` clears the description; absent keeps the current value.
+	Description *string     `json:"description"`
+	Tags        *[]string   `json:"tags"`
+	Value       interface{} `json:"value,omitempty"`
+}
+
 // UpdateServiceAccountCrdRequestBody defines model for UpdateServiceAccountCrdRequestBody.
 type UpdateServiceAccountCrdRequestBody struct {
 	Description *string `json:"description"`
@@ -2565,6 +3181,19 @@ type UpdateTableClassificationBody struct {
 
 	// Sensitivity Sensitivity level for data classification
 	Sensitivity *SensitivityLevel `json:"sensitivity,omitempty"`
+}
+
+// UpsertOptimizeConfigRequest defines model for UpsertOptimizeConfigRequest.
+type UpsertOptimizeConfigRequest struct {
+	AnalyzeStatisticsEnabled   *bool   `json:"analyze_statistics_enabled,omitempty"`
+	CompactFilesEnabled        *bool   `json:"compact_files_enabled,omitempty"`
+	CompactFilesSizeThreshold  *string `json:"compact_files_size_threshold"`
+	ExpireSnapshotsEnabled     *bool   `json:"expire_snapshots_enabled,omitempty"`
+	ExpireSnapshotsRetention   *string `json:"expire_snapshots_retention"`
+	RemoveOrphanFilesEnabled   *bool   `json:"remove_orphan_files_enabled,omitempty"`
+	RemoveOrphanFilesRetention *string `json:"remove_orphan_files_retention"`
+	Schedule                   *string `json:"schedule,omitempty"`
+	Suspend                    *bool   `json:"suspend,omitempty"`
 }
 
 // User defines model for User.
@@ -2638,6 +3267,12 @@ type DownloadBucketFileParams struct {
 	Path string `form:"path" json:"path"`
 }
 
+// GetOptimizeHistoryParams defines parameters for GetOptimizeHistory.
+type GetOptimizeHistoryParams struct {
+	Limit  *int64 `form:"limit,omitempty" json:"limit,omitempty"`
+	Offset *int64 `form:"offset,omitempty" json:"offset,omitempty"`
+}
+
 // ListArchiveOperationsParams defines parameters for ListArchiveOperations.
 type ListArchiveOperationsParams struct {
 	Limit  *int64 `form:"limit,omitempty" json:"limit,omitempty"`
@@ -2663,12 +3298,41 @@ type CheckOrganizationNameAvailabilityParams struct {
 	Slug string `form:"slug" json:"slug"`
 }
 
+// ListKafkaHfServicesParams defines parameters for ListKafkaHfServices.
+type ListKafkaHfServicesParams struct {
+	// Limit Maximum results (default 100).
+	Limit *int64 `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Offset Pagination offset (default 0).
+	Offset *int64 `form:"offset,omitempty" json:"offset,omitempty"`
+}
+
+// StreamPodLogsParams defines parameters for StreamPodLogs.
+type StreamPodLogsParams struct {
+	// TailLines Number of tail lines to start from (default: 100)
+	TailLines *int64 `form:"tail_lines,omitempty" json:"tail_lines,omitempty"`
+}
+
 // ListHarborsParams defines parameters for ListHarbors.
 type ListHarborsParams struct {
 	Name   *string `form:"name,omitempty" json:"name,omitempty"`
 	Slug   *string `form:"slug,omitempty" json:"slug,omitempty"`
 	Limit  *int64  `form:"limit,omitempty" json:"limit,omitempty"`
 	Offset *int64  `form:"offset,omitempty" json:"offset,omitempty"`
+}
+
+// ListSecretsParams defines parameters for ListSecrets.
+type ListSecretsParams struct {
+	Name   *string `form:"name,omitempty" json:"name,omitempty"`
+	Tag    *string `form:"tag,omitempty" json:"tag,omitempty"`
+	Limit  *int64  `form:"limit,omitempty" json:"limit,omitempty"`
+	Offset *int64  `form:"offset,omitempty" json:"offset,omitempty"`
+}
+
+// CountSecretsParams defines parameters for CountSecrets.
+type CountSecretsParams struct {
+	Name *string `form:"name,omitempty" json:"name,omitempty"`
+	Tag  *string `form:"tag,omitempty" json:"tag,omitempty"`
 }
 
 // ListContextualRestrictionsHandlerParams defines parameters for ListContextualRestrictionsHandler.
@@ -2800,6 +3464,9 @@ type GetUnifiedCatalogParams struct {
 	HarborId *openapi_types.UUID `form:"harbor_id,omitempty" json:"harbor_id,omitempty"`
 }
 
+// PatchOptimizeStatusJSONRequestBody defines body for PatchOptimizeStatus for application/json ContentType.
+type PatchOptimizeStatusJSONRequestBody = UpdateOptimizeRunStatusRequest
+
 // UpdateContextProviderHandlerJSONRequestBody defines body for UpdateContextProviderHandler for application/json ContentType.
 type UpdateContextProviderHandlerJSONRequestBody = UpdateContextProviderBody
 
@@ -2836,6 +3503,9 @@ type CreateTableJSONRequestBody = CreateIcebergTableMetadataRequest
 // CloneTableJSONRequestBody defines body for CloneTable for application/json ContentType.
 type CloneTableJSONRequestBody = CloneIcebergTableRequestBody
 
+// PutOptimizeConfigJSONRequestBody defines body for PutOptimizeConfig for application/json ContentType.
+type PutOptimizeConfigJSONRequestBody = UpsertOptimizeConfigRequest
+
 // CreateDataDockCrdJSONRequestBody defines body for CreateDataDockCrd for application/json ContentType.
 type CreateDataDockCrdJSONRequestBody = CreateDataDockRequestBody
 
@@ -2844,6 +3514,9 @@ type ArchiveExportDataContainerJSONRequestBody = ArchiveExportRequest
 
 // ArchiveImportDataContainerJSONRequestBody defines body for ArchiveImportDataContainer for application/json ContentType.
 type ArchiveImportDataContainerJSONRequestBody = ArchiveImportRequest
+
+// ArchiveImportExternalJSONRequestBody defines body for ArchiveImportExternal for application/json ContentType.
+type ArchiveImportExternalJSONRequestBody = ExternalArchiveImportRequest
 
 // AbortMultipartUploadJSONRequestBody defines body for AbortMultipartUpload for application/json ContentType.
 type AbortMultipartUploadJSONRequestBody = AbortMultipartUploadRequest
@@ -2857,20 +3530,38 @@ type PrepareArchiveImportJSONRequestBody = PrepareArchiveImportRequest
 // UpdateDataDockSecuritySettingsHandlerJSONRequestBody defines body for UpdateDataDockSecuritySettingsHandler for application/json ContentType.
 type UpdateDataDockSecuritySettingsHandlerJSONRequestBody = UpdateDataDockSecuritySettingsBody
 
+// UpdateKafkaHfServiceJSONRequestBody defines body for UpdateKafkaHfService for application/json ContentType.
+type UpdateKafkaHfServiceJSONRequestBody = UpdateKafkaHFServiceRequest
+
 // CreateOrganizationCrdJSONRequestBody defines body for CreateOrganizationCrd for application/json ContentType.
 type CreateOrganizationCrdJSONRequestBody = CreateOrganizationRequestBody
+
+// CreateKafkaHfServiceJSONRequestBody defines body for CreateKafkaHfService for application/json ContentType.
+type CreateKafkaHfServiceJSONRequestBody = CreateKafkaHFServiceRequest
 
 // CreateApiKeyJSONRequestBody defines body for CreateApiKey for application/json ContentType.
 type CreateApiKeyJSONRequestBody = CreateApiKeyRequest
 
+// PatchContainerAppCrdJSONRequestBody defines body for PatchContainerAppCrd for application/json ContentType.
+type PatchContainerAppCrdJSONRequestBody = PatchContainerAppCrdRequestBody
+
 // CreateHarborCrdJSONRequestBody defines body for CreateHarborCrd for application/json ContentType.
 type CreateHarborCrdJSONRequestBody = CreateHarborCrdRequestBody
+
+// CreateContainerAppCrdJSONRequestBody defines body for CreateContainerAppCrd for application/json ContentType.
+type CreateContainerAppCrdJSONRequestBody = CreateContainerAppCrdRequestBody
 
 // CreateModelServingJSONRequestBody defines body for CreateModelServing for application/json ContentType.
 type CreateModelServingJSONRequestBody = CreateModelServingRequest
 
 // PatchModelServingJSONRequestBody defines body for PatchModelServing for application/json ContentType.
 type PatchModelServingJSONRequestBody = PatchModelServingRequest
+
+// CreateSecretJSONRequestBody defines body for CreateSecret for application/json ContentType.
+type CreateSecretJSONRequestBody = CreateSecretRequestBody
+
+// UpdateSecretJSONRequestBody defines body for UpdateSecret for application/json ContentType.
+type UpdateSecretJSONRequestBody = UpdateSecretRequestBody
 
 // CreateServiceAccountCrdJSONRequestBody defines body for CreateServiceAccountCrd for application/json ContentType.
 type CreateServiceAccountCrdJSONRequestBody = CreateServiceAccountCrdRequestBody
@@ -2892,6 +3583,9 @@ type CreateContextProviderHandlerJSONRequestBody = CreateContextProviderBody
 
 // CreateContextualRestrictionHandlerJSONRequestBody defines body for CreateContextualRestrictionHandler for application/json ContentType.
 type CreateContextualRestrictionHandlerJSONRequestBody = CreateContextualRestrictionBody
+
+// AssignSubscriptionHandlerJSONRequestBody defines body for AssignSubscriptionHandler for application/json ContentType.
+type AssignSubscriptionHandlerJSONRequestBody = AssignSubscriptionBody
 
 // UpdateOrgSecuritySettingsHandlerJSONRequestBody defines body for UpdateOrgSecuritySettingsHandler for application/json ContentType.
 type UpdateOrgSecuritySettingsHandlerJSONRequestBody = UpdateOrgSecuritySettingsBody
@@ -3049,6 +3743,58 @@ func (t *CreatePipelineRequestV2) FromCreatePipelineRequestV24(v CreatePipelineR
 
 // MergeCreatePipelineRequestV24 performs a merge with any union data inside the CreatePipelineRequestV2, using the provided CreatePipelineRequestV24
 func (t *CreatePipelineRequestV2) MergeCreatePipelineRequestV24(v CreatePipelineRequestV24) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCreatePipelineRequestV25 returns the union data inside the CreatePipelineRequestV2 as a CreatePipelineRequestV25
+func (t CreatePipelineRequestV2) AsCreatePipelineRequestV25() (CreatePipelineRequestV25, error) {
+	var body CreatePipelineRequestV25
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreatePipelineRequestV25 overwrites any union data inside the CreatePipelineRequestV2 as the provided CreatePipelineRequestV25
+func (t *CreatePipelineRequestV2) FromCreatePipelineRequestV25(v CreatePipelineRequestV25) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreatePipelineRequestV25 performs a merge with any union data inside the CreatePipelineRequestV2, using the provided CreatePipelineRequestV25
+func (t *CreatePipelineRequestV2) MergeCreatePipelineRequestV25(v CreatePipelineRequestV25) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCreatePipelineRequestV26 returns the union data inside the CreatePipelineRequestV2 as a CreatePipelineRequestV26
+func (t CreatePipelineRequestV2) AsCreatePipelineRequestV26() (CreatePipelineRequestV26, error) {
+	var body CreatePipelineRequestV26
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreatePipelineRequestV26 overwrites any union data inside the CreatePipelineRequestV2 as the provided CreatePipelineRequestV26
+func (t *CreatePipelineRequestV2) FromCreatePipelineRequestV26(v CreatePipelineRequestV26) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreatePipelineRequestV26 performs a merge with any union data inside the CreatePipelineRequestV2, using the provided CreatePipelineRequestV26
+func (t *CreatePipelineRequestV2) MergeCreatePipelineRequestV26(v CreatePipelineRequestV26) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -3763,6 +4509,120 @@ func (t *PrepareArchiveImportResponse) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsSecretValue0 returns the union data inside the SecretValue as a SecretValue0
+func (t SecretValue) AsSecretValue0() (SecretValue0, error) {
+	var body SecretValue0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSecretValue0 overwrites any union data inside the SecretValue as the provided SecretValue0
+func (t *SecretValue) FromSecretValue0(v SecretValue0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSecretValue0 performs a merge with any union data inside the SecretValue, using the provided SecretValue0
+func (t *SecretValue) MergeSecretValue0(v SecretValue0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSecretValue1 returns the union data inside the SecretValue as a SecretValue1
+func (t SecretValue) AsSecretValue1() (SecretValue1, error) {
+	var body SecretValue1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSecretValue1 overwrites any union data inside the SecretValue as the provided SecretValue1
+func (t *SecretValue) FromSecretValue1(v SecretValue1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSecretValue1 performs a merge with any union data inside the SecretValue, using the provided SecretValue1
+func (t *SecretValue) MergeSecretValue1(v SecretValue1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSecretValue2 returns the union data inside the SecretValue as a SecretValue2
+func (t SecretValue) AsSecretValue2() (SecretValue2, error) {
+	var body SecretValue2
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSecretValue2 overwrites any union data inside the SecretValue as the provided SecretValue2
+func (t *SecretValue) FromSecretValue2(v SecretValue2) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSecretValue2 performs a merge with any union data inside the SecretValue, using the provided SecretValue2
+func (t *SecretValue) MergeSecretValue2(v SecretValue2) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSecretValue3 returns the union data inside the SecretValue as a SecretValue3
+func (t SecretValue) AsSecretValue3() (SecretValue3, error) {
+	var body SecretValue3
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSecretValue3 overwrites any union data inside the SecretValue as the provided SecretValue3
+func (t *SecretValue) FromSecretValue3(v SecretValue3) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSecretValue3 performs a merge with any union data inside the SecretValue, using the provided SecretValue3
+func (t *SecretValue) MergeSecretValue3(v SecretValue3) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t SecretValue) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *SecretValue) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
 
@@ -3836,6 +4696,11 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 
 // The interface specification for the client above.
 type ClientInterface interface {
+	// PatchOptimizeStatusWithBody request with any body
+	PatchOptimizeStatusWithBody(ctx context.Context, optimizeName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchOptimizeStatus(ctx context.Context, optimizeName string, body PatchOptimizeStatusJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// HandleGetConsoleConfig request
 	HandleGetConsoleConfig(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -3962,6 +4827,23 @@ type ClientInterface interface {
 	// GetDataContainer request
 	GetDataContainer(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteOptimizeConfig request
+	DeleteOptimizeConfig(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetOptimizeConfig request
+	GetOptimizeConfig(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutOptimizeConfigWithBody request with any body
+	PutOptimizeConfigWithBody(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PutOptimizeConfig(ctx context.Context, dataContainerId openapi_types.UUID, body PutOptimizeConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetOptimizeHistory request
+	GetOptimizeHistory(ctx context.Context, dataContainerId openapi_types.UUID, params *GetOptimizeHistoryParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TriggerOptimize request
+	TriggerOptimize(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// CreateDataDockCrdWithBody request with any body
 	CreateDataDockCrdWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -3982,6 +4864,11 @@ type ClientInterface interface {
 	ArchiveImportDataContainerWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	ArchiveImportDataContainer(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ArchiveImportExternalWithBody request with any body
+	ArchiveImportExternalWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ArchiveImportExternal(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportExternalJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AbortMultipartUploadWithBody request with any body
 	AbortMultipartUploadWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -4007,6 +4894,9 @@ type ClientInterface interface {
 	// DownloadArchiveOperation request
 	DownloadArchiveOperation(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID, params *DownloadArchiveOperationParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// RetryArchiveOperation request
+	RetryArchiveOperation(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetDataDockSecuritySettingsHandler request
 	GetDataDockSecuritySettingsHandler(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -4018,6 +4908,20 @@ type ClientInterface interface {
 	// ListHarborDataDock request
 	ListHarborDataDock(ctx context.Context, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetKafkaHfService request
+	GetKafkaHfService(ctx context.Context, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateKafkaHfServiceWithBody request with any body
+	UpdateKafkaHfServiceWithBody(ctx context.Context, kafkaServiceId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateKafkaHfService(ctx context.Context, kafkaServiceId openapi_types.UUID, body UpdateKafkaHfServiceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetKafkaLastBundle request
+	GetKafkaLastBundle(ctx context.Context, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetKafkaMetadata request
+	GetKafkaMetadata(ctx context.Context, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListOrganizations request
 	ListOrganizations(ctx context.Context, params *ListOrganizationsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -4028,6 +4932,17 @@ type ClientInterface interface {
 
 	// CheckOrganizationNameAvailability request
 	CheckOrganizationNameAvailability(ctx context.Context, params *CheckOrganizationNameAvailabilityParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListKafkaHfServices request
+	ListKafkaHfServices(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, params *ListKafkaHfServicesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateKafkaHfServiceWithBody request with any body
+	CreateKafkaHfServiceWithBody(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateKafkaHfService(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, body CreateKafkaHfServiceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteKafkaHfService request
+	DeleteKafkaHfService(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetOrganizationById request
 	GetOrganizationById(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -4043,6 +4958,32 @@ type ClientInterface interface {
 	// RevokeApiKey request
 	RevokeApiKey(ctx context.Context, organizationId openapi_types.UUID, keyId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetContainerApp request
+	GetContainerApp(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteContainerAppCrd request
+	DeleteContainerAppCrd(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetContainerAppCrd request
+	GetContainerAppCrd(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchContainerAppCrdWithBody request with any body
+	PatchContainerAppCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchContainerAppCrd(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, body PatchContainerAppCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RestartContainerAppCrd request
+	RestartContainerAppCrd(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// StreamAppLogs request
+	StreamAppLogs(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListContainerAppPods request
+	ListContainerAppPods(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// StreamPodLogs request
+	StreamPodLogs(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, podName string, params *StreamPodLogsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DeleteOrganizationCrd request
 	DeleteOrganizationCrd(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -4056,6 +4997,14 @@ type ClientInterface interface {
 
 	// DeleteHarborCrd request
 	DeleteHarborCrd(ctx context.Context, organizationId openapi_types.UUID, harborSlug string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListContainerApps request
+	ListContainerApps(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateContainerAppCrdWithBody request with any body
+	CreateContainerAppCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateContainerAppCrd(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateContainerAppCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CheckHarborNameAvailable request
 	CheckHarborNameAvailable(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -4093,6 +5042,31 @@ type ClientInterface interface {
 
 	// TriggerPipeline request
 	TriggerPipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListSecrets request
+	ListSecrets(ctx context.Context, organizationId openapi_types.UUID, params *ListSecretsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateSecretWithBody request with any body
+	CreateSecretWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateSecret(ctx context.Context, organizationId openapi_types.UUID, body CreateSecretJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CountSecrets request
+	CountSecrets(ctx context.Context, organizationId openapi_types.UUID, params *CountSecretsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteSecret request
+	DeleteSecret(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSecret request
+	GetSecret(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateSecretWithBody request with any body
+	UpdateSecretWithBody(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateSecret(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, body UpdateSecretJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ReadSecretValue request
+	ReadSecretValue(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CreateServiceAccountCrdWithBody request with any body
 	CreateServiceAccountCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -4162,6 +5136,14 @@ type ClientInterface interface {
 	// GetEffectiveSecuritySettingsHandler request
 	GetEffectiveSecuritySettingsHandler(ctx context.Context, organizationId openapi_types.UUID, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetOrgQuotasHandler request
+	GetOrgQuotasHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AssignSubscriptionHandlerWithBody request with any body
+	AssignSubscriptionHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AssignSubscriptionHandler(ctx context.Context, organizationId openapi_types.UUID, body AssignSubscriptionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetOrgSecuritySettingsHandler request
 	GetOrgSecuritySettingsHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -4207,6 +5189,9 @@ type ClientInterface interface {
 	CreatePipelineWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	CreatePipeline(ctx context.Context, body CreatePipelineJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListQuotaProfilesHandler request
+	ListQuotaProfilesHandler(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CountRefsWithBody request with any body
 	CountRefsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -4287,6 +5272,30 @@ type ClientInterface interface {
 	CreatePipelineV2WithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	CreatePipelineV2(ctx context.Context, body CreatePipelineV2JSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+}
+
+func (c *Client) PatchOptimizeStatusWithBody(ctx context.Context, optimizeName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchOptimizeStatusRequestWithBody(c.Server, optimizeName, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchOptimizeStatus(ctx context.Context, optimizeName string, body PatchOptimizeStatusJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchOptimizeStatusRequest(c.Server, optimizeName, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
 }
 
 func (c *Client) HandleGetConsoleConfig(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -4841,6 +5850,78 @@ func (c *Client) GetDataContainer(ctx context.Context, dataContainerId openapi_t
 	return c.Client.Do(req)
 }
 
+func (c *Client) DeleteOptimizeConfig(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteOptimizeConfigRequest(c.Server, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetOptimizeConfig(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOptimizeConfigRequest(c.Server, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutOptimizeConfigWithBody(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutOptimizeConfigRequestWithBody(c.Server, dataContainerId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutOptimizeConfig(ctx context.Context, dataContainerId openapi_types.UUID, body PutOptimizeConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutOptimizeConfigRequest(c.Server, dataContainerId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetOptimizeHistory(ctx context.Context, dataContainerId openapi_types.UUID, params *GetOptimizeHistoryParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOptimizeHistoryRequest(c.Server, dataContainerId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TriggerOptimize(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTriggerOptimizeRequest(c.Server, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) CreateDataDockCrdWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateDataDockCrdRequestWithBody(c.Server, contentType, body)
 	if err != nil {
@@ -4927,6 +6008,30 @@ func (c *Client) ArchiveImportDataContainerWithBody(ctx context.Context, dataDoc
 
 func (c *Client) ArchiveImportDataContainer(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewArchiveImportDataContainerRequest(c.Server, dataDockId, dataContainerId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ArchiveImportExternalWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewArchiveImportExternalRequestWithBody(c.Server, dataDockId, dataContainerId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ArchiveImportExternal(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportExternalJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewArchiveImportExternalRequest(c.Server, dataDockId, dataContainerId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -5045,6 +6150,18 @@ func (c *Client) DownloadArchiveOperation(ctx context.Context, dataDockId openap
 	return c.Client.Do(req)
 }
 
+func (c *Client) RetryArchiveOperation(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRetryArchiveOperationRequest(c.Server, dataDockId, dataContainerId, operationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetDataDockSecuritySettingsHandler(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetDataDockSecuritySettingsHandlerRequest(c.Server, dataDockId)
 	if err != nil {
@@ -5093,6 +6210,66 @@ func (c *Client) ListHarborDataDock(ctx context.Context, harborId openapi_types.
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetKafkaHfService(ctx context.Context, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetKafkaHfServiceRequest(c.Server, kafkaServiceId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateKafkaHfServiceWithBody(ctx context.Context, kafkaServiceId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateKafkaHfServiceRequestWithBody(c.Server, kafkaServiceId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateKafkaHfService(ctx context.Context, kafkaServiceId openapi_types.UUID, body UpdateKafkaHfServiceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateKafkaHfServiceRequest(c.Server, kafkaServiceId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetKafkaLastBundle(ctx context.Context, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetKafkaLastBundleRequest(c.Server, kafkaServiceId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetKafkaMetadata(ctx context.Context, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetKafkaMetadataRequest(c.Server, kafkaServiceId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListOrganizations(ctx context.Context, params *ListOrganizationsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListOrganizationsRequest(c.Server, params)
 	if err != nil {
@@ -5131,6 +6308,54 @@ func (c *Client) CreateOrganizationCrd(ctx context.Context, body CreateOrganizat
 
 func (c *Client) CheckOrganizationNameAvailability(ctx context.Context, params *CheckOrganizationNameAvailabilityParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCheckOrganizationNameAvailabilityRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListKafkaHfServices(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, params *ListKafkaHfServicesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListKafkaHfServicesRequest(c.Server, orgId, harborId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateKafkaHfServiceWithBody(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateKafkaHfServiceRequestWithBody(c.Server, orgId, harborId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateKafkaHfService(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, body CreateKafkaHfServiceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateKafkaHfServiceRequest(c.Server, orgId, harborId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteKafkaHfService(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteKafkaHfServiceRequest(c.Server, orgId, harborId, kafkaServiceId)
 	if err != nil {
 		return nil, err
 	}
@@ -5201,6 +6426,114 @@ func (c *Client) RevokeApiKey(ctx context.Context, organizationId openapi_types.
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetContainerApp(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetContainerAppRequest(c.Server, organizationId, appId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteContainerAppCrd(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteContainerAppCrdRequest(c.Server, organizationId, appId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetContainerAppCrd(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetContainerAppCrdRequest(c.Server, organizationId, appId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchContainerAppCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchContainerAppCrdRequestWithBody(c.Server, organizationId, appId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchContainerAppCrd(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, body PatchContainerAppCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchContainerAppCrdRequest(c.Server, organizationId, appId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RestartContainerAppCrd(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRestartContainerAppCrdRequest(c.Server, organizationId, appId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) StreamAppLogs(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewStreamAppLogsRequest(c.Server, organizationId, appId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListContainerAppPods(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListContainerAppPodsRequest(c.Server, organizationId, appId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) StreamPodLogs(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, podName string, params *StreamPodLogsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewStreamPodLogsRequest(c.Server, organizationId, appId, podName, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) DeleteOrganizationCrd(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteOrganizationCrdRequest(c.Server, organizationId)
 	if err != nil {
@@ -5251,6 +6584,42 @@ func (c *Client) CreateHarborCrd(ctx context.Context, organizationId openapi_typ
 
 func (c *Client) DeleteHarborCrd(ctx context.Context, organizationId openapi_types.UUID, harborSlug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteHarborCrdRequest(c.Server, organizationId, harborSlug)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListContainerApps(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListContainerAppsRequest(c.Server, organizationId, harborId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateContainerAppCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateContainerAppCrdRequestWithBody(c.Server, organizationId, harborId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateContainerAppCrd(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateContainerAppCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateContainerAppCrdRequest(c.Server, organizationId, harborId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -5407,6 +6776,114 @@ func (c *Client) GetPipelineRun(ctx context.Context, organizationId openapi_type
 
 func (c *Client) TriggerPipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTriggerPipelineRequest(c.Server, organizationId, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListSecrets(ctx context.Context, organizationId openapi_types.UUID, params *ListSecretsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListSecretsRequest(c.Server, organizationId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateSecretWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateSecretRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateSecret(ctx context.Context, organizationId openapi_types.UUID, body CreateSecretJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateSecretRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CountSecrets(ctx context.Context, organizationId openapi_types.UUID, params *CountSecretsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCountSecretsRequest(c.Server, organizationId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteSecret(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteSecretRequest(c.Server, organizationId, secretId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetSecret(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSecretRequest(c.Server, organizationId, secretId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateSecretWithBody(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateSecretRequestWithBody(c.Server, organizationId, secretId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateSecret(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, body UpdateSecretJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateSecretRequest(c.Server, organizationId, secretId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ReadSecretValue(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReadSecretValueRequest(c.Server, organizationId, secretId)
 	if err != nil {
 		return nil, err
 	}
@@ -5717,6 +7194,42 @@ func (c *Client) GetEffectiveSecuritySettingsHandler(ctx context.Context, organi
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetOrgQuotasHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrgQuotasHandlerRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AssignSubscriptionHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAssignSubscriptionHandlerRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AssignSubscriptionHandler(ctx context.Context, organizationId openapi_types.UUID, body AssignSubscriptionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAssignSubscriptionHandlerRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetOrgSecuritySettingsHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetOrgSecuritySettingsHandlerRequest(c.Server, organizationId)
 	if err != nil {
@@ -5911,6 +7424,18 @@ func (c *Client) CreatePipelineWithBody(ctx context.Context, contentType string,
 
 func (c *Client) CreatePipeline(ctx context.Context, body CreatePipelineJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreatePipelineRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListQuotaProfilesHandler(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListQuotaProfilesHandlerRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -6267,6 +7792,53 @@ func (c *Client) CreatePipelineV2(ctx context.Context, body CreatePipelineV2JSON
 		return nil, err
 	}
 	return c.Client.Do(req)
+}
+
+// NewPatchOptimizeStatusRequest calls the generic PatchOptimizeStatus builder with application/json body
+func NewPatchOptimizeStatusRequest(server string, optimizeName string, body PatchOptimizeStatusJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchOptimizeStatusRequestWithBody(server, optimizeName, "application/json", bodyReader)
+}
+
+// NewPatchOptimizeStatusRequestWithBody generates requests for PatchOptimizeStatus with any type of body
+func NewPatchOptimizeStatusRequestWithBody(server string, optimizeName string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "optimize_name", runtime.ParamLocationPath, optimizeName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/internal/iceberg-optimize/%s/status", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
 }
 
 // NewHandleGetConsoleConfigRequest generates requests for HandleGetConsoleConfig
@@ -7653,6 +9225,227 @@ func NewGetDataContainerRequest(server string, dataContainerId openapi_types.UUI
 	return req, nil
 }
 
+// NewDeleteOptimizeConfigRequest generates requests for DeleteOptimizeConfig
+func NewDeleteOptimizeConfigRequest(server string, dataContainerId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/%s/optimize", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetOptimizeConfigRequest generates requests for GetOptimizeConfig
+func NewGetOptimizeConfigRequest(server string, dataContainerId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/%s/optimize", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPutOptimizeConfigRequest calls the generic PutOptimizeConfig builder with application/json body
+func NewPutOptimizeConfigRequest(server string, dataContainerId openapi_types.UUID, body PutOptimizeConfigJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPutOptimizeConfigRequestWithBody(server, dataContainerId, "application/json", bodyReader)
+}
+
+// NewPutOptimizeConfigRequestWithBody generates requests for PutOptimizeConfig with any type of body
+func NewPutOptimizeConfigRequestWithBody(server string, dataContainerId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/%s/optimize", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetOptimizeHistoryRequest generates requests for GetOptimizeHistory
+func NewGetOptimizeHistoryRequest(server string, dataContainerId openapi_types.UUID, params *GetOptimizeHistoryParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/%s/optimize/history", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Offset != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "offset", runtime.ParamLocationQuery, *params.Offset); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewTriggerOptimizeRequest generates requests for TriggerOptimize
+func NewTriggerOptimizeRequest(server string, dataContainerId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/%s/optimize/trigger", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewCreateDataDockCrdRequest calls the generic CreateDataDockCrd builder with application/json body
 func NewCreateDataDockCrdRequest(server string, body CreateDataDockCrdJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -7850,6 +9643,60 @@ func NewArchiveImportDataContainerRequestWithBody(server string, dataDockId open
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/data-docks/%s/data-containers/%s/archive-import", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewArchiveImportExternalRequest calls the generic ArchiveImportExternal builder with application/json body
+func NewArchiveImportExternalRequest(server string, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportExternalJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewArchiveImportExternalRequestWithBody(server, dataDockId, dataContainerId, "application/json", bodyReader)
+}
+
+// NewArchiveImportExternalRequestWithBody generates requests for ArchiveImportExternal with any type of body
+func NewArchiveImportExternalRequestWithBody(server string, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_dock_id", runtime.ParamLocationPath, dataDockId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-docks/%s/data-containers/%s/archive-import-external", pathParam0, pathParam1)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -8228,6 +10075,54 @@ func NewDownloadArchiveOperationRequest(server string, dataDockId openapi_types.
 	return req, nil
 }
 
+// NewRetryArchiveOperationRequest generates requests for RetryArchiveOperation
+func NewRetryArchiveOperationRequest(server string, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_dock_id", runtime.ParamLocationPath, dataDockId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "operation_id", runtime.ParamLocationPath, operationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-docks/%s/data-containers/%s/archive-operations/%s/retry", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetDataDockSecuritySettingsHandlerRequest generates requests for GetDataDockSecuritySettingsHandler
 func NewGetDataDockSecuritySettingsHandlerRequest(server string, dataDockId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -8326,6 +10221,155 @@ func NewListHarborDataDockRequest(server string, harborId openapi_types.UUID) (*
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/harbors/%s/data-docks", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetKafkaHfServiceRequest generates requests for GetKafkaHfService
+func NewGetKafkaHfServiceRequest(server string, kafkaServiceId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "kafka_service_id", runtime.ParamLocationPath, kafkaServiceId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/kafka-services/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateKafkaHfServiceRequest calls the generic UpdateKafkaHfService builder with application/json body
+func NewUpdateKafkaHfServiceRequest(server string, kafkaServiceId openapi_types.UUID, body UpdateKafkaHfServiceJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateKafkaHfServiceRequestWithBody(server, kafkaServiceId, "application/json", bodyReader)
+}
+
+// NewUpdateKafkaHfServiceRequestWithBody generates requests for UpdateKafkaHfService with any type of body
+func NewUpdateKafkaHfServiceRequestWithBody(server string, kafkaServiceId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "kafka_service_id", runtime.ParamLocationPath, kafkaServiceId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/kafka-services/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetKafkaLastBundleRequest generates requests for GetKafkaLastBundle
+func NewGetKafkaLastBundleRequest(server string, kafkaServiceId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "kafka_service_id", runtime.ParamLocationPath, kafkaServiceId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/kafka-services/%s/last-bundle", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetKafkaMetadataRequest generates requests for GetKafkaMetadata
+func NewGetKafkaMetadataRequest(server string, kafkaServiceId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "kafka_service_id", runtime.ParamLocationPath, kafkaServiceId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/kafka-services/%s/metadata", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -8525,6 +10569,187 @@ func NewCheckOrganizationNameAvailabilityRequest(server string, params *CheckOrg
 	return req, nil
 }
 
+// NewListKafkaHfServicesRequest generates requests for ListKafkaHfServices
+func NewListKafkaHfServicesRequest(server string, orgId openapi_types.UUID, harborId openapi_types.UUID, params *ListKafkaHfServicesParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "org_id", runtime.ParamLocationPath, orgId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/kafka-services", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Offset != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "offset", runtime.ParamLocationQuery, *params.Offset); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateKafkaHfServiceRequest calls the generic CreateKafkaHfService builder with application/json body
+func NewCreateKafkaHfServiceRequest(server string, orgId openapi_types.UUID, harborId openapi_types.UUID, body CreateKafkaHfServiceJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateKafkaHfServiceRequestWithBody(server, orgId, harborId, "application/json", bodyReader)
+}
+
+// NewCreateKafkaHfServiceRequestWithBody generates requests for CreateKafkaHfService with any type of body
+func NewCreateKafkaHfServiceRequestWithBody(server string, orgId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "org_id", runtime.ParamLocationPath, orgId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/kafka-services", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteKafkaHfServiceRequest generates requests for DeleteKafkaHfService
+func NewDeleteKafkaHfServiceRequest(server string, orgId openapi_types.UUID, harborId openapi_types.UUID, kafkaServiceId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "org_id", runtime.ParamLocationPath, orgId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "kafka_service_id", runtime.ParamLocationPath, kafkaServiceId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/kafka-services/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetOrganizationByIdRequest generates requests for GetOrganizationById
 func NewGetOrganizationByIdRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -8674,6 +10899,376 @@ func NewRevokeApiKeyRequest(server string, organizationId openapi_types.UUID, ke
 	}
 
 	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetContainerAppRequest generates requests for GetContainerApp
+func NewGetContainerAppRequest(server string, organizationId openapi_types.UUID, appId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "app_id", runtime.ParamLocationPath, appId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/container-apps/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteContainerAppCrdRequest generates requests for DeleteContainerAppCrd
+func NewDeleteContainerAppCrdRequest(server string, organizationId openapi_types.UUID, appId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "app_id", runtime.ParamLocationPath, appId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/container-apps/%s/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetContainerAppCrdRequest generates requests for GetContainerAppCrd
+func NewGetContainerAppCrdRequest(server string, organizationId openapi_types.UUID, appId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "app_id", runtime.ParamLocationPath, appId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/container-apps/%s/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPatchContainerAppCrdRequest calls the generic PatchContainerAppCrd builder with application/json body
+func NewPatchContainerAppCrdRequest(server string, organizationId openapi_types.UUID, appId openapi_types.UUID, body PatchContainerAppCrdJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchContainerAppCrdRequestWithBody(server, organizationId, appId, "application/json", bodyReader)
+}
+
+// NewPatchContainerAppCrdRequestWithBody generates requests for PatchContainerAppCrd with any type of body
+func NewPatchContainerAppCrdRequestWithBody(server string, organizationId openapi_types.UUID, appId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "app_id", runtime.ParamLocationPath, appId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/container-apps/%s/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewRestartContainerAppCrdRequest generates requests for RestartContainerAppCrd
+func NewRestartContainerAppCrdRequest(server string, organizationId openapi_types.UUID, appId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "app_id", runtime.ParamLocationPath, appId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/container-apps/%s/crd/restart", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewStreamAppLogsRequest generates requests for StreamAppLogs
+func NewStreamAppLogsRequest(server string, organizationId openapi_types.UUID, appId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "app_id", runtime.ParamLocationPath, appId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/container-apps/%s/logs", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListContainerAppPodsRequest generates requests for ListContainerAppPods
+func NewListContainerAppPodsRequest(server string, organizationId openapi_types.UUID, appId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "app_id", runtime.ParamLocationPath, appId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/container-apps/%s/pods", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewStreamPodLogsRequest generates requests for StreamPodLogs
+func NewStreamPodLogsRequest(server string, organizationId openapi_types.UUID, appId openapi_types.UUID, podName string, params *StreamPodLogsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "app_id", runtime.ParamLocationPath, appId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "pod_name", runtime.ParamLocationPath, podName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/container-apps/%s/pods/%s/logs", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.TailLines != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "tail_lines", runtime.ParamLocationQuery, *params.TailLines); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8903,6 +11498,101 @@ func NewDeleteHarborCrdRequest(server string, organizationId openapi_types.UUID,
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewListContainerAppsRequest generates requests for ListContainerApps
+func NewListContainerAppsRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/container-apps", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateContainerAppCrdRequest calls the generic CreateContainerAppCrd builder with application/json body
+func NewCreateContainerAppCrdRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateContainerAppCrdJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateContainerAppCrdRequestWithBody(server, organizationId, harborId, "application/json", bodyReader)
+}
+
+// NewCreateContainerAppCrdRequestWithBody generates requests for CreateContainerAppCrd with any type of body
+func NewCreateContainerAppCrdRequestWithBody(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/container-apps/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -9363,6 +12053,406 @@ func NewTriggerPipelineRequest(server string, organizationId openapi_types.UUID,
 	}
 
 	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListSecretsRequest generates requests for ListSecrets
+func NewListSecretsRequest(server string, organizationId openapi_types.UUID, params *ListSecretsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/secrets", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Name != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "name", runtime.ParamLocationQuery, *params.Name); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Tag != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "tag", runtime.ParamLocationQuery, *params.Tag); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Offset != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "offset", runtime.ParamLocationQuery, *params.Offset); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateSecretRequest calls the generic CreateSecret builder with application/json body
+func NewCreateSecretRequest(server string, organizationId openapi_types.UUID, body CreateSecretJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateSecretRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewCreateSecretRequestWithBody generates requests for CreateSecret with any type of body
+func NewCreateSecretRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/secrets", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCountSecretsRequest generates requests for CountSecrets
+func NewCountSecretsRequest(server string, organizationId openapi_types.UUID, params *CountSecretsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/secrets/count", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Name != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "name", runtime.ParamLocationQuery, *params.Name); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Tag != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "tag", runtime.ParamLocationQuery, *params.Tag); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteSecretRequest generates requests for DeleteSecret
+func NewDeleteSecretRequest(server string, organizationId openapi_types.UUID, secretId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "secret_id", runtime.ParamLocationPath, secretId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/secrets/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetSecretRequest generates requests for GetSecret
+func NewGetSecretRequest(server string, organizationId openapi_types.UUID, secretId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "secret_id", runtime.ParamLocationPath, secretId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/secrets/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateSecretRequest calls the generic UpdateSecret builder with application/json body
+func NewUpdateSecretRequest(server string, organizationId openapi_types.UUID, secretId openapi_types.UUID, body UpdateSecretJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateSecretRequestWithBody(server, organizationId, secretId, "application/json", bodyReader)
+}
+
+// NewUpdateSecretRequestWithBody generates requests for UpdateSecret with any type of body
+func NewUpdateSecretRequestWithBody(server string, organizationId openapi_types.UUID, secretId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "secret_id", runtime.ParamLocationPath, secretId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/secrets/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewReadSecretValueRequest generates requests for ReadSecretValue
+func NewReadSecretValueRequest(server string, organizationId openapi_types.UUID, secretId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "secret_id", runtime.ParamLocationPath, secretId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/secrets/%s/value", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -10180,6 +13270,87 @@ func NewGetEffectiveSecuritySettingsHandlerRequest(server string, organizationId
 	return req, nil
 }
 
+// NewGetOrgQuotasHandlerRequest generates requests for GetOrgQuotasHandler
+func NewGetOrgQuotasHandlerRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/quotas", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAssignSubscriptionHandlerRequest calls the generic AssignSubscriptionHandler builder with application/json body
+func NewAssignSubscriptionHandlerRequest(server string, organizationId openapi_types.UUID, body AssignSubscriptionHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAssignSubscriptionHandlerRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewAssignSubscriptionHandlerRequestWithBody generates requests for AssignSubscriptionHandler with any type of body
+func NewAssignSubscriptionHandlerRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/quotas/subscription", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetOrgSecuritySettingsHandlerRequest generates requests for GetOrgSecuritySettingsHandler
 func NewGetOrgSecuritySettingsHandlerRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -10692,6 +13863,33 @@ func NewCreatePipelineRequestWithBody(server string, contentType string, body io
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListQuotaProfilesHandlerRequest generates requests for ListQuotaProfilesHandler
+func NewListQuotaProfilesHandlerRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/quota-profiles")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -12071,6 +15269,11 @@ func WithBaseURL(baseURL string) ClientOption {
 
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
+	// PatchOptimizeStatusWithBodyWithResponse request with any body
+	PatchOptimizeStatusWithBodyWithResponse(ctx context.Context, optimizeName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchOptimizeStatusRes, error)
+
+	PatchOptimizeStatusWithResponse(ctx context.Context, optimizeName string, body PatchOptimizeStatusJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchOptimizeStatusRes, error)
+
 	// HandleGetConsoleConfigWithResponse request
 	HandleGetConsoleConfigWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*HandleGetConsoleConfigRes, error)
 
@@ -12197,6 +15400,23 @@ type ClientWithResponsesInterface interface {
 	// GetDataContainerWithResponse request
 	GetDataContainerWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDataContainerRes, error)
 
+	// DeleteOptimizeConfigWithResponse request
+	DeleteOptimizeConfigWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteOptimizeConfigRes, error)
+
+	// GetOptimizeConfigWithResponse request
+	GetOptimizeConfigWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOptimizeConfigRes, error)
+
+	// PutOptimizeConfigWithBodyWithResponse request with any body
+	PutOptimizeConfigWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutOptimizeConfigRes, error)
+
+	PutOptimizeConfigWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, body PutOptimizeConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*PutOptimizeConfigRes, error)
+
+	// GetOptimizeHistoryWithResponse request
+	GetOptimizeHistoryWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, params *GetOptimizeHistoryParams, reqEditors ...RequestEditorFn) (*GetOptimizeHistoryRes, error)
+
+	// TriggerOptimizeWithResponse request
+	TriggerOptimizeWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*TriggerOptimizeRes, error)
+
 	// CreateDataDockCrdWithBodyWithResponse request with any body
 	CreateDataDockCrdWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateDataDockCrdRes, error)
 
@@ -12217,6 +15437,11 @@ type ClientWithResponsesInterface interface {
 	ArchiveImportDataContainerWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ArchiveImportDataContainerRes, error)
 
 	ArchiveImportDataContainerWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*ArchiveImportDataContainerRes, error)
+
+	// ArchiveImportExternalWithBodyWithResponse request with any body
+	ArchiveImportExternalWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ArchiveImportExternalRes, error)
+
+	ArchiveImportExternalWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportExternalJSONRequestBody, reqEditors ...RequestEditorFn) (*ArchiveImportExternalRes, error)
 
 	// AbortMultipartUploadWithBodyWithResponse request with any body
 	AbortMultipartUploadWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AbortMultipartUploadRes, error)
@@ -12242,6 +15467,9 @@ type ClientWithResponsesInterface interface {
 	// DownloadArchiveOperationWithResponse request
 	DownloadArchiveOperationWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID, params *DownloadArchiveOperationParams, reqEditors ...RequestEditorFn) (*DownloadArchiveOperationRes, error)
 
+	// RetryArchiveOperationWithResponse request
+	RetryArchiveOperationWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RetryArchiveOperationRes, error)
+
 	// GetDataDockSecuritySettingsHandlerWithResponse request
 	GetDataDockSecuritySettingsHandlerWithResponse(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDataDockSecuritySettingsHandlerRes, error)
 
@@ -12253,6 +15481,20 @@ type ClientWithResponsesInterface interface {
 	// ListHarborDataDockWithResponse request
 	ListHarborDataDockWithResponse(ctx context.Context, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListHarborDataDockRes, error)
 
+	// GetKafkaHfServiceWithResponse request
+	GetKafkaHfServiceWithResponse(ctx context.Context, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetKafkaHfServiceRes, error)
+
+	// UpdateKafkaHfServiceWithBodyWithResponse request with any body
+	UpdateKafkaHfServiceWithBodyWithResponse(ctx context.Context, kafkaServiceId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateKafkaHfServiceRes, error)
+
+	UpdateKafkaHfServiceWithResponse(ctx context.Context, kafkaServiceId openapi_types.UUID, body UpdateKafkaHfServiceJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateKafkaHfServiceRes, error)
+
+	// GetKafkaLastBundleWithResponse request
+	GetKafkaLastBundleWithResponse(ctx context.Context, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetKafkaLastBundleRes, error)
+
+	// GetKafkaMetadataWithResponse request
+	GetKafkaMetadataWithResponse(ctx context.Context, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetKafkaMetadataRes, error)
+
 	// ListOrganizationsWithResponse request
 	ListOrganizationsWithResponse(ctx context.Context, params *ListOrganizationsParams, reqEditors ...RequestEditorFn) (*ListOrganizationsRes, error)
 
@@ -12263,6 +15505,17 @@ type ClientWithResponsesInterface interface {
 
 	// CheckOrganizationNameAvailabilityWithResponse request
 	CheckOrganizationNameAvailabilityWithResponse(ctx context.Context, params *CheckOrganizationNameAvailabilityParams, reqEditors ...RequestEditorFn) (*CheckOrganizationNameAvailabilityRes, error)
+
+	// ListKafkaHfServicesWithResponse request
+	ListKafkaHfServicesWithResponse(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, params *ListKafkaHfServicesParams, reqEditors ...RequestEditorFn) (*ListKafkaHfServicesRes, error)
+
+	// CreateKafkaHfServiceWithBodyWithResponse request with any body
+	CreateKafkaHfServiceWithBodyWithResponse(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateKafkaHfServiceRes, error)
+
+	CreateKafkaHfServiceWithResponse(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, body CreateKafkaHfServiceJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateKafkaHfServiceRes, error)
+
+	// DeleteKafkaHfServiceWithResponse request
+	DeleteKafkaHfServiceWithResponse(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteKafkaHfServiceRes, error)
 
 	// GetOrganizationByIdWithResponse request
 	GetOrganizationByIdWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOrganizationByIdRes, error)
@@ -12278,6 +15531,32 @@ type ClientWithResponsesInterface interface {
 	// RevokeApiKeyWithResponse request
 	RevokeApiKeyWithResponse(ctx context.Context, organizationId openapi_types.UUID, keyId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RevokeApiKeyRes, error)
 
+	// GetContainerAppWithResponse request
+	GetContainerAppWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetContainerAppRes, error)
+
+	// DeleteContainerAppCrdWithResponse request
+	DeleteContainerAppCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteContainerAppCrdRes, error)
+
+	// GetContainerAppCrdWithResponse request
+	GetContainerAppCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetContainerAppCrdRes, error)
+
+	// PatchContainerAppCrdWithBodyWithResponse request with any body
+	PatchContainerAppCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchContainerAppCrdRes, error)
+
+	PatchContainerAppCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, body PatchContainerAppCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchContainerAppCrdRes, error)
+
+	// RestartContainerAppCrdWithResponse request
+	RestartContainerAppCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RestartContainerAppCrdRes, error)
+
+	// StreamAppLogsWithResponse request
+	StreamAppLogsWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*StreamAppLogsRes, error)
+
+	// ListContainerAppPodsWithResponse request
+	ListContainerAppPodsWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListContainerAppPodsRes, error)
+
+	// StreamPodLogsWithResponse request
+	StreamPodLogsWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, podName string, params *StreamPodLogsParams, reqEditors ...RequestEditorFn) (*StreamPodLogsRes, error)
+
 	// DeleteOrganizationCrdWithResponse request
 	DeleteOrganizationCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteOrganizationCrdRes, error)
 
@@ -12291,6 +15570,14 @@ type ClientWithResponsesInterface interface {
 
 	// DeleteHarborCrdWithResponse request
 	DeleteHarborCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborSlug string, reqEditors ...RequestEditorFn) (*DeleteHarborCrdRes, error)
+
+	// ListContainerAppsWithResponse request
+	ListContainerAppsWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListContainerAppsRes, error)
+
+	// CreateContainerAppCrdWithBodyWithResponse request with any body
+	CreateContainerAppCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateContainerAppCrdRes, error)
+
+	CreateContainerAppCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateContainerAppCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateContainerAppCrdRes, error)
 
 	// CheckHarborNameAvailableWithResponse request
 	CheckHarborNameAvailableWithResponse(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*CheckHarborNameAvailableRes, error)
@@ -12328,6 +15615,31 @@ type ClientWithResponsesInterface interface {
 
 	// TriggerPipelineWithResponse request
 	TriggerPipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*TriggerPipelineRes, error)
+
+	// ListSecretsWithResponse request
+	ListSecretsWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *ListSecretsParams, reqEditors ...RequestEditorFn) (*ListSecretsRes, error)
+
+	// CreateSecretWithBodyWithResponse request with any body
+	CreateSecretWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateSecretRes, error)
+
+	CreateSecretWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateSecretJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateSecretRes, error)
+
+	// CountSecretsWithResponse request
+	CountSecretsWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *CountSecretsParams, reqEditors ...RequestEditorFn) (*CountSecretsRes, error)
+
+	// DeleteSecretWithResponse request
+	DeleteSecretWithResponse(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteSecretRes, error)
+
+	// GetSecretWithResponse request
+	GetSecretWithResponse(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetSecretRes, error)
+
+	// UpdateSecretWithBodyWithResponse request with any body
+	UpdateSecretWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateSecretRes, error)
+
+	UpdateSecretWithResponse(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, body UpdateSecretJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateSecretRes, error)
+
+	// ReadSecretValueWithResponse request
+	ReadSecretValueWithResponse(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ReadSecretValueRes, error)
 
 	// CreateServiceAccountCrdWithBodyWithResponse request with any body
 	CreateServiceAccountCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateServiceAccountCrdRes, error)
@@ -12397,6 +15709,14 @@ type ClientWithResponsesInterface interface {
 	// GetEffectiveSecuritySettingsHandlerWithResponse request
 	GetEffectiveSecuritySettingsHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetEffectiveSecuritySettingsHandlerRes, error)
 
+	// GetOrgQuotasHandlerWithResponse request
+	GetOrgQuotasHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOrgQuotasHandlerRes, error)
+
+	// AssignSubscriptionHandlerWithBodyWithResponse request with any body
+	AssignSubscriptionHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AssignSubscriptionHandlerRes, error)
+
+	AssignSubscriptionHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body AssignSubscriptionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*AssignSubscriptionHandlerRes, error)
+
 	// GetOrgSecuritySettingsHandlerWithResponse request
 	GetOrgSecuritySettingsHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOrgSecuritySettingsHandlerRes, error)
 
@@ -12442,6 +15762,9 @@ type ClientWithResponsesInterface interface {
 	CreatePipelineWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreatePipelineRes, error)
 
 	CreatePipelineWithResponse(ctx context.Context, body CreatePipelineJSONRequestBody, reqEditors ...RequestEditorFn) (*CreatePipelineRes, error)
+
+	// ListQuotaProfilesHandlerWithResponse request
+	ListQuotaProfilesHandlerWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListQuotaProfilesHandlerRes, error)
 
 	// CountRefsWithBodyWithResponse request with any body
 	CountRefsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CountRefsRes, error)
@@ -12522,6 +15845,27 @@ type ClientWithResponsesInterface interface {
 	CreatePipelineV2WithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreatePipelineV2Res, error)
 
 	CreatePipelineV2WithResponse(ctx context.Context, body CreatePipelineV2JSONRequestBody, reqEditors ...RequestEditorFn) (*CreatePipelineV2Res, error)
+}
+
+type PatchOptimizeStatusRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchOptimizeStatusRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchOptimizeStatusRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
 }
 
 type HandleGetConsoleConfigRes struct {
@@ -13261,6 +16605,115 @@ func (r GetDataContainerRes) StatusCode() int {
 	return 0
 }
 
+type DeleteOptimizeConfigRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteOptimizeConfigRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteOptimizeConfigRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetOptimizeConfigRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *IcebergOptimizeConfig
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOptimizeConfigRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOptimizeConfigRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PutOptimizeConfigRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *IcebergOptimizeConfig
+}
+
+// Status returns HTTPResponse.Status
+func (r PutOptimizeConfigRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutOptimizeConfigRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetOptimizeHistoryRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]IcebergOptimizeRun
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOptimizeHistoryRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOptimizeHistoryRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type TriggerOptimizeRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *IcebergOptimizeRun
+}
+
+// Status returns HTTPResponse.Status
+func (r TriggerOptimizeRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TriggerOptimizeRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type CreateDataDockCrdRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -13364,6 +16817,28 @@ func (r ArchiveImportDataContainerRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ArchiveImportDataContainerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ArchiveImportExternalRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *BucketArchiveOperation
+}
+
+// Status returns HTTPResponse.Status
+func (r ArchiveImportExternalRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ArchiveImportExternalRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -13500,6 +16975,28 @@ func (r DownloadArchiveOperationRes) StatusCode() int {
 	return 0
 }
 
+type RetryArchiveOperationRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *BucketArchiveOperation
+}
+
+// Status returns HTTPResponse.Status
+func (r RetryArchiveOperationRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RetryArchiveOperationRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetDataDockSecuritySettingsHandlerRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -13566,6 +17063,93 @@ func (r ListHarborDataDockRes) StatusCode() int {
 	return 0
 }
 
+type GetKafkaHfServiceRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *KafkaHFServiceResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetKafkaHfServiceRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetKafkaHfServiceRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateKafkaHfServiceRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *KafkaHFServiceResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateKafkaHfServiceRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateKafkaHfServiceRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetKafkaLastBundleRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetKafkaLastBundleRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetKafkaLastBundleRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetKafkaMetadataRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *KafkaMetadata
+}
+
+// Status returns HTTPResponse.Status
+func (r GetKafkaMetadataRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetKafkaMetadataRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type ListOrganizationsRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -13625,6 +17209,71 @@ func (r CheckOrganizationNameAvailabilityRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r CheckOrganizationNameAvailabilityRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListKafkaHfServicesRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]KafkaHFServiceResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListKafkaHfServicesRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListKafkaHfServicesRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateKafkaHfServiceRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *KafkaHFServiceResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateKafkaHfServiceRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateKafkaHfServiceRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteKafkaHfServiceRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteKafkaHfServiceRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteKafkaHfServiceRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -13718,6 +17367,177 @@ func (r RevokeApiKeyRes) StatusCode() int {
 	return 0
 }
 
+type GetContainerAppRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ContainerAppResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetContainerAppRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetContainerAppRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteContainerAppCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteContainerAppCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteContainerAppCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetContainerAppCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ContainerAppCrdSpecResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetContainerAppCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetContainerAppCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchContainerAppCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchContainerAppCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchContainerAppCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type RestartContainerAppCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r RestartContainerAppCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RestartContainerAppCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type StreamAppLogsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r StreamAppLogsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r StreamAppLogsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListContainerAppPodsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]ContainerAppPodInfo
+}
+
+// Status returns HTTPResponse.Status
+func (r ListContainerAppPodsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListContainerAppPodsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type StreamPodLogsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r StreamPodLogsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r StreamPodLogsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type DeleteOrganizationCrdRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -13798,6 +17618,49 @@ func (r DeleteHarborCrdRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r DeleteHarborCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListContainerAppsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]ContainerAppResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListContainerAppsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListContainerAppsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateContainerAppCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateContainerAppCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateContainerAppCrdRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -14037,6 +17900,159 @@ func (r TriggerPipelineRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r TriggerPipelineRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListSecretsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ListSecretsResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListSecretsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListSecretsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateSecretRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *SecretMetadataResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateSecretRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateSecretRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CountSecretsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *CountSecretsResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CountSecretsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CountSecretsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteSecretRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteSecretRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteSecretRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetSecretRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SecretMetadataResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSecretRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSecretRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateSecretRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SecretMetadataResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateSecretRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateSecretRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ReadSecretValueRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SecretValueResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ReadSecretValueRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ReadSecretValueRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -14434,6 +18450,49 @@ func (r GetEffectiveSecuritySettingsHandlerRes) StatusCode() int {
 	return 0
 }
 
+type GetOrgQuotasHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *OrganizationQuotaResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrgQuotasHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrgQuotasHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AssignSubscriptionHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r AssignSubscriptionHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AssignSubscriptionHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetOrgSecuritySettingsHandlerRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -14690,6 +18749,28 @@ func (r CreatePipelineRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r CreatePipelineRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListQuotaProfilesHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ListQuotaProfilesResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListQuotaProfilesHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListQuotaProfilesHandlerRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -15177,6 +19258,23 @@ func (r CreatePipelineV2Res) StatusCode() int {
 	return 0
 }
 
+// PatchOptimizeStatusWithBodyWithResponse request with arbitrary body returning *PatchOptimizeStatusRes
+func (c *ClientWithResponses) PatchOptimizeStatusWithBodyWithResponse(ctx context.Context, optimizeName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchOptimizeStatusRes, error) {
+	rsp, err := c.PatchOptimizeStatusWithBody(ctx, optimizeName, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchOptimizeStatusRes(rsp)
+}
+
+func (c *ClientWithResponses) PatchOptimizeStatusWithResponse(ctx context.Context, optimizeName string, body PatchOptimizeStatusJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchOptimizeStatusRes, error) {
+	rsp, err := c.PatchOptimizeStatus(ctx, optimizeName, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchOptimizeStatusRes(rsp)
+}
+
 // HandleGetConsoleConfigWithResponse request returning *HandleGetConsoleConfigRes
 func (c *ClientWithResponses) HandleGetConsoleConfigWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*HandleGetConsoleConfigRes, error) {
 	rsp, err := c.HandleGetConsoleConfig(ctx, reqEditors...)
@@ -15579,6 +19677,59 @@ func (c *ClientWithResponses) GetDataContainerWithResponse(ctx context.Context, 
 	return ParseGetDataContainerRes(rsp)
 }
 
+// DeleteOptimizeConfigWithResponse request returning *DeleteOptimizeConfigRes
+func (c *ClientWithResponses) DeleteOptimizeConfigWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteOptimizeConfigRes, error) {
+	rsp, err := c.DeleteOptimizeConfig(ctx, dataContainerId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteOptimizeConfigRes(rsp)
+}
+
+// GetOptimizeConfigWithResponse request returning *GetOptimizeConfigRes
+func (c *ClientWithResponses) GetOptimizeConfigWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOptimizeConfigRes, error) {
+	rsp, err := c.GetOptimizeConfig(ctx, dataContainerId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetOptimizeConfigRes(rsp)
+}
+
+// PutOptimizeConfigWithBodyWithResponse request with arbitrary body returning *PutOptimizeConfigRes
+func (c *ClientWithResponses) PutOptimizeConfigWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutOptimizeConfigRes, error) {
+	rsp, err := c.PutOptimizeConfigWithBody(ctx, dataContainerId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutOptimizeConfigRes(rsp)
+}
+
+func (c *ClientWithResponses) PutOptimizeConfigWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, body PutOptimizeConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*PutOptimizeConfigRes, error) {
+	rsp, err := c.PutOptimizeConfig(ctx, dataContainerId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutOptimizeConfigRes(rsp)
+}
+
+// GetOptimizeHistoryWithResponse request returning *GetOptimizeHistoryRes
+func (c *ClientWithResponses) GetOptimizeHistoryWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, params *GetOptimizeHistoryParams, reqEditors ...RequestEditorFn) (*GetOptimizeHistoryRes, error) {
+	rsp, err := c.GetOptimizeHistory(ctx, dataContainerId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetOptimizeHistoryRes(rsp)
+}
+
+// TriggerOptimizeWithResponse request returning *TriggerOptimizeRes
+func (c *ClientWithResponses) TriggerOptimizeWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*TriggerOptimizeRes, error) {
+	rsp, err := c.TriggerOptimize(ctx, dataContainerId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTriggerOptimizeRes(rsp)
+}
+
 // CreateDataDockCrdWithBodyWithResponse request with arbitrary body returning *CreateDataDockCrdRes
 func (c *ClientWithResponses) CreateDataDockCrdWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateDataDockCrdRes, error) {
 	rsp, err := c.CreateDataDockCrdWithBody(ctx, contentType, body, reqEditors...)
@@ -15646,6 +19797,23 @@ func (c *ClientWithResponses) ArchiveImportDataContainerWithResponse(ctx context
 		return nil, err
 	}
 	return ParseArchiveImportDataContainerRes(rsp)
+}
+
+// ArchiveImportExternalWithBodyWithResponse request with arbitrary body returning *ArchiveImportExternalRes
+func (c *ClientWithResponses) ArchiveImportExternalWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ArchiveImportExternalRes, error) {
+	rsp, err := c.ArchiveImportExternalWithBody(ctx, dataDockId, dataContainerId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseArchiveImportExternalRes(rsp)
+}
+
+func (c *ClientWithResponses) ArchiveImportExternalWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportExternalJSONRequestBody, reqEditors ...RequestEditorFn) (*ArchiveImportExternalRes, error) {
+	rsp, err := c.ArchiveImportExternal(ctx, dataDockId, dataContainerId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseArchiveImportExternalRes(rsp)
 }
 
 // AbortMultipartUploadWithBodyWithResponse request with arbitrary body returning *AbortMultipartUploadRes
@@ -15726,6 +19894,15 @@ func (c *ClientWithResponses) DownloadArchiveOperationWithResponse(ctx context.C
 	return ParseDownloadArchiveOperationRes(rsp)
 }
 
+// RetryArchiveOperationWithResponse request returning *RetryArchiveOperationRes
+func (c *ClientWithResponses) RetryArchiveOperationWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RetryArchiveOperationRes, error) {
+	rsp, err := c.RetryArchiveOperation(ctx, dataDockId, dataContainerId, operationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRetryArchiveOperationRes(rsp)
+}
+
 // GetDataDockSecuritySettingsHandlerWithResponse request returning *GetDataDockSecuritySettingsHandlerRes
 func (c *ClientWithResponses) GetDataDockSecuritySettingsHandlerWithResponse(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDataDockSecuritySettingsHandlerRes, error) {
 	rsp, err := c.GetDataDockSecuritySettingsHandler(ctx, dataDockId, reqEditors...)
@@ -15761,6 +19938,50 @@ func (c *ClientWithResponses) ListHarborDataDockWithResponse(ctx context.Context
 	return ParseListHarborDataDockRes(rsp)
 }
 
+// GetKafkaHfServiceWithResponse request returning *GetKafkaHfServiceRes
+func (c *ClientWithResponses) GetKafkaHfServiceWithResponse(ctx context.Context, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetKafkaHfServiceRes, error) {
+	rsp, err := c.GetKafkaHfService(ctx, kafkaServiceId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetKafkaHfServiceRes(rsp)
+}
+
+// UpdateKafkaHfServiceWithBodyWithResponse request with arbitrary body returning *UpdateKafkaHfServiceRes
+func (c *ClientWithResponses) UpdateKafkaHfServiceWithBodyWithResponse(ctx context.Context, kafkaServiceId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateKafkaHfServiceRes, error) {
+	rsp, err := c.UpdateKafkaHfServiceWithBody(ctx, kafkaServiceId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateKafkaHfServiceRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdateKafkaHfServiceWithResponse(ctx context.Context, kafkaServiceId openapi_types.UUID, body UpdateKafkaHfServiceJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateKafkaHfServiceRes, error) {
+	rsp, err := c.UpdateKafkaHfService(ctx, kafkaServiceId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateKafkaHfServiceRes(rsp)
+}
+
+// GetKafkaLastBundleWithResponse request returning *GetKafkaLastBundleRes
+func (c *ClientWithResponses) GetKafkaLastBundleWithResponse(ctx context.Context, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetKafkaLastBundleRes, error) {
+	rsp, err := c.GetKafkaLastBundle(ctx, kafkaServiceId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetKafkaLastBundleRes(rsp)
+}
+
+// GetKafkaMetadataWithResponse request returning *GetKafkaMetadataRes
+func (c *ClientWithResponses) GetKafkaMetadataWithResponse(ctx context.Context, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetKafkaMetadataRes, error) {
+	rsp, err := c.GetKafkaMetadata(ctx, kafkaServiceId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetKafkaMetadataRes(rsp)
+}
+
 // ListOrganizationsWithResponse request returning *ListOrganizationsRes
 func (c *ClientWithResponses) ListOrganizationsWithResponse(ctx context.Context, params *ListOrganizationsParams, reqEditors ...RequestEditorFn) (*ListOrganizationsRes, error) {
 	rsp, err := c.ListOrganizations(ctx, params, reqEditors...)
@@ -15794,6 +20015,41 @@ func (c *ClientWithResponses) CheckOrganizationNameAvailabilityWithResponse(ctx 
 		return nil, err
 	}
 	return ParseCheckOrganizationNameAvailabilityRes(rsp)
+}
+
+// ListKafkaHfServicesWithResponse request returning *ListKafkaHfServicesRes
+func (c *ClientWithResponses) ListKafkaHfServicesWithResponse(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, params *ListKafkaHfServicesParams, reqEditors ...RequestEditorFn) (*ListKafkaHfServicesRes, error) {
+	rsp, err := c.ListKafkaHfServices(ctx, orgId, harborId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListKafkaHfServicesRes(rsp)
+}
+
+// CreateKafkaHfServiceWithBodyWithResponse request with arbitrary body returning *CreateKafkaHfServiceRes
+func (c *ClientWithResponses) CreateKafkaHfServiceWithBodyWithResponse(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateKafkaHfServiceRes, error) {
+	rsp, err := c.CreateKafkaHfServiceWithBody(ctx, orgId, harborId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateKafkaHfServiceRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateKafkaHfServiceWithResponse(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, body CreateKafkaHfServiceJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateKafkaHfServiceRes, error) {
+	rsp, err := c.CreateKafkaHfService(ctx, orgId, harborId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateKafkaHfServiceRes(rsp)
+}
+
+// DeleteKafkaHfServiceWithResponse request returning *DeleteKafkaHfServiceRes
+func (c *ClientWithResponses) DeleteKafkaHfServiceWithResponse(ctx context.Context, orgId openapi_types.UUID, harborId openapi_types.UUID, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteKafkaHfServiceRes, error) {
+	rsp, err := c.DeleteKafkaHfService(ctx, orgId, harborId, kafkaServiceId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteKafkaHfServiceRes(rsp)
 }
 
 // GetOrganizationByIdWithResponse request returning *GetOrganizationByIdRes
@@ -15840,6 +20096,86 @@ func (c *ClientWithResponses) RevokeApiKeyWithResponse(ctx context.Context, orga
 	return ParseRevokeApiKeyRes(rsp)
 }
 
+// GetContainerAppWithResponse request returning *GetContainerAppRes
+func (c *ClientWithResponses) GetContainerAppWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetContainerAppRes, error) {
+	rsp, err := c.GetContainerApp(ctx, organizationId, appId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetContainerAppRes(rsp)
+}
+
+// DeleteContainerAppCrdWithResponse request returning *DeleteContainerAppCrdRes
+func (c *ClientWithResponses) DeleteContainerAppCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteContainerAppCrdRes, error) {
+	rsp, err := c.DeleteContainerAppCrd(ctx, organizationId, appId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteContainerAppCrdRes(rsp)
+}
+
+// GetContainerAppCrdWithResponse request returning *GetContainerAppCrdRes
+func (c *ClientWithResponses) GetContainerAppCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetContainerAppCrdRes, error) {
+	rsp, err := c.GetContainerAppCrd(ctx, organizationId, appId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetContainerAppCrdRes(rsp)
+}
+
+// PatchContainerAppCrdWithBodyWithResponse request with arbitrary body returning *PatchContainerAppCrdRes
+func (c *ClientWithResponses) PatchContainerAppCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchContainerAppCrdRes, error) {
+	rsp, err := c.PatchContainerAppCrdWithBody(ctx, organizationId, appId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchContainerAppCrdRes(rsp)
+}
+
+func (c *ClientWithResponses) PatchContainerAppCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, body PatchContainerAppCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchContainerAppCrdRes, error) {
+	rsp, err := c.PatchContainerAppCrd(ctx, organizationId, appId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchContainerAppCrdRes(rsp)
+}
+
+// RestartContainerAppCrdWithResponse request returning *RestartContainerAppCrdRes
+func (c *ClientWithResponses) RestartContainerAppCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RestartContainerAppCrdRes, error) {
+	rsp, err := c.RestartContainerAppCrd(ctx, organizationId, appId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRestartContainerAppCrdRes(rsp)
+}
+
+// StreamAppLogsWithResponse request returning *StreamAppLogsRes
+func (c *ClientWithResponses) StreamAppLogsWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*StreamAppLogsRes, error) {
+	rsp, err := c.StreamAppLogs(ctx, organizationId, appId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseStreamAppLogsRes(rsp)
+}
+
+// ListContainerAppPodsWithResponse request returning *ListContainerAppPodsRes
+func (c *ClientWithResponses) ListContainerAppPodsWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListContainerAppPodsRes, error) {
+	rsp, err := c.ListContainerAppPods(ctx, organizationId, appId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListContainerAppPodsRes(rsp)
+}
+
+// StreamPodLogsWithResponse request returning *StreamPodLogsRes
+func (c *ClientWithResponses) StreamPodLogsWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, podName string, params *StreamPodLogsParams, reqEditors ...RequestEditorFn) (*StreamPodLogsRes, error) {
+	rsp, err := c.StreamPodLogs(ctx, organizationId, appId, podName, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseStreamPodLogsRes(rsp)
+}
+
 // DeleteOrganizationCrdWithResponse request returning *DeleteOrganizationCrdRes
 func (c *ClientWithResponses) DeleteOrganizationCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteOrganizationCrdRes, error) {
 	rsp, err := c.DeleteOrganizationCrd(ctx, organizationId, reqEditors...)
@@ -15882,6 +20218,32 @@ func (c *ClientWithResponses) DeleteHarborCrdWithResponse(ctx context.Context, o
 		return nil, err
 	}
 	return ParseDeleteHarborCrdRes(rsp)
+}
+
+// ListContainerAppsWithResponse request returning *ListContainerAppsRes
+func (c *ClientWithResponses) ListContainerAppsWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListContainerAppsRes, error) {
+	rsp, err := c.ListContainerApps(ctx, organizationId, harborId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListContainerAppsRes(rsp)
+}
+
+// CreateContainerAppCrdWithBodyWithResponse request with arbitrary body returning *CreateContainerAppCrdRes
+func (c *ClientWithResponses) CreateContainerAppCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateContainerAppCrdRes, error) {
+	rsp, err := c.CreateContainerAppCrdWithBody(ctx, organizationId, harborId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateContainerAppCrdRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateContainerAppCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateContainerAppCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateContainerAppCrdRes, error) {
+	rsp, err := c.CreateContainerAppCrd(ctx, organizationId, harborId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateContainerAppCrdRes(rsp)
 }
 
 // CheckHarborNameAvailableWithResponse request returning *CheckHarborNameAvailableRes
@@ -15997,6 +20359,85 @@ func (c *ClientWithResponses) TriggerPipelineWithResponse(ctx context.Context, o
 		return nil, err
 	}
 	return ParseTriggerPipelineRes(rsp)
+}
+
+// ListSecretsWithResponse request returning *ListSecretsRes
+func (c *ClientWithResponses) ListSecretsWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *ListSecretsParams, reqEditors ...RequestEditorFn) (*ListSecretsRes, error) {
+	rsp, err := c.ListSecrets(ctx, organizationId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListSecretsRes(rsp)
+}
+
+// CreateSecretWithBodyWithResponse request with arbitrary body returning *CreateSecretRes
+func (c *ClientWithResponses) CreateSecretWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateSecretRes, error) {
+	rsp, err := c.CreateSecretWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateSecretRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateSecretWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateSecretJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateSecretRes, error) {
+	rsp, err := c.CreateSecret(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateSecretRes(rsp)
+}
+
+// CountSecretsWithResponse request returning *CountSecretsRes
+func (c *ClientWithResponses) CountSecretsWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *CountSecretsParams, reqEditors ...RequestEditorFn) (*CountSecretsRes, error) {
+	rsp, err := c.CountSecrets(ctx, organizationId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCountSecretsRes(rsp)
+}
+
+// DeleteSecretWithResponse request returning *DeleteSecretRes
+func (c *ClientWithResponses) DeleteSecretWithResponse(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteSecretRes, error) {
+	rsp, err := c.DeleteSecret(ctx, organizationId, secretId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteSecretRes(rsp)
+}
+
+// GetSecretWithResponse request returning *GetSecretRes
+func (c *ClientWithResponses) GetSecretWithResponse(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetSecretRes, error) {
+	rsp, err := c.GetSecret(ctx, organizationId, secretId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSecretRes(rsp)
+}
+
+// UpdateSecretWithBodyWithResponse request with arbitrary body returning *UpdateSecretRes
+func (c *ClientWithResponses) UpdateSecretWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateSecretRes, error) {
+	rsp, err := c.UpdateSecretWithBody(ctx, organizationId, secretId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateSecretRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdateSecretWithResponse(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, body UpdateSecretJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateSecretRes, error) {
+	rsp, err := c.UpdateSecret(ctx, organizationId, secretId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateSecretRes(rsp)
+}
+
+// ReadSecretValueWithResponse request returning *ReadSecretValueRes
+func (c *ClientWithResponses) ReadSecretValueWithResponse(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ReadSecretValueRes, error) {
+	rsp, err := c.ReadSecretValue(ctx, organizationId, secretId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReadSecretValueRes(rsp)
 }
 
 // CreateServiceAccountCrdWithBodyWithResponse request with arbitrary body returning *CreateServiceAccountCrdRes
@@ -16217,6 +20658,32 @@ func (c *ClientWithResponses) GetEffectiveSecuritySettingsHandlerWithResponse(ct
 	return ParseGetEffectiveSecuritySettingsHandlerRes(rsp)
 }
 
+// GetOrgQuotasHandlerWithResponse request returning *GetOrgQuotasHandlerRes
+func (c *ClientWithResponses) GetOrgQuotasHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOrgQuotasHandlerRes, error) {
+	rsp, err := c.GetOrgQuotasHandler(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetOrgQuotasHandlerRes(rsp)
+}
+
+// AssignSubscriptionHandlerWithBodyWithResponse request with arbitrary body returning *AssignSubscriptionHandlerRes
+func (c *ClientWithResponses) AssignSubscriptionHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AssignSubscriptionHandlerRes, error) {
+	rsp, err := c.AssignSubscriptionHandlerWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAssignSubscriptionHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) AssignSubscriptionHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body AssignSubscriptionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*AssignSubscriptionHandlerRes, error) {
+	rsp, err := c.AssignSubscriptionHandler(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAssignSubscriptionHandlerRes(rsp)
+}
+
 // GetOrgSecuritySettingsHandlerWithResponse request returning *GetOrgSecuritySettingsHandlerRes
 func (c *ClientWithResponses) GetOrgSecuritySettingsHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOrgSecuritySettingsHandlerRes, error) {
 	rsp, err := c.GetOrgSecuritySettingsHandler(ctx, organizationId, reqEditors...)
@@ -16363,6 +20830,15 @@ func (c *ClientWithResponses) CreatePipelineWithResponse(ctx context.Context, bo
 		return nil, err
 	}
 	return ParseCreatePipelineRes(rsp)
+}
+
+// ListQuotaProfilesHandlerWithResponse request returning *ListQuotaProfilesHandlerRes
+func (c *ClientWithResponses) ListQuotaProfilesHandlerWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListQuotaProfilesHandlerRes, error) {
+	rsp, err := c.ListQuotaProfilesHandler(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListQuotaProfilesHandlerRes(rsp)
 }
 
 // CountRefsWithBodyWithResponse request with arbitrary body returning *CountRefsRes
@@ -16617,6 +21093,22 @@ func (c *ClientWithResponses) CreatePipelineV2WithResponse(ctx context.Context, 
 		return nil, err
 	}
 	return ParseCreatePipelineV2Res(rsp)
+}
+
+// ParsePatchOptimizeStatusRes parses an HTTP response from a PatchOptimizeStatusWithResponse call
+func ParsePatchOptimizeStatusRes(rsp *http.Response) (*PatchOptimizeStatusRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchOptimizeStatusRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
 }
 
 // ParseHandleGetConsoleConfigRes parses an HTTP response from a HandleGetConsoleConfigWithResponse call
@@ -17393,6 +21885,126 @@ func ParseGetDataContainerRes(rsp *http.Response) (*GetDataContainerRes, error) 
 	return response, nil
 }
 
+// ParseDeleteOptimizeConfigRes parses an HTTP response from a DeleteOptimizeConfigWithResponse call
+func ParseDeleteOptimizeConfigRes(rsp *http.Response) (*DeleteOptimizeConfigRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteOptimizeConfigRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetOptimizeConfigRes parses an HTTP response from a GetOptimizeConfigWithResponse call
+func ParseGetOptimizeConfigRes(rsp *http.Response) (*GetOptimizeConfigRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOptimizeConfigRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest IcebergOptimizeConfig
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePutOptimizeConfigRes parses an HTTP response from a PutOptimizeConfigWithResponse call
+func ParsePutOptimizeConfigRes(rsp *http.Response) (*PutOptimizeConfigRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PutOptimizeConfigRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest IcebergOptimizeConfig
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOptimizeHistoryRes parses an HTTP response from a GetOptimizeHistoryWithResponse call
+func ParseGetOptimizeHistoryRes(rsp *http.Response) (*GetOptimizeHistoryRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOptimizeHistoryRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []IcebergOptimizeRun
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTriggerOptimizeRes parses an HTTP response from a TriggerOptimizeWithResponse call
+func ParseTriggerOptimizeRes(rsp *http.Response) (*TriggerOptimizeRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TriggerOptimizeRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest IcebergOptimizeRun
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseCreateDataDockCrdRes parses an HTTP response from a CreateDataDockCrdWithResponse call
 func ParseCreateDataDockCrdRes(rsp *http.Response) (*CreateDataDockCrdRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -17496,6 +22108,32 @@ func ParseArchiveImportDataContainerRes(rsp *http.Response) (*ArchiveImportDataC
 	}
 
 	response := &ArchiveImportDataContainerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest BucketArchiveOperation
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseArchiveImportExternalRes parses an HTTP response from a ArchiveImportExternalWithResponse call
+func ParseArchiveImportExternalRes(rsp *http.Response) (*ArchiveImportExternalRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ArchiveImportExternalRes{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -17649,6 +22287,32 @@ func ParseDownloadArchiveOperationRes(rsp *http.Response) (*DownloadArchiveOpera
 	return response, nil
 }
 
+// ParseRetryArchiveOperationRes parses an HTTP response from a RetryArchiveOperationWithResponse call
+func ParseRetryArchiveOperationRes(rsp *http.Response) (*RetryArchiveOperationRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RetryArchiveOperationRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest BucketArchiveOperation
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetDataDockSecuritySettingsHandlerRes parses an HTTP response from a GetDataDockSecuritySettingsHandlerWithResponse call
 func ParseGetDataDockSecuritySettingsHandlerRes(rsp *http.Response) (*GetDataDockSecuritySettingsHandlerRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -17727,6 +22391,100 @@ func ParseListHarborDataDockRes(rsp *http.Response) (*ListHarborDataDockRes, err
 	return response, nil
 }
 
+// ParseGetKafkaHfServiceRes parses an HTTP response from a GetKafkaHfServiceWithResponse call
+func ParseGetKafkaHfServiceRes(rsp *http.Response) (*GetKafkaHfServiceRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetKafkaHfServiceRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest KafkaHFServiceResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateKafkaHfServiceRes parses an HTTP response from a UpdateKafkaHfServiceWithResponse call
+func ParseUpdateKafkaHfServiceRes(rsp *http.Response) (*UpdateKafkaHfServiceRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateKafkaHfServiceRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest KafkaHFServiceResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetKafkaLastBundleRes parses an HTTP response from a GetKafkaLastBundleWithResponse call
+func ParseGetKafkaLastBundleRes(rsp *http.Response) (*GetKafkaLastBundleRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetKafkaLastBundleRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetKafkaMetadataRes parses an HTTP response from a GetKafkaMetadataWithResponse call
+func ParseGetKafkaMetadataRes(rsp *http.Response) (*GetKafkaMetadataRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetKafkaMetadataRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest KafkaMetadata
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListOrganizationsRes parses an HTTP response from a ListOrganizationsWithResponse call
 func ParseListOrganizationsRes(rsp *http.Response) (*ListOrganizationsRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -17790,6 +22548,74 @@ func ParseCheckOrganizationNameAvailabilityRes(rsp *http.Response) (*CheckOrgani
 		}
 		response.JSON200 = &dest
 
+	}
+
+	return response, nil
+}
+
+// ParseListKafkaHfServicesRes parses an HTTP response from a ListKafkaHfServicesWithResponse call
+func ParseListKafkaHfServicesRes(rsp *http.Response) (*ListKafkaHfServicesRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListKafkaHfServicesRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []KafkaHFServiceResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateKafkaHfServiceRes parses an HTTP response from a CreateKafkaHfServiceWithResponse call
+func ParseCreateKafkaHfServiceRes(rsp *http.Response) (*CreateKafkaHfServiceRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateKafkaHfServiceRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest KafkaHFServiceResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteKafkaHfServiceRes parses an HTTP response from a DeleteKafkaHfServiceWithResponse call
+func ParseDeleteKafkaHfServiceRes(rsp *http.Response) (*DeleteKafkaHfServiceRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteKafkaHfServiceRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
 	}
 
 	return response, nil
@@ -17889,6 +22715,164 @@ func ParseRevokeApiKeyRes(rsp *http.Response) (*RevokeApiKeyRes, error) {
 	return response, nil
 }
 
+// ParseGetContainerAppRes parses an HTTP response from a GetContainerAppWithResponse call
+func ParseGetContainerAppRes(rsp *http.Response) (*GetContainerAppRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetContainerAppRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ContainerAppResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteContainerAppCrdRes parses an HTTP response from a DeleteContainerAppCrdWithResponse call
+func ParseDeleteContainerAppCrdRes(rsp *http.Response) (*DeleteContainerAppCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteContainerAppCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetContainerAppCrdRes parses an HTTP response from a GetContainerAppCrdWithResponse call
+func ParseGetContainerAppCrdRes(rsp *http.Response) (*GetContainerAppCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetContainerAppCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ContainerAppCrdSpecResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchContainerAppCrdRes parses an HTTP response from a PatchContainerAppCrdWithResponse call
+func ParsePatchContainerAppCrdRes(rsp *http.Response) (*PatchContainerAppCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchContainerAppCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseRestartContainerAppCrdRes parses an HTTP response from a RestartContainerAppCrdWithResponse call
+func ParseRestartContainerAppCrdRes(rsp *http.Response) (*RestartContainerAppCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RestartContainerAppCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseStreamAppLogsRes parses an HTTP response from a StreamAppLogsWithResponse call
+func ParseStreamAppLogsRes(rsp *http.Response) (*StreamAppLogsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &StreamAppLogsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseListContainerAppPodsRes parses an HTTP response from a ListContainerAppPodsWithResponse call
+func ParseListContainerAppPodsRes(rsp *http.Response) (*ListContainerAppPodsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListContainerAppPodsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []ContainerAppPodInfo
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseStreamPodLogsRes parses an HTTP response from a StreamPodLogsWithResponse call
+func ParseStreamPodLogsRes(rsp *http.Response) (*StreamPodLogsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &StreamPodLogsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
 // ParseDeleteOrganizationCrdRes parses an HTTP response from a DeleteOrganizationCrdWithResponse call
 func ParseDeleteOrganizationCrdRes(rsp *http.Response) (*DeleteOrganizationCrdRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -17966,6 +22950,48 @@ func ParseDeleteHarborCrdRes(rsp *http.Response) (*DeleteHarborCrdRes, error) {
 	}
 
 	response := &DeleteHarborCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseListContainerAppsRes parses an HTTP response from a ListContainerAppsWithResponse call
+func ParseListContainerAppsRes(rsp *http.Response) (*ListContainerAppsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListContainerAppsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []ContainerAppResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateContainerAppCrdRes parses an HTTP response from a CreateContainerAppCrdWithResponse call
+func ParseCreateContainerAppCrdRes(rsp *http.Response) (*CreateContainerAppCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateContainerAppCrdRes{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -18224,6 +23250,178 @@ func ParseTriggerPipelineRes(rsp *http.Response) (*TriggerPipelineRes, error) {
 	response := &TriggerPipelineRes{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseListSecretsRes parses an HTTP response from a ListSecretsWithResponse call
+func ParseListSecretsRes(rsp *http.Response) (*ListSecretsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListSecretsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListSecretsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateSecretRes parses an HTTP response from a CreateSecretWithResponse call
+func ParseCreateSecretRes(rsp *http.Response) (*CreateSecretRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateSecretRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest SecretMetadataResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCountSecretsRes parses an HTTP response from a CountSecretsWithResponse call
+func ParseCountSecretsRes(rsp *http.Response) (*CountSecretsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CountSecretsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest CountSecretsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteSecretRes parses an HTTP response from a DeleteSecretWithResponse call
+func ParseDeleteSecretRes(rsp *http.Response) (*DeleteSecretRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteSecretRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetSecretRes parses an HTTP response from a GetSecretWithResponse call
+func ParseGetSecretRes(rsp *http.Response) (*GetSecretRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSecretRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SecretMetadataResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateSecretRes parses an HTTP response from a UpdateSecretWithResponse call
+func ParseUpdateSecretRes(rsp *http.Response) (*UpdateSecretRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateSecretRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SecretMetadataResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseReadSecretValueRes parses an HTTP response from a ReadSecretValueWithResponse call
+func ParseReadSecretValueRes(rsp *http.Response) (*ReadSecretValueRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ReadSecretValueRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SecretValueResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
 	}
 
 	return response, nil
@@ -18647,6 +23845,48 @@ func ParseGetEffectiveSecuritySettingsHandlerRes(rsp *http.Response) (*GetEffect
 	return response, nil
 }
 
+// ParseGetOrgQuotasHandlerRes parses an HTTP response from a GetOrgQuotasHandlerWithResponse call
+func ParseGetOrgQuotasHandlerRes(rsp *http.Response) (*GetOrgQuotasHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrgQuotasHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest OrganizationQuotaResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAssignSubscriptionHandlerRes parses an HTTP response from a AssignSubscriptionHandlerWithResponse call
+func ParseAssignSubscriptionHandlerRes(rsp *http.Response) (*AssignSubscriptionHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AssignSubscriptionHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
 // ParseGetOrgSecuritySettingsHandlerRes parses an HTTP response from a GetOrgSecuritySettingsHandlerWithResponse call
 func ParseGetOrgSecuritySettingsHandlerRes(rsp *http.Response) (*GetOrgSecuritySettingsHandlerRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -18934,6 +24174,32 @@ func ParseCreatePipelineRes(rsp *http.Response) (*CreatePipelineRes, error) {
 	response := &CreatePipelineRes{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseListQuotaProfilesHandlerRes parses an HTTP response from a ListQuotaProfilesHandlerWithResponse call
+func ParseListQuotaProfilesHandlerRes(rsp *http.Response) (*ListQuotaProfilesHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListQuotaProfilesHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListQuotaProfilesResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
 	}
 
 	return response, nil

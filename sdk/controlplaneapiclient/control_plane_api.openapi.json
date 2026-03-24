@@ -5,6 +5,42 @@
     "version": "0.1.0"
   },
   "paths": {
+    "/api/internal/iceberg-optimize/{optimize_name}/status": {
+      "patch": {
+        "tags": [
+          "iceberg::optimize"
+        ],
+        "operationId": "patch_optimize_status",
+        "parameters": [
+          {
+            "name": "optimize_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOptimizeRunStatusRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Status updated"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/config": {
       "get": {
         "tags": [
@@ -1310,6 +1346,196 @@
         }
       }
     },
+    "/api/v1/data-containers/{data_container_id}/optimize": {
+      "get": {
+        "tags": [
+          "iceberg::optimize"
+        ],
+        "operationId": "get_optimize_config",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Optimize configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IcebergOptimizeConfig"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No optimize config found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "iceberg::optimize"
+        ],
+        "operationId": "put_optimize_config",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertOptimizeConfigRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Optimize configuration created/updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IcebergOptimizeConfig"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "iceberg::optimize"
+        ],
+        "operationId": "delete_optimize_config",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Optimize configuration deleted"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/{data_container_id}/optimize/history": {
+      "get": {
+        "tags": [
+          "iceberg::optimize"
+        ],
+        "operationId": "get_optimize_history",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Optimization run history",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IcebergOptimizeRun"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No optimize config found"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/{data_container_id}/optimize/trigger": {
+      "post": {
+        "tags": [
+          "iceberg::optimize"
+        ],
+        "operationId": "trigger_optimize",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Optimization triggered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IcebergOptimizeRun"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No optimize config found"
+          }
+        }
+      }
+    },
     "/api/v1/data-docks/crd": {
       "post": {
         "tags": [],
@@ -1972,6 +2198,155 @@
         }
       }
     },
+    "/api/v1/kafka-services/{kafka_service_id}": {
+      "get": {
+        "tags": [
+          "Kafka Services"
+        ],
+        "operationId": "get_kafka_hf_service",
+        "parameters": [
+          {
+            "name": "kafka_service_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Kafka service details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KafkaHFServiceResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Kafka Services"
+        ],
+        "operationId": "update_kafka_hf_service",
+        "parameters": [
+          {
+            "name": "kafka_service_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateKafkaHFServiceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Kafka service updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KafkaHFServiceResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/kafka-services/{kafka_service_id}/last-bundle": {
+      "get": {
+        "tags": [
+          "Kafka Services"
+        ],
+        "operationId": "get_kafka_last_bundle",
+        "parameters": [
+          {
+            "name": "kafka_service_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/gzip": {}
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/kafka-services/{kafka_service_id}/metadata": {
+      "get": {
+        "tags": [
+          "Kafka Services"
+        ],
+        "operationId": "get_kafka_metadata",
+        "parameters": [
+          {
+            "name": "kafka_service_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Kafka service metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KafkaMetadata"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/organizations": {
       "get": {
         "tags": [
@@ -2101,6 +2476,170 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{org_id}/harbors/{harbor_id}/kafka-services": {
+      "get": {
+        "tags": [
+          "Kafka Services"
+        ],
+        "operationId": "list_kafka_hf_services",
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "harbor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum results (default 100).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Pagination offset (default 0).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of kafka services",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KafkaHFServiceResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Kafka Services"
+        ],
+        "operationId": "create_kafka_hf_service",
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "harbor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateKafkaHFServiceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Kafka service created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KafkaHFServiceResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{org_id}/harbors/{harbor_id}/kafka-services/{kafka_service_id}": {
+      "delete": {
+        "tags": [
+          "Kafka Services"
+        ],
+        "operationId": "delete_kafka_hf_service",
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "harbor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "kafka_service_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Kafka service deleted"
           },
           "500": {
             "description": "Internal server error"
@@ -2261,6 +2800,373 @@
           },
           "404": {
             "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/container-apps/{app_id}": {
+      "get": {
+        "tags": [
+          "ContainerApps"
+        ],
+        "operationId": "get_container_app",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "app_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Container app found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContainerAppResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container app not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/container-apps/{app_id}/crd": {
+      "get": {
+        "tags": [
+          "ContainerApps"
+        ],
+        "operationId": "get_container_app_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "app_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Container app CRD spec",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContainerAppCrdSpecResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container app not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ContainerApps"
+        ],
+        "operationId": "delete_container_app_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "app_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Container app CRD deleted successfully"
+          },
+          "404": {
+            "description": "Container app not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "ContainerApps"
+        ],
+        "operationId": "patch_container_app_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "app_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchContainerAppCrdRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Container app CRD patched successfully"
+          },
+          "404": {
+            "description": "Container app not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/container-apps/{app_id}/crd/restart": {
+      "post": {
+        "tags": [
+          "ContainerApps"
+        ],
+        "operationId": "restart_container_app_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "app_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Container app restart triggered"
+          },
+          "404": {
+            "description": "Container app not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/container-apps/{app_id}/logs": {
+      "get": {
+        "tags": [
+          "ContainerApps"
+        ],
+        "operationId": "stream_app_logs",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "app_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SSE stream of aggregated log lines from all pods",
+            "content": {
+              "text/event-stream": {}
+            }
+          },
+          "404": {
+            "description": "Container app or organization not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/container-apps/{app_id}/pods": {
+      "get": {
+        "tags": [
+          "ContainerApps"
+        ],
+        "operationId": "list_container_app_pods",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "app_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of pods for the container app",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContainerAppPodInfo"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container app or organization not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/container-apps/{app_id}/pods/{pod_name}/logs": {
+      "get": {
+        "tags": [
+          "ContainerApps"
+        ],
+        "operationId": "stream_pod_logs",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "app_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pod_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tail_lines",
+            "in": "query",
+            "description": "Number of tail lines to start from (default: 100)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SSE stream of pod log lines",
+            "content": {
+              "text/event-stream": {}
+            }
+          },
+          "404": {
+            "description": "Container app, organization, or pod not found"
           },
           "500": {
             "description": "Internal server error"
@@ -2459,6 +3365,104 @@
           },
           "404": {
             "description": "Harbor not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/harbors/{harbor_id}/container-apps": {
+      "get": {
+        "tags": [
+          "ContainerApps"
+        ],
+        "operationId": "list_container_apps",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "harbor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of container apps",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContainerAppResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/harbors/{harbor_id}/container-apps/crd": {
+      "post": {
+        "tags": [
+          "ContainerApps"
+        ],
+        "operationId": "create_container_app_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "harbor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContainerAppCrdRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Container app CRD created successfully"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Organization or harbor not found"
           },
           "500": {
             "description": "Internal server error"
@@ -2936,6 +3940,384 @@
           },
           "403": {
             "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/secrets": {
+      "get": {
+        "tags": [
+          "Secrets"
+        ],
+        "operationId": "list_secrets",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of secrets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListSecretsResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Secrets"
+        ],
+        "operationId": "create_secret",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSecretRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Secret created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretMetadataResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Secret already exists"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/secrets/count": {
+      "get": {
+        "tags": [
+          "Secrets"
+        ],
+        "operationId": "count_secrets",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Count of secrets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountSecretsResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/secrets/{secret_id}": {
+      "get": {
+        "tags": [
+          "Secrets"
+        ],
+        "operationId": "get_secret",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "secret_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Secret retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretMetadataResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Secret not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Secrets"
+        ],
+        "operationId": "update_secret",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "secret_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSecretRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Secret updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretMetadataResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Secret not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Secrets"
+        ],
+        "operationId": "delete_secret",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "secret_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Secret deleted"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Secret not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/secrets/{secret_id}/value": {
+      "get": {
+        "tags": [
+          "Secrets"
+        ],
+        "operationId": "read_secret_value",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "secret_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Secret value retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretValueResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Secret not found"
           },
           "500": {
             "description": "Internal server error"
@@ -3754,6 +5136,81 @@
         }
       }
     },
+    "/api/v1/orgs/{organization_id}/quotas": {
+      "get": {
+        "tags": [
+          "Quotas"
+        ],
+        "summary": "Get quota overview for an organization (profile + current usage).",
+        "operationId": "get_org_quotas_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationQuotaResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No subscription found"
+          }
+        }
+      }
+    },
+    "/api/v1/orgs/{organization_id}/quotas/subscription": {
+      "put": {
+        "tags": [
+          "Quotas"
+        ],
+        "summary": "Assign or update a subscription for an organization.",
+        "operationId": "assign_subscription_handler",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "description": "Organization ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignSubscriptionBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Subscription assigned"
+          },
+          "404": {
+            "description": "Profile not found"
+          }
+        }
+      }
+    },
     "/api/v1/orgs/{organization_id}/security/settings": {
       "get": {
         "tags": [
@@ -4237,6 +5694,27 @@
           },
           "500": {
             "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/quota-profiles": {
+      "get": {
+        "tags": [
+          "Quotas"
+        ],
+        "summary": "List all available quota profiles (plans).",
+        "operationId": "list_quota_profiles_handler",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListQuotaProfilesResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -5630,6 +7108,19 @@
           "export"
         ]
       },
+      "AssignSubscriptionBody": {
+        "type": "object",
+        "required": [
+          "quota_profile_id"
+        ],
+        "properties": {
+          "custom_limits": {},
+          "quota_profile_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
       "BucketArchiveOperation": {
         "type": "object",
         "required": [
@@ -6099,6 +7590,171 @@
           "vauban_preview"
         ]
       },
+      "ContainerAppCrdSpecResponse": {
+        "type": "object",
+        "required": [
+          "enabled",
+          "image_repository",
+          "image_tag",
+          "replicas",
+          "port",
+          "env",
+          "secret_refs",
+          "image_pull_secrets"
+        ],
+        "properties": {
+          "cpu_limit": {
+            "type": "string",
+            "nullable": true
+          },
+          "cpu_request": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "env": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EnvVarSpecResponse"
+            }
+          },
+          "health_check_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "health_check_port": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "nullable": true
+          },
+          "image_pull_secrets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "image_repository": {
+            "type": "string"
+          },
+          "image_tag": {
+            "type": "string"
+          },
+          "memory_limit": {
+            "type": "string",
+            "nullable": true
+          },
+          "memory_request": {
+            "type": "string",
+            "nullable": true
+          },
+          "port": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "replicas": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "secret_refs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SecretRefSpecResponse"
+            }
+          }
+        }
+      },
+      "ContainerAppPodInfo": {
+        "type": "object",
+        "required": [
+          "name",
+          "phase",
+          "ready",
+          "restarts"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "ready": {
+            "type": "boolean"
+          },
+          "restarts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "started_at": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ContainerAppResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "organization_id",
+          "harbor_id",
+          "name",
+          "slug",
+          "available_replicas",
+          "desired_replicas",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "available_replicas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "conditions": {},
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "desired_replicas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "endpoint": {
+            "type": "string",
+            "nullable": true
+          },
+          "harbor_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "phase": {
+            "type": "string",
+            "nullable": true
+          },
+          "slug": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "ContextProviderResponse": {
         "type": "object",
         "description": "Response for a context provider.",
@@ -6287,6 +7943,10 @@
           "import_api_key"
         ],
         "properties": {
+          "extra_filter": {
+            "$ref": "#/components/schemas/ImportApiExtraFilter",
+            "nullable": true
+          },
           "import_api_key": {
             "type": "string",
             "format": "password",
@@ -6322,6 +7982,18 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          }
+        }
+      },
+      "CountSecretsResponse": {
+        "type": "object",
+        "required": [
+          "count"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
@@ -6413,6 +8085,97 @@
         "properties": {
           "path": {
             "type": "string"
+          }
+        }
+      },
+      "CreateContainerAppCrdRequestBody": {
+        "type": "object",
+        "required": [
+          "name",
+          "enabled",
+          "image_repository",
+          "image_tag"
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "env": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EnvVarInput"
+            }
+          },
+          "health_check_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "health_check_port": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "nullable": true
+          },
+          "image_pull_secrets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Names of secrets from the secret store to use as image pull secrets."
+          },
+          "image_repository": {
+            "type": "string"
+          },
+          "image_tag": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "description": "Must be a valid slug: lowercase letters, digits, and hyphens only; cannot start or end with a hyphen."
+          },
+          "port": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "replicas": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "resource_tier": {
+            "$ref": "#/components/schemas/ResourceTier",
+            "nullable": true
+          },
+          "secret_refs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SecretRefInput"
+            }
+          }
+        }
+      },
+      "CreateContextEnricherPipelineRequest": {
+        "type": "object",
+        "description": "Context Enricher pipeline request: enrich Iceberg table with L0/L1 abstracts via LLM.\nReads content (L2) from a source table, writes enriched rows (content + L0 + L1) to a destination table.\nEnables lineage: minio → OCR → ice_raw → hippocampe → ice_enriched",
+        "required": [
+          "pipeline",
+          "source",
+          "destination",
+          "classification"
+        ],
+        "properties": {
+          "classification": {
+            "$ref": "#/components/schemas/ClassificationConfig"
+          },
+          "destination": {
+            "$ref": "#/components/schemas/MetadataStorageConfig"
+          },
+          "pipeline": {
+            "$ref": "#/components/schemas/PipelineMetadata"
+          },
+          "source": {
+            "$ref": "#/components/schemas/MetadataStorageConfig"
           }
         }
       },
@@ -6695,6 +8458,55 @@
           }
         }
       },
+      "CreateKafkaHFServiceRequest": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "broker_replicas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cpu_limit": {
+            "type": "string",
+            "nullable": true
+          },
+          "cpu_request": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string"
+          },
+          "memory_limit": {
+            "type": "string",
+            "nullable": true
+          },
+          "memory_request": {
+            "type": "string",
+            "nullable": true
+          },
+          "min_insync_replicas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "replication_factor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "schema_registry_enabled": {
+            "type": "boolean"
+          },
+          "storage_size_gb": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "CreateMedallionSchemaRequest": {
         "type": "object",
         "required": [
@@ -6770,8 +8582,32 @@
           "name": {
             "type": "string"
           },
+          "quota_profile_slug": {
+            "type": "string",
+            "nullable": true
+          },
           "slug": {
             "type": "string"
+          }
+        }
+      },
+      "CreatePageSplitterPipelineRequest": {
+        "type": "object",
+        "description": "PageSplitter pipeline request: splits OCR'd documents by page markers",
+        "required": [
+          "pipeline",
+          "source",
+          "destination"
+        ],
+        "properties": {
+          "destination": {
+            "$ref": "#/components/schemas/MetadataStorageConfig"
+          },
+          "pipeline": {
+            "$ref": "#/components/schemas/PipelineMetadata"
+          },
+          "source": {
+            "$ref": "#/components/schemas/MetadataStorageConfig"
           }
         }
       },
@@ -6905,6 +8741,50 @@
               }
             ],
             "description": "S3Copy: S3 source → S3 destination"
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreatePageSplitterPipelineRequest"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "page_splitter"
+                    ]
+                  }
+                }
+              }
+            ],
+            "description": "PageSplitter: splits OCR'd documents by page number"
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateContextEnricherPipelineRequest"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "context_enricher"
+                    ]
+                  }
+                }
+              }
+            ],
+            "description": "ContextEnricher: enrich Iceberg table rows with L0 abstracts and L1 overviews via LLM"
           }
         ],
         "description": "Discriminated union for pipeline creation requests"
@@ -6964,6 +8844,33 @@
           }
         }
       },
+      "CreateSecretRequestBody": {
+        "type": "object",
+        "required": [
+          "name",
+          "value",
+          "secret_type"
+        ],
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "secret_type": {
+            "$ref": "#/components/schemas/SecretType"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "value": {}
+        }
+      },
       "CreateServiceAccountCrdRequestBody": {
         "type": "object",
         "required": [
@@ -7009,7 +8916,7 @@
       },
       "CreateTrinoPipelineRequest": {
         "type": "object",
-        "description": "Trino-based pipeline request (Markitdown, HephaistosPdfeed, Labelizer)",
+        "description": "Trino-based pipeline request (Markitdown, HephaistosPdfeed, Labelizer, Omnifeed)",
         "required": [
           "pipeline_type",
           "pipeline",
@@ -7024,6 +8931,10 @@
           "metadata_storage": {
             "$ref": "#/components/schemas/MetadataStorageConfig"
           },
+          "ocr_provider": {
+            "$ref": "#/components/schemas/OcrProviderConfig",
+            "nullable": true
+          },
           "pipeline": {
             "$ref": "#/components/schemas/PipelineMetadata"
           },
@@ -7032,6 +8943,10 @@
           },
           "source": {
             "$ref": "#/components/schemas/FileSorterSourceConfig"
+          },
+          "split_by_page": {
+            "type": "boolean",
+            "description": "When true, adds a PageSplitter step after OCR to split documents by page markers.\nThe split pages are written to a table named `{table_name}_split_pages` in the same schema."
           }
         }
       },
@@ -7734,6 +9649,36 @@
           }
         }
       },
+      "EnvVarInput": {
+        "type": "object",
+        "required": [
+          "name",
+          "value"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "EnvVarSpecResponse": {
+        "type": "object",
+        "required": [
+          "name",
+          "value"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
       "ExecuteRequest": {
         "type": "object",
         "required": [
@@ -8285,6 +10230,139 @@
           }
         }
       },
+      "IcebergOptimizeConfig": {
+        "type": "object",
+        "required": [
+          "id",
+          "data_container_id",
+          "schedule",
+          "suspend",
+          "compact_files_enabled",
+          "expire_snapshots_enabled",
+          "remove_orphan_files_enabled",
+          "analyze_statistics_enabled",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "analyze_statistics_enabled": {
+            "type": "boolean"
+          },
+          "compact_files_enabled": {
+            "type": "boolean"
+          },
+          "compact_files_size_threshold": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data_container_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expire_snapshots_enabled": {
+            "type": "boolean"
+          },
+          "expire_snapshots_retention": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "last_run_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_run_status": {
+            "type": "string",
+            "nullable": true
+          },
+          "remove_orphan_files_enabled": {
+            "type": "boolean"
+          },
+          "remove_orphan_files_retention": {
+            "type": "string",
+            "nullable": true
+          },
+          "schedule": {
+            "type": "string"
+          },
+          "suspend": {
+            "type": "boolean"
+          },
+          "tables_optimized": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "IcebergOptimizeRun": {
+        "type": "object",
+        "required": [
+          "id",
+          "optimize_config_id",
+          "started_at",
+          "status",
+          "created_at"
+        ],
+        "properties": {
+          "completed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "error_details": {},
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "log_output": {
+            "type": "string",
+            "nullable": true
+          },
+          "optimize_config_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string"
+          },
+          "tables_failed": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "tables_processed": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "tables_succeeded": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
       "IcebergSchemaMetadata": {
         "type": "object",
         "required": [
@@ -8431,6 +10509,214 @@
           }
         }
       },
+      "ImportApiExtraFilter": {
+        "type": "object",
+        "description": "Filter on a field within the `extra` JSON object returned by the Import API.",
+        "required": [
+          "field",
+          "value"
+        ],
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "Key within `extra` to filter on (e.g. \"rubrique_parent_title\")"
+          },
+          "value": {
+            "type": "string",
+            "description": "Expected string value"
+          }
+        }
+      },
+      "KafkaConsumerGroup": {
+        "type": "object",
+        "required": [
+          "group_id",
+          "state",
+          "members"
+        ],
+        "properties": {
+          "group_id": {
+            "type": "string"
+          },
+          "members": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "state": {
+            "type": "string"
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "KafkaHFServiceResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "harbor_id",
+          "name",
+          "slug",
+          "description",
+          "broker_replicas",
+          "storage_size_gb",
+          "replication_factor",
+          "min_insync_replicas",
+          "schema_registry_enabled",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "bootstrap_servers": {
+            "type": "string",
+            "nullable": true
+          },
+          "broker_replicas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cpu_limit": {
+            "type": "string",
+            "nullable": true
+          },
+          "cpu_request": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string"
+          },
+          "harbor_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "internal_bootstrap_servers": {
+            "type": "string",
+            "nullable": true
+          },
+          "keycloak_client_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "memory_limit": {
+            "type": "string",
+            "nullable": true
+          },
+          "memory_request": {
+            "type": "string",
+            "nullable": true
+          },
+          "min_insync_replicas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "opa_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "refreshed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "replication_factor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "schema_registry_enabled": {
+            "type": "boolean"
+          },
+          "schema_registry_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "slug": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "storage_size_gb": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "token_issuer_endpoint": {
+            "type": "string",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "KafkaMetadata": {
+        "type": "object",
+        "description": "Dynamic metadata about the Kafka cluster (stored as JSONB)",
+        "properties": {
+          "cluster_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "consumer_groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KafkaConsumerGroup"
+            }
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KafkaTopicInfo"
+            }
+          }
+        }
+      },
+      "KafkaTopicInfo": {
+        "type": "object",
+        "required": [
+          "name",
+          "partitions",
+          "replication_factor"
+        ],
+        "properties": {
+          "cleanup_policy": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "partitions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "replication_factor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "retention_ms": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          }
+        }
+      },
       "LabelDefinition": {
         "type": "object",
         "description": "Label definition for document classification (Labelize step)\nSupports both static labels (id + description) and dynamic labels with placeholders.\n\nExample YAML format:\n```yaml\n- id: facture_eau\n  type: static\n  description: \"Water utility invoices\"\n- id: travaux\n  type: dynamic\n  description: \"Construction work documents\"\n  format: \"TRAVAUX/{year}/{date}-{work_name}\"\n  placeholders:\n    - id: year\n      source: \"Extract the year from the document\"\n      format: \"YYYY\"\n      rules: [\"Must be 4 digits\"]\n```",
@@ -8479,6 +10765,20 @@
           }
         }
       },
+      "ListQuotaProfilesResponse": {
+        "type": "object",
+        "required": [
+          "profiles"
+        ],
+        "properties": {
+          "profiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuotaProfileResponse"
+            }
+          }
+        }
+      },
       "ListRunsResponse": {
         "type": "object",
         "required": [
@@ -8489,6 +10789,20 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PipelineRun"
+            }
+          }
+        }
+      },
+      "ListSecretsResponse": {
+        "type": "object",
+        "required": [
+          "secrets"
+        ],
+        "properties": {
+          "secrets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SecretMetadataResponse"
             }
           }
         }
@@ -8926,6 +11240,39 @@
           }
         }
       },
+      "OciRegistryAuth": {
+        "type": "object",
+        "required": [
+          "username",
+          "password",
+          "auth"
+        ],
+        "properties": {
+          "auth": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "OciRegistryConfigValue": {
+        "type": "object",
+        "required": [
+          "auths"
+        ],
+        "properties": {
+          "auths": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/OciRegistryAuth"
+            }
+          }
+        }
+      },
       "OcrProviderConfig": {
         "oneOf": [
           {
@@ -9054,6 +11401,24 @@
           }
         }
       },
+      "OrganizationQuotaResponse": {
+        "type": "object",
+        "required": [
+          "profile",
+          "usage"
+        ],
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/QuotaProfileResponse"
+          },
+          "usage": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuotaUsageItemResponse"
+            }
+          }
+        }
+      },
       "ParsedAttributeResponse": {
         "type": "object",
         "description": "Parsed attribute with separate namespace and value.",
@@ -9069,6 +11434,71 @@
           "value": {
             "type": "string",
             "description": "Value part (e.g., \"occitanie\")"
+          }
+        }
+      },
+      "PatchContainerAppCrdRequestBody": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "env": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EnvVarInput"
+            },
+            "nullable": true
+          },
+          "health_check_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "health_check_port": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "nullable": true
+          },
+          "image_pull_secrets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Names of secrets from the secret store to use as image pull secrets. Replaces existing pull secrets when set.",
+            "nullable": true
+          },
+          "image_repository": {
+            "type": "string",
+            "nullable": true
+          },
+          "image_tag": {
+            "type": "string",
+            "nullable": true
+          },
+          "port": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "nullable": true
+          },
+          "replicas": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "nullable": true
+          },
+          "resource_tier": {
+            "$ref": "#/components/schemas/ResourceTier",
+            "nullable": true
+          },
+          "secret_refs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SecretRefInput"
+            },
+            "nullable": true
           }
         }
       },
@@ -9105,6 +11535,16 @@
           },
           "folder": {
             "type": "string",
+            "nullable": true
+          },
+          "import_api_extra_filter_field": {
+            "type": "string",
+            "description": "Copy pipeline: optional extra field filter key (e.g. \"rubrique_parent_title\")",
+            "nullable": true
+          },
+          "import_api_extra_filter_value": {
+            "type": "string",
+            "description": "Copy pipeline: optional extra field filter value",
             "nullable": true
           },
           "import_api_key": {
@@ -9402,7 +11842,10 @@
           "Labelizer",
           "FileRouter",
           "Copy",
-          "FileSorter"
+          "FileSorter",
+          "PageSplitter",
+          "Omnifeed",
+          "ContextEnricher"
         ]
       },
       "PostgresInternalConfig": {
@@ -9751,6 +12194,146 @@
           }
         }
       },
+      "QuotaProfileResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "max_harbors",
+          "max_data_docks",
+          "max_pipelines",
+          "max_model_servings",
+          "max_users",
+          "max_api_keys",
+          "max_service_accounts",
+          "max_storage_gb",
+          "max_vcpu",
+          "max_ram_gb",
+          "max_pipeline_runs_monthly",
+          "max_llm_tokens_monthly",
+          "max_api_calls_daily"
+        ],
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "max_api_calls_daily": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "max_api_keys": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "max_data_docks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "max_harbors": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "max_llm_tokens_monthly": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "max_model_servings": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "max_pipeline_runs_monthly": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "max_pipelines": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "max_ram_gb": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "max_service_accounts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "max_storage_gb": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "max_users": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "max_vcpu": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        }
+      },
+      "QuotaResourceType": {
+        "type": "string",
+        "enum": [
+          "harbor",
+          "data_dock",
+          "pipeline",
+          "model_serving",
+          "user",
+          "api_key",
+          "service_account"
+        ]
+      },
+      "QuotaStatus": {
+        "type": "string",
+        "enum": [
+          "ok",
+          "warning",
+          "exceeded"
+        ]
+      },
+      "QuotaUsageItemResponse": {
+        "type": "object",
+        "required": [
+          "resource_type",
+          "status",
+          "current",
+          "limit",
+          "percentage"
+        ],
+        "properties": {
+          "current": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "percentage": {
+            "type": "number",
+            "format": "double",
+            "description": "Usage percentage (0-100+), -1 if unlimited"
+          },
+          "resource_type": {
+            "$ref": "#/components/schemas/QuotaResourceType"
+          },
+          "status": {
+            "$ref": "#/components/schemas/QuotaStatus"
+          }
+        }
+      },
       "Ref": {
         "type": "object",
         "description": "A reference to a file in a storage bucket\nThis reference is created upon scanning a bucket and is used to track the\nstatus of the file through the pipeline.",
@@ -9837,6 +12420,18 @@
             "minimum": 0
           }
         }
+      },
+      "ResourceTier": {
+        "type": "string",
+        "description": "Predefined resource tiers for container apps.\nMemory limits are always equal to memory requests.",
+        "enum": [
+          "nano",
+          "micro",
+          "small",
+          "medium",
+          "large",
+          "xlarge"
+        ]
       },
       "ResultsPage": {
         "type": "object",
@@ -9965,6 +12560,166 @@
           },
           "visibility": {
             "type": "string"
+          }
+        }
+      },
+      "SecretMetadataResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "tags",
+          "secret_path",
+          "secret_type",
+          "created_by",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "secret_path": {
+            "type": "string"
+          },
+          "secret_type": {
+            "$ref": "#/components/schemas/SecretType"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SecretRefInput": {
+        "type": "object",
+        "required": [
+          "env_var_name",
+          "secret_name"
+        ],
+        "properties": {
+          "env_var_name": {
+            "type": "string"
+          },
+          "secret_name": {
+            "type": "string"
+          }
+        }
+      },
+      "SecretRefSpecResponse": {
+        "type": "object",
+        "required": [
+          "env_var_name",
+          "secret_name"
+        ],
+        "properties": {
+          "env_var_name": {
+            "type": "string"
+          },
+          "secret_name": {
+            "type": "string"
+          }
+        }
+      },
+      "SecretType": {
+        "type": "string",
+        "description": "The type of value stored in the secret.",
+        "enum": [
+          "plaintext",
+          "json",
+          "oci_registry_config"
+        ]
+      },
+      "SecretValue": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "value",
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "plaintext"
+                ]
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "value",
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "json"
+                ]
+              },
+              "value": {}
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "value",
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "oci_registry_config"
+                ]
+              },
+              "value": {
+                "$ref": "#/components/schemas/OciRegistryConfigValue"
+              }
+            }
+          }
+        ]
+      },
+      "SecretValueResponse": {
+        "type": "object",
+        "required": [
+          "name",
+          "value"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "$ref": "#/components/schemas/SecretValue"
           }
         }
       },
@@ -10735,6 +13490,98 @@
           }
         }
       },
+      "UpdateKafkaHFServiceRequest": {
+        "type": "object",
+        "properties": {
+          "broker_replicas": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "cpu_limit": {
+            "type": "string",
+            "nullable": true
+          },
+          "cpu_request": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "memory_limit": {
+            "type": "string",
+            "nullable": true
+          },
+          "memory_request": {
+            "type": "string",
+            "nullable": true
+          },
+          "min_insync_replicas": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "replication_factor": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "schema_registry_enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "storage_size_gb": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateOptimizeRunStatusRequest": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {},
+            "nullable": true
+          },
+          "logs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "table_results": {
+            "type": "array",
+            "items": {},
+            "nullable": true
+          },
+          "tables_failed": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "tables_processed": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "tables_succeeded": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
       "UpdateOrgSecuritySettingsBody": {
         "type": "object",
         "description": "Request to update organization security settings.",
@@ -10823,6 +13670,24 @@
           }
         }
       },
+      "UpdateSecretRequestBody": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "`null` clears the description; absent keeps the current value.",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "value": {}
+        }
+      },
       "UpdateServiceAccountCrdRequestBody": {
         "type": "object",
         "properties": {
@@ -10846,6 +13711,41 @@
           "sensitivity": {
             "$ref": "#/components/schemas/SensitivityLevel",
             "nullable": true
+          }
+        }
+      },
+      "UpsertOptimizeConfigRequest": {
+        "type": "object",
+        "properties": {
+          "analyze_statistics_enabled": {
+            "type": "boolean"
+          },
+          "compact_files_enabled": {
+            "type": "boolean"
+          },
+          "compact_files_size_threshold": {
+            "type": "string",
+            "nullable": true
+          },
+          "expire_snapshots_enabled": {
+            "type": "boolean"
+          },
+          "expire_snapshots_retention": {
+            "type": "string",
+            "nullable": true
+          },
+          "remove_orphan_files_enabled": {
+            "type": "boolean"
+          },
+          "remove_orphan_files_retention": {
+            "type": "string",
+            "nullable": true
+          },
+          "schedule": {
+            "type": "string"
+          },
+          "suspend": {
+            "type": "boolean"
           }
         }
       },
@@ -11047,6 +13947,10 @@
       "description": "Platform-wide shared model status (read-only)"
     },
     {
+      "name": "Kafka Services",
+      "description": "Kafka HF Service operations"
+    },
+    {
       "name": "API Keys",
       "description": "LLMaaS API key management"
     },
@@ -11057,6 +13961,18 @@
     {
       "name": "Petite Requête",
       "description": "Petite Requête (tinyQuery) - Execute, save, and manage queries"
+    },
+    {
+      "name": "Secrets",
+      "description": "Organization secret management"
+    },
+    {
+      "name": "ContainerApps",
+      "description": "Container apps management"
+    },
+    {
+      "name": "Quotas",
+      "description": "Quota and subscription management"
     }
   ]
 }
