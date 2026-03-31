@@ -17,9 +17,10 @@ const (
 
 // FusionConfig controls the fusion step in hybrid search.
 type FusionConfig struct {
-	Strategy FusionStrategy `json:"strategy"`
-	RRFK     float32        `json:"rrf_k"`
-	Alpha    float32        `json:"alpha"`
+	Strategy  FusionStrategy `json:"strategy"`
+	RRFK      float32        `json:"rrf_k"`
+	Alpha     float32        `json:"alpha"`
+	FusionKey string         `json:"fusion_key,omitempty"`
 }
 
 // HybridSearchResult represents a single hybrid search result with a fused score.
