@@ -178,6 +178,26 @@ const (
 	Timestamp   HfDataType = "Timestamp"
 )
 
+// Defines values for Label0Type.
+const (
+	Label0TypeStatic Label0Type = "static"
+)
+
+// Defines values for Label1Type.
+const (
+	Label1TypeDynamic Label1Type = "dynamic"
+)
+
+// Defines values for LabelType0Type.
+const (
+	LabelType0TypeStatic LabelType0Type = "static"
+)
+
+// Defines values for LabelType1Type.
+const (
+	LabelType1TypeDynamic LabelType1Type = "dynamic"
+)
+
 // Defines values for MetricsRange.
 const (
 	N1h  MetricsRange = "1h"
@@ -309,7 +329,6 @@ const (
 	SecretTypeJson              SecretType = "json"
 	SecretTypeOciRegistryConfig SecretType = "oci_registry_config"
 	SecretTypePlaintext         SecretType = "plaintext"
-	SecretTypeS3Config          SecretType = "s3_config"
 )
 
 // Defines values for SecretValue0Type.
@@ -325,11 +344,6 @@ const (
 // Defines values for SecretValue2Type.
 const (
 	OciRegistryConfig SecretValue2Type = "oci_registry_config"
-)
-
-// Defines values for SecretValue3Type.
-const (
-	S3Config SecretValue3Type = "s3_config"
 )
 
 // Defines values for SensitivityLevel.
@@ -492,10 +506,6 @@ type BucketArchiveOperation struct {
 	DestinationDataContainerId openapi_types.UUID `json:"destination_data_container_id"`
 	ErrorMessage               *string            `json:"error_message"`
 
-	// ExternalSource Configuration for importing a ZIP archive from an external S3-compatible source.
-	// Credentials are resolved at execution time from the platform's secret manager.
-	ExternalSource *ExternalS3Source `json:"external_source,omitempty"`
-
 	// FileName The name of the archive file
 	FileName string `json:"file_name"`
 
@@ -600,24 +610,8 @@ type ClassificationConfig struct {
 	// ApiKey API key for the AI model (e.g., Mistral)
 	ApiKey string `json:"api_key"`
 
-	// LabelsYaml Label definitions as a YAML string, supporting static and dynamic
-	// labels with format strings, placeholders, and rules.
-	// Required for FileSorter and Labelizer pipelines.
-	//
-	// Example:
-	// ```yaml
-	// - id: ASSEMBLEES GENERALES/{YYMMDD} AGO/CONVOCATION
-	//   type: dynamic
-	//   description: "Convocation à l'assemblée générale ordinaire"
-	//   format: "ASSEMBLEES GENERALES/{YYMMDD} AGO/CONVOCATION"
-	//   placeholders:
-	//     - id: YYMMDD
-	//       source: "date de l'assemblée"
-	//       format: "YYMMDD"
-	//       rules:
-	//         - "must be a valid date"
-	// ```
-	LabelsYaml *string `json:"labels_yaml"`
+	// Labels Document classification labels (supports both static and dynamic labels)
+	Labels []Label `json:"labels"`
 
 	// ModelBaseUrl Base URL for the model API. Defaults to Mistral API when not set.
 	// Set to a vLLM/KServe endpoint for self-hosted models (e.g., "http://ministral-3-8b-rocm-predictor.kserve.svc.cluster.local/v1").
@@ -1561,6 +1555,33 @@ type DownloadServiceAccountResponse struct {
 	TokenUri     string `json:"token_uri"`
 }
 
+// DynamicLabel Dynamic label configuration with format string and placeholders.
+// The format string contains placeholders like {year}, {date}, {name} that
+// get replaced with extracted values.
+type DynamicLabel struct {
+	// Format Format string with placeholders (e.g., "TRAVAUX/{year}/{date}-{work_name}")
+	Format string `json:"format"`
+
+	// Placeholders Placeholders to extract from the document
+	Placeholders []DynamicLabelPlaceholder `json:"placeholders"`
+}
+
+// DynamicLabelPlaceholder Placeholder definition for dynamic labels.
+// Used to extract variable parts from documents (dates, names, etc.)
+type DynamicLabelPlaceholder struct {
+	// Format Expected format (e.g., "YYYY", "YYMMDD", "Texte en majuscules")
+	Format string `json:"format"`
+
+	// Id Unique identifier for this placeholder (e.g., "year", "employee_name")
+	Id string `json:"id"`
+
+	// Rules Validation rules for the extracted value
+	Rules *[]string `json:"rules,omitempty"`
+
+	// Source Instructions for the LLM on how to extract this value from the document
+	Source string `json:"source"`
+}
+
 // EffectiveSecuritySettingsResponse Response for effective security settings.
 type EffectiveSecuritySettingsResponse struct {
 	ColumnLabelMatching           bool     `json:"column_label_matching"`
@@ -1596,53 +1617,6 @@ type ExecuteRequest struct {
 	Limit          *int64             `json:"limit"`
 	Sql            string             `json:"sql"`
 	TimeoutSeconds *int64             `json:"timeout_seconds"`
-}
-
-// ExternalArchiveImportRequest defines model for ExternalArchiveImportRequest.
-type ExternalArchiveImportRequest struct {
-	// Bucket External S3 bucket name
-	Bucket           string            `json:"bucket"`
-	DedupingStrategy *DedupingStrategy `json:"deduping_strategy,omitempty"`
-
-	// Endpoint Custom S3-compatible endpoint URL
-	Endpoint *string `json:"endpoint"`
-
-	// ForcePathStyle Use path-style addressing (required for MinIO-style endpoints)
-	ForcePathStyle *bool `json:"force_path_style"`
-
-	// Key Object key (path) to the ZIP file on the external S3
-	Key string `json:"key"`
-
-	// Prefix Optional prefix where files will be extracted in the target bucket
-	Prefix *string `json:"prefix"`
-
-	// Region AWS region (defaults to `us-east-1`)
-	Region *string `json:"region"`
-
-	// SecretName Name of the `s3_config` secret containing external S3 credentials
-	SecretName string `json:"secret_name"`
-}
-
-// ExternalS3Source Configuration for importing a ZIP archive from an external S3-compatible source.
-// Credentials are resolved at execution time from the platform's secret manager.
-type ExternalS3Source struct {
-	// Bucket External S3 bucket name
-	Bucket string `json:"bucket"`
-
-	// Endpoint Custom S3-compatible endpoint URL (e.g. `https://s3.amazonaws.com`)
-	Endpoint *string `json:"endpoint"`
-
-	// ForcePathStyle Use path-style addressing (required for MinIO-style endpoints)
-	ForcePathStyle *bool `json:"force_path_style"`
-
-	// Key Object key (path) to the ZIP file on the external S3
-	Key string `json:"key"`
-
-	// Region AWS region (defaults to `us-east-1` when absent)
-	Region *string `json:"region"`
-
-	// SecretName Name of the `s3_config` secret containing the S3 credentials
-	SecretName string `json:"secret_name"`
 }
 
 // FakerFieldType defines model for FakerFieldType.
@@ -1997,6 +1971,63 @@ type KafkaTopicInfo struct {
 	ReplicationFactor int32   `json:"replication_factor"`
 	RetentionMs       *int64  `json:"retention_ms"`
 }
+
+// Label defines model for Label.
+type Label struct {
+	// Description Human-readable description for LLM classification
+	Description string `json:"description"`
+
+	// Id Unique identifier for this label
+	Id    string `json:"id"`
+	union json.RawMessage
+}
+
+// Label0 Static label - fixed category path
+type Label0 struct {
+	Type Label0Type `json:"type"`
+}
+
+// Label0Type defines model for Label.0.Type.
+type Label0Type string
+
+// Label1 defines model for .
+type Label1 struct {
+	// Format Format string with placeholders (e.g., "TRAVAUX/{year}/{date}-{work_name}")
+	Format string `json:"format"`
+
+	// Placeholders Placeholders to extract from the document
+	Placeholders []DynamicLabelPlaceholder `json:"placeholders"`
+	Type         Label1Type                `json:"type"`
+}
+
+// Label1Type defines model for Label.1.Type.
+type Label1Type string
+
+// LabelType Label type - either static or dynamic with placeholders
+type LabelType struct {
+	union json.RawMessage
+}
+
+// LabelType0 Static label - fixed category path
+type LabelType0 struct {
+	Type LabelType0Type `json:"type"`
+}
+
+// LabelType0Type defines model for LabelType.0.Type.
+type LabelType0Type string
+
+// LabelType1 defines model for .
+type LabelType1 struct {
+	// Format Format string with placeholders (e.g., "TRAVAUX/{year}/{date}-{work_name}")
+	Format string `json:"format"`
+
+	// Placeholders Placeholders to extract from the document
+	Placeholders []DynamicLabelPlaceholder `json:"placeholders"`
+	Type         LabelType1Type            `json:"type"`
+}
+
+// LabelType1Type defines model for LabelType.1.Type.
+type LabelType1Type string
 
 // ListContextProvidersResponse Response for list of context providers.
 type ListContextProvidersResponse struct {
@@ -2754,14 +2785,6 @@ type Role struct {
 	UpdatedAt      time.Time          `json:"updated_at"`
 }
 
-// S3ConfigValue defines model for S3ConfigValue.
-type S3ConfigValue struct {
-	AccessKey string  `json:"access_key"`
-	Endpoint  *string `json:"endpoint"`
-	Region    *string `json:"region"`
-	SecretKey string  `json:"secret_key"`
-}
-
 // S3OutputParameters defines model for S3OutputParameters.
 type S3OutputParameters = map[string]interface{}
 
@@ -2841,15 +2864,6 @@ type SecretValue2 struct {
 
 // SecretValue2Type defines model for SecretValue.2.Type.
 type SecretValue2Type string
-
-// SecretValue3 defines model for .
-type SecretValue3 struct {
-	Type  SecretValue3Type `json:"type"`
-	Value S3ConfigValue    `json:"value"`
-}
-
-// SecretValue3Type defines model for SecretValue.3.Type.
-type SecretValue3Type string
 
 // SecretValueResponse defines model for SecretValueResponse.
 type SecretValueResponse struct {
@@ -3514,9 +3528,6 @@ type ArchiveExportDataContainerJSONRequestBody = ArchiveExportRequest
 
 // ArchiveImportDataContainerJSONRequestBody defines body for ArchiveImportDataContainer for application/json ContentType.
 type ArchiveImportDataContainerJSONRequestBody = ArchiveImportRequest
-
-// ArchiveImportExternalJSONRequestBody defines body for ArchiveImportExternal for application/json ContentType.
-type ArchiveImportExternalJSONRequestBody = ExternalArchiveImportRequest
 
 // AbortMultipartUploadJSONRequestBody defines body for AbortMultipartUpload for application/json ContentType.
 type AbortMultipartUploadJSONRequestBody = AbortMultipartUploadRequest
@@ -4271,6 +4282,175 @@ func (t *DedupingStrategy) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsLabel0 returns the union data inside the Label as a Label0
+func (t Label) AsLabel0() (Label0, error) {
+	var body Label0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromLabel0 overwrites any union data inside the Label as the provided Label0
+func (t *Label) FromLabel0(v Label0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeLabel0 performs a merge with any union data inside the Label, using the provided Label0
+func (t *Label) MergeLabel0(v Label0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsLabel1 returns the union data inside the Label as a Label1
+func (t Label) AsLabel1() (Label1, error) {
+	var body Label1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromLabel1 overwrites any union data inside the Label as the provided Label1
+func (t *Label) FromLabel1(v Label1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeLabel1 performs a merge with any union data inside the Label, using the provided Label1
+func (t *Label) MergeLabel1(v Label1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t Label) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	object := make(map[string]json.RawMessage)
+	if t.union != nil {
+		err = json.Unmarshal(b, &object)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	object["description"], err = json.Marshal(t.Description)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'description': %w", err)
+	}
+
+	object["id"], err = json.Marshal(t.Id)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'id': %w", err)
+	}
+
+	b, err = json.Marshal(object)
+	return b, err
+}
+
+func (t *Label) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	if err != nil {
+		return err
+	}
+	object := make(map[string]json.RawMessage)
+	err = json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["description"]; found {
+		err = json.Unmarshal(raw, &t.Description)
+		if err != nil {
+			return fmt.Errorf("error reading 'description': %w", err)
+		}
+	}
+
+	if raw, found := object["id"]; found {
+		err = json.Unmarshal(raw, &t.Id)
+		if err != nil {
+			return fmt.Errorf("error reading 'id': %w", err)
+		}
+	}
+
+	return err
+}
+
+// AsLabelType0 returns the union data inside the LabelType as a LabelType0
+func (t LabelType) AsLabelType0() (LabelType0, error) {
+	var body LabelType0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromLabelType0 overwrites any union data inside the LabelType as the provided LabelType0
+func (t *LabelType) FromLabelType0(v LabelType0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeLabelType0 performs a merge with any union data inside the LabelType, using the provided LabelType0
+func (t *LabelType) MergeLabelType0(v LabelType0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsLabelType1 returns the union data inside the LabelType as a LabelType1
+func (t LabelType) AsLabelType1() (LabelType1, error) {
+	var body LabelType1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromLabelType1 overwrites any union data inside the LabelType as the provided LabelType1
+func (t *LabelType) FromLabelType1(v LabelType1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeLabelType1 performs a merge with any union data inside the LabelType, using the provided LabelType1
+func (t *LabelType) MergeLabelType1(v LabelType1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t LabelType) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *LabelType) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsOcrProviderConfig0 returns the union data inside the OcrProviderConfig as a OcrProviderConfig0
 func (t OcrProviderConfig) AsOcrProviderConfig0() (OcrProviderConfig0, error) {
 	var body OcrProviderConfig0
@@ -4587,32 +4767,6 @@ func (t *SecretValue) MergeSecretValue2(v SecretValue2) error {
 	return err
 }
 
-// AsSecretValue3 returns the union data inside the SecretValue as a SecretValue3
-func (t SecretValue) AsSecretValue3() (SecretValue3, error) {
-	var body SecretValue3
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromSecretValue3 overwrites any union data inside the SecretValue as the provided SecretValue3
-func (t *SecretValue) FromSecretValue3(v SecretValue3) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeSecretValue3 performs a merge with any union data inside the SecretValue, using the provided SecretValue3
-func (t *SecretValue) MergeSecretValue3(v SecretValue3) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
 func (t SecretValue) MarshalJSON() ([]byte, error) {
 	b, err := t.union.MarshalJSON()
 	return b, err
@@ -4865,11 +5019,6 @@ type ClientInterface interface {
 
 	ArchiveImportDataContainer(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ArchiveImportExternalWithBody request with any body
-	ArchiveImportExternalWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	ArchiveImportExternal(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportExternalJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// AbortMultipartUploadWithBody request with any body
 	AbortMultipartUploadWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -4893,9 +5042,6 @@ type ClientInterface interface {
 
 	// DownloadArchiveOperation request
 	DownloadArchiveOperation(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID, params *DownloadArchiveOperationParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// RetryArchiveOperation request
-	RetryArchiveOperation(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetDataDockSecuritySettingsHandler request
 	GetDataDockSecuritySettingsHandler(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -6018,30 +6164,6 @@ func (c *Client) ArchiveImportDataContainer(ctx context.Context, dataDockId open
 	return c.Client.Do(req)
 }
 
-func (c *Client) ArchiveImportExternalWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewArchiveImportExternalRequestWithBody(c.Server, dataDockId, dataContainerId, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ArchiveImportExternal(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportExternalJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewArchiveImportExternalRequest(c.Server, dataDockId, dataContainerId, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) AbortMultipartUploadWithBody(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAbortMultipartUploadRequestWithBody(c.Server, dataDockId, dataContainerId, contentType, body)
 	if err != nil {
@@ -6140,18 +6262,6 @@ func (c *Client) GetArchiveOperation(ctx context.Context, dataDockId openapi_typ
 
 func (c *Client) DownloadArchiveOperation(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID, params *DownloadArchiveOperationParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDownloadArchiveOperationRequest(c.Server, dataDockId, dataContainerId, operationId, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) RetryArchiveOperation(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewRetryArchiveOperationRequest(c.Server, dataDockId, dataContainerId, operationId)
 	if err != nil {
 		return nil, err
 	}
@@ -9662,60 +9772,6 @@ func NewArchiveImportDataContainerRequestWithBody(server string, dataDockId open
 	return req, nil
 }
 
-// NewArchiveImportExternalRequest calls the generic ArchiveImportExternal builder with application/json body
-func NewArchiveImportExternalRequest(server string, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportExternalJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewArchiveImportExternalRequestWithBody(server, dataDockId, dataContainerId, "application/json", bodyReader)
-}
-
-// NewArchiveImportExternalRequestWithBody generates requests for ArchiveImportExternal with any type of body
-func NewArchiveImportExternalRequestWithBody(server string, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_dock_id", runtime.ParamLocationPath, dataDockId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/data-docks/%s/data-containers/%s/archive-import-external", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
 // NewAbortMultipartUploadRequest calls the generic AbortMultipartUpload builder with application/json body
 func NewAbortMultipartUploadRequest(server string, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body AbortMultipartUploadJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -10068,54 +10124,6 @@ func NewDownloadArchiveOperationRequest(server string, dataDockId openapi_types.
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewRetryArchiveOperationRequest generates requests for RetryArchiveOperation
-func NewRetryArchiveOperationRequest(server string, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_dock_id", runtime.ParamLocationPath, dataDockId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam2 string
-
-	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "operation_id", runtime.ParamLocationPath, operationId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/data-docks/%s/data-containers/%s/archive-operations/%s/retry", pathParam0, pathParam1, pathParam2)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -15438,11 +15446,6 @@ type ClientWithResponsesInterface interface {
 
 	ArchiveImportDataContainerWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportDataContainerJSONRequestBody, reqEditors ...RequestEditorFn) (*ArchiveImportDataContainerRes, error)
 
-	// ArchiveImportExternalWithBodyWithResponse request with any body
-	ArchiveImportExternalWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ArchiveImportExternalRes, error)
-
-	ArchiveImportExternalWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportExternalJSONRequestBody, reqEditors ...RequestEditorFn) (*ArchiveImportExternalRes, error)
-
 	// AbortMultipartUploadWithBodyWithResponse request with any body
 	AbortMultipartUploadWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AbortMultipartUploadRes, error)
 
@@ -15466,9 +15469,6 @@ type ClientWithResponsesInterface interface {
 
 	// DownloadArchiveOperationWithResponse request
 	DownloadArchiveOperationWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID, params *DownloadArchiveOperationParams, reqEditors ...RequestEditorFn) (*DownloadArchiveOperationRes, error)
-
-	// RetryArchiveOperationWithResponse request
-	RetryArchiveOperationWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RetryArchiveOperationRes, error)
 
 	// GetDataDockSecuritySettingsHandlerWithResponse request
 	GetDataDockSecuritySettingsHandlerWithResponse(ctx context.Context, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDataDockSecuritySettingsHandlerRes, error)
@@ -16823,28 +16823,6 @@ func (r ArchiveImportDataContainerRes) StatusCode() int {
 	return 0
 }
 
-type ArchiveImportExternalRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *BucketArchiveOperation
-}
-
-// Status returns HTTPResponse.Status
-func (r ArchiveImportExternalRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ArchiveImportExternalRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type AbortMultipartUploadRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -16969,28 +16947,6 @@ func (r DownloadArchiveOperationRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r DownloadArchiveOperationRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type RetryArchiveOperationRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *BucketArchiveOperation
-}
-
-// Status returns HTTPResponse.Status
-func (r RetryArchiveOperationRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r RetryArchiveOperationRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -19799,23 +19755,6 @@ func (c *ClientWithResponses) ArchiveImportDataContainerWithResponse(ctx context
 	return ParseArchiveImportDataContainerRes(rsp)
 }
 
-// ArchiveImportExternalWithBodyWithResponse request with arbitrary body returning *ArchiveImportExternalRes
-func (c *ClientWithResponses) ArchiveImportExternalWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ArchiveImportExternalRes, error) {
-	rsp, err := c.ArchiveImportExternalWithBody(ctx, dataDockId, dataContainerId, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseArchiveImportExternalRes(rsp)
-}
-
-func (c *ClientWithResponses) ArchiveImportExternalWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, body ArchiveImportExternalJSONRequestBody, reqEditors ...RequestEditorFn) (*ArchiveImportExternalRes, error) {
-	rsp, err := c.ArchiveImportExternal(ctx, dataDockId, dataContainerId, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseArchiveImportExternalRes(rsp)
-}
-
 // AbortMultipartUploadWithBodyWithResponse request with arbitrary body returning *AbortMultipartUploadRes
 func (c *ClientWithResponses) AbortMultipartUploadWithBodyWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AbortMultipartUploadRes, error) {
 	rsp, err := c.AbortMultipartUploadWithBody(ctx, dataDockId, dataContainerId, contentType, body, reqEditors...)
@@ -19892,15 +19831,6 @@ func (c *ClientWithResponses) DownloadArchiveOperationWithResponse(ctx context.C
 		return nil, err
 	}
 	return ParseDownloadArchiveOperationRes(rsp)
-}
-
-// RetryArchiveOperationWithResponse request returning *RetryArchiveOperationRes
-func (c *ClientWithResponses) RetryArchiveOperationWithResponse(ctx context.Context, dataDockId openapi_types.UUID, dataContainerId openapi_types.UUID, operationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RetryArchiveOperationRes, error) {
-	rsp, err := c.RetryArchiveOperation(ctx, dataDockId, dataContainerId, operationId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseRetryArchiveOperationRes(rsp)
 }
 
 // GetDataDockSecuritySettingsHandlerWithResponse request returning *GetDataDockSecuritySettingsHandlerRes
@@ -22125,32 +22055,6 @@ func ParseArchiveImportDataContainerRes(rsp *http.Response) (*ArchiveImportDataC
 	return response, nil
 }
 
-// ParseArchiveImportExternalRes parses an HTTP response from a ArchiveImportExternalWithResponse call
-func ParseArchiveImportExternalRes(rsp *http.Response) (*ArchiveImportExternalRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ArchiveImportExternalRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest BucketArchiveOperation
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseAbortMultipartUploadRes parses an HTTP response from a AbortMultipartUploadWithResponse call
 func ParseAbortMultipartUploadRes(rsp *http.Response) (*AbortMultipartUploadRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -22277,32 +22181,6 @@ func ParseDownloadArchiveOperationRes(rsp *http.Response) (*DownloadArchiveOpera
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ArchiveDownloadResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseRetryArchiveOperationRes parses an HTTP response from a RetryArchiveOperationWithResponse call
-func ParseRetryArchiveOperationRes(rsp *http.Response) (*RetryArchiveOperationRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &RetryArchiveOperationRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest BucketArchiveOperation
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

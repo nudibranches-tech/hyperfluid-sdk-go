@@ -7413,9 +7413,9 @@
           "labels": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LabelDefinition"
+              "$ref": "#/components/schemas/Label"
             },
-            "description": "Document classification labels"
+            "description": "Document classification labels (supports both static and dynamic labels)"
           },
           "model_base_url": {
             "type": "string",
@@ -9580,6 +9580,57 @@
           }
         }
       },
+      "DynamicLabel": {
+        "type": "object",
+        "description": "Dynamic label configuration with format string and placeholders.\nThe format string contains placeholders like {year}, {date}, {name} that\nget replaced with extracted values.",
+        "required": [
+          "format",
+          "placeholders"
+        ],
+        "properties": {
+          "format": {
+            "type": "string",
+            "description": "Format string with placeholders (e.g., \"TRAVAUX/{year}/{date}-{work_name}\")"
+          },
+          "placeholders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DynamicLabelPlaceholder"
+            },
+            "description": "Placeholders to extract from the document"
+          }
+        }
+      },
+      "DynamicLabelPlaceholder": {
+        "type": "object",
+        "description": "Placeholder definition for dynamic labels.\nUsed to extract variable parts from documents (dates, names, etc.)",
+        "required": [
+          "id",
+          "source",
+          "format"
+        ],
+        "properties": {
+          "format": {
+            "type": "string",
+            "description": "Expected format (e.g., \"YYYY\", \"YYMMDD\", \"Texte en majuscules\")"
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for this placeholder (e.g., \"year\", \"employee_name\")"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Validation rules for the extracted value"
+          },
+          "source": {
+            "type": "string",
+            "description": "Instructions for the LLM on how to extract this value from the document"
+          }
+        }
+      },
       "EffectiveSecuritySettingsResponse": {
         "type": "object",
         "description": "Response for effective security settings.",
@@ -10717,23 +10768,72 @@
           }
         }
       },
-      "LabelDefinition": {
-        "type": "object",
-        "description": "Label definition for document classification (Labelize step)\nSupports both static labels (id + description) and dynamic labels with placeholders.\n\nExample YAML format:\n```yaml\n- id: facture_eau\n  type: static\n  description: \"Water utility invoices\"\n- id: travaux\n  type: dynamic\n  description: \"Construction work documents\"\n  format: \"TRAVAUX/{year}/{date}-{work_name}\"\n  placeholders:\n    - id: year\n      source: \"Extract the year from the document\"\n      format: \"YYYY\"\n      rules: [\"Must be 4 digits\"]\n```",
-        "required": [
-          "category",
-          "description"
-        ],
-        "properties": {
-          "category": {
-            "type": "string",
-            "description": "Label category key (e.g., \"Factures/Eau\", \"Contrats/Entretien\")"
+      "Label": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/LabelType"
           },
-          "description": {
-            "type": "string",
-            "description": "Human-readable description for LLM classification"
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "description"
+            ],
+            "properties": {
+              "description": {
+                "type": "string",
+                "description": "Human-readable description for LLM classification"
+              },
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for this label"
+              }
+            }
           }
-        }
+        ],
+        "description": "Full label definition supporting both static and dynamic types.\nThis is the primary type used for document classification labels.\n\nExample YAML:\n```yaml\n# Static label\n- id: facture_eau\n  type: static\n  description: \"Water utility invoices\"\n\n# Dynamic label with placeholders\n- id: travaux\n  type: dynamic\n  description: \"Construction work documents\"\n  format: \"TRAVAUX/{year}/{date}-{work_name}\"\n  placeholders:\n    - id: year\n      source: \"Extract the year from the document\"\n      format: \"YYYY\"\n      rules: [\"Must be 4 digits\"]\n```"
+      },
+      "LabelType": {
+        "oneOf": [
+          {
+            "type": "object",
+            "description": "Static label - fixed category path",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "static"
+                ]
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DynamicLabel"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "dynamic"
+                    ]
+                  }
+                }
+              }
+            ],
+            "description": "Dynamic label - category path with extracted placeholders"
+          }
+        ],
+        "description": "Label type - either static or dynamic with placeholders"
       },
       "ListContextProvidersResponse": {
         "type": "object",
