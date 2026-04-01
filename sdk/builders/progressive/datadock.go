@@ -114,11 +114,13 @@ func (d *DataDockBuilder) Search(query string) *SearchBuilder {
 
 // HybridSearch starts a hybrid search builder for this datadock.
 // Combines FTS (BM25) and vector similarity search with configurable fusion.
-func (d *DataDockBuilder) HybridSearch(query string) *HybridSearchBuilder {
+// ftsQuery is the keyword query for BM25 matching, vectorQuery is the semantic query for embedding generation.
+func (d *DataDockBuilder) HybridSearch(ftsQuery, vectorQuery string) *HybridSearchBuilder {
 	return &HybridSearchBuilder{
 		client:         d.client,
 		dataDockID:     d.dataDockID,
-		searchQuery:    query,
+		ftsQuery:       ftsQuery,
+		vectorQuery:    vectorQuery,
 		columnsToIndex: []string{},
 		limitVal:       20,
 	}
