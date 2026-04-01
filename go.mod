@@ -10,7 +10,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.41.10
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
-	github.com/oapi-codegen/runtime v1.3.0
+	github.com/oapi-codegen/runtime v1.3.1
 	golang.org/x/oauth2 v0.36.0
 )
 
