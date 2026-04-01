@@ -45,7 +45,8 @@ type HybridSearchBuilder struct {
 	}
 	errors []error
 
-	searchQuery    string
+	ftsQuery       string
+	vectorQuery    string
 	dataDockID     string
 	catalogName    string
 	schemaName     string
@@ -72,12 +73,21 @@ func NewHybridSearchBuilder(client interface {
 	}
 }
 
-// Query sets the search query string.
-func (b *HybridSearchBuilder) Query(query string) *HybridSearchBuilder {
+// FTSQuery sets the full-text search query string (BM25 keyword matching).
+func (b *HybridSearchBuilder) FTSQuery(query string) *HybridSearchBuilder {
 	if query == "" {
-		b.errors = append(b.errors, fmt.Errorf("search query cannot be empty"))
+		b.errors = append(b.errors, fmt.Errorf("FTS query cannot be empty"))
 	}
-	b.searchQuery = query
+	b.ftsQuery = query
+	return b
+}
+
+// VectorQuery sets the vector search query string (semantic similarity / embedding generation).
+func (b *HybridSearchBuilder) VectorQuery(query string) *HybridSearchBuilder {
+	if query == "" {
+		b.errors = append(b.errors, fmt.Errorf("vector query cannot be empty"))
+	}
+	b.vectorQuery = query
 	return b
 }
 
@@ -169,8 +179,11 @@ func (b *HybridSearchBuilder) validate() error {
 	if len(b.errors) > 0 {
 		return fmt.Errorf("hybrid search builder validation failed: %s", b.errors[0].Error())
 	}
-	if b.searchQuery == "" {
-		return fmt.Errorf("%w: search query is required", utils.ErrInvalidRequest)
+	if b.ftsQuery == "" {
+		return fmt.Errorf("%w: FTS query is required", utils.ErrInvalidRequest)
+	}
+	if b.vectorQuery == "" {
+		return fmt.Errorf("%w: vector query is required", utils.ErrInvalidRequest)
 	}
 	if b.dataDockID == "" {
 		return fmt.Errorf("%w: data dock ID is required", utils.ErrInvalidRequest)
@@ -197,7 +210,8 @@ func (b *HybridSearchBuilder) Execute(ctx context.Context) (*HybridSearchResults
 	}
 
 	requestBody := map[string]interface{}{
-		"query":            b.searchQuery,
+		"fts_query":        b.ftsQuery,
+		"vector_query":     b.vectorQuery,
 		"data_dock_id":     b.dataDockID,
 		"catalog":          b.catalogName,
 		"schema":           b.schemaName,

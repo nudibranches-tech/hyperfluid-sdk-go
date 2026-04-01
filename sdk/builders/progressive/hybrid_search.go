@@ -14,7 +14,8 @@ type HybridSearchBuilder struct {
 	client builders.ClientInterface
 
 	dataDockID     string
-	searchQuery    string
+	ftsQuery       string
+	vectorQuery    string
 	catalogName    string
 	schemaName     string
 	tableName      string
@@ -82,8 +83,11 @@ func (b *HybridSearchBuilder) Limit(n int) *HybridSearchBuilder {
 
 // Execute executes the hybrid search query and returns the results.
 func (b *HybridSearchBuilder) Execute(ctx context.Context) (*fluent.HybridSearchResults, error) {
-	if b.searchQuery == "" {
-		return nil, fmt.Errorf("%w: search query is required", utils.ErrInvalidRequest)
+	if b.ftsQuery == "" {
+		return nil, fmt.Errorf("%w: FTS query is required", utils.ErrInvalidRequest)
+	}
+	if b.vectorQuery == "" {
+		return nil, fmt.Errorf("%w: vector query is required", utils.ErrInvalidRequest)
 	}
 	if b.dataDockID == "" {
 		return nil, fmt.Errorf("%w: data dock ID is required", utils.ErrInvalidRequest)
@@ -102,7 +106,8 @@ func (b *HybridSearchBuilder) Execute(ctx context.Context) (*fluent.HybridSearch
 	}
 
 	requestBody := map[string]interface{}{
-		"query":            b.searchQuery,
+		"fts_query":        b.ftsQuery,
+		"vector_query":     b.vectorQuery,
 		"data_dock_id":     b.dataDockID,
 		"catalog":          b.catalogName,
 		"schema":           b.schemaName,
