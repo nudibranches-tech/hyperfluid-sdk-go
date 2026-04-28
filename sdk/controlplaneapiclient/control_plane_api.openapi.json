@@ -1156,6 +1156,63 @@
         }
       }
     },
+    "/api/v1/data-containers/iceberg/{data_container_id}/schemas/{schema_name}/tables/{table_name}/columns": {
+      "get": {
+        "tags": [
+          "iceberg::get_table_columns"
+        ],
+        "summary": "Returns the live column definitions for a Trino table, formatted so the\n\"Adopt as CRD\" UI flow can prefill its editor and POST straight into the\nstructured `create_table` endpoint. Lives separately from `get_tables` so\nthe expensive per-column introspection isn't paid on every list refresh.",
+        "operationId": "get_table_columns",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "schema_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "table_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Introspected columns for the table",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IcebergColumnDefinition"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data container or table not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/data-containers/iceberg/{data_container_id}/tables": {
       "get": {
         "tags": [
@@ -1228,6 +1285,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid request"
           },
           "403": {
             "description": "Unauthorized"
@@ -1556,7 +1616,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DataDockResponseData"
+                  "$ref": "#/components/schemas/DataDockExternalResponseData"
                 }
               }
             }
@@ -2347,6 +2407,27 @@
         }
       }
     },
+    "/api/v1/open-data/catalog": {
+      "get": {
+        "tags": [
+          "Open Data"
+        ],
+        "summary": "Returns the open data catalog. No auth required — this endpoint only returns\nstatic public dataset metadata (names, descriptions, column schemas, public URLs).\nSame pattern as `handle_get_console_config`.",
+        "operationId": "get_open_data_catalog",
+        "responses": {
+          "200": {
+            "description": "Available open data datasets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenDataCatalogResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/organizations": {
       "get": {
         "tags": [
@@ -2800,6 +2881,185 @@
           },
           "404": {
             "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/backup-targets/{backup_target_id}": {
+      "get": {
+        "tags": [
+          "BackupTargets"
+        ],
+        "operationId": "get_backup_target",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "backup_target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Backup target found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupTargetResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Backup target not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/backup-targets/{backup_target_id}/crd": {
+      "get": {
+        "tags": [
+          "BackupTargets"
+        ],
+        "operationId": "get_backup_target_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "backup_target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Backup target CRD spec",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupTargetCrdSpecResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Backup target not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "BackupTargets"
+        ],
+        "operationId": "delete_backup_target_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "backup_target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Backup target CRD deleted successfully"
+          },
+          "404": {
+            "description": "Backup target not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "BackupTargets"
+        ],
+        "operationId": "patch_backup_target_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "backup_target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchBackupTargetCrdRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Backup target CRD patched successfully"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Backup target not found"
           },
           "500": {
             "description": "Internal server error"
@@ -3372,6 +3632,114 @@
         }
       }
     },
+    "/api/v1/organizations/{organization_id}/harbors/{harbor_id}/backup-targets": {
+      "get": {
+        "tags": [
+          "BackupTargets"
+        ],
+        "operationId": "list_backup_targets",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "harbor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of backup targets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BackupTargetResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/harbors/{harbor_id}/backup-targets/crd": {
+      "post": {
+        "tags": [
+          "BackupTargets"
+        ],
+        "operationId": "create_backup_target_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "harbor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBackupTargetCrdRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Backup target CRD created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupTargetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Organization or harbor not found"
+          },
+          "409": {
+            "description": "Backup target already exists"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/organizations/{organization_id}/harbors/{harbor_id}/container-apps": {
       "get": {
         "tags": [
@@ -3470,6 +3838,114 @@
         }
       }
     },
+    "/api/v1/organizations/{organization_id}/harbors/{harbor_id}/managed-postgresqls": {
+      "get": {
+        "tags": [
+          "ManagedPostgreSQLs"
+        ],
+        "operationId": "list_managed_postgresqls",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "harbor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of managed PostgreSQL instances",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ManagedPostgresqlResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/harbors/{harbor_id}/managed-postgresqls/crd": {
+      "post": {
+        "tags": [
+          "ManagedPostgreSQLs"
+        ],
+        "operationId": "create_managed_postgresql_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "harbor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateManagedPostgresqlCrdRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Managed PostgreSQL CRD created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedPostgresqlResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Organization or harbor not found"
+          },
+          "409": {
+            "description": "Managed PostgreSQL already exists"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/organizations/{organization_id}/harbors/{name}/available": {
       "get": {
         "tags": [
@@ -3505,6 +3981,764 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/managed-postgresql-backups/{backup_id}": {
+      "get": {
+        "tags": [
+          "ManagedPostgresqlBackups"
+        ],
+        "operationId": "get_managed_postgresql_backup",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "backup_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Backup found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedPostgresqlBackupResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Backup not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/managed-postgresql-backups/{backup_id}/crd": {
+      "get": {
+        "tags": [
+          "ManagedPostgresqlBackups"
+        ],
+        "operationId": "get_managed_postgresql_backup_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "backup_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Backup CRD spec + status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedPostgresqlBackupCrdResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Backup not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ManagedPostgresqlBackups"
+        ],
+        "operationId": "delete_managed_postgresql_backup_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "backup_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Backup CRD deleted successfully"
+          },
+          "404": {
+            "description": "Backup not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/managed-postgresqls/{cluster_id}/users": {
+      "get": {
+        "tags": [
+          "ManagedPostgreSQLUsers"
+        ],
+        "operationId": "list_managed_postgresql_users",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cluster_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of users for the cluster",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ManagedPostgresqlUserResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/managed-postgresqls/{cluster_id}/users/crd": {
+      "post": {
+        "tags": [
+          "ManagedPostgreSQLUsers"
+        ],
+        "operationId": "create_managed_postgresql_user_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cluster_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateManagedPostgresqlUserCrdRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Managed PostgreSQL user CRD created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedPostgresqlUserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Parent cluster not found"
+          },
+          "409": {
+            "description": "Managed PostgreSQL user already exists"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/managed-postgresqls/{cluster_id}/users/{user_id}": {
+      "get": {
+        "tags": [
+          "ManagedPostgreSQLUsers"
+        ],
+        "operationId": "get_managed_postgresql_user",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cluster_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Managed PostgreSQL user found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedPostgresqlUserResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/managed-postgresqls/{cluster_id}/users/{user_id}/crd": {
+      "get": {
+        "tags": [
+          "ManagedPostgreSQLUsers"
+        ],
+        "operationId": "get_managed_postgresql_user_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cluster_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Managed PostgreSQL user CRD spec",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedPostgresqlUserCrdSpecResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ManagedPostgreSQLUsers"
+        ],
+        "operationId": "delete_managed_postgresql_user_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cluster_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Managed PostgreSQL user CRD deleted"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "ManagedPostgreSQLUsers"
+        ],
+        "operationId": "patch_managed_postgresql_user_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cluster_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchManagedPostgresqlUserCrdRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "User CRD patched"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/managed-postgresqls/{instance_id}": {
+      "get": {
+        "tags": [
+          "ManagedPostgreSQLs"
+        ],
+        "operationId": "get_managed_postgresql",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "instance_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Managed PostgreSQL instance found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedPostgresqlResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Managed PostgreSQL not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/managed-postgresqls/{instance_id}/crd": {
+      "get": {
+        "tags": [
+          "ManagedPostgreSQLs"
+        ],
+        "operationId": "get_managed_postgresql_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "instance_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Managed PostgreSQL CRD spec",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedPostgresqlCrdSpecResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Managed PostgreSQL not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ManagedPostgreSQLs"
+        ],
+        "operationId": "delete_managed_postgresql_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "instance_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Managed PostgreSQL CRD deleted successfully"
+          },
+          "404": {
+            "description": "Managed PostgreSQL not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "ManagedPostgreSQLs"
+        ],
+        "operationId": "patch_managed_postgresql_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "instance_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchManagedPostgresqlCrdRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Managed PostgreSQL CRD patched successfully"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Managed PostgreSQL not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/managed-postgresqls/{managed_postgresql_id}/backups": {
+      "get": {
+        "tags": [
+          "ManagedPostgresqlBackups"
+        ],
+        "operationId": "list_managed_postgresql_backups",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "managed_postgresql_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Page size (max 50).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of backups",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedPostgresqlBackupsPage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/managed-postgresqls/{managed_postgresql_id}/backups/crd": {
+      "post": {
+        "tags": [
+          "ManagedPostgresqlBackups"
+        ],
+        "operationId": "create_managed_postgresql_backup_crd",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "managed_postgresql_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateManagedPostgresqlBackupCrdRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Backup CRD created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedPostgresqlBackupResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Organization, harbor, or managed postgresql not found"
+          },
+          "409": {
+            "description": "Backup already exists"
           },
           "500": {
             "description": "Internal server error"
@@ -3804,6 +5038,102 @@
         }
       }
     },
+    "/api/v1/organizations/{organization_id}/pipelines/{pipeline_id}/refs": {
+      "get": {
+        "tags": [
+          "Pipelines"
+        ],
+        "operationId": "count_pipeline_refs",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CountRefRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Count of references for the pipeline matching filters",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/pipelines/{pipeline_id}/resume": {
+      "post": {
+        "tags": [
+          "Pipelines"
+        ],
+        "operationId": "resume_pipeline",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pipeline resumed"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/organizations/{organization_id}/pipelines/{pipeline_id}/runs": {
       "get": {
         "tags": [
@@ -3908,6 +5238,45 @@
         }
       }
     },
+    "/api/v1/organizations/{organization_id}/pipelines/{pipeline_id}/suspend": {
+      "post": {
+        "tags": [
+          "Pipelines"
+        ],
+        "operationId": "suspend_pipeline",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pipeline suspended (no-op for non-CronJob execution types)"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/organizations/{organization_id}/pipelines/{pipeline_id}/trigger": {
       "post": {
         "tags": [
@@ -3975,6 +5344,16 @@
           {
             "name": "tag",
             "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "prefix",
+            "in": "query",
+            "description": "Filter secrets whose name starts with this prefix (e.g. `my-app/staging/`).",
             "required": false,
             "schema": {
               "type": "string",
@@ -4105,6 +5484,16 @@
               "type": "string",
               "nullable": true
             }
+          },
+          {
+            "name": "prefix",
+            "in": "query",
+            "description": "Filter secrets whose name starts with this prefix (e.g. `my-app/staging/`).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
           }
         ],
         "responses": {
@@ -4117,6 +5506,55 @@
                 }
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/secrets/directory": {
+      "delete": {
+        "tags": [
+          "Secrets"
+        ],
+        "operationId": "delete_directory",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "prefix",
+            "in": "query",
+            "description": "The hierarchical prefix whose secrets should be deleted. Must be\nnon-empty and end with `/` (e.g. `my-app/staging/`). Deletion is\nrecursive: every secret whose name starts with this prefix is removed.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Directory deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteDirectoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid prefix"
           },
           "403": {
             "description": "Forbidden"
@@ -7121,6 +8559,127 @@
           }
         }
       },
+      "BackupOrigin": {
+        "type": "string",
+        "description": "Whether the backup was user-initiated or produced by a scheduled run that\nthe operator adopted. Mirrored into the DB column `origin` (VARCHAR(16)\nwith a CHECK constraint on the same vocabulary) and into the OpenAPI spec\nas an `enum`, so every consumer (operator via progenitor, frontend via\nhey-api, SDK users) sees the same closed set.",
+        "enum": [
+          "manual",
+          "scheduled"
+        ]
+      },
+      "BackupPolicy": {
+        "type": "string",
+        "enum": [
+          "automated",
+          "manual"
+        ]
+      },
+      "BackupTargetCrdSpecResponse": {
+        "type": "object",
+        "required": [
+          "endpoint_url",
+          "destination_path",
+          "access_key_secret_name",
+          "secret_access_key_secret_name"
+        ],
+        "properties": {
+          "access_key_secret_name": {
+            "type": "string"
+          },
+          "destination_path": {
+            "type": "string"
+          },
+          "endpoint_url": {
+            "type": "string"
+          },
+          "secret_access_key_secret_name": {
+            "type": "string"
+          }
+        }
+      },
+      "BackupTargetInstance": {
+        "type": "string",
+        "enum": [
+          "primary",
+          "preferStandby"
+        ]
+      },
+      "BackupTargetResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "organization_id",
+          "harbor_id",
+          "name",
+          "slug",
+          "endpoint_url",
+          "destination_path",
+          "access_key_secret_name",
+          "secret_access_key_secret_name",
+          "phase",
+          "tags",
+          "insecure",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "access_key_secret_name": {
+            "type": "string"
+          },
+          "conditions": {},
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "destination_path": {
+            "type": "string"
+          },
+          "endpoint_url": {
+            "type": "string"
+          },
+          "harbor_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "insecure": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "secret_access_key_secret_name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "BucketArchiveOperation": {
         "type": "object",
         "required": [
@@ -7285,9 +8844,14 @@
       "CephRgwInternalConfig": {
         "type": "object",
         "required": [
-          "storage_quota_gb"
+          "storage_quota_gb",
+          "ceph_cluster_namespace"
         ],
         "properties": {
+          "ceph_cluster_namespace": {
+            "type": "string",
+            "description": "K8s namespace of the CephCluster to deploy the object store into"
+          },
           "replication_size": {
             "type": "integer",
             "format": "int32",
@@ -7310,8 +8874,9 @@
           }
         }
       },
-      "CephRgwInternalConfigResponse": {
+      "CephRgwInternalConfigExternalResponse": {
         "type": "object",
+        "description": "External API response — exposes zone_id instead of raw namespace.",
         "required": [
           "storage_quota_gb",
           "rgw_instances",
@@ -7346,6 +8911,45 @@
             "type": "integer",
             "format": "int32",
             "minimum": 0
+          },
+          "zone_id": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CephRgwInternalRequest": {
+        "type": "object",
+        "description": "Ceph RGW creation request — uses zone_id which gets resolved to ceph_cluster_namespace",
+        "required": [
+          "storage_quota_gb"
+        ],
+        "properties": {
+          "ceph_cluster_namespace": {
+            "type": "string",
+            "description": "Pre-resolved namespace — used by operator which already knows the namespace from CRD.\nExternal handlers MUST sanitize this field (set to None) before processing to prevent\nnamespace injection from user input.",
+            "nullable": true
+          },
+          "replication_size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "resources": {
+            "$ref": "#/components/schemas/CephRgwResources",
+            "nullable": true
+          },
+          "rgw_instances": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "storage_quota_gb": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "zone_id": {
+            "type": "string",
+            "description": "Zone identifier — resolved to ceph_cluster_namespace by the console"
           }
         }
       },
@@ -7371,6 +8975,28 @@
             "type": "string",
             "description": "Memory request (e.g., \"1Gi\")",
             "nullable": true
+          }
+        }
+      },
+      "CephZoneResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Human-readable description",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "description": "Stable identifier for this zone"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the zone"
           }
         }
       },
@@ -7582,6 +9208,13 @@
             "description": "Part number (1-indexed as per S3 API)"
           }
         }
+      },
+      "Configuration": {
+        "type": "string",
+        "enum": [
+          "standalone",
+          "high-availability"
+        ]
       },
       "ConsoleConfigFeatureFlag": {
         "type": "string",
@@ -7907,7 +9540,7 @@
           "destination_dd": {
             "type": "string",
             "format": "uuid",
-            "description": "UUID of the destination MinIO Data Dock"
+            "description": "UUID of the destination object storage Data Dock"
           },
           "destination_prefix": {
             "type": "string",
@@ -7969,6 +9602,11 @@
             "type": "boolean",
             "nullable": true
           },
+          "pipeline_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "status": {
             "$ref": "#/components/schemas/RefStatus",
             "nullable": true
@@ -7994,6 +9632,37 @@
           "count": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "CrdStatusSnapshot": {
+        "type": "object",
+        "description": "Projection of a Hyperfluid CRD's `.status` subresource, suitable for\nsurfacing in list endpoints so the UI can render a live status badge\nwithout having to call kube-apiserver itself.\n\n- For `TrinoSchema`: `phase` + `message` are populated; drift fields\n  stay empty.\n- For `TrinoTable`: all four fields are meaningful — `missing_columns`\n  and `extra_columns` come from the reconciler's drift detection.",
+        "required": [
+          "phase"
+        ],
+        "properties": {
+          "extraColumns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Columns present in Trino but not declared in the CRD spec. The\nreconciler never drops these automatically. Empty for schemas."
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "missingColumns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Columns declared in the CRD spec but absent from the actual Trino\ntable (subject to opt-in migration). Empty for schemas."
+          },
+          "phase": {
+            "type": "string",
+            "description": "`Pending` / `Ready` / `Drifted` / `Failed` / `Terminating`.\nStringly-typed because `TrinoSchema` and `TrinoTable` don't share\nthe same phase enum (Drifted is Table-only)."
           }
         }
       },
@@ -8058,6 +9727,54 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "CreateBackupTargetCrdRequestBody": {
+        "type": "object",
+        "required": [
+          "name",
+          "endpoint_url",
+          "destination_path",
+          "access_key_secret_name",
+          "secret_access_key_secret_name"
+        ],
+        "properties": {
+          "access_key_secret_name": {
+            "type": "string",
+            "description": "Name of the control-plane secret holding the S3 access key id"
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional description (DB-only, not stored in CRD)",
+            "nullable": true
+          },
+          "destination_path": {
+            "type": "string",
+            "description": "Bucket + prefix (e.g. \"s3://backups/\")"
+          },
+          "endpoint_url": {
+            "type": "string",
+            "description": "S3-compatible endpoint URL (e.g. \"http://minio.minio.svc:9000\")"
+          },
+          "insecure": {
+            "type": "boolean",
+            "description": "Skip TLS certificate verification when probing the S3 endpoint.\nIntended for development (self-signed certs). Defaults to false."
+          },
+          "name": {
+            "type": "string",
+            "description": "Must be a valid slug: lowercase letters, digits, and hyphens only; cannot start or end with a hyphen."
+          },
+          "secret_access_key_secret_name": {
+            "type": "string",
+            "description": "Name of the control-plane secret holding the S3 secret access key"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "User-defined tags (DB-only, not stored in CRD)"
           }
         }
       },
@@ -8157,7 +9874,7 @@
       },
       "CreateContextEnricherPipelineRequest": {
         "type": "object",
-        "description": "Context Enricher pipeline request: enrich Iceberg table with L0/L1 abstracts via LLM.\nReads content (L2) from a source table, writes enriched rows (content + L0 + L1) to a destination table.\nEnables lineage: minio → OCR → ice_raw → hippocampe → ice_enriched",
+        "description": "Context Enricher pipeline request: enrich Iceberg table with L0/L1 abstracts via LLM.\nReads content (L2) from a source table, writes enriched rows (content + L0 + L1) to a destination table.\nEnables lineage: object storage → OCR → ice_raw → hippocampe → ice_enriched",
         "required": [
           "pipeline",
           "source",
@@ -8393,6 +10110,31 @@
           }
         }
       },
+      "CreateGDrivePipelineRequest": {
+        "type": "object",
+        "required": [
+          "pipeline",
+          "source",
+          "destination_data_container_id"
+        ],
+        "properties": {
+          "destination_data_container_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Destination S3 DataDock to land the files into"
+          },
+          "destination_prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "pipeline": {
+            "$ref": "#/components/schemas/PipelineMetadata"
+          },
+          "source": {
+            "$ref": "#/components/schemas/GDriveSourceConfig"
+          }
+        }
+      },
       "CreateHarborCrdRequestBody": {
         "type": "object",
         "required": [
@@ -8435,26 +10177,62 @@
       },
       "CreateIcebergTableMetadataRequest": {
         "type": "object",
-        "description": "Request to create Iceberg table metadata",
+        "description": "Request to create Iceberg table metadata.\n\nThe modern flow is structured: the client sends `columns`,\n`medallion_tier`, and optional partitioning/sort/properties; the backend\ngenerates the DDL, executes it, saves metadata, and materializes the\nTrinoTable CRD from the same structured input.\n\n`ddl_statement` is kept as an optional backward-compatibility field for\ncallers that still generate DDL client-side. When both are present,\nstructured fields win and `ddl_statement` is ignored.",
         "required": [
           "schema_id",
           "table_name",
-          "description",
-          "ddl_statement"
+          "description"
         ],
         "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IcebergColumnDefinition"
+            },
+            "nullable": true
+          },
           "ddl_statement": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "description": {
             "type": "string"
+          },
+          "medallion_tier": {
+            "$ref": "#/components/schemas/MedallionTier",
+            "nullable": true
+          },
+          "partition_by": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "primary_key": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
           },
           "schema_id": {
             "type": "string",
             "format": "uuid"
           },
+          "sort_order": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
           "table_name": {
             "type": "string"
+          },
+          "table_properties": {
+            "$ref": "#/components/schemas/Value",
+            "nullable": true
           }
         }
       },
@@ -8504,6 +10282,99 @@
           "storage_size_gb": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "CreateManagedPostgresqlBackupCrdRequestBody": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "$ref": "#/components/schemas/BackupTargetInstance"
+          }
+        }
+      },
+      "CreateManagedPostgresqlCrdRequestBody": {
+        "type": "object",
+        "required": [
+          "name",
+          "database_name"
+        ],
+        "properties": {
+          "backup_policy": {
+            "$ref": "#/components/schemas/BackupPolicy"
+          },
+          "backup_target_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "BackupTarget to use for on-demand and scheduled backups. Required when\n`backup_policy` is `automated`; ignored when `manual`.",
+            "nullable": true
+          },
+          "configuration": {
+            "$ref": "#/components/schemas/Configuration"
+          },
+          "database_name": {
+            "type": "string",
+            "description": "Name of the application database to create inside the PostgreSQL cluster.\nMust be a valid PostgreSQL identifier: lowercase letters, digits, and underscores only; must start with a letter or underscore."
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional description for this database instance",
+            "nullable": true
+          },
+          "engine": {
+            "$ref": "#/components/schemas/Engine"
+          },
+          "name": {
+            "type": "string",
+            "description": "Must be a valid slug: lowercase letters, digits, and hyphens only; cannot start or end with a hyphen."
+          },
+          "node_tier": {
+            "$ref": "#/components/schemas/NodeTier"
+          },
+          "storage_capacity": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Storage capacity in GB (1-30)",
+            "maximum": 30,
+            "minimum": 1
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "User-defined tags"
+          },
+          "version": {
+            "type": "string",
+            "description": "PostgreSQL major version (e.g. \"17\")"
+          }
+        }
+      },
+      "CreateManagedPostgresqlUserCrdRequestBody": {
+        "type": "object",
+        "required": [
+          "username"
+        ],
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Optional description (DB-only).",
+            "nullable": true
+          },
+          "permission_level": {
+            "$ref": "#/components/schemas/PermissionLevel"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "User-defined tags (DB-only)."
+          },
+          "username": {
+            "type": "string",
+            "description": "Postgres role name. Lowercase letters, digits and underscores; must start\nwith a letter or underscore. The CRD `metadata.name` is derived by\nreplacing `_` with `-`, so the same identifier shows up in the UI, the\nPostgres cluster, and Kubernetes."
           }
         }
       },
@@ -8569,6 +10440,26 @@
           },
           "runtime": {
             "$ref": "#/components/schemas/ModelRuntime"
+          }
+        }
+      },
+      "CreateOpenDataPipelineRequest": {
+        "type": "object",
+        "description": "Open Data pipeline request: download open data CSV and load into Iceberg table",
+        "required": [
+          "pipeline",
+          "source",
+          "destination"
+        ],
+        "properties": {
+          "destination": {
+            "$ref": "#/components/schemas/MetadataStorageConfig"
+          },
+          "pipeline": {
+            "$ref": "#/components/schemas/PipelineMetadata"
+          },
+          "source": {
+            "$ref": "#/components/schemas/OpenDataSourceConfig"
           }
         }
       },
@@ -8785,6 +10676,50 @@
               }
             ],
             "description": "ContextEnricher: enrich Iceberg table rows with L0 abstracts and L1 overviews via LLM"
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateGDrivePipelineRequest"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "g_drive"
+                    ]
+                  }
+                }
+              }
+            ],
+            "description": "GDrive: download files from GDrive and load into S3"
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateOpenDataPipelineRequest"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "open_data"
+                    ]
+                  }
+                }
+              }
+            ],
+            "description": "OpenData: download open data CSV and load into Iceberg table"
           }
         ],
         "description": "Discriminated union for pipeline creation requests"
@@ -9098,6 +11033,63 @@
           }
         }
       },
+      "DataDockExternalResponseData": {
+        "type": "object",
+        "description": "External API response — strips infra details (namespaces) from user-facing endpoints.",
+        "required": [
+          "id",
+          "harbor_id",
+          "name",
+          "slug",
+          "description",
+          "connection_kind",
+          "host",
+          "port",
+          "refresh_interval",
+          "status"
+        ],
+        "properties": {
+          "connection_kind": {
+            "$ref": "#/components/schemas/DataDockKindExternalResponse"
+          },
+          "description": {
+            "type": "string"
+          },
+          "harbor_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "host": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "port": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "refresh_interval": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "refreshed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "slug": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/DataDockStatus"
+          }
+        }
+      },
       "DataDockKind": {
         "oneOf": [
           {
@@ -9140,24 +11132,6 @@
             ],
             "properties": {
               "content": {
-                "$ref": "#/components/schemas/MinioInternalConfig"
-              },
-              "type": {
-                "type": "string",
-                "enum": [
-                  "MinioInternal"
-                ]
-              }
-            }
-          },
-          {
-            "type": "object",
-            "required": [
-              "content",
-              "type"
-            ],
-            "properties": {
-              "content": {
                 "$ref": "#/components/schemas/PostgresInternalConfig"
               },
               "type": {
@@ -9177,6 +11151,82 @@
             "properties": {
               "content": {
                 "$ref": "#/components/schemas/CephRgwInternalConfig"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "CephRgwInternal"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "DataDockKindExternalResponse": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/TrinoConfigResponse"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "Trino"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/TrinoInternalConfigResponse"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "TrinoInternal"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/PostgresInternalConfigResponse"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "PostgresInternal"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "content",
+              "type"
+            ],
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/CephRgwInternalConfigExternalResponse"
               },
               "type": {
                 "type": "string",
@@ -9234,24 +11284,6 @@
             ],
             "properties": {
               "content": {
-                "$ref": "#/components/schemas/MinioInternalConfig"
-              },
-              "type": {
-                "type": "string",
-                "enum": [
-                  "MinioInternal"
-                ]
-              }
-            }
-          },
-          {
-            "type": "object",
-            "required": [
-              "content",
-              "type"
-            ],
-            "properties": {
-              "content": {
                 "$ref": "#/components/schemas/PostgresInternalConfig"
               },
               "type": {
@@ -9270,7 +11302,7 @@
             ],
             "properties": {
               "content": {
-                "$ref": "#/components/schemas/CephRgwInternalConfig"
+                "$ref": "#/components/schemas/CephRgwInternalRequest"
               },
               "type": {
                 "type": "string",
@@ -9281,156 +11313,6 @@
             }
           }
         ]
-      },
-      "DataDockKindResponse": {
-        "oneOf": [
-          {
-            "type": "object",
-            "required": [
-              "content",
-              "type"
-            ],
-            "properties": {
-              "content": {
-                "$ref": "#/components/schemas/TrinoConfigResponse"
-              },
-              "type": {
-                "type": "string",
-                "enum": [
-                  "Trino"
-                ]
-              }
-            }
-          },
-          {
-            "type": "object",
-            "required": [
-              "content",
-              "type"
-            ],
-            "properties": {
-              "content": {
-                "$ref": "#/components/schemas/TrinoInternalConfigResponse"
-              },
-              "type": {
-                "type": "string",
-                "enum": [
-                  "TrinoInternal"
-                ]
-              }
-            }
-          },
-          {
-            "type": "object",
-            "required": [
-              "content",
-              "type"
-            ],
-            "properties": {
-              "content": {
-                "$ref": "#/components/schemas/MinioInternalConfigResponse"
-              },
-              "type": {
-                "type": "string",
-                "enum": [
-                  "MinioInternal"
-                ]
-              }
-            }
-          },
-          {
-            "type": "object",
-            "required": [
-              "content",
-              "type"
-            ],
-            "properties": {
-              "content": {
-                "$ref": "#/components/schemas/PostgresInternalConfigResponse"
-              },
-              "type": {
-                "type": "string",
-                "enum": [
-                  "PostgresInternal"
-                ]
-              }
-            }
-          },
-          {
-            "type": "object",
-            "required": [
-              "content",
-              "type"
-            ],
-            "properties": {
-              "content": {
-                "$ref": "#/components/schemas/CephRgwInternalConfigResponse"
-              },
-              "type": {
-                "type": "string",
-                "enum": [
-                  "CephRgwInternal"
-                ]
-              }
-            }
-          }
-        ]
-      },
-      "DataDockResponseData": {
-        "type": "object",
-        "required": [
-          "id",
-          "harbor_id",
-          "name",
-          "slug",
-          "description",
-          "connection_kind",
-          "host",
-          "port",
-          "refresh_interval",
-          "status"
-        ],
-        "properties": {
-          "connection_kind": {
-            "$ref": "#/components/schemas/DataDockKindResponse"
-          },
-          "description": {
-            "type": "string"
-          },
-          "harbor_id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "host": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "port": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "refresh_interval": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "refreshed_at": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "slug": {
-            "type": "string"
-          },
-          "status": {
-            "$ref": "#/components/schemas/DataDockStatus"
-          }
-        }
       },
       "DataDockSecuritySettingsResponse": {
         "type": "object",
@@ -9527,6 +11409,19 @@
             }
           }
         ]
+      },
+      "DeleteDirectoryResponse": {
+        "type": "object",
+        "required": [
+          "deleted"
+        ],
+        "properties": {
+          "deleted": {
+            "type": "integer",
+            "description": "Number of secrets deleted under the prefix.",
+            "minimum": 0
+          }
+        }
       },
       "DestinationConfig": {
         "type": "object",
@@ -9699,6 +11594,14 @@
             "type": "boolean"
           }
         }
+      },
+      "Engine": {
+        "type": "string",
+        "enum": [
+          "postgresql",
+          "postgis",
+          "timescaledb"
+        ]
       },
       "EnvVarInput": {
         "type": "object",
@@ -9993,7 +11896,7 @@
           },
           "source_file_connection_id": {
             "type": "string",
-            "description": "Source S3 connection ID for router (references input.dd_minio)",
+            "description": "Source S3 connection ID for router (references input.dd_source)",
             "nullable": true
           },
           "trino_schema": {
@@ -10045,6 +11948,33 @@
           }
         }
       },
+      "GDriveSourceConfig": {
+        "type": "object",
+        "description": "GDrive source configuration",
+        "required": [
+          "service_account_email",
+          "private_key"
+        ],
+        "properties": {
+          "prefix": {
+            "type": "string",
+            "description": "Optional folder prefix within the bucket",
+            "nullable": true
+          },
+          "private_key": {
+            "type": "string",
+            "format": "password"
+          },
+          "service_account_email": {
+            "type": "string",
+            "description": "Service account email for GDrive connector authentication"
+          },
+          "shared_drive_id": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "GetConsoleConfigResponse": {
         "type": "object",
         "required": [
@@ -10056,7 +11986,8 @@
           "feature_flags",
           "app_version",
           "sapience_api_url",
-          "console_base_domain"
+          "console_base_domain",
+          "ceph_zones"
         ],
         "properties": {
           "app_version": {
@@ -10067,6 +11998,13 @@
           },
           "bifrost_sql_endpoint": {
             "type": "string"
+          },
+          "ceph_zones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CephZoneResponse"
+            },
+            "description": "Available Ceph zones for DataDock creation."
           },
           "console_base_domain": {
             "type": "string",
@@ -10251,6 +12189,30 @@
           }
         }
       },
+      "IcebergColumnDefinition": {
+        "type": "object",
+        "description": "Column definition for table creation",
+        "required": [
+          "name",
+          "data_type",
+          "nullable"
+        ],
+        "properties": {
+          "comment": {
+            "type": "string",
+            "nullable": true
+          },
+          "data_type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "nullable": {
+            "type": "boolean"
+          }
+        }
+      },
       "IcebergConnectorDataContainer": {
         "type": "object",
         "required": [
@@ -10428,6 +12390,13 @@
           "updated_at"
         ],
         "properties": {
+          "annotations": {
+            "type": "object",
+            "description": "Annotations mirrored from the `TrinoSchema` CRD metadata when\n`source = Crd`. Empty otherwise.",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
           "cdc_enabled": {
             "type": "boolean"
           },
@@ -10459,6 +12428,13 @@
           },
           "schema_name": {
             "type": "string"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ResourceSource"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CrdStatusSnapshot",
+            "nullable": true
           },
           "updated_at": {
             "type": "string",
@@ -10519,9 +12495,18 @@
           "updated_at",
           "data_container_id",
           "schema_name",
-          "medallion_tier"
+          "medallion_tier",
+          "source",
+          "annotations"
         ],
         "properties": {
+          "annotations": {
+            "type": "object",
+            "description": "Metadata annotations copied from the CRD when `source = Crd`. The UI\nsurfaces well-known keys (e.g. `hyperfluid.nudibranches.tech/source`,\n`hyperfluid.nudibranches.tech/pipeline`) as coloured badges.",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
           "created_at": {
             "type": "string",
             "format": "date-time"
@@ -10550,6 +12535,13 @@
           },
           "schema_name": {
             "type": "string"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ResourceSource"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CrdStatusSnapshot",
+            "nullable": true
           },
           "table_name": {
             "type": "string"
@@ -10896,14 +12888,32 @@
       "ListSecretsResponse": {
         "type": "object",
         "required": [
-          "secrets"
+          "secrets",
+          "total",
+          "current_path"
         ],
         "properties": {
+          "common_prefixes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Immediate sub-directory names under `current_path` (single-level listings only)."
+          },
+          "current_path": {
+            "type": "string",
+            "description": "The prefix the server used to compute this listing (echoed back for the UI)."
+          },
           "secrets": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SecretMetadataResponse"
             }
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Total number of secrets matching the filter, ignoring pagination."
           }
         }
       },
@@ -10951,6 +12961,458 @@
             "description": "List of attributes in `namespace::value` format."
           }
         }
+      },
+      "ManagedPostgresqlBackupCrdResponse": {
+        "type": "object",
+        "required": [
+          "cluster_name",
+          "method"
+        ],
+        "properties": {
+          "backup_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "backup_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "cluster_name": {
+            "type": "string"
+          },
+          "cnpg_backup_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          },
+          "method": {
+            "type": "string"
+          },
+          "phase": {
+            "type": "string",
+            "nullable": true
+          },
+          "started_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "stopped_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "target": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ManagedPostgresqlBackupResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "organization_id",
+          "harbor_id",
+          "managed_postgresql_id",
+          "name",
+          "slug",
+          "method",
+          "phase",
+          "origin",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "backup_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "backup_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "cnpg_backup_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "conditions": {},
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          },
+          "harbor_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "managed_postgresql_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "method": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "origin": {
+            "$ref": "#/components/schemas/BackupOrigin"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "scheduled_backup_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "size_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "slug": {
+            "type": "string"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "stopped_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "target": {
+            "type": "string",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ManagedPostgresqlBackupsPage": {
+        "type": "object",
+        "required": [
+          "data",
+          "total",
+          "page",
+          "limit"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManagedPostgresqlBackupResponse"
+            }
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ManagedPostgresqlCrdSpecResponse": {
+        "type": "object",
+        "required": [
+          "engine",
+          "version",
+          "instances",
+          "storage_size",
+          "enable_superuser_access",
+          "has_backup",
+          "has_pooler"
+        ],
+        "properties": {
+          "backup_retention": {
+            "type": "string",
+            "nullable": true
+          },
+          "backup_schedule": {
+            "type": "string",
+            "nullable": true
+          },
+          "cpu_limit": {
+            "type": "string",
+            "nullable": true
+          },
+          "cpu_request": {
+            "type": "string",
+            "nullable": true
+          },
+          "enable_superuser_access": {
+            "type": "boolean"
+          },
+          "engine": {
+            "type": "string"
+          },
+          "has_backup": {
+            "type": "boolean"
+          },
+          "has_pooler": {
+            "type": "boolean"
+          },
+          "instances": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "memory_limit": {
+            "type": "string",
+            "nullable": true
+          },
+          "memory_request": {
+            "type": "string",
+            "nullable": true
+          },
+          "storage_class": {
+            "type": "string",
+            "nullable": true
+          },
+          "storage_size": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
+      },
+      "ManagedPostgresqlResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "organization_id",
+          "harbor_id",
+          "name",
+          "slug",
+          "database_name",
+          "engine",
+          "version",
+          "configuration",
+          "instances",
+          "ready_instances",
+          "node_tier",
+          "storage_size",
+          "backup_policy",
+          "backup_schedule_suspend",
+          "tags",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "backup_policy": {
+            "type": "string"
+          },
+          "backup_schedule": {
+            "type": "string",
+            "nullable": true
+          },
+          "backup_schedule_suspend": {
+            "type": "boolean"
+          },
+          "backup_schedule_target": {
+            "type": "string",
+            "nullable": true
+          },
+          "conditions": {},
+          "configuration": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "current_primary": {
+            "type": "string",
+            "nullable": true
+          },
+          "database_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "engine": {
+            "type": "string"
+          },
+          "external_endpoint": {
+            "type": "string",
+            "nullable": true
+          },
+          "harbor_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "instances": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "node_tier": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "phase": {
+            "type": "string",
+            "nullable": true
+          },
+          "read_endpoint": {
+            "type": "string",
+            "nullable": true
+          },
+          "ready_instances": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "storage_size": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "string"
+          },
+          "write_endpoint": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ManagedPostgresqlUserCrdSpecResponse": {
+        "type": "object",
+        "required": [
+          "username",
+          "cluster_name",
+          "permission_level"
+        ],
+        "properties": {
+          "cluster_name": {
+            "type": "string"
+          },
+          "permission_level": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "ManagedPostgresqlUserResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "organization_id",
+          "managed_postgresql_id",
+          "slug",
+          "username",
+          "permission_level",
+          "tags",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "conditions": {},
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "managed_postgresql_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "observed_permission_level": {
+            "type": "string",
+            "nullable": true
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "permission_level": {
+            "type": "string"
+          },
+          "phase": {
+            "type": "string",
+            "nullable": true
+          },
+          "slug": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "MedallionTier": {
+        "type": "string",
+        "description": "Medallion architecture tiers for data lake house governance",
+        "enum": [
+          "bronze",
+          "silver",
+          "gold"
+        ]
       },
       "MetadataStorageConfig": {
         "type": "object",
@@ -11050,31 +13512,6 @@
           "24h",
           "7d"
         ]
-      },
-      "MinioInternalConfig": {
-        "type": "object",
-        "required": [
-          "storage_size"
-        ],
-        "properties": {
-          "storage_size": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Storage size in Gigabytes",
-            "minimum": 0
-          }
-        }
-      },
-      "MinioInternalConfigResponse": {
-        "type": "object",
-        "required": [
-          "storage_size"
-        ],
-        "properties": {
-          "storage_size": {
-            "type": "string"
-          }
-        }
       },
       "ModelConfig": {
         "type": "object",
@@ -11340,6 +13777,18 @@
           }
         }
       },
+      "NodeTier": {
+        "type": "string",
+        "description": "Predefined resource tiers for managed PostgreSQL instances.\nMemory limits are always equal to memory requests.",
+        "enum": [
+          "nano",
+          "micro",
+          "small",
+          "medium",
+          "large",
+          "xlarge"
+        ]
+      },
       "OciRegistryAuth": {
         "type": "object",
         "required": [
@@ -11419,6 +13868,104 @@
           }
         ],
         "description": "OCR provider configuration for PDF processing"
+      },
+      "OpenDataCatalogResponse": {
+        "type": "object",
+        "required": [
+          "datasets"
+        ],
+        "properties": {
+          "datasets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenDataDatasetResponse"
+            }
+          }
+        }
+      },
+      "OpenDataColumnResponse": {
+        "type": "object",
+        "required": [
+          "name",
+          "trino_type",
+          "description"
+        ],
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "trino_type": {
+            "type": "string"
+          }
+        }
+      },
+      "OpenDataDatasetResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "provider",
+          "url",
+          "license",
+          "update_frequency",
+          "csv_delimiter",
+          "estimated_size_mb",
+          "columns"
+        ],
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenDataColumnResponse"
+            }
+          },
+          "csv_delimiter": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "estimated_size_mb": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "id": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "update_frequency": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "OpenDataSourceConfig": {
+        "type": "object",
+        "description": "Open Data connector source configuration",
+        "required": [
+          "dataset_id"
+        ],
+        "properties": {
+          "dataset_id": {
+            "type": "string",
+            "description": "Dataset identifier from the open data catalog (e.g., \"rnic\")"
+          }
+        }
       },
       "Org": {
         "type": "object",
@@ -11537,6 +14084,38 @@
           }
         }
       },
+      "PatchBackupTargetCrdRequestBody": {
+        "type": "object",
+        "properties": {
+          "access_key_secret_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "destination_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "endpoint_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "secret_access_key_secret_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        }
+      },
       "PatchContainerAppCrdRequestBody": {
         "type": "object",
         "properties": {
@@ -11602,6 +14181,62 @@
           }
         }
       },
+      "PatchManagedPostgresqlCrdRequestBody": {
+        "type": "object",
+        "properties": {
+          "configuration": {
+            "$ref": "#/components/schemas/Configuration",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional description (DB-only, not stored in CRD)",
+            "nullable": true
+          },
+          "node_tier": {
+            "$ref": "#/components/schemas/NodeTier",
+            "nullable": true
+          },
+          "storage_capacity": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Storage capacity in GB (1-30)",
+            "maximum": 30,
+            "minimum": 1,
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "User-defined tags (DB-only, not stored in CRD)",
+            "nullable": true
+          }
+        }
+      },
+      "PatchManagedPostgresqlUserCrdRequestBody": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Optional description (DB-only).",
+            "nullable": true
+          },
+          "permission_level": {
+            "$ref": "#/components/schemas/PermissionLevel",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "User-defined tags (DB-only).",
+            "nullable": true
+          }
+        }
+      },
       "PatchModelServingRequest": {
         "type": "object",
         "properties": {
@@ -11614,6 +14249,14 @@
           }
         }
       },
+      "PermissionLevel": {
+        "type": "string",
+        "description": "Permission level granted to the Postgres role.",
+        "enum": [
+          "viewer",
+          "editor"
+        ]
+      },
       "PipelineInputParameters": {
         "type": "object",
         "properties": {
@@ -11623,10 +14266,10 @@
             "description": "UUID of the bucket Data Container (not required for Copy pipeline)",
             "nullable": true
           },
-          "dd_minio": {
+          "dd_source": {
             "type": "string",
             "format": "uuid",
-            "description": "UUID of the source MinIO Data Dock (not required for Copy pipeline)",
+            "description": "UUID of the source object storage Data Dock (not required for Copy pipeline)",
             "nullable": true
           },
           "default_route": {
@@ -11700,6 +14343,10 @@
           "organization_slug": {
             "type": "string",
             "description": "Organization slug (used for Keycloak realm)"
+          },
+          "persist_logs": {
+            "type": "boolean",
+            "description": "When true, runtime logs are persisted to the console (queryable from the\nUI). When false, logs are emitted to stdout only and not persisted.\nDefaults to true."
           }
         }
       },
@@ -11945,7 +14592,9 @@
           "FileSorter",
           "PageSplitter",
           "Omnifeed",
-          "ContextEnricher"
+          "ContextEnricher",
+          "OpenData",
+          "GDriveConnector"
         ]
       },
       "PostgresInternalConfig": {
@@ -12462,6 +15111,13 @@
           "key": {
             "type": "string"
           },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "ARN-style metadata accumulated per step for this ref. Append-only.\nFormat `hf:pipelines:{kind}[:{qualifier}]::{value}` — see\n`crate::models::labels` for builders. Used by retriable steps to skip\nalready-completed work and by routing steps to record produced paths."
+          },
           "locked_at": {
             "type": "string",
             "format": "date-time",
@@ -12520,6 +15176,14 @@
             "minimum": 0
           }
         }
+      },
+      "ResourceSource": {
+        "type": "string",
+        "description": "Whether a schema / table was declared via a Hyperfluid CRD\n(`TrinoSchema`, `TrinoTable`) or materialized ad-hoc through Trino DDL.\n\nLives here (domain layer) rather than in the HTTP DTO layer because\nboth domain models and HTTP responses carry this label.",
+        "enum": [
+          "crd",
+          "adhoc"
+        ]
       },
       "ResourceTier": {
         "type": "string",
@@ -13725,6 +16389,12 @@
           "key": {
             "type": "string"
           },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "locked_at": {
             "type": "string",
             "format": "date-time",
@@ -13947,6 +16617,7 @@
           }
         ]
       },
+      "Value": {},
       "WorkerAutoScaling": {
         "type": "object",
         "properties": {
@@ -14069,6 +16740,26 @@
     {
       "name": "ContainerApps",
       "description": "Container apps management"
+    },
+    {
+      "name": "ManagedPostgreSQLs",
+      "description": "Managed PostgreSQL management"
+    },
+    {
+      "name": "ManagedPostgreSQLUsers",
+      "description": "Managed PostgreSQL user management"
+    },
+    {
+      "name": "ManagedPostgresqlBackups",
+      "description": "One-shot backups for managed PostgreSQL instances"
+    },
+    {
+      "name": "BackupTargets",
+      "description": "Backup target management"
+    },
+    {
+      "name": "Open Data",
+      "description": "Open data connectors catalog"
     },
     {
       "name": "Quotas",

@@ -42,6 +42,30 @@ const (
 	Import ArchiveOperationType = "import"
 )
 
+// Defines values for BackupOrigin.
+const (
+	BackupOriginManual    BackupOrigin = "manual"
+	BackupOriginScheduled BackupOrigin = "scheduled"
+)
+
+// Defines values for BackupPolicy.
+const (
+	BackupPolicyAutomated BackupPolicy = "automated"
+	BackupPolicyManual    BackupPolicy = "manual"
+)
+
+// Defines values for BackupTargetInstance.
+const (
+	PreferStandby BackupTargetInstance = "preferStandby"
+	Primary       BackupTargetInstance = "primary"
+)
+
+// Defines values for Configuration.
+const (
+	HighAvailability Configuration = "high-availability"
+	Standalone       Configuration = "standalone"
+)
+
 // Defines values for ConsoleConfigFeatureFlag.
 const (
 	ShowDemoBanner ConsoleConfigFeatureFlag = "show_demo_banner"
@@ -83,6 +107,16 @@ const (
 	ContextEnricher CreatePipelineRequestV26Type = "context_enricher"
 )
 
+// Defines values for CreatePipelineRequestV27Type.
+const (
+	GDrive CreatePipelineRequestV27Type = "g_drive"
+)
+
+// Defines values for CreatePipelineRequestV28Type.
+const (
+	OpenData CreatePipelineRequestV28Type = "open_data"
+)
+
 // Defines values for DataDockKind0Type.
 const (
 	DataDockKind0TypeTrino DataDockKind0Type = "Trino"
@@ -95,17 +129,32 @@ const (
 
 // Defines values for DataDockKind2Type.
 const (
-	DataDockKind2TypeMinioInternal DataDockKind2Type = "MinioInternal"
+	DataDockKind2TypePostgresInternal DataDockKind2Type = "PostgresInternal"
 )
 
 // Defines values for DataDockKind3Type.
 const (
-	DataDockKind3TypePostgresInternal DataDockKind3Type = "PostgresInternal"
+	DataDockKind3TypeCephRgwInternal DataDockKind3Type = "CephRgwInternal"
 )
 
-// Defines values for DataDockKind4Type.
+// Defines values for DataDockKindExternalResponse0Type.
 const (
-	DataDockKind4TypeCephRgwInternal DataDockKind4Type = "CephRgwInternal"
+	DataDockKindExternalResponse0TypeTrino DataDockKindExternalResponse0Type = "Trino"
+)
+
+// Defines values for DataDockKindExternalResponse1Type.
+const (
+	DataDockKindExternalResponse1TypeTrinoInternal DataDockKindExternalResponse1Type = "TrinoInternal"
+)
+
+// Defines values for DataDockKindExternalResponse2Type.
+const (
+	DataDockKindExternalResponse2TypePostgresInternal DataDockKindExternalResponse2Type = "PostgresInternal"
+)
+
+// Defines values for DataDockKindExternalResponse3Type.
+const (
+	DataDockKindExternalResponse3TypeCephRgwInternal DataDockKindExternalResponse3Type = "CephRgwInternal"
 )
 
 // Defines values for DataDockKindRequest0Type.
@@ -115,47 +164,17 @@ const (
 
 // Defines values for DataDockKindRequest1Type.
 const (
-	DataDockKindRequest1TypeTrinoInternal DataDockKindRequest1Type = "TrinoInternal"
+	TrinoInternal DataDockKindRequest1Type = "TrinoInternal"
 )
 
 // Defines values for DataDockKindRequest2Type.
 const (
-	DataDockKindRequest2TypeMinioInternal DataDockKindRequest2Type = "MinioInternal"
+	PostgresInternal DataDockKindRequest2Type = "PostgresInternal"
 )
 
 // Defines values for DataDockKindRequest3Type.
 const (
-	DataDockKindRequest3TypePostgresInternal DataDockKindRequest3Type = "PostgresInternal"
-)
-
-// Defines values for DataDockKindRequest4Type.
-const (
-	DataDockKindRequest4TypeCephRgwInternal DataDockKindRequest4Type = "CephRgwInternal"
-)
-
-// Defines values for DataDockKindResponse0Type.
-const (
-	DataDockKindResponse0TypeTrino DataDockKindResponse0Type = "Trino"
-)
-
-// Defines values for DataDockKindResponse1Type.
-const (
-	TrinoInternal DataDockKindResponse1Type = "TrinoInternal"
-)
-
-// Defines values for DataDockKindResponse2Type.
-const (
-	MinioInternal DataDockKindResponse2Type = "MinioInternal"
-)
-
-// Defines values for DataDockKindResponse3Type.
-const (
-	PostgresInternal DataDockKindResponse3Type = "PostgresInternal"
-)
-
-// Defines values for DataDockKindResponse4Type.
-const (
-	CephRgwInternal DataDockKindResponse4Type = "CephRgwInternal"
+	CephRgwInternal DataDockKindRequest3Type = "CephRgwInternal"
 )
 
 // Defines values for DataDockStatus.
@@ -164,6 +183,13 @@ const (
 	DataDockStatusOnline   DataDockStatus = "Online"
 	DataDockStatusPending  DataDockStatus = "Pending"
 	DataDockStatusSleeping DataDockStatus = "Sleeping"
+)
+
+// Defines values for Engine.
+const (
+	Postgis     Engine = "postgis"
+	Postgresql  Engine = "postgresql"
+	Timescaledb Engine = "timescaledb"
 )
 
 // Defines values for HfDataType.
@@ -198,6 +224,13 @@ const (
 	LabelType1TypeDynamic LabelType1Type = "dynamic"
 )
 
+// Defines values for MedallionTier.
+const (
+	Bronze MedallionTier = "bronze"
+	Gold   MedallionTier = "gold"
+	Silver MedallionTier = "silver"
+)
+
 // Defines values for MetricsRange.
 const (
 	N1h  MetricsRange = "1h"
@@ -227,6 +260,16 @@ const (
 	Generation ModelType = "generation"
 )
 
+// Defines values for NodeTier.
+const (
+	NodeTierLarge  NodeTier = "large"
+	NodeTierMedium NodeTier = "medium"
+	NodeTierMicro  NodeTier = "micro"
+	NodeTierNano   NodeTier = "nano"
+	NodeTierSmall  NodeTier = "small"
+	NodeTierXlarge NodeTier = "xlarge"
+)
+
 // Defines values for OcrProviderConfig0Type.
 const (
 	Mistral OcrProviderConfig0Type = "mistral"
@@ -235,6 +278,12 @@ const (
 // Defines values for OcrProviderConfig1Type.
 const (
 	Local OcrProviderConfig1Type = "local"
+)
+
+// Defines values for PermissionLevel.
+const (
+	Editor PermissionLevel = "editor"
+	Viewer PermissionLevel = "viewer"
 )
 
 // Defines values for PipelineOutputParameters0Type.
@@ -271,10 +320,12 @@ const (
 	PipelineTypeCopy             PipelineType = "Copy"
 	PipelineTypeFileRouter       PipelineType = "FileRouter"
 	PipelineTypeFileSorter       PipelineType = "FileSorter"
+	PipelineTypeGDriveConnector  PipelineType = "GDriveConnector"
 	PipelineTypeHephaistosPdfeed PipelineType = "HephaistosPdfeed"
 	PipelineTypeLabelizer        PipelineType = "Labelizer"
 	PipelineTypeMarkitdown       PipelineType = "Markitdown"
 	PipelineTypeOmnifeed         PipelineType = "Omnifeed"
+	PipelineTypeOpenData         PipelineType = "OpenData"
 	PipelineTypePageSplitter     PipelineType = "PageSplitter"
 )
 
@@ -314,14 +365,20 @@ const (
 	Skipped RefStatus = "skipped"
 )
 
+// Defines values for ResourceSource.
+const (
+	Adhoc ResourceSource = "adhoc"
+	Crd   ResourceSource = "crd"
+)
+
 // Defines values for ResourceTier.
 const (
-	Large  ResourceTier = "large"
-	Medium ResourceTier = "medium"
-	Micro  ResourceTier = "micro"
-	Nano   ResourceTier = "nano"
-	Small  ResourceTier = "small"
-	Xlarge ResourceTier = "xlarge"
+	ResourceTierLarge  ResourceTier = "large"
+	ResourceTierMedium ResourceTier = "medium"
+	ResourceTierMicro  ResourceTier = "micro"
+	ResourceTierNano   ResourceTier = "nano"
+	ResourceTierSmall  ResourceTier = "small"
+	ResourceTierXlarge ResourceTier = "xlarge"
 )
 
 // Defines values for SecretType.
@@ -493,6 +550,47 @@ type AssignSubscriptionBody struct {
 	QuotaProfileId openapi_types.UUID `json:"quota_profile_id"`
 }
 
+// BackupOrigin Whether the backup was user-initiated or produced by a scheduled run that
+// the operator adopted. Mirrored into the DB column `origin` (VARCHAR(16)
+// with a CHECK constraint on the same vocabulary) and into the OpenAPI spec
+// as an `enum`, so every consumer (operator via progenitor, frontend via
+// hey-api, SDK users) sees the same closed set.
+type BackupOrigin string
+
+// BackupPolicy defines model for BackupPolicy.
+type BackupPolicy string
+
+// BackupTargetCrdSpecResponse defines model for BackupTargetCrdSpecResponse.
+type BackupTargetCrdSpecResponse struct {
+	AccessKeySecretName       string `json:"access_key_secret_name"`
+	DestinationPath           string `json:"destination_path"`
+	EndpointUrl               string `json:"endpoint_url"`
+	SecretAccessKeySecretName string `json:"secret_access_key_secret_name"`
+}
+
+// BackupTargetInstance defines model for BackupTargetInstance.
+type BackupTargetInstance string
+
+// BackupTargetResponse defines model for BackupTargetResponse.
+type BackupTargetResponse struct {
+	AccessKeySecretName       string             `json:"access_key_secret_name"`
+	Conditions                interface{}        `json:"conditions,omitempty"`
+	CreatedAt                 time.Time          `json:"created_at"`
+	Description               *string            `json:"description"`
+	DestinationPath           string             `json:"destination_path"`
+	EndpointUrl               string             `json:"endpoint_url"`
+	HarborId                  openapi_types.UUID `json:"harbor_id"`
+	Id                        openapi_types.UUID `json:"id"`
+	Insecure                  bool               `json:"insecure"`
+	Name                      string             `json:"name"`
+	OrganizationId            openapi_types.UUID `json:"organization_id"`
+	Phase                     string             `json:"phase"`
+	SecretAccessKeySecretName string             `json:"secret_access_key_secret_name"`
+	Slug                      string             `json:"slug"`
+	Tags                      []string           `json:"tags"`
+	UpdatedAt                 time.Time          `json:"updated_at"`
+}
+
 // BucketArchiveOperation defines model for BucketArchiveOperation.
 type BucketArchiveOperation struct {
 	CreatedAt time.Time `json:"created_at"`
@@ -558,6 +656,9 @@ type CategoryRouterConfig struct {
 
 // CephRgwInternalConfig defines model for CephRgwInternalConfig.
 type CephRgwInternalConfig struct {
+	// CephClusterNamespace K8s namespace of the CephCluster to deploy the object store into
+	CephClusterNamespace string `json:"ceph_cluster_namespace"`
+
 	// ReplicationSize Data replication factor (default: 3)
 	ReplicationSize *int32            `json:"replication_size,omitempty"`
 	Resources       *CephRgwResources `json:"resources,omitempty"`
@@ -569,8 +670,8 @@ type CephRgwInternalConfig struct {
 	StorageQuotaGb int32 `json:"storage_quota_gb"`
 }
 
-// CephRgwInternalConfigResponse defines model for CephRgwInternalConfigResponse.
-type CephRgwInternalConfigResponse struct {
+// CephRgwInternalConfigExternalResponse External API response — exposes zone_id instead of raw namespace.
+type CephRgwInternalConfigExternalResponse struct {
 	CpuLimit        *string `json:"cpu_limit"`
 	CpuRequest      *string `json:"cpu_request"`
 	MemoryLimit     *string `json:"memory_limit"`
@@ -578,6 +679,22 @@ type CephRgwInternalConfigResponse struct {
 	ReplicationSize int32   `json:"replication_size"`
 	RgwInstances    int32   `json:"rgw_instances"`
 	StorageQuotaGb  int32   `json:"storage_quota_gb"`
+	ZoneId          *string `json:"zone_id"`
+}
+
+// CephRgwInternalRequest Ceph RGW creation request — uses zone_id which gets resolved to ceph_cluster_namespace
+type CephRgwInternalRequest struct {
+	// CephClusterNamespace Pre-resolved namespace — used by operator which already knows the namespace from CRD.
+	// External handlers MUST sanitize this field (set to None) before processing to prevent
+	// namespace injection from user input.
+	CephClusterNamespace *string           `json:"ceph_cluster_namespace"`
+	ReplicationSize      *int32            `json:"replication_size,omitempty"`
+	Resources            *CephRgwResources `json:"resources,omitempty"`
+	RgwInstances         *int32            `json:"rgw_instances,omitempty"`
+	StorageQuotaGb       int32             `json:"storage_quota_gb"`
+
+	// ZoneId Zone identifier — resolved to ceph_cluster_namespace by the console
+	ZoneId *string `json:"zone_id,omitempty"`
 }
 
 // CephRgwResources defines model for CephRgwResources.
@@ -593,6 +710,18 @@ type CephRgwResources struct {
 
 	// MemoryRequest Memory request (e.g., "1Gi")
 	MemoryRequest *string `json:"memory_request"`
+}
+
+// CephZoneResponse defines model for CephZoneResponse.
+type CephZoneResponse struct {
+	// Description Human-readable description
+	Description *string `json:"description"`
+
+	// Id Stable identifier for this zone
+	Id string `json:"id"`
+
+	// Name Display name of the zone
+	Name string `json:"name"`
 }
 
 // CheckNameAvailabilityResponseData defines model for CheckNameAvailabilityResponseData.
@@ -675,6 +804,9 @@ type CompletedPartInfo struct {
 	// PartNumber Part number (1-indexed as per S3 API)
 	PartNumber int32 `json:"part_number"`
 }
+
+// Configuration defines model for Configuration.
+type Configuration string
 
 // ConsoleConfigFeatureFlag defines model for ConsoleConfigFeatureFlag.
 type ConsoleConfigFeatureFlag string
@@ -767,7 +899,7 @@ type CopyOutputParameters struct {
 	// DestinationBucketId UUID of the destination bucket Data Container
 	DestinationBucketId openapi_types.UUID `json:"destination_bucket_id"`
 
-	// DestinationDd UUID of the destination MinIO Data Dock
+	// DestinationDd UUID of the destination object storage Data Dock
 	DestinationDd openapi_types.UUID `json:"destination_dd"`
 
 	// DestinationPrefix Optional prefix path within the destination bucket
@@ -797,16 +929,41 @@ type CopySourceConfig struct {
 
 // CountRefRequest defines model for CountRefRequest.
 type CountRefRequest struct {
-	Key             *string    `json:"key"`
-	Locked          *bool      `json:"locked"`
-	Status          *RefStatus `json:"status,omitempty"`
-	UpdatedAtAfter  *time.Time `json:"updated_at_after"`
-	UpdatedAtBefore *time.Time `json:"updated_at_before"`
+	Key             *string             `json:"key"`
+	Locked          *bool               `json:"locked"`
+	PipelineId      *openapi_types.UUID `json:"pipeline_id"`
+	Status          *RefStatus          `json:"status,omitempty"`
+	UpdatedAtAfter  *time.Time          `json:"updated_at_after"`
+	UpdatedAtBefore *time.Time          `json:"updated_at_before"`
 }
 
 // CountSecretsResponse defines model for CountSecretsResponse.
 type CountSecretsResponse struct {
 	Count int64 `json:"count"`
+}
+
+// CrdStatusSnapshot Projection of a Hyperfluid CRD's `.status` subresource, suitable for
+// surfacing in list endpoints so the UI can render a live status badge
+// without having to call kube-apiserver itself.
+//
+//   - For `TrinoSchema`: `phase` + `message` are populated; drift fields
+//     stay empty.
+//   - For `TrinoTable`: all four fields are meaningful — `missing_columns`
+//     and `extra_columns` come from the reconciler's drift detection.
+type CrdStatusSnapshot struct {
+	// ExtraColumns Columns present in Trino but not declared in the CRD spec. The
+	// reconciler never drops these automatically. Empty for schemas.
+	ExtraColumns *[]string `json:"extraColumns,omitempty"`
+	Message      *string   `json:"message"`
+
+	// MissingColumns Columns declared in the CRD spec but absent from the actual Trino
+	// table (subject to opt-in migration). Empty for schemas.
+	MissingColumns *[]string `json:"missingColumns,omitempty"`
+
+	// Phase `Pending` / `Ready` / `Drifted` / `Failed` / `Terminating`.
+	// Stringly-typed because `TrinoSchema` and `TrinoTable` don't share
+	// the same phase enum (Drifted is Table-only).
+	Phase string `json:"phase"`
 }
 
 // CreateApiKeyRequest defines model for CreateApiKeyRequest.
@@ -825,6 +982,34 @@ type CreateApiKeyResponse struct {
 	KeyPrefix string             `json:"key_prefix"`
 	Name      string             `json:"name"`
 	Scopes    []string           `json:"scopes"`
+}
+
+// CreateBackupTargetCrdRequestBody defines model for CreateBackupTargetCrdRequestBody.
+type CreateBackupTargetCrdRequestBody struct {
+	// AccessKeySecretName Name of the control-plane secret holding the S3 access key id
+	AccessKeySecretName string `json:"access_key_secret_name"`
+
+	// Description Optional description (DB-only, not stored in CRD)
+	Description *string `json:"description"`
+
+	// DestinationPath Bucket + prefix (e.g. "s3://backups/")
+	DestinationPath string `json:"destination_path"`
+
+	// EndpointUrl S3-compatible endpoint URL (e.g. "http://minio.minio.svc:9000")
+	EndpointUrl string `json:"endpoint_url"`
+
+	// Insecure Skip TLS certificate verification when probing the S3 endpoint.
+	// Intended for development (self-signed certs). Defaults to false.
+	Insecure *bool `json:"insecure,omitempty"`
+
+	// Name Must be a valid slug: lowercase letters, digits, and hyphens only; cannot start or end with a hyphen.
+	Name string `json:"name"`
+
+	// SecretAccessKeySecretName Name of the control-plane secret holding the S3 secret access key
+	SecretAccessKeySecretName string `json:"secret_access_key_secret_name"`
+
+	// Tags User-defined tags (DB-only, not stored in CRD)
+	Tags *[]string `json:"tags,omitempty"`
 }
 
 // CreateBucketDataContainerRequestBody defines model for CreateBucketDataContainerRequestBody.
@@ -863,7 +1048,7 @@ type CreateContainerAppCrdRequestBody struct {
 
 // CreateContextEnricherPipelineRequest Context Enricher pipeline request: enrich Iceberg table with L0/L1 abstracts via LLM.
 // Reads content (L2) from a source table, writes enriched rows (content + L0 + L1) to a destination table.
-// Enables lineage: minio → OCR → ice_raw → hippocampe → ice_enriched
+// Enables lineage: object storage → OCR → ice_raw → hippocampe → ice_enriched
 type CreateContextEnricherPipelineRequest struct {
 	// Classification Classification configuration for AI processing
 	Classification ClassificationConfig `json:"classification"`
@@ -975,6 +1160,19 @@ type CreateFileSorterRequest struct {
 	Source FileSorterSourceConfig `json:"source"`
 }
 
+// CreateGDrivePipelineRequest defines model for CreateGDrivePipelineRequest.
+type CreateGDrivePipelineRequest struct {
+	// DestinationDataContainerId Destination S3 DataDock to land the files into
+	DestinationDataContainerId openapi_types.UUID `json:"destination_data_container_id"`
+	DestinationPrefix          *string            `json:"destination_prefix"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// Source GDrive source configuration
+	Source GDriveSourceConfig `json:"source"`
+}
+
 // CreateHarborCrdRequestBody defines model for CreateHarborCrdRequestBody.
 type CreateHarborCrdRequestBody struct {
 	Name string `json:"name"`
@@ -989,12 +1187,29 @@ type CreateIcebergDataContainerRequestBody struct {
 	StorageDataDockId openapi_types.UUID `json:"storage_data_dock_id"`
 }
 
-// CreateIcebergTableMetadataRequest Request to create Iceberg table metadata
+// CreateIcebergTableMetadataRequest Request to create Iceberg table metadata.
+//
+// The modern flow is structured: the client sends `columns`,
+// `medallion_tier`, and optional partitioning/sort/properties; the backend
+// generates the DDL, executes it, saves metadata, and materializes the
+// TrinoTable CRD from the same structured input.
+//
+// `ddl_statement` is kept as an optional backward-compatibility field for
+// callers that still generate DDL client-side. When both are present,
+// structured fields win and `ddl_statement` is ignored.
 type CreateIcebergTableMetadataRequest struct {
-	DdlStatement string             `json:"ddl_statement"`
-	Description  string             `json:"description"`
-	SchemaId     openapi_types.UUID `json:"schema_id"`
-	TableName    string             `json:"table_name"`
+	Columns      *[]IcebergColumnDefinition `json:"columns"`
+	DdlStatement *string                    `json:"ddl_statement"`
+	Description  string                     `json:"description"`
+
+	// MedallionTier Medallion architecture tiers for data lake house governance
+	MedallionTier   *MedallionTier     `json:"medallion_tier,omitempty"`
+	PartitionBy     *[]string          `json:"partition_by"`
+	PrimaryKey      *[]string          `json:"primary_key"`
+	SchemaId        openapi_types.UUID `json:"schema_id"`
+	SortOrder       *[]string          `json:"sort_order"`
+	TableName       string             `json:"table_name"`
+	TableProperties *Value             `json:"table_properties,omitempty"`
 }
 
 // CreateKafkaHFServiceRequest defines model for CreateKafkaHFServiceRequest.
@@ -1010,6 +1225,63 @@ type CreateKafkaHFServiceRequest struct {
 	ReplicationFactor     *int32  `json:"replication_factor,omitempty"`
 	SchemaRegistryEnabled *bool   `json:"schema_registry_enabled,omitempty"`
 	StorageSizeGb         *int32  `json:"storage_size_gb,omitempty"`
+}
+
+// CreateManagedPostgresqlBackupCrdRequestBody defines model for CreateManagedPostgresqlBackupCrdRequestBody.
+type CreateManagedPostgresqlBackupCrdRequestBody struct {
+	Target *BackupTargetInstance `json:"target,omitempty"`
+}
+
+// CreateManagedPostgresqlCrdRequestBody defines model for CreateManagedPostgresqlCrdRequestBody.
+type CreateManagedPostgresqlCrdRequestBody struct {
+	BackupPolicy *BackupPolicy `json:"backup_policy,omitempty"`
+
+	// BackupTargetId BackupTarget to use for on-demand and scheduled backups. Required when
+	// `backup_policy` is `automated`; ignored when `manual`.
+	BackupTargetId *openapi_types.UUID `json:"backup_target_id"`
+	Configuration  *Configuration      `json:"configuration,omitempty"`
+
+	// DatabaseName Name of the application database to create inside the PostgreSQL cluster.
+	// Must be a valid PostgreSQL identifier: lowercase letters, digits, and underscores only; must start with a letter or underscore.
+	DatabaseName string `json:"database_name"`
+
+	// Description Optional description for this database instance
+	Description *string `json:"description"`
+	Engine      *Engine `json:"engine,omitempty"`
+
+	// Name Must be a valid slug: lowercase letters, digits, and hyphens only; cannot start or end with a hyphen.
+	Name string `json:"name"`
+
+	// NodeTier Predefined resource tiers for managed PostgreSQL instances.
+	// Memory limits are always equal to memory requests.
+	NodeTier *NodeTier `json:"node_tier,omitempty"`
+
+	// StorageCapacity Storage capacity in GB (1-30)
+	StorageCapacity *int32 `json:"storage_capacity,omitempty"`
+
+	// Tags User-defined tags
+	Tags *[]string `json:"tags,omitempty"`
+
+	// Version PostgreSQL major version (e.g. "17")
+	Version *string `json:"version,omitempty"`
+}
+
+// CreateManagedPostgresqlUserCrdRequestBody defines model for CreateManagedPostgresqlUserCrdRequestBody.
+type CreateManagedPostgresqlUserCrdRequestBody struct {
+	// Description Optional description (DB-only).
+	Description *string `json:"description"`
+
+	// PermissionLevel Permission level granted to the Postgres role.
+	PermissionLevel *PermissionLevel `json:"permission_level,omitempty"`
+
+	// Tags User-defined tags (DB-only).
+	Tags *[]string `json:"tags,omitempty"`
+
+	// Username Postgres role name. Lowercase letters, digits and underscores; must start
+	// with a letter or underscore. The CRD `metadata.name` is derived by
+	// replacing `_` with `-`, so the same identifier shows up in the UI, the
+	// Postgres cluster, and Kubernetes.
+	Username string `json:"username"`
 }
 
 // CreateMedallionSchemaRequest defines model for CreateMedallionSchemaRequest.
@@ -1042,6 +1314,18 @@ type CreateModelServingRequest struct {
 
 	// Runtime Runtime engine for serving the model.
 	Runtime ModelRuntime `json:"runtime"`
+}
+
+// CreateOpenDataPipelineRequest Open Data pipeline request: download open data CSV and load into Iceberg table
+type CreateOpenDataPipelineRequest struct {
+	// Destination Metadata storage configuration (Trino/Iceberg for document metadata)
+	Destination MetadataStorageConfig `json:"destination"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// Source Open Data connector source configuration
+	Source OpenDataSourceConfig `json:"source"`
 }
 
 // CreateOrganizationRequestBody defines model for CreateOrganizationRequestBody.
@@ -1214,6 +1498,39 @@ type CreatePipelineRequestV26 struct {
 // CreatePipelineRequestV26Type defines model for CreatePipelineRequestV2.6.Type.
 type CreatePipelineRequestV26Type string
 
+// CreatePipelineRequestV27 defines model for .
+type CreatePipelineRequestV27 struct {
+	// DestinationDataContainerId Destination S3 DataDock to land the files into
+	DestinationDataContainerId openapi_types.UUID `json:"destination_data_container_id"`
+	DestinationPrefix          *string            `json:"destination_prefix"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// Source GDrive source configuration
+	Source GDriveSourceConfig           `json:"source"`
+	Type   CreatePipelineRequestV27Type `json:"type"`
+}
+
+// CreatePipelineRequestV27Type defines model for CreatePipelineRequestV2.7.Type.
+type CreatePipelineRequestV27Type string
+
+// CreatePipelineRequestV28 defines model for .
+type CreatePipelineRequestV28 struct {
+	// Destination Metadata storage configuration (Trino/Iceberg for document metadata)
+	Destination MetadataStorageConfig `json:"destination"`
+
+	// Pipeline Pipeline metadata configuration (common to all pipeline types)
+	Pipeline PipelineMetadata `json:"pipeline"`
+
+	// Source Open Data connector source configuration
+	Source OpenDataSourceConfig         `json:"source"`
+	Type   CreatePipelineRequestV28Type `json:"type"`
+}
+
+// CreatePipelineRequestV28Type defines model for CreatePipelineRequestV2.8.Type.
+type CreatePipelineRequestV28Type string
+
 // CreateS3CopyPipelineRequest S3-to-S3 copy pipeline request
 type CreateS3CopyPipelineRequest struct {
 	// Destination Copy pipeline destination configuration (S3 bucket)
@@ -1339,6 +1656,21 @@ type DataDock struct {
 	TokenIssuerEndpoint string `json:"token_issuer_endpoint"`
 }
 
+// DataDockExternalResponseData External API response — strips infra details (namespaces) from user-facing endpoints.
+type DataDockExternalResponseData struct {
+	ConnectionKind  DataDockKindExternalResponse `json:"connection_kind"`
+	Description     string                       `json:"description"`
+	HarborId        openapi_types.UUID           `json:"harbor_id"`
+	Host            string                       `json:"host"`
+	Id              openapi_types.UUID           `json:"id"`
+	Name            string                       `json:"name"`
+	Port            int32                        `json:"port"`
+	RefreshInterval int32                        `json:"refresh_interval"`
+	RefreshedAt     *time.Time                   `json:"refreshed_at"`
+	Slug            string                       `json:"slug"`
+	Status          DataDockStatus               `json:"status"`
+}
+
 // DataDockKind defines model for DataDockKind.
 type DataDockKind struct {
 	union json.RawMessage
@@ -1363,8 +1695,8 @@ type DataDockKind1Type string
 
 // DataDockKind2 defines model for .
 type DataDockKind2 struct {
-	Content MinioInternalConfig `json:"content"`
-	Type    DataDockKind2Type   `json:"type"`
+	Content PostgresInternalConfig `json:"content"`
+	Type    DataDockKind2Type      `json:"type"`
 }
 
 // DataDockKind2Type defines model for DataDockKind.2.Type.
@@ -1372,21 +1704,54 @@ type DataDockKind2Type string
 
 // DataDockKind3 defines model for .
 type DataDockKind3 struct {
-	Content PostgresInternalConfig `json:"content"`
-	Type    DataDockKind3Type      `json:"type"`
+	Content CephRgwInternalConfig `json:"content"`
+	Type    DataDockKind3Type     `json:"type"`
 }
 
 // DataDockKind3Type defines model for DataDockKind.3.Type.
 type DataDockKind3Type string
 
-// DataDockKind4 defines model for .
-type DataDockKind4 struct {
-	Content CephRgwInternalConfig `json:"content"`
-	Type    DataDockKind4Type     `json:"type"`
+// DataDockKindExternalResponse defines model for DataDockKindExternalResponse.
+type DataDockKindExternalResponse struct {
+	union json.RawMessage
 }
 
-// DataDockKind4Type defines model for DataDockKind.4.Type.
-type DataDockKind4Type string
+// DataDockKindExternalResponse0 defines model for .
+type DataDockKindExternalResponse0 struct {
+	Content TrinoConfigResponse               `json:"content"`
+	Type    DataDockKindExternalResponse0Type `json:"type"`
+}
+
+// DataDockKindExternalResponse0Type defines model for DataDockKindExternalResponse.0.Type.
+type DataDockKindExternalResponse0Type string
+
+// DataDockKindExternalResponse1 defines model for .
+type DataDockKindExternalResponse1 struct {
+	Content TrinoInternalConfigResponse       `json:"content"`
+	Type    DataDockKindExternalResponse1Type `json:"type"`
+}
+
+// DataDockKindExternalResponse1Type defines model for DataDockKindExternalResponse.1.Type.
+type DataDockKindExternalResponse1Type string
+
+// DataDockKindExternalResponse2 defines model for .
+type DataDockKindExternalResponse2 struct {
+	Content PostgresInternalConfigResponse    `json:"content"`
+	Type    DataDockKindExternalResponse2Type `json:"type"`
+}
+
+// DataDockKindExternalResponse2Type defines model for DataDockKindExternalResponse.2.Type.
+type DataDockKindExternalResponse2Type string
+
+// DataDockKindExternalResponse3 defines model for .
+type DataDockKindExternalResponse3 struct {
+	// Content External API response — exposes zone_id instead of raw namespace.
+	Content CephRgwInternalConfigExternalResponse `json:"content"`
+	Type    DataDockKindExternalResponse3Type     `json:"type"`
+}
+
+// DataDockKindExternalResponse3Type defines model for DataDockKindExternalResponse.3.Type.
+type DataDockKindExternalResponse3Type string
 
 // DataDockKindRequest defines model for DataDockKindRequest.
 type DataDockKindRequest struct {
@@ -1413,7 +1778,7 @@ type DataDockKindRequest1Type string
 
 // DataDockKindRequest2 defines model for .
 type DataDockKindRequest2 struct {
-	Content MinioInternalConfig      `json:"content"`
+	Content PostgresInternalConfig   `json:"content"`
 	Type    DataDockKindRequest2Type `json:"type"`
 }
 
@@ -1422,86 +1787,13 @@ type DataDockKindRequest2Type string
 
 // DataDockKindRequest3 defines model for .
 type DataDockKindRequest3 struct {
-	Content PostgresInternalConfig   `json:"content"`
+	// Content Ceph RGW creation request — uses zone_id which gets resolved to ceph_cluster_namespace
+	Content CephRgwInternalRequest   `json:"content"`
 	Type    DataDockKindRequest3Type `json:"type"`
 }
 
 // DataDockKindRequest3Type defines model for DataDockKindRequest.3.Type.
 type DataDockKindRequest3Type string
-
-// DataDockKindRequest4 defines model for .
-type DataDockKindRequest4 struct {
-	Content CephRgwInternalConfig    `json:"content"`
-	Type    DataDockKindRequest4Type `json:"type"`
-}
-
-// DataDockKindRequest4Type defines model for DataDockKindRequest.4.Type.
-type DataDockKindRequest4Type string
-
-// DataDockKindResponse defines model for DataDockKindResponse.
-type DataDockKindResponse struct {
-	union json.RawMessage
-}
-
-// DataDockKindResponse0 defines model for .
-type DataDockKindResponse0 struct {
-	Content TrinoConfigResponse       `json:"content"`
-	Type    DataDockKindResponse0Type `json:"type"`
-}
-
-// DataDockKindResponse0Type defines model for DataDockKindResponse.0.Type.
-type DataDockKindResponse0Type string
-
-// DataDockKindResponse1 defines model for .
-type DataDockKindResponse1 struct {
-	Content TrinoInternalConfigResponse `json:"content"`
-	Type    DataDockKindResponse1Type   `json:"type"`
-}
-
-// DataDockKindResponse1Type defines model for DataDockKindResponse.1.Type.
-type DataDockKindResponse1Type string
-
-// DataDockKindResponse2 defines model for .
-type DataDockKindResponse2 struct {
-	Content MinioInternalConfigResponse `json:"content"`
-	Type    DataDockKindResponse2Type   `json:"type"`
-}
-
-// DataDockKindResponse2Type defines model for DataDockKindResponse.2.Type.
-type DataDockKindResponse2Type string
-
-// DataDockKindResponse3 defines model for .
-type DataDockKindResponse3 struct {
-	Content PostgresInternalConfigResponse `json:"content"`
-	Type    DataDockKindResponse3Type      `json:"type"`
-}
-
-// DataDockKindResponse3Type defines model for DataDockKindResponse.3.Type.
-type DataDockKindResponse3Type string
-
-// DataDockKindResponse4 defines model for .
-type DataDockKindResponse4 struct {
-	Content CephRgwInternalConfigResponse `json:"content"`
-	Type    DataDockKindResponse4Type     `json:"type"`
-}
-
-// DataDockKindResponse4Type defines model for DataDockKindResponse.4.Type.
-type DataDockKindResponse4Type string
-
-// DataDockResponseData defines model for DataDockResponseData.
-type DataDockResponseData struct {
-	ConnectionKind  DataDockKindResponse `json:"connection_kind"`
-	Description     string               `json:"description"`
-	HarborId        openapi_types.UUID   `json:"harbor_id"`
-	Host            string               `json:"host"`
-	Id              openapi_types.UUID   `json:"id"`
-	Name            string               `json:"name"`
-	Port            int32                `json:"port"`
-	RefreshInterval int32                `json:"refresh_interval"`
-	RefreshedAt     *time.Time           `json:"refreshed_at"`
-	Slug            string               `json:"slug"`
-	Status          DataDockStatus       `json:"status"`
-}
 
 // DataDockSecuritySettingsResponse Response for datadock security settings.
 type DataDockSecuritySettingsResponse struct {
@@ -1531,6 +1823,12 @@ type DedupingStrategy struct {
 // DedupingStrategy0 defines model for .
 type DedupingStrategy0 struct {
 	Suffix Sha256HashDedupingStrategy `json:"Suffix"`
+}
+
+// DeleteDirectoryResponse defines model for DeleteDirectoryResponse.
+type DeleteDirectoryResponse struct {
+	// Deleted Number of secrets deleted under the prefix.
+	Deleted int `json:"deleted"`
 }
 
 // DestinationConfig Configuration for a FileRouter destination
@@ -1598,6 +1896,9 @@ type EffectiveSecuritySettingsResponse struct {
 	TableLabelMatching            bool     `json:"table_label_matching"`
 	ZeroTrustMode                 bool     `json:"zero_trust_mode"`
 }
+
+// Engine defines model for Engine.
+type Engine string
 
 // EnvVarInput defines model for EnvVarInput.
 type EnvVarInput struct {
@@ -1728,7 +2029,7 @@ type FileSorterOutputParameters struct {
 	// Router Category router configuration (CategoryRouterMetadataAware step)
 	Router CategoryRouterConfig `json:"router"`
 
-	// SourceFileConnectionId Source S3 connection ID for router (references input.dd_minio)
+	// SourceFileConnectionId Source S3 connection ID for router (references input.dd_source)
 	SourceFileConnectionId *string `json:"source_file_connection_id"`
 
 	// TrinoSchema Trino schema name
@@ -1759,11 +2060,25 @@ type FileSorterSourceConfig struct {
 	FolderPrefix *string `json:"folder_prefix"`
 }
 
+// GDriveSourceConfig GDrive source configuration
+type GDriveSourceConfig struct {
+	// Prefix Optional folder prefix within the bucket
+	Prefix     *string `json:"prefix"`
+	PrivateKey string  `json:"private_key"`
+
+	// ServiceAccountEmail Service account email for GDrive connector authentication
+	ServiceAccountEmail string  `json:"service_account_email"`
+	SharedDriveId       *string `json:"shared_drive_id"`
+}
+
 // GetConsoleConfigResponse defines model for GetConsoleConfigResponse.
 type GetConsoleConfigResponse struct {
 	AppVersion         string `json:"app_version"`
 	BifrostApiUrl      string `json:"bifrost_api_url"`
 	BifrostSqlEndpoint string `json:"bifrost_sql_endpoint"`
+
+	// CephZones Available Ceph zones for DataDock creation.
+	CephZones []CephZoneResponse `json:"ceph_zones"`
 
 	// ConsoleBaseDomain The base domain for the console (e.g., "localhost" for dev, "hyperfluid.app" for prod).
 	ConsoleBaseDomain             string                     `json:"console_base_domain"`
@@ -1828,6 +2143,14 @@ type HfTable struct {
 	TableName   string      `json:"table_name"`
 }
 
+// IcebergColumnDefinition Column definition for table creation
+type IcebergColumnDefinition struct {
+	Comment  *string `json:"comment"`
+	DataType string  `json:"data_type"`
+	Name     string  `json:"name"`
+	Nullable bool    `json:"nullable"`
+}
+
 // IcebergConnectorDataContainer defines model for IcebergConnectorDataContainer.
 type IcebergConnectorDataContainer struct {
 	DataDockId      openapi_types.UUID `json:"data_dock_id"`
@@ -1874,6 +2197,9 @@ type IcebergOptimizeRun struct {
 
 // IcebergSchemaMetadata defines model for IcebergSchemaMetadata.
 type IcebergSchemaMetadata struct {
+	// Annotations Annotations mirrored from the `TrinoSchema` CRD metadata when
+	// `source = Crd`. Empty otherwise.
+	Annotations     *map[string]string `json:"annotations,omitempty"`
 	CdcEnabled      bool               `json:"cdc_enabled"`
 	CreatedAt       time.Time          `json:"created_at"`
 	CreatorId       openapi_types.UUID `json:"creator_id"`
@@ -1883,7 +2209,24 @@ type IcebergSchemaMetadata struct {
 	Location        string             `json:"location"`
 	MedallionTier   string             `json:"medallion_tier"`
 	SchemaName      string             `json:"schema_name"`
-	UpdatedAt       time.Time          `json:"updated_at"`
+
+	// Source Whether a schema / table was declared via a Hyperfluid CRD
+	// (`TrinoSchema`, `TrinoTable`) or materialized ad-hoc through Trino DDL.
+	//
+	// Lives here (domain layer) rather than in the HTTP DTO layer because
+	// both domain models and HTTP responses carry this label.
+	Source *ResourceSource `json:"source,omitempty"`
+
+	// Status Projection of a Hyperfluid CRD's `.status` subresource, suitable for
+	// surfacing in list endpoints so the UI can render a live status badge
+	// without having to call kube-apiserver itself.
+	//
+	// - For `TrinoSchema`: `phase` + `message` are populated; drift fields
+	//   stay empty.
+	// - For `TrinoTable`: all four fields are meaningful — `missing_columns`
+	//   and `extra_columns` come from the reconciler's drift detection.
+	Status    *CrdStatusSnapshot `json:"status,omitempty"`
+	UpdatedAt time.Time          `json:"updated_at"`
 }
 
 // IcebergTableMetadata Iceberg table metadata stored in Hyperfluid
@@ -1899,6 +2242,10 @@ type IcebergTableMetadata struct {
 
 // IcebergTableResponseData defines model for IcebergTableResponseData.
 type IcebergTableResponseData struct {
+	// Annotations Metadata annotations copied from the CRD when `source = Crd`. The UI
+	// surfaces well-known keys (e.g. `hyperfluid.nudibranches.tech/source`,
+	// `hyperfluid.nudibranches.tech/pipeline`) as coloured badges.
+	Annotations     map[string]string  `json:"annotations"`
 	CreatedAt       time.Time          `json:"created_at"`
 	CreatorId       openapi_types.UUID `json:"creator_id"`
 	DataContainerId openapi_types.UUID `json:"data_container_id"`
@@ -1907,8 +2254,25 @@ type IcebergTableResponseData struct {
 	MedallionTier   string             `json:"medallion_tier"`
 	SchemaId        openapi_types.UUID `json:"schema_id"`
 	SchemaName      string             `json:"schema_name"`
-	TableName       string             `json:"table_name"`
-	UpdatedAt       time.Time          `json:"updated_at"`
+
+	// Source Whether a schema / table was declared via a Hyperfluid CRD
+	// (`TrinoSchema`, `TrinoTable`) or materialized ad-hoc through Trino DDL.
+	//
+	// Lives here (domain layer) rather than in the HTTP DTO layer because
+	// both domain models and HTTP responses carry this label.
+	Source ResourceSource `json:"source"`
+
+	// Status Projection of a Hyperfluid CRD's `.status` subresource, suitable for
+	// surfacing in list endpoints so the UI can render a live status badge
+	// without having to call kube-apiserver itself.
+	//
+	// - For `TrinoSchema`: `phase` + `message` are populated; drift fields
+	//   stay empty.
+	// - For `TrinoTable`: all four fields are meaningful — `missing_columns`
+	//   and `extra_columns` come from the reconciler's drift detection.
+	Status    *CrdStatusSnapshot `json:"status,omitempty"`
+	TableName string             `json:"table_name"`
+	UpdatedAt time.Time          `json:"updated_at"`
 }
 
 // ImportApiExtraFilter Filter on a field within the `extra` JSON object returned by the Import API.
@@ -2051,7 +2415,15 @@ type ListRunsResponse struct {
 
 // ListSecretsResponse defines model for ListSecretsResponse.
 type ListSecretsResponse struct {
-	Secrets []SecretMetadataResponse `json:"secrets"`
+	// CommonPrefixes Immediate sub-directory names under `current_path` (single-level listings only).
+	CommonPrefixes *[]string `json:"common_prefixes,omitempty"`
+
+	// CurrentPath The prefix the server used to compute this listing (echoed back for the UI).
+	CurrentPath string                   `json:"current_path"`
+	Secrets     []SecretMetadataResponse `json:"secrets"`
+
+	// Total Total number of secrets matching the filter, ignoring pagination.
+	Total int64 `json:"total"`
 }
 
 // ListServiceAccountsResponseData defines model for ListServiceAccountsResponseData.
@@ -2069,6 +2441,135 @@ type ListUserAttributesResponse struct {
 	// Attributes List of attributes in `namespace::value` format.
 	Attributes []string `json:"attributes"`
 }
+
+// ManagedPostgresqlBackupCrdResponse defines model for ManagedPostgresqlBackupCrdResponse.
+type ManagedPostgresqlBackupCrdResponse struct {
+	BackupId       *string `json:"backup_id"`
+	BackupName     *string `json:"backup_name"`
+	ClusterName    string  `json:"cluster_name"`
+	CnpgBackupName *string `json:"cnpg_backup_name"`
+	Error          *string `json:"error"`
+	Method         string  `json:"method"`
+	Phase          *string `json:"phase"`
+	StartedAt      *string `json:"started_at"`
+	StoppedAt      *string `json:"stopped_at"`
+	Target         *string `json:"target"`
+}
+
+// ManagedPostgresqlBackupResponse defines model for ManagedPostgresqlBackupResponse.
+type ManagedPostgresqlBackupResponse struct {
+	BackupId            *string            `json:"backup_id"`
+	BackupName          *string            `json:"backup_name"`
+	CnpgBackupName      *string            `json:"cnpg_backup_name"`
+	Conditions          interface{}        `json:"conditions,omitempty"`
+	CreatedAt           time.Time          `json:"created_at"`
+	Error               *string            `json:"error"`
+	HarborId            openapi_types.UUID `json:"harbor_id"`
+	Id                  openapi_types.UUID `json:"id"`
+	ManagedPostgresqlId openapi_types.UUID `json:"managed_postgresql_id"`
+	Method              string             `json:"method"`
+	Name                string             `json:"name"`
+	OrganizationId      openapi_types.UUID `json:"organization_id"`
+
+	// Origin Whether the backup was user-initiated or produced by a scheduled run that
+	// the operator adopted. Mirrored into the DB column `origin` (VARCHAR(16)
+	// with a CHECK constraint on the same vocabulary) and into the OpenAPI spec
+	// as an `enum`, so every consumer (operator via progenitor, frontend via
+	// hey-api, SDK users) sees the same closed set.
+	Origin              BackupOrigin `json:"origin"`
+	Phase               string       `json:"phase"`
+	ScheduledBackupName *string      `json:"scheduled_backup_name"`
+	SizeBytes           *int64       `json:"size_bytes"`
+	Slug                string       `json:"slug"`
+	StartedAt           *time.Time   `json:"started_at"`
+	StoppedAt           *time.Time   `json:"stopped_at"`
+	Target              *string      `json:"target"`
+	UpdatedAt           time.Time    `json:"updated_at"`
+}
+
+// ManagedPostgresqlBackupsPage defines model for ManagedPostgresqlBackupsPage.
+type ManagedPostgresqlBackupsPage struct {
+	Data  []ManagedPostgresqlBackupResponse `json:"data"`
+	Limit int64                             `json:"limit"`
+	Page  int64                             `json:"page"`
+	Total int64                             `json:"total"`
+}
+
+// ManagedPostgresqlCrdSpecResponse defines model for ManagedPostgresqlCrdSpecResponse.
+type ManagedPostgresqlCrdSpecResponse struct {
+	BackupRetention       *string `json:"backup_retention"`
+	BackupSchedule        *string `json:"backup_schedule"`
+	CpuLimit              *string `json:"cpu_limit"`
+	CpuRequest            *string `json:"cpu_request"`
+	EnableSuperuserAccess bool    `json:"enable_superuser_access"`
+	Engine                string  `json:"engine"`
+	HasBackup             bool    `json:"has_backup"`
+	HasPooler             bool    `json:"has_pooler"`
+	Instances             int32   `json:"instances"`
+	MemoryLimit           *string `json:"memory_limit"`
+	MemoryRequest         *string `json:"memory_request"`
+	StorageClass          *string `json:"storage_class"`
+	StorageSize           string  `json:"storage_size"`
+	Version               string  `json:"version"`
+}
+
+// ManagedPostgresqlResponse defines model for ManagedPostgresqlResponse.
+type ManagedPostgresqlResponse struct {
+	BackupPolicy          string             `json:"backup_policy"`
+	BackupSchedule        *string            `json:"backup_schedule"`
+	BackupScheduleSuspend bool               `json:"backup_schedule_suspend"`
+	BackupScheduleTarget  *string            `json:"backup_schedule_target"`
+	Conditions            interface{}        `json:"conditions,omitempty"`
+	Configuration         string             `json:"configuration"`
+	CreatedAt             time.Time          `json:"created_at"`
+	CurrentPrimary        *string            `json:"current_primary"`
+	DatabaseName          string             `json:"database_name"`
+	Description           *string            `json:"description"`
+	Engine                string             `json:"engine"`
+	ExternalEndpoint      *string            `json:"external_endpoint"`
+	HarborId              openapi_types.UUID `json:"harbor_id"`
+	Id                    openapi_types.UUID `json:"id"`
+	Instances             int32              `json:"instances"`
+	Name                  string             `json:"name"`
+	NodeTier              string             `json:"node_tier"`
+	OrganizationId        openapi_types.UUID `json:"organization_id"`
+	Phase                 *string            `json:"phase"`
+	ReadEndpoint          *string            `json:"read_endpoint"`
+	ReadyInstances        int32              `json:"ready_instances"`
+	Slug                  string             `json:"slug"`
+	StorageSize           string             `json:"storage_size"`
+	Tags                  []string           `json:"tags"`
+	UpdatedAt             time.Time          `json:"updated_at"`
+	Version               string             `json:"version"`
+	WriteEndpoint         *string            `json:"write_endpoint"`
+}
+
+// ManagedPostgresqlUserCrdSpecResponse defines model for ManagedPostgresqlUserCrdSpecResponse.
+type ManagedPostgresqlUserCrdSpecResponse struct {
+	ClusterName     string `json:"cluster_name"`
+	PermissionLevel string `json:"permission_level"`
+	Username        string `json:"username"`
+}
+
+// ManagedPostgresqlUserResponse defines model for ManagedPostgresqlUserResponse.
+type ManagedPostgresqlUserResponse struct {
+	Conditions              interface{}        `json:"conditions,omitempty"`
+	CreatedAt               time.Time          `json:"created_at"`
+	Description             *string            `json:"description"`
+	Id                      openapi_types.UUID `json:"id"`
+	ManagedPostgresqlId     openapi_types.UUID `json:"managed_postgresql_id"`
+	ObservedPermissionLevel *string            `json:"observed_permission_level"`
+	OrganizationId          openapi_types.UUID `json:"organization_id"`
+	PermissionLevel         string             `json:"permission_level"`
+	Phase                   *string            `json:"phase"`
+	Slug                    string             `json:"slug"`
+	Tags                    []string           `json:"tags"`
+	UpdatedAt               time.Time          `json:"updated_at"`
+	Username                string             `json:"username"`
+}
+
+// MedallionTier Medallion architecture tiers for data lake house governance
+type MedallionTier string
 
 // MetadataStorageConfig Metadata storage configuration (Trino/Iceberg for document metadata)
 type MetadataStorageConfig struct {
@@ -2117,17 +2618,6 @@ type MetricsDataPoint struct {
 
 // MetricsRange defines model for MetricsRange.
 type MetricsRange string
-
-// MinioInternalConfig defines model for MinioInternalConfig.
-type MinioInternalConfig struct {
-	// StorageSize Storage size in Gigabytes
-	StorageSize int32 `json:"storage_size"`
-}
-
-// MinioInternalConfigResponse defines model for MinioInternalConfigResponse.
-type MinioInternalConfigResponse struct {
-	StorageSize string `json:"storage_size"`
-}
 
 // ModelConfig Extra configuration for the model serving instance.
 type ModelConfig struct {
@@ -2261,6 +2751,10 @@ type MultipartPartUrl struct {
 	UploadUrl string `json:"upload_url"`
 }
 
+// NodeTier Predefined resource tiers for managed PostgreSQL instances.
+// Memory limits are always equal to memory requests.
+type NodeTier string
+
 // OciRegistryAuth defines model for OciRegistryAuth.
 type OciRegistryAuth struct {
 	Auth     string `json:"auth"`
@@ -2297,6 +2791,38 @@ type OcrProviderConfig1 struct {
 // OcrProviderConfig1Type defines model for OcrProviderConfig.1.Type.
 type OcrProviderConfig1Type string
 
+// OpenDataCatalogResponse defines model for OpenDataCatalogResponse.
+type OpenDataCatalogResponse struct {
+	Datasets []OpenDataDatasetResponse `json:"datasets"`
+}
+
+// OpenDataColumnResponse defines model for OpenDataColumnResponse.
+type OpenDataColumnResponse struct {
+	Description string `json:"description"`
+	Name        string `json:"name"`
+	TrinoType   string `json:"trino_type"`
+}
+
+// OpenDataDatasetResponse defines model for OpenDataDatasetResponse.
+type OpenDataDatasetResponse struct {
+	Columns         []OpenDataColumnResponse `json:"columns"`
+	CsvDelimiter    string                   `json:"csv_delimiter"`
+	Description     string                   `json:"description"`
+	EstimatedSizeMb int32                    `json:"estimated_size_mb"`
+	Id              string                   `json:"id"`
+	License         string                   `json:"license"`
+	Name            string                   `json:"name"`
+	Provider        string                   `json:"provider"`
+	UpdateFrequency string                   `json:"update_frequency"`
+	Url             string                   `json:"url"`
+}
+
+// OpenDataSourceConfig Open Data connector source configuration
+type OpenDataSourceConfig struct {
+	// DatasetId Dataset identifier from the open data catalog (e.g., "rnic")
+	DatasetId string `json:"dataset_id"`
+}
+
 // Org An organization is a collection of [Users](super::user::User) and [DataDocks](super::datadock::DataDock)
 type Org struct {
 	CreatedAt time.Time          `json:"created_at"`
@@ -2328,6 +2854,16 @@ type OrganizationQuotaResponse struct {
 	Usage   []QuotaUsageItemResponse `json:"usage"`
 }
 
+// PatchBackupTargetCrdRequestBody defines model for PatchBackupTargetCrdRequestBody.
+type PatchBackupTargetCrdRequestBody struct {
+	AccessKeySecretName       *string   `json:"access_key_secret_name"`
+	Description               *string   `json:"description"`
+	DestinationPath           *string   `json:"destination_path"`
+	EndpointUrl               *string   `json:"endpoint_url"`
+	SecretAccessKeySecretName *string   `json:"secret_access_key_secret_name"`
+	Tags                      *[]string `json:"tags"`
+}
+
 // PatchContainerAppCrdRequestBody defines model for PatchContainerAppCrdRequestBody.
 type PatchContainerAppCrdRequestBody struct {
 	Enabled         *bool          `json:"enabled"`
@@ -2348,19 +2884,52 @@ type PatchContainerAppCrdRequestBody struct {
 	SecretRefs   *[]SecretRefInput `json:"secret_refs"`
 }
 
+// PatchManagedPostgresqlCrdRequestBody defines model for PatchManagedPostgresqlCrdRequestBody.
+type PatchManagedPostgresqlCrdRequestBody struct {
+	Configuration *Configuration `json:"configuration,omitempty"`
+
+	// Description Optional description (DB-only, not stored in CRD)
+	Description *string `json:"description"`
+
+	// NodeTier Predefined resource tiers for managed PostgreSQL instances.
+	// Memory limits are always equal to memory requests.
+	NodeTier *NodeTier `json:"node_tier,omitempty"`
+
+	// StorageCapacity Storage capacity in GB (1-30)
+	StorageCapacity *int32 `json:"storage_capacity"`
+
+	// Tags User-defined tags (DB-only, not stored in CRD)
+	Tags *[]string `json:"tags"`
+}
+
+// PatchManagedPostgresqlUserCrdRequestBody defines model for PatchManagedPostgresqlUserCrdRequestBody.
+type PatchManagedPostgresqlUserCrdRequestBody struct {
+	// Description Optional description (DB-only).
+	Description *string `json:"description"`
+
+	// PermissionLevel Permission level granted to the Postgres role.
+	PermissionLevel *PermissionLevel `json:"permission_level,omitempty"`
+
+	// Tags User-defined tags (DB-only).
+	Tags *[]string `json:"tags"`
+}
+
 // PatchModelServingRequest defines model for PatchModelServingRequest.
 type PatchModelServingRequest struct {
 	// Replicas Target replica count for scaling
 	Replicas *int32 `json:"replicas"`
 }
 
+// PermissionLevel Permission level granted to the Postgres role.
+type PermissionLevel string
+
 // PipelineInputParameters defines model for PipelineInputParameters.
 type PipelineInputParameters struct {
 	// DcBucketId UUID of the bucket Data Container (not required for Copy pipeline)
 	DcBucketId *openapi_types.UUID `json:"dc_bucket_id"`
 
-	// DdMinio UUID of the source MinIO Data Dock (not required for Copy pipeline)
-	DdMinio *openapi_types.UUID `json:"dd_minio"`
+	// DdSource UUID of the source object storage Data Dock (not required for Copy pipeline)
+	DdSource *openapi_types.UUID `json:"dd_source"`
 
 	// DefaultRoute Configuration for a FileRouter destination
 	// Allows routing to different Data Docks with specific prefixes
@@ -2400,6 +2969,11 @@ type PipelineMetadata struct {
 
 	// OrganizationSlug Organization slug (used for Keycloak realm)
 	OrganizationSlug string `json:"organization_slug"`
+
+	// PersistLogs When true, runtime logs are persisted to the console (queryable from the
+	// UI). When false, logs are emitted to stdout only and not persisted.
+	// Defaults to true.
+	PersistLogs *bool `json:"persist_logs,omitempty"`
 }
 
 // PipelineOutputParameters defines model for PipelineOutputParameters.
@@ -2490,7 +3064,7 @@ type PipelineOutputParameters2 struct {
 	// Router Category router configuration (CategoryRouterMetadataAware step)
 	Router CategoryRouterConfig `json:"router"`
 
-	// SourceFileConnectionId Source S3 connection ID for router (references input.dd_minio)
+	// SourceFileConnectionId Source S3 connection ID for router (references input.dd_source)
 	SourceFileConnectionId *string `json:"source_file_connection_id"`
 
 	// TrinoSchema Trino schema name
@@ -2512,7 +3086,7 @@ type PipelineOutputParameters3 struct {
 	// DestinationBucketId UUID of the destination bucket Data Container
 	DestinationBucketId openapi_types.UUID `json:"destination_bucket_id"`
 
-	// DestinationDd UUID of the destination MinIO Data Dock
+	// DestinationDd UUID of the destination object storage Data Dock
 	DestinationDd openapi_types.UUID `json:"destination_dd"`
 
 	// DestinationPrefix Optional prefix path within the destination bucket
@@ -2735,11 +3309,17 @@ type QuotaUsageItemResponse struct {
 // This reference is created upon scanning a bucket and is used to track the
 // status of the file through the pipeline.
 type Ref struct {
-	Attempts     int64      `json:"attempts"`
-	CreatedAt    time.Time  `json:"created_at"`
-	ErrorMessage *string    `json:"error_message"`
-	Key          string     `json:"key"`
-	LockedAt     *time.Time `json:"locked_at"`
+	Attempts     int64     `json:"attempts"`
+	CreatedAt    time.Time `json:"created_at"`
+	ErrorMessage *string   `json:"error_message"`
+	Key          string    `json:"key"`
+
+	// Labels ARN-style metadata accumulated per step for this ref. Append-only.
+	// Format `hf:pipelines:{kind}[:{qualifier}]::{value}` — see
+	// `crate::models::labels` for builders. Used by retriable steps to skip
+	// already-completed work and by routing steps to record produced paths.
+	Labels   *[]string  `json:"labels,omitempty"`
+	LockedAt *time.Time `json:"locked_at"`
 
 	// LockedBy The ID of the pipeline run that locked the reference
 	// This is used to track the progress of the pipeline run
@@ -2761,6 +3341,13 @@ type RefreshDataDocksResponse struct {
 	RefreshedCount int32  `json:"refreshed_count"`
 	TotalCount     int32  `json:"total_count"`
 }
+
+// ResourceSource Whether a schema / table was declared via a Hyperfluid CRD
+// (`TrinoSchema`, `TrinoTable`) or materialized ad-hoc through Trino DDL.
+//
+// Lives here (domain layer) rather than in the HTTP DTO layer because
+// both domain models and HTTP responses carry this label.
+type ResourceSource string
 
 // ResourceTier Predefined resource tiers for container apps.
 // Memory limits are always equal to memory requests.
@@ -3161,6 +3748,7 @@ type UpdateRefRequest struct {
 	Attempts         int64              `json:"attempts"`
 	ErrorMessage     *string            `json:"error_message"`
 	Key              string             `json:"key"`
+	Labels           *[]string          `json:"labels,omitempty"`
 	LockedAt         *time.Time         `json:"locked_at"`
 	PipelineChecksum string             `json:"pipeline_checksum"`
 	PipelineId       openapi_types.UUID `json:"pipeline_id"`
@@ -3247,6 +3835,9 @@ type UserWithRoles struct {
 	OauthId   string             `json:"oauth_id"`
 	Roles     []Role             `json:"roles"`
 }
+
+// Value defines model for Value.
+type Value = interface{}
 
 // WorkerAutoScaling defines model for WorkerAutoScaling.
 type WorkerAutoScaling struct {
@@ -3335,10 +3926,22 @@ type ListHarborsParams struct {
 	Offset *int64  `form:"offset,omitempty" json:"offset,omitempty"`
 }
 
+// ListManagedPostgresqlBackupsParams defines parameters for ListManagedPostgresqlBackups.
+type ListManagedPostgresqlBackupsParams struct {
+	// Page Zero-based page index.
+	Page *int64 `form:"page,omitempty" json:"page,omitempty"`
+
+	// Limit Page size (max 50).
+	Limit *int64 `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
 // ListSecretsParams defines parameters for ListSecrets.
 type ListSecretsParams struct {
-	Name   *string `form:"name,omitempty" json:"name,omitempty"`
-	Tag    *string `form:"tag,omitempty" json:"tag,omitempty"`
+	Name *string `form:"name,omitempty" json:"name,omitempty"`
+	Tag  *string `form:"tag,omitempty" json:"tag,omitempty"`
+
+	// Prefix Filter secrets whose name starts with this prefix (e.g. `my-app/staging/`).
+	Prefix *string `form:"prefix,omitempty" json:"prefix,omitempty"`
 	Limit  *int64  `form:"limit,omitempty" json:"limit,omitempty"`
 	Offset *int64  `form:"offset,omitempty" json:"offset,omitempty"`
 }
@@ -3347,6 +3950,17 @@ type ListSecretsParams struct {
 type CountSecretsParams struct {
 	Name *string `form:"name,omitempty" json:"name,omitempty"`
 	Tag  *string `form:"tag,omitempty" json:"tag,omitempty"`
+
+	// Prefix Filter secrets whose name starts with this prefix (e.g. `my-app/staging/`).
+	Prefix *string `form:"prefix,omitempty" json:"prefix,omitempty"`
+}
+
+// DeleteDirectoryParams defines parameters for DeleteDirectory.
+type DeleteDirectoryParams struct {
+	// Prefix The hierarchical prefix whose secrets should be deleted. Must be
+	// non-empty and end with `/` (e.g. `my-app/staging/`). Deletion is
+	// recursive: every secret whose name starts with this prefix is removed.
+	Prefix string `form:"prefix" json:"prefix"`
 }
 
 // ListContextualRestrictionsHandlerParams defines parameters for ListContextualRestrictionsHandler.
@@ -3553,20 +4167,44 @@ type CreateKafkaHfServiceJSONRequestBody = CreateKafkaHFServiceRequest
 // CreateApiKeyJSONRequestBody defines body for CreateApiKey for application/json ContentType.
 type CreateApiKeyJSONRequestBody = CreateApiKeyRequest
 
+// PatchBackupTargetCrdJSONRequestBody defines body for PatchBackupTargetCrd for application/json ContentType.
+type PatchBackupTargetCrdJSONRequestBody = PatchBackupTargetCrdRequestBody
+
 // PatchContainerAppCrdJSONRequestBody defines body for PatchContainerAppCrd for application/json ContentType.
 type PatchContainerAppCrdJSONRequestBody = PatchContainerAppCrdRequestBody
 
 // CreateHarborCrdJSONRequestBody defines body for CreateHarborCrd for application/json ContentType.
 type CreateHarborCrdJSONRequestBody = CreateHarborCrdRequestBody
 
+// CreateBackupTargetCrdJSONRequestBody defines body for CreateBackupTargetCrd for application/json ContentType.
+type CreateBackupTargetCrdJSONRequestBody = CreateBackupTargetCrdRequestBody
+
 // CreateContainerAppCrdJSONRequestBody defines body for CreateContainerAppCrd for application/json ContentType.
 type CreateContainerAppCrdJSONRequestBody = CreateContainerAppCrdRequestBody
+
+// CreateManagedPostgresqlCrdJSONRequestBody defines body for CreateManagedPostgresqlCrd for application/json ContentType.
+type CreateManagedPostgresqlCrdJSONRequestBody = CreateManagedPostgresqlCrdRequestBody
+
+// CreateManagedPostgresqlUserCrdJSONRequestBody defines body for CreateManagedPostgresqlUserCrd for application/json ContentType.
+type CreateManagedPostgresqlUserCrdJSONRequestBody = CreateManagedPostgresqlUserCrdRequestBody
+
+// PatchManagedPostgresqlUserCrdJSONRequestBody defines body for PatchManagedPostgresqlUserCrd for application/json ContentType.
+type PatchManagedPostgresqlUserCrdJSONRequestBody = PatchManagedPostgresqlUserCrdRequestBody
+
+// PatchManagedPostgresqlCrdJSONRequestBody defines body for PatchManagedPostgresqlCrd for application/json ContentType.
+type PatchManagedPostgresqlCrdJSONRequestBody = PatchManagedPostgresqlCrdRequestBody
+
+// CreateManagedPostgresqlBackupCrdJSONRequestBody defines body for CreateManagedPostgresqlBackupCrd for application/json ContentType.
+type CreateManagedPostgresqlBackupCrdJSONRequestBody = CreateManagedPostgresqlBackupCrdRequestBody
 
 // CreateModelServingJSONRequestBody defines body for CreateModelServing for application/json ContentType.
 type CreateModelServingJSONRequestBody = CreateModelServingRequest
 
 // PatchModelServingJSONRequestBody defines body for PatchModelServing for application/json ContentType.
 type PatchModelServingJSONRequestBody = PatchModelServingRequest
+
+// CountPipelineRefsJSONRequestBody defines body for CountPipelineRefs for application/json ContentType.
+type CountPipelineRefsJSONRequestBody = CountRefRequest
 
 // CreateSecretJSONRequestBody defines body for CreateSecret for application/json ContentType.
 type CreateSecretJSONRequestBody = CreateSecretRequestBody
@@ -3816,6 +4454,58 @@ func (t *CreatePipelineRequestV2) MergeCreatePipelineRequestV26(v CreatePipeline
 	return err
 }
 
+// AsCreatePipelineRequestV27 returns the union data inside the CreatePipelineRequestV2 as a CreatePipelineRequestV27
+func (t CreatePipelineRequestV2) AsCreatePipelineRequestV27() (CreatePipelineRequestV27, error) {
+	var body CreatePipelineRequestV27
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreatePipelineRequestV27 overwrites any union data inside the CreatePipelineRequestV2 as the provided CreatePipelineRequestV27
+func (t *CreatePipelineRequestV2) FromCreatePipelineRequestV27(v CreatePipelineRequestV27) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreatePipelineRequestV27 performs a merge with any union data inside the CreatePipelineRequestV2, using the provided CreatePipelineRequestV27
+func (t *CreatePipelineRequestV2) MergeCreatePipelineRequestV27(v CreatePipelineRequestV27) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCreatePipelineRequestV28 returns the union data inside the CreatePipelineRequestV2 as a CreatePipelineRequestV28
+func (t CreatePipelineRequestV2) AsCreatePipelineRequestV28() (CreatePipelineRequestV28, error) {
+	var body CreatePipelineRequestV28
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreatePipelineRequestV28 overwrites any union data inside the CreatePipelineRequestV2 as the provided CreatePipelineRequestV28
+func (t *CreatePipelineRequestV2) FromCreatePipelineRequestV28(v CreatePipelineRequestV28) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreatePipelineRequestV28 performs a merge with any union data inside the CreatePipelineRequestV2, using the provided CreatePipelineRequestV28
+func (t *CreatePipelineRequestV2) MergeCreatePipelineRequestV28(v CreatePipelineRequestV28) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t CreatePipelineRequestV2) MarshalJSON() ([]byte, error) {
 	b, err := t.union.MarshalJSON()
 	return b, err
@@ -3930,22 +4620,32 @@ func (t *DataDockKind) MergeDataDockKind3(v DataDockKind3) error {
 	return err
 }
 
-// AsDataDockKind4 returns the union data inside the DataDockKind as a DataDockKind4
-func (t DataDockKind) AsDataDockKind4() (DataDockKind4, error) {
-	var body DataDockKind4
+func (t DataDockKind) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *DataDockKind) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsDataDockKindExternalResponse0 returns the union data inside the DataDockKindExternalResponse as a DataDockKindExternalResponse0
+func (t DataDockKindExternalResponse) AsDataDockKindExternalResponse0() (DataDockKindExternalResponse0, error) {
+	var body DataDockKindExternalResponse0
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromDataDockKind4 overwrites any union data inside the DataDockKind as the provided DataDockKind4
-func (t *DataDockKind) FromDataDockKind4(v DataDockKind4) error {
+// FromDataDockKindExternalResponse0 overwrites any union data inside the DataDockKindExternalResponse as the provided DataDockKindExternalResponse0
+func (t *DataDockKindExternalResponse) FromDataDockKindExternalResponse0(v DataDockKindExternalResponse0) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeDataDockKind4 performs a merge with any union data inside the DataDockKind, using the provided DataDockKind4
-func (t *DataDockKind) MergeDataDockKind4(v DataDockKind4) error {
+// MergeDataDockKindExternalResponse0 performs a merge with any union data inside the DataDockKindExternalResponse, using the provided DataDockKindExternalResponse0
+func (t *DataDockKindExternalResponse) MergeDataDockKindExternalResponse0(v DataDockKindExternalResponse0) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -3956,12 +4656,90 @@ func (t *DataDockKind) MergeDataDockKind4(v DataDockKind4) error {
 	return err
 }
 
-func (t DataDockKind) MarshalJSON() ([]byte, error) {
+// AsDataDockKindExternalResponse1 returns the union data inside the DataDockKindExternalResponse as a DataDockKindExternalResponse1
+func (t DataDockKindExternalResponse) AsDataDockKindExternalResponse1() (DataDockKindExternalResponse1, error) {
+	var body DataDockKindExternalResponse1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDataDockKindExternalResponse1 overwrites any union data inside the DataDockKindExternalResponse as the provided DataDockKindExternalResponse1
+func (t *DataDockKindExternalResponse) FromDataDockKindExternalResponse1(v DataDockKindExternalResponse1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDataDockKindExternalResponse1 performs a merge with any union data inside the DataDockKindExternalResponse, using the provided DataDockKindExternalResponse1
+func (t *DataDockKindExternalResponse) MergeDataDockKindExternalResponse1(v DataDockKindExternalResponse1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsDataDockKindExternalResponse2 returns the union data inside the DataDockKindExternalResponse as a DataDockKindExternalResponse2
+func (t DataDockKindExternalResponse) AsDataDockKindExternalResponse2() (DataDockKindExternalResponse2, error) {
+	var body DataDockKindExternalResponse2
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDataDockKindExternalResponse2 overwrites any union data inside the DataDockKindExternalResponse as the provided DataDockKindExternalResponse2
+func (t *DataDockKindExternalResponse) FromDataDockKindExternalResponse2(v DataDockKindExternalResponse2) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDataDockKindExternalResponse2 performs a merge with any union data inside the DataDockKindExternalResponse, using the provided DataDockKindExternalResponse2
+func (t *DataDockKindExternalResponse) MergeDataDockKindExternalResponse2(v DataDockKindExternalResponse2) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsDataDockKindExternalResponse3 returns the union data inside the DataDockKindExternalResponse as a DataDockKindExternalResponse3
+func (t DataDockKindExternalResponse) AsDataDockKindExternalResponse3() (DataDockKindExternalResponse3, error) {
+	var body DataDockKindExternalResponse3
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDataDockKindExternalResponse3 overwrites any union data inside the DataDockKindExternalResponse as the provided DataDockKindExternalResponse3
+func (t *DataDockKindExternalResponse) FromDataDockKindExternalResponse3(v DataDockKindExternalResponse3) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDataDockKindExternalResponse3 performs a merge with any union data inside the DataDockKindExternalResponse, using the provided DataDockKindExternalResponse3
+func (t *DataDockKindExternalResponse) MergeDataDockKindExternalResponse3(v DataDockKindExternalResponse3) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t DataDockKindExternalResponse) MarshalJSON() ([]byte, error) {
 	b, err := t.union.MarshalJSON()
 	return b, err
 }
 
-func (t *DataDockKind) UnmarshalJSON(b []byte) error {
+func (t *DataDockKindExternalResponse) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -4070,178 +4848,12 @@ func (t *DataDockKindRequest) MergeDataDockKindRequest3(v DataDockKindRequest3) 
 	return err
 }
 
-// AsDataDockKindRequest4 returns the union data inside the DataDockKindRequest as a DataDockKindRequest4
-func (t DataDockKindRequest) AsDataDockKindRequest4() (DataDockKindRequest4, error) {
-	var body DataDockKindRequest4
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromDataDockKindRequest4 overwrites any union data inside the DataDockKindRequest as the provided DataDockKindRequest4
-func (t *DataDockKindRequest) FromDataDockKindRequest4(v DataDockKindRequest4) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeDataDockKindRequest4 performs a merge with any union data inside the DataDockKindRequest, using the provided DataDockKindRequest4
-func (t *DataDockKindRequest) MergeDataDockKindRequest4(v DataDockKindRequest4) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
 func (t DataDockKindRequest) MarshalJSON() ([]byte, error) {
 	b, err := t.union.MarshalJSON()
 	return b, err
 }
 
 func (t *DataDockKindRequest) UnmarshalJSON(b []byte) error {
-	err := t.union.UnmarshalJSON(b)
-	return err
-}
-
-// AsDataDockKindResponse0 returns the union data inside the DataDockKindResponse as a DataDockKindResponse0
-func (t DataDockKindResponse) AsDataDockKindResponse0() (DataDockKindResponse0, error) {
-	var body DataDockKindResponse0
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromDataDockKindResponse0 overwrites any union data inside the DataDockKindResponse as the provided DataDockKindResponse0
-func (t *DataDockKindResponse) FromDataDockKindResponse0(v DataDockKindResponse0) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeDataDockKindResponse0 performs a merge with any union data inside the DataDockKindResponse, using the provided DataDockKindResponse0
-func (t *DataDockKindResponse) MergeDataDockKindResponse0(v DataDockKindResponse0) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsDataDockKindResponse1 returns the union data inside the DataDockKindResponse as a DataDockKindResponse1
-func (t DataDockKindResponse) AsDataDockKindResponse1() (DataDockKindResponse1, error) {
-	var body DataDockKindResponse1
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromDataDockKindResponse1 overwrites any union data inside the DataDockKindResponse as the provided DataDockKindResponse1
-func (t *DataDockKindResponse) FromDataDockKindResponse1(v DataDockKindResponse1) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeDataDockKindResponse1 performs a merge with any union data inside the DataDockKindResponse, using the provided DataDockKindResponse1
-func (t *DataDockKindResponse) MergeDataDockKindResponse1(v DataDockKindResponse1) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsDataDockKindResponse2 returns the union data inside the DataDockKindResponse as a DataDockKindResponse2
-func (t DataDockKindResponse) AsDataDockKindResponse2() (DataDockKindResponse2, error) {
-	var body DataDockKindResponse2
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromDataDockKindResponse2 overwrites any union data inside the DataDockKindResponse as the provided DataDockKindResponse2
-func (t *DataDockKindResponse) FromDataDockKindResponse2(v DataDockKindResponse2) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeDataDockKindResponse2 performs a merge with any union data inside the DataDockKindResponse, using the provided DataDockKindResponse2
-func (t *DataDockKindResponse) MergeDataDockKindResponse2(v DataDockKindResponse2) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsDataDockKindResponse3 returns the union data inside the DataDockKindResponse as a DataDockKindResponse3
-func (t DataDockKindResponse) AsDataDockKindResponse3() (DataDockKindResponse3, error) {
-	var body DataDockKindResponse3
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromDataDockKindResponse3 overwrites any union data inside the DataDockKindResponse as the provided DataDockKindResponse3
-func (t *DataDockKindResponse) FromDataDockKindResponse3(v DataDockKindResponse3) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeDataDockKindResponse3 performs a merge with any union data inside the DataDockKindResponse, using the provided DataDockKindResponse3
-func (t *DataDockKindResponse) MergeDataDockKindResponse3(v DataDockKindResponse3) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsDataDockKindResponse4 returns the union data inside the DataDockKindResponse as a DataDockKindResponse4
-func (t DataDockKindResponse) AsDataDockKindResponse4() (DataDockKindResponse4, error) {
-	var body DataDockKindResponse4
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromDataDockKindResponse4 overwrites any union data inside the DataDockKindResponse as the provided DataDockKindResponse4
-func (t *DataDockKindResponse) FromDataDockKindResponse4(v DataDockKindResponse4) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeDataDockKindResponse4 performs a merge with any union data inside the DataDockKindResponse, using the provided DataDockKindResponse4
-func (t *DataDockKindResponse) MergeDataDockKindResponse4(v DataDockKindResponse4) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-func (t DataDockKindResponse) MarshalJSON() ([]byte, error) {
-	b, err := t.union.MarshalJSON()
-	return b, err
-}
-
-func (t *DataDockKindResponse) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -4962,6 +5574,9 @@ type ClientInterface interface {
 
 	CreateSchema(ctx context.Context, dataContainerId openapi_types.UUID, body CreateSchemaJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetTableColumns request
+	GetTableColumns(ctx context.Context, dataContainerId openapi_types.UUID, schemaName string, tableName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetTables request
 	GetTables(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -5068,6 +5683,9 @@ type ClientInterface interface {
 	// GetKafkaMetadata request
 	GetKafkaMetadata(ctx context.Context, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetOpenDataCatalog request
+	GetOpenDataCatalog(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListOrganizations request
 	ListOrganizations(ctx context.Context, params *ListOrganizationsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -5103,6 +5721,20 @@ type ClientInterface interface {
 
 	// RevokeApiKey request
 	RevokeApiKey(ctx context.Context, organizationId openapi_types.UUID, keyId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetBackupTarget request
+	GetBackupTarget(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteBackupTargetCrd request
+	DeleteBackupTargetCrd(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetBackupTargetCrd request
+	GetBackupTargetCrd(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchBackupTargetCrdWithBody request with any body
+	PatchBackupTargetCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchBackupTargetCrd(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, body PatchBackupTargetCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetContainerApp request
 	GetContainerApp(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -5144,6 +5776,14 @@ type ClientInterface interface {
 	// DeleteHarborCrd request
 	DeleteHarborCrd(ctx context.Context, organizationId openapi_types.UUID, harborSlug string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListBackupTargets request
+	ListBackupTargets(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateBackupTargetCrdWithBody request with any body
+	CreateBackupTargetCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateBackupTargetCrd(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateBackupTargetCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListContainerApps request
 	ListContainerApps(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -5152,8 +5792,69 @@ type ClientInterface interface {
 
 	CreateContainerAppCrd(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateContainerAppCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListManagedPostgresqls request
+	ListManagedPostgresqls(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateManagedPostgresqlCrdWithBody request with any body
+	CreateManagedPostgresqlCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateManagedPostgresqlCrd(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateManagedPostgresqlCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// CheckHarborNameAvailable request
 	CheckHarborNameAvailable(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetManagedPostgresqlBackup request
+	GetManagedPostgresqlBackup(ctx context.Context, organizationId openapi_types.UUID, backupId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteManagedPostgresqlBackupCrd request
+	DeleteManagedPostgresqlBackupCrd(ctx context.Context, organizationId openapi_types.UUID, backupId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetManagedPostgresqlBackupCrd request
+	GetManagedPostgresqlBackupCrd(ctx context.Context, organizationId openapi_types.UUID, backupId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListManagedPostgresqlUsers request
+	ListManagedPostgresqlUsers(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateManagedPostgresqlUserCrdWithBody request with any body
+	CreateManagedPostgresqlUserCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateManagedPostgresqlUserCrd(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, body CreateManagedPostgresqlUserCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetManagedPostgresqlUser request
+	GetManagedPostgresqlUser(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteManagedPostgresqlUserCrd request
+	DeleteManagedPostgresqlUserCrd(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetManagedPostgresqlUserCrd request
+	GetManagedPostgresqlUserCrd(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchManagedPostgresqlUserCrdWithBody request with any body
+	PatchManagedPostgresqlUserCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchManagedPostgresqlUserCrd(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, body PatchManagedPostgresqlUserCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetManagedPostgresql request
+	GetManagedPostgresql(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteManagedPostgresqlCrd request
+	DeleteManagedPostgresqlCrd(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetManagedPostgresqlCrd request
+	GetManagedPostgresqlCrd(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchManagedPostgresqlCrdWithBody request with any body
+	PatchManagedPostgresqlCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchManagedPostgresqlCrd(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, body PatchManagedPostgresqlCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListManagedPostgresqlBackups request
+	ListManagedPostgresqlBackups(ctx context.Context, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, params *ListManagedPostgresqlBackupsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateManagedPostgresqlBackupCrdWithBody request with any body
+	CreateManagedPostgresqlBackupCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateManagedPostgresqlBackupCrd(ctx context.Context, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, body CreateManagedPostgresqlBackupCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListModelServings request
 	ListModelServings(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -5180,11 +5881,22 @@ type ClientInterface interface {
 	// DeletePipeline request
 	DeletePipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// CountPipelineRefsWithBody request with any body
+	CountPipelineRefsWithBody(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CountPipelineRefs(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body CountPipelineRefsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ResumePipeline request
+	ResumePipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListPipelineRuns request
 	ListPipelineRuns(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetPipelineRun request
 	GetPipelineRun(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, runId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SuspendPipeline request
+	SuspendPipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TriggerPipeline request
 	TriggerPipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -5199,6 +5911,9 @@ type ClientInterface interface {
 
 	// CountSecrets request
 	CountSecrets(ctx context.Context, organizationId openapi_types.UUID, params *CountSecretsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteDirectory request
+	DeleteDirectory(ctx context.Context, organizationId openapi_types.UUID, params *DeleteDirectoryParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteSecret request
 	DeleteSecret(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -5912,6 +6627,18 @@ func (c *Client) CreateSchema(ctx context.Context, dataContainerId openapi_types
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetTableColumns(ctx context.Context, dataContainerId openapi_types.UUID, schemaName string, tableName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetTableColumnsRequest(c.Server, dataContainerId, schemaName, tableName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetTables(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetTablesRequest(c.Server, dataContainerId)
 	if err != nil {
@@ -6380,6 +7107,18 @@ func (c *Client) GetKafkaMetadata(ctx context.Context, kafkaServiceId openapi_ty
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetOpenDataCatalog(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOpenDataCatalogRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListOrganizations(ctx context.Context, params *ListOrganizationsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListOrganizationsRequest(c.Server, params)
 	if err != nil {
@@ -6526,6 +7265,66 @@ func (c *Client) CreateApiKey(ctx context.Context, organizationId openapi_types.
 
 func (c *Client) RevokeApiKey(ctx context.Context, organizationId openapi_types.UUID, keyId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewRevokeApiKeyRequest(c.Server, organizationId, keyId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetBackupTarget(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetBackupTargetRequest(c.Server, organizationId, backupTargetId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteBackupTargetCrd(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteBackupTargetCrdRequest(c.Server, organizationId, backupTargetId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetBackupTargetCrd(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetBackupTargetCrdRequest(c.Server, organizationId, backupTargetId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchBackupTargetCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchBackupTargetCrdRequestWithBody(c.Server, organizationId, backupTargetId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchBackupTargetCrd(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, body PatchBackupTargetCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchBackupTargetCrdRequest(c.Server, organizationId, backupTargetId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -6704,6 +7503,42 @@ func (c *Client) DeleteHarborCrd(ctx context.Context, organizationId openapi_typ
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListBackupTargets(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListBackupTargetsRequest(c.Server, organizationId, harborId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateBackupTargetCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateBackupTargetCrdRequestWithBody(c.Server, organizationId, harborId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateBackupTargetCrd(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateBackupTargetCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateBackupTargetCrdRequest(c.Server, organizationId, harborId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListContainerApps(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListContainerAppsRequest(c.Server, organizationId, harborId)
 	if err != nil {
@@ -6740,8 +7575,272 @@ func (c *Client) CreateContainerAppCrd(ctx context.Context, organizationId opena
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListManagedPostgresqls(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListManagedPostgresqlsRequest(c.Server, organizationId, harborId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateManagedPostgresqlCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateManagedPostgresqlCrdRequestWithBody(c.Server, organizationId, harborId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateManagedPostgresqlCrd(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateManagedPostgresqlCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateManagedPostgresqlCrdRequest(c.Server, organizationId, harborId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) CheckHarborNameAvailable(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCheckHarborNameAvailableRequest(c.Server, organizationId, name)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetManagedPostgresqlBackup(ctx context.Context, organizationId openapi_types.UUID, backupId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetManagedPostgresqlBackupRequest(c.Server, organizationId, backupId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteManagedPostgresqlBackupCrd(ctx context.Context, organizationId openapi_types.UUID, backupId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteManagedPostgresqlBackupCrdRequest(c.Server, organizationId, backupId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetManagedPostgresqlBackupCrd(ctx context.Context, organizationId openapi_types.UUID, backupId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetManagedPostgresqlBackupCrdRequest(c.Server, organizationId, backupId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListManagedPostgresqlUsers(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListManagedPostgresqlUsersRequest(c.Server, organizationId, clusterId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateManagedPostgresqlUserCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateManagedPostgresqlUserCrdRequestWithBody(c.Server, organizationId, clusterId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateManagedPostgresqlUserCrd(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, body CreateManagedPostgresqlUserCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateManagedPostgresqlUserCrdRequest(c.Server, organizationId, clusterId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetManagedPostgresqlUser(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetManagedPostgresqlUserRequest(c.Server, organizationId, clusterId, userId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteManagedPostgresqlUserCrd(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteManagedPostgresqlUserCrdRequest(c.Server, organizationId, clusterId, userId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetManagedPostgresqlUserCrd(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetManagedPostgresqlUserCrdRequest(c.Server, organizationId, clusterId, userId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchManagedPostgresqlUserCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchManagedPostgresqlUserCrdRequestWithBody(c.Server, organizationId, clusterId, userId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchManagedPostgresqlUserCrd(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, body PatchManagedPostgresqlUserCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchManagedPostgresqlUserCrdRequest(c.Server, organizationId, clusterId, userId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetManagedPostgresql(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetManagedPostgresqlRequest(c.Server, organizationId, instanceId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteManagedPostgresqlCrd(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteManagedPostgresqlCrdRequest(c.Server, organizationId, instanceId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetManagedPostgresqlCrd(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetManagedPostgresqlCrdRequest(c.Server, organizationId, instanceId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchManagedPostgresqlCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchManagedPostgresqlCrdRequestWithBody(c.Server, organizationId, instanceId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchManagedPostgresqlCrd(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, body PatchManagedPostgresqlCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchManagedPostgresqlCrdRequest(c.Server, organizationId, instanceId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListManagedPostgresqlBackups(ctx context.Context, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, params *ListManagedPostgresqlBackupsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListManagedPostgresqlBackupsRequest(c.Server, organizationId, managedPostgresqlId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateManagedPostgresqlBackupCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateManagedPostgresqlBackupCrdRequestWithBody(c.Server, organizationId, managedPostgresqlId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateManagedPostgresqlBackupCrd(ctx context.Context, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, body CreateManagedPostgresqlBackupCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateManagedPostgresqlBackupCrdRequest(c.Server, organizationId, managedPostgresqlId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -6860,6 +7959,42 @@ func (c *Client) DeletePipeline(ctx context.Context, organizationId openapi_type
 	return c.Client.Do(req)
 }
 
+func (c *Client) CountPipelineRefsWithBody(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCountPipelineRefsRequestWithBody(c.Server, organizationId, pipelineId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CountPipelineRefs(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body CountPipelineRefsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCountPipelineRefsRequest(c.Server, organizationId, pipelineId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ResumePipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewResumePipelineRequest(c.Server, organizationId, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListPipelineRuns(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListPipelineRunsRequest(c.Server, organizationId, pipelineId)
 	if err != nil {
@@ -6874,6 +8009,18 @@ func (c *Client) ListPipelineRuns(ctx context.Context, organizationId openapi_ty
 
 func (c *Client) GetPipelineRun(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, runId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetPipelineRunRequest(c.Server, organizationId, pipelineId, runId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SuspendPipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSuspendPipelineRequest(c.Server, organizationId, pipelineId)
 	if err != nil {
 		return nil, err
 	}
@@ -6934,6 +8081,18 @@ func (c *Client) CreateSecret(ctx context.Context, organizationId openapi_types.
 
 func (c *Client) CountSecrets(ctx context.Context, organizationId openapi_types.UUID, params *CountSecretsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCountSecretsRequest(c.Server, organizationId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteDirectory(ctx context.Context, organizationId openapi_types.UUID, params *DeleteDirectoryParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteDirectoryRequest(c.Server, organizationId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -9139,6 +10298,54 @@ func NewCreateSchemaRequestWithBody(server string, dataContainerId openapi_types
 	return req, nil
 }
 
+// NewGetTableColumnsRequest generates requests for GetTableColumns
+func NewGetTableColumnsRequest(server string, dataContainerId openapi_types.UUID, schemaName string, tableName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "schema_name", runtime.ParamLocationPath, schemaName)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "table_name", runtime.ParamLocationPath, tableName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/iceberg/%s/schemas/%s/tables/%s/columns", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetTablesRequest generates requests for GetTables
 func NewGetTablesRequest(server string, dataContainerId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -10395,6 +11602,33 @@ func NewGetKafkaMetadataRequest(server string, kafkaServiceId openapi_types.UUID
 	return req, nil
 }
 
+// NewGetOpenDataCatalogRequest generates requests for GetOpenDataCatalog
+func NewGetOpenDataCatalogRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/open-data/catalog")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewListOrganizationsRequest generates requests for ListOrganizations
 func NewListOrganizationsRequest(server string, params *ListOrganizationsParams) (*http.Request, error) {
 	var err error
@@ -10910,6 +12144,183 @@ func NewRevokeApiKeyRequest(server string, organizationId openapi_types.UUID, ke
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewGetBackupTargetRequest generates requests for GetBackupTarget
+func NewGetBackupTargetRequest(server string, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "backup_target_id", runtime.ParamLocationPath, backupTargetId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/backup-targets/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteBackupTargetCrdRequest generates requests for DeleteBackupTargetCrd
+func NewDeleteBackupTargetCrdRequest(server string, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "backup_target_id", runtime.ParamLocationPath, backupTargetId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/backup-targets/%s/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetBackupTargetCrdRequest generates requests for GetBackupTargetCrd
+func NewGetBackupTargetCrdRequest(server string, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "backup_target_id", runtime.ParamLocationPath, backupTargetId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/backup-targets/%s/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPatchBackupTargetCrdRequest calls the generic PatchBackupTargetCrd builder with application/json body
+func NewPatchBackupTargetCrdRequest(server string, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, body PatchBackupTargetCrdJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchBackupTargetCrdRequestWithBody(server, organizationId, backupTargetId, "application/json", bodyReader)
+}
+
+// NewPatchBackupTargetCrdRequestWithBody generates requests for PatchBackupTargetCrd with any type of body
+func NewPatchBackupTargetCrdRequestWithBody(server string, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "backup_target_id", runtime.ParamLocationPath, backupTargetId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/backup-targets/%s/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -11510,6 +12921,101 @@ func NewDeleteHarborCrdRequest(server string, organizationId openapi_types.UUID,
 	return req, nil
 }
 
+// NewListBackupTargetsRequest generates requests for ListBackupTargets
+func NewListBackupTargetsRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/backup-targets", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateBackupTargetCrdRequest calls the generic CreateBackupTargetCrd builder with application/json body
+func NewCreateBackupTargetCrdRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateBackupTargetCrdJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateBackupTargetCrdRequestWithBody(server, organizationId, harborId, "application/json", bodyReader)
+}
+
+// NewCreateBackupTargetCrdRequestWithBody generates requests for CreateBackupTargetCrd with any type of body
+func NewCreateBackupTargetCrdRequestWithBody(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/backup-targets/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewListContainerAppsRequest generates requests for ListContainerApps
 func NewListContainerAppsRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -11605,6 +13111,101 @@ func NewCreateContainerAppCrdRequestWithBody(server string, organizationId opena
 	return req, nil
 }
 
+// NewListManagedPostgresqlsRequest generates requests for ListManagedPostgresqls
+func NewListManagedPostgresqlsRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/managed-postgresqls", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateManagedPostgresqlCrdRequest calls the generic CreateManagedPostgresqlCrd builder with application/json body
+func NewCreateManagedPostgresqlCrdRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateManagedPostgresqlCrdJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateManagedPostgresqlCrdRequestWithBody(server, organizationId, harborId, "application/json", bodyReader)
+}
+
+// NewCreateManagedPostgresqlCrdRequestWithBody generates requests for CreateManagedPostgresqlCrd with any type of body
+func NewCreateManagedPostgresqlCrdRequestWithBody(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/managed-postgresqls/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewCheckHarborNameAvailableRequest generates requests for CheckHarborNameAvailable
 func NewCheckHarborNameAvailableRequest(server string, organizationId openapi_types.UUID, name string) (*http.Request, error) {
 	var err error
@@ -11642,6 +13243,739 @@ func NewCheckHarborNameAvailableRequest(server string, organizationId openapi_ty
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewGetManagedPostgresqlBackupRequest generates requests for GetManagedPostgresqlBackup
+func NewGetManagedPostgresqlBackupRequest(server string, organizationId openapi_types.UUID, backupId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "backup_id", runtime.ParamLocationPath, backupId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresql-backups/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteManagedPostgresqlBackupCrdRequest generates requests for DeleteManagedPostgresqlBackupCrd
+func NewDeleteManagedPostgresqlBackupCrdRequest(server string, organizationId openapi_types.UUID, backupId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "backup_id", runtime.ParamLocationPath, backupId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresql-backups/%s/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetManagedPostgresqlBackupCrdRequest generates requests for GetManagedPostgresqlBackupCrd
+func NewGetManagedPostgresqlBackupCrdRequest(server string, organizationId openapi_types.UUID, backupId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "backup_id", runtime.ParamLocationPath, backupId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresql-backups/%s/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListManagedPostgresqlUsersRequest generates requests for ListManagedPostgresqlUsers
+func NewListManagedPostgresqlUsersRequest(server string, organizationId openapi_types.UUID, clusterId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "cluster_id", runtime.ParamLocationPath, clusterId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresqls/%s/users", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateManagedPostgresqlUserCrdRequest calls the generic CreateManagedPostgresqlUserCrd builder with application/json body
+func NewCreateManagedPostgresqlUserCrdRequest(server string, organizationId openapi_types.UUID, clusterId openapi_types.UUID, body CreateManagedPostgresqlUserCrdJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateManagedPostgresqlUserCrdRequestWithBody(server, organizationId, clusterId, "application/json", bodyReader)
+}
+
+// NewCreateManagedPostgresqlUserCrdRequestWithBody generates requests for CreateManagedPostgresqlUserCrd with any type of body
+func NewCreateManagedPostgresqlUserCrdRequestWithBody(server string, organizationId openapi_types.UUID, clusterId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "cluster_id", runtime.ParamLocationPath, clusterId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresqls/%s/users/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetManagedPostgresqlUserRequest generates requests for GetManagedPostgresqlUser
+func NewGetManagedPostgresqlUserRequest(server string, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "cluster_id", runtime.ParamLocationPath, clusterId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "user_id", runtime.ParamLocationPath, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresqls/%s/users/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteManagedPostgresqlUserCrdRequest generates requests for DeleteManagedPostgresqlUserCrd
+func NewDeleteManagedPostgresqlUserCrdRequest(server string, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "cluster_id", runtime.ParamLocationPath, clusterId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "user_id", runtime.ParamLocationPath, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresqls/%s/users/%s/crd", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetManagedPostgresqlUserCrdRequest generates requests for GetManagedPostgresqlUserCrd
+func NewGetManagedPostgresqlUserCrdRequest(server string, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "cluster_id", runtime.ParamLocationPath, clusterId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "user_id", runtime.ParamLocationPath, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresqls/%s/users/%s/crd", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPatchManagedPostgresqlUserCrdRequest calls the generic PatchManagedPostgresqlUserCrd builder with application/json body
+func NewPatchManagedPostgresqlUserCrdRequest(server string, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, body PatchManagedPostgresqlUserCrdJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchManagedPostgresqlUserCrdRequestWithBody(server, organizationId, clusterId, userId, "application/json", bodyReader)
+}
+
+// NewPatchManagedPostgresqlUserCrdRequestWithBody generates requests for PatchManagedPostgresqlUserCrd with any type of body
+func NewPatchManagedPostgresqlUserCrdRequestWithBody(server string, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "cluster_id", runtime.ParamLocationPath, clusterId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "user_id", runtime.ParamLocationPath, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresqls/%s/users/%s/crd", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetManagedPostgresqlRequest generates requests for GetManagedPostgresql
+func NewGetManagedPostgresqlRequest(server string, organizationId openapi_types.UUID, instanceId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "instance_id", runtime.ParamLocationPath, instanceId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresqls/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteManagedPostgresqlCrdRequest generates requests for DeleteManagedPostgresqlCrd
+func NewDeleteManagedPostgresqlCrdRequest(server string, organizationId openapi_types.UUID, instanceId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "instance_id", runtime.ParamLocationPath, instanceId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresqls/%s/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetManagedPostgresqlCrdRequest generates requests for GetManagedPostgresqlCrd
+func NewGetManagedPostgresqlCrdRequest(server string, organizationId openapi_types.UUID, instanceId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "instance_id", runtime.ParamLocationPath, instanceId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresqls/%s/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPatchManagedPostgresqlCrdRequest calls the generic PatchManagedPostgresqlCrd builder with application/json body
+func NewPatchManagedPostgresqlCrdRequest(server string, organizationId openapi_types.UUID, instanceId openapi_types.UUID, body PatchManagedPostgresqlCrdJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchManagedPostgresqlCrdRequestWithBody(server, organizationId, instanceId, "application/json", bodyReader)
+}
+
+// NewPatchManagedPostgresqlCrdRequestWithBody generates requests for PatchManagedPostgresqlCrd with any type of body
+func NewPatchManagedPostgresqlCrdRequestWithBody(server string, organizationId openapi_types.UUID, instanceId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "instance_id", runtime.ParamLocationPath, instanceId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresqls/%s/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListManagedPostgresqlBackupsRequest generates requests for ListManagedPostgresqlBackups
+func NewListManagedPostgresqlBackupsRequest(server string, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, params *ListManagedPostgresqlBackupsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "managed_postgresql_id", runtime.ParamLocationPath, managedPostgresqlId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresqls/%s/backups", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateManagedPostgresqlBackupCrdRequest calls the generic CreateManagedPostgresqlBackupCrd builder with application/json body
+func NewCreateManagedPostgresqlBackupCrdRequest(server string, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, body CreateManagedPostgresqlBackupCrdJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateManagedPostgresqlBackupCrdRequestWithBody(server, organizationId, managedPostgresqlId, "application/json", bodyReader)
+}
+
+// NewCreateManagedPostgresqlBackupCrdRequestWithBody generates requests for CreateManagedPostgresqlBackupCrd with any type of body
+func NewCreateManagedPostgresqlBackupCrdRequestWithBody(server string, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "managed_postgresql_id", runtime.ParamLocationPath, managedPostgresqlId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/managed-postgresqls/%s/backups/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -11938,6 +14272,101 @@ func NewDeletePipelineRequest(server string, organizationId openapi_types.UUID, 
 	return req, nil
 }
 
+// NewCountPipelineRefsRequest calls the generic CountPipelineRefs builder with application/json body
+func NewCountPipelineRefsRequest(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body CountPipelineRefsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCountPipelineRefsRequestWithBody(server, organizationId, pipelineId, "application/json", bodyReader)
+}
+
+// NewCountPipelineRefsRequestWithBody generates requests for CountPipelineRefs with any type of body
+func NewCountPipelineRefsRequestWithBody(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "pipeline_id", runtime.ParamLocationPath, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/pipelines/%s/refs", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewResumePipelineRequest generates requests for ResumePipeline
+func NewResumePipelineRequest(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "pipeline_id", runtime.ParamLocationPath, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/pipelines/%s/resume", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewListPipelineRunsRequest generates requests for ListPipelineRuns
 func NewListPipelineRunsRequest(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -12020,6 +14449,47 @@ func NewGetPipelineRunRequest(server string, organizationId openapi_types.UUID, 
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewSuspendPipelineRequest generates requests for SuspendPipeline
+func NewSuspendPipelineRequest(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "pipeline_id", runtime.ParamLocationPath, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/pipelines/%s/suspend", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -12116,6 +14586,22 @@ func NewListSecretsRequest(server string, organizationId openapi_types.UUID, par
 		if params.Tag != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "tag", runtime.ParamLocationQuery, *params.Tag); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Prefix != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "prefix", runtime.ParamLocationQuery, *params.Prefix); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -12280,10 +14766,78 @@ func NewCountSecretsRequest(server string, organizationId openapi_types.UUID, pa
 
 		}
 
+		if params.Prefix != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "prefix", runtime.ParamLocationQuery, *params.Prefix); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
 		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteDirectoryRequest generates requests for DeleteDirectory
+func NewDeleteDirectoryRequest(server string, organizationId openapi_types.UUID, params *DeleteDirectoryParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/secrets/directory", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "prefix", runtime.ParamLocationQuery, params.Prefix); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -15389,6 +17943,9 @@ type ClientWithResponsesInterface interface {
 
 	CreateSchemaWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, body CreateSchemaJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateSchemaRes, error)
 
+	// GetTableColumnsWithResponse request
+	GetTableColumnsWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaName string, tableName string, reqEditors ...RequestEditorFn) (*GetTableColumnsRes, error)
+
 	// GetTablesWithResponse request
 	GetTablesWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTablesRes, error)
 
@@ -15495,6 +18052,9 @@ type ClientWithResponsesInterface interface {
 	// GetKafkaMetadataWithResponse request
 	GetKafkaMetadataWithResponse(ctx context.Context, kafkaServiceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetKafkaMetadataRes, error)
 
+	// GetOpenDataCatalogWithResponse request
+	GetOpenDataCatalogWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetOpenDataCatalogRes, error)
+
 	// ListOrganizationsWithResponse request
 	ListOrganizationsWithResponse(ctx context.Context, params *ListOrganizationsParams, reqEditors ...RequestEditorFn) (*ListOrganizationsRes, error)
 
@@ -15530,6 +18090,20 @@ type ClientWithResponsesInterface interface {
 
 	// RevokeApiKeyWithResponse request
 	RevokeApiKeyWithResponse(ctx context.Context, organizationId openapi_types.UUID, keyId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RevokeApiKeyRes, error)
+
+	// GetBackupTargetWithResponse request
+	GetBackupTargetWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetBackupTargetRes, error)
+
+	// DeleteBackupTargetCrdWithResponse request
+	DeleteBackupTargetCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteBackupTargetCrdRes, error)
+
+	// GetBackupTargetCrdWithResponse request
+	GetBackupTargetCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetBackupTargetCrdRes, error)
+
+	// PatchBackupTargetCrdWithBodyWithResponse request with any body
+	PatchBackupTargetCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchBackupTargetCrdRes, error)
+
+	PatchBackupTargetCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, body PatchBackupTargetCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchBackupTargetCrdRes, error)
 
 	// GetContainerAppWithResponse request
 	GetContainerAppWithResponse(ctx context.Context, organizationId openapi_types.UUID, appId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetContainerAppRes, error)
@@ -15571,6 +18145,14 @@ type ClientWithResponsesInterface interface {
 	// DeleteHarborCrdWithResponse request
 	DeleteHarborCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborSlug string, reqEditors ...RequestEditorFn) (*DeleteHarborCrdRes, error)
 
+	// ListBackupTargetsWithResponse request
+	ListBackupTargetsWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListBackupTargetsRes, error)
+
+	// CreateBackupTargetCrdWithBodyWithResponse request with any body
+	CreateBackupTargetCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateBackupTargetCrdRes, error)
+
+	CreateBackupTargetCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateBackupTargetCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateBackupTargetCrdRes, error)
+
 	// ListContainerAppsWithResponse request
 	ListContainerAppsWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListContainerAppsRes, error)
 
@@ -15579,8 +18161,69 @@ type ClientWithResponsesInterface interface {
 
 	CreateContainerAppCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateContainerAppCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateContainerAppCrdRes, error)
 
+	// ListManagedPostgresqlsWithResponse request
+	ListManagedPostgresqlsWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListManagedPostgresqlsRes, error)
+
+	// CreateManagedPostgresqlCrdWithBodyWithResponse request with any body
+	CreateManagedPostgresqlCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateManagedPostgresqlCrdRes, error)
+
+	CreateManagedPostgresqlCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateManagedPostgresqlCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateManagedPostgresqlCrdRes, error)
+
 	// CheckHarborNameAvailableWithResponse request
 	CheckHarborNameAvailableWithResponse(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*CheckHarborNameAvailableRes, error)
+
+	// GetManagedPostgresqlBackupWithResponse request
+	GetManagedPostgresqlBackupWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetManagedPostgresqlBackupRes, error)
+
+	// DeleteManagedPostgresqlBackupCrdWithResponse request
+	DeleteManagedPostgresqlBackupCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteManagedPostgresqlBackupCrdRes, error)
+
+	// GetManagedPostgresqlBackupCrdWithResponse request
+	GetManagedPostgresqlBackupCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetManagedPostgresqlBackupCrdRes, error)
+
+	// ListManagedPostgresqlUsersWithResponse request
+	ListManagedPostgresqlUsersWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListManagedPostgresqlUsersRes, error)
+
+	// CreateManagedPostgresqlUserCrdWithBodyWithResponse request with any body
+	CreateManagedPostgresqlUserCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateManagedPostgresqlUserCrdRes, error)
+
+	CreateManagedPostgresqlUserCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, body CreateManagedPostgresqlUserCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateManagedPostgresqlUserCrdRes, error)
+
+	// GetManagedPostgresqlUserWithResponse request
+	GetManagedPostgresqlUserWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetManagedPostgresqlUserRes, error)
+
+	// DeleteManagedPostgresqlUserCrdWithResponse request
+	DeleteManagedPostgresqlUserCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteManagedPostgresqlUserCrdRes, error)
+
+	// GetManagedPostgresqlUserCrdWithResponse request
+	GetManagedPostgresqlUserCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetManagedPostgresqlUserCrdRes, error)
+
+	// PatchManagedPostgresqlUserCrdWithBodyWithResponse request with any body
+	PatchManagedPostgresqlUserCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchManagedPostgresqlUserCrdRes, error)
+
+	PatchManagedPostgresqlUserCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, body PatchManagedPostgresqlUserCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchManagedPostgresqlUserCrdRes, error)
+
+	// GetManagedPostgresqlWithResponse request
+	GetManagedPostgresqlWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetManagedPostgresqlRes, error)
+
+	// DeleteManagedPostgresqlCrdWithResponse request
+	DeleteManagedPostgresqlCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteManagedPostgresqlCrdRes, error)
+
+	// GetManagedPostgresqlCrdWithResponse request
+	GetManagedPostgresqlCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetManagedPostgresqlCrdRes, error)
+
+	// PatchManagedPostgresqlCrdWithBodyWithResponse request with any body
+	PatchManagedPostgresqlCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchManagedPostgresqlCrdRes, error)
+
+	PatchManagedPostgresqlCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, body PatchManagedPostgresqlCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchManagedPostgresqlCrdRes, error)
+
+	// ListManagedPostgresqlBackupsWithResponse request
+	ListManagedPostgresqlBackupsWithResponse(ctx context.Context, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, params *ListManagedPostgresqlBackupsParams, reqEditors ...RequestEditorFn) (*ListManagedPostgresqlBackupsRes, error)
+
+	// CreateManagedPostgresqlBackupCrdWithBodyWithResponse request with any body
+	CreateManagedPostgresqlBackupCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateManagedPostgresqlBackupCrdRes, error)
+
+	CreateManagedPostgresqlBackupCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, body CreateManagedPostgresqlBackupCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateManagedPostgresqlBackupCrdRes, error)
 
 	// ListModelServingsWithResponse request
 	ListModelServingsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListModelServingsRes, error)
@@ -15607,11 +18250,22 @@ type ClientWithResponsesInterface interface {
 	// DeletePipelineWithResponse request
 	DeletePipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeletePipelineRes, error)
 
+	// CountPipelineRefsWithBodyWithResponse request with any body
+	CountPipelineRefsWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CountPipelineRefsRes, error)
+
+	CountPipelineRefsWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body CountPipelineRefsJSONRequestBody, reqEditors ...RequestEditorFn) (*CountPipelineRefsRes, error)
+
+	// ResumePipelineWithResponse request
+	ResumePipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ResumePipelineRes, error)
+
 	// ListPipelineRunsWithResponse request
 	ListPipelineRunsWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListPipelineRunsRes, error)
 
 	// GetPipelineRunWithResponse request
 	GetPipelineRunWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, runId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetPipelineRunRes, error)
+
+	// SuspendPipelineWithResponse request
+	SuspendPipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*SuspendPipelineRes, error)
 
 	// TriggerPipelineWithResponse request
 	TriggerPipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*TriggerPipelineRes, error)
@@ -15626,6 +18280,9 @@ type ClientWithResponsesInterface interface {
 
 	// CountSecretsWithResponse request
 	CountSecretsWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *CountSecretsParams, reqEditors ...RequestEditorFn) (*CountSecretsRes, error)
+
+	// DeleteDirectoryWithResponse request
+	DeleteDirectoryWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *DeleteDirectoryParams, reqEditors ...RequestEditorFn) (*DeleteDirectoryRes, error)
 
 	// DeleteSecretWithResponse request
 	DeleteSecretWithResponse(ctx context.Context, organizationId openapi_types.UUID, secretId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteSecretRes, error)
@@ -16497,6 +19154,28 @@ func (r CreateSchemaRes) StatusCode() int {
 	return 0
 }
 
+type GetTableColumnsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]IcebergColumnDefinition
+}
+
+// Status returns HTTPResponse.Status
+func (r GetTableColumnsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetTableColumnsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetTablesRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -16717,7 +19396,7 @@ func (r TriggerOptimizeRes) StatusCode() int {
 type CreateDataDockCrdRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *DataDockResponseData
+	JSON201      *DataDockExternalResponseData
 }
 
 // Status returns HTTPResponse.Status
@@ -17106,6 +19785,28 @@ func (r GetKafkaMetadataRes) StatusCode() int {
 	return 0
 }
 
+type GetOpenDataCatalogRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *OpenDataCatalogResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOpenDataCatalogRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOpenDataCatalogRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type ListOrganizationsRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -17317,6 +20018,92 @@ func (r RevokeApiKeyRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r RevokeApiKeyRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetBackupTargetRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *BackupTargetResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetBackupTargetRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetBackupTargetRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteBackupTargetCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteBackupTargetCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteBackupTargetCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetBackupTargetCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *BackupTargetCrdSpecResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetBackupTargetCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetBackupTargetCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchBackupTargetCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchBackupTargetCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchBackupTargetCrdRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -17580,6 +20367,50 @@ func (r DeleteHarborCrdRes) StatusCode() int {
 	return 0
 }
 
+type ListBackupTargetsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]BackupTargetResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListBackupTargetsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListBackupTargetsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateBackupTargetCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *BackupTargetResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateBackupTargetCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateBackupTargetCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type ListContainerAppsRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -17623,6 +20454,50 @@ func (r CreateContainerAppCrdRes) StatusCode() int {
 	return 0
 }
 
+type ListManagedPostgresqlsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]ManagedPostgresqlResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListManagedPostgresqlsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListManagedPostgresqlsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateManagedPostgresqlCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *ManagedPostgresqlResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateManagedPostgresqlCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateManagedPostgresqlCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type CheckHarborNameAvailableRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -17639,6 +20514,331 @@ func (r CheckHarborNameAvailableRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r CheckHarborNameAvailableRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetManagedPostgresqlBackupRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ManagedPostgresqlBackupResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetManagedPostgresqlBackupRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetManagedPostgresqlBackupRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteManagedPostgresqlBackupCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteManagedPostgresqlBackupCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteManagedPostgresqlBackupCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetManagedPostgresqlBackupCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ManagedPostgresqlBackupCrdResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetManagedPostgresqlBackupCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetManagedPostgresqlBackupCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListManagedPostgresqlUsersRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]ManagedPostgresqlUserResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListManagedPostgresqlUsersRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListManagedPostgresqlUsersRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateManagedPostgresqlUserCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *ManagedPostgresqlUserResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateManagedPostgresqlUserCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateManagedPostgresqlUserCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetManagedPostgresqlUserRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ManagedPostgresqlUserResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetManagedPostgresqlUserRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetManagedPostgresqlUserRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteManagedPostgresqlUserCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteManagedPostgresqlUserCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteManagedPostgresqlUserCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetManagedPostgresqlUserCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ManagedPostgresqlUserCrdSpecResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetManagedPostgresqlUserCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetManagedPostgresqlUserCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchManagedPostgresqlUserCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchManagedPostgresqlUserCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchManagedPostgresqlUserCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetManagedPostgresqlRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ManagedPostgresqlResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetManagedPostgresqlRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetManagedPostgresqlRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteManagedPostgresqlCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteManagedPostgresqlCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteManagedPostgresqlCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetManagedPostgresqlCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ManagedPostgresqlCrdSpecResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetManagedPostgresqlCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetManagedPostgresqlCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchManagedPostgresqlCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchManagedPostgresqlCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchManagedPostgresqlCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListManagedPostgresqlBackupsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ManagedPostgresqlBackupsPage
+}
+
+// Status returns HTTPResponse.Status
+func (r ListManagedPostgresqlBackupsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListManagedPostgresqlBackupsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateManagedPostgresqlBackupCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *ManagedPostgresqlBackupResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateManagedPostgresqlBackupCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateManagedPostgresqlBackupCrdRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -17797,6 +20997,48 @@ func (r DeletePipelineRes) StatusCode() int {
 	return 0
 }
 
+type CountPipelineRefsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r CountPipelineRefsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CountPipelineRefsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ResumePipelineRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r ResumePipelineRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ResumePipelineRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type ListPipelineRunsRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -17835,6 +21077,27 @@ func (r GetPipelineRunRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetPipelineRunRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SuspendPipelineRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r SuspendPipelineRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SuspendPipelineRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -17922,6 +21185,28 @@ func (r CountSecretsRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r CountSecretsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteDirectoryRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DeleteDirectoryResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteDirectoryRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteDirectoryRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -19572,6 +22857,15 @@ func (c *ClientWithResponses) CreateSchemaWithResponse(ctx context.Context, data
 	return ParseCreateSchemaRes(rsp)
 }
 
+// GetTableColumnsWithResponse request returning *GetTableColumnsRes
+func (c *ClientWithResponses) GetTableColumnsWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaName string, tableName string, reqEditors ...RequestEditorFn) (*GetTableColumnsRes, error) {
+	rsp, err := c.GetTableColumns(ctx, dataContainerId, schemaName, tableName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetTableColumnsRes(rsp)
+}
+
 // GetTablesWithResponse request returning *GetTablesRes
 func (c *ClientWithResponses) GetTablesWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTablesRes, error) {
 	rsp, err := c.GetTables(ctx, dataContainerId, reqEditors...)
@@ -19912,6 +23206,15 @@ func (c *ClientWithResponses) GetKafkaMetadataWithResponse(ctx context.Context, 
 	return ParseGetKafkaMetadataRes(rsp)
 }
 
+// GetOpenDataCatalogWithResponse request returning *GetOpenDataCatalogRes
+func (c *ClientWithResponses) GetOpenDataCatalogWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetOpenDataCatalogRes, error) {
+	rsp, err := c.GetOpenDataCatalog(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetOpenDataCatalogRes(rsp)
+}
+
 // ListOrganizationsWithResponse request returning *ListOrganizationsRes
 func (c *ClientWithResponses) ListOrganizationsWithResponse(ctx context.Context, params *ListOrganizationsParams, reqEditors ...RequestEditorFn) (*ListOrganizationsRes, error) {
 	rsp, err := c.ListOrganizations(ctx, params, reqEditors...)
@@ -20024,6 +23327,50 @@ func (c *ClientWithResponses) RevokeApiKeyWithResponse(ctx context.Context, orga
 		return nil, err
 	}
 	return ParseRevokeApiKeyRes(rsp)
+}
+
+// GetBackupTargetWithResponse request returning *GetBackupTargetRes
+func (c *ClientWithResponses) GetBackupTargetWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetBackupTargetRes, error) {
+	rsp, err := c.GetBackupTarget(ctx, organizationId, backupTargetId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetBackupTargetRes(rsp)
+}
+
+// DeleteBackupTargetCrdWithResponse request returning *DeleteBackupTargetCrdRes
+func (c *ClientWithResponses) DeleteBackupTargetCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteBackupTargetCrdRes, error) {
+	rsp, err := c.DeleteBackupTargetCrd(ctx, organizationId, backupTargetId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteBackupTargetCrdRes(rsp)
+}
+
+// GetBackupTargetCrdWithResponse request returning *GetBackupTargetCrdRes
+func (c *ClientWithResponses) GetBackupTargetCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetBackupTargetCrdRes, error) {
+	rsp, err := c.GetBackupTargetCrd(ctx, organizationId, backupTargetId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetBackupTargetCrdRes(rsp)
+}
+
+// PatchBackupTargetCrdWithBodyWithResponse request with arbitrary body returning *PatchBackupTargetCrdRes
+func (c *ClientWithResponses) PatchBackupTargetCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchBackupTargetCrdRes, error) {
+	rsp, err := c.PatchBackupTargetCrdWithBody(ctx, organizationId, backupTargetId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchBackupTargetCrdRes(rsp)
+}
+
+func (c *ClientWithResponses) PatchBackupTargetCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupTargetId openapi_types.UUID, body PatchBackupTargetCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchBackupTargetCrdRes, error) {
+	rsp, err := c.PatchBackupTargetCrd(ctx, organizationId, backupTargetId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchBackupTargetCrdRes(rsp)
 }
 
 // GetContainerAppWithResponse request returning *GetContainerAppRes
@@ -20150,6 +23497,32 @@ func (c *ClientWithResponses) DeleteHarborCrdWithResponse(ctx context.Context, o
 	return ParseDeleteHarborCrdRes(rsp)
 }
 
+// ListBackupTargetsWithResponse request returning *ListBackupTargetsRes
+func (c *ClientWithResponses) ListBackupTargetsWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListBackupTargetsRes, error) {
+	rsp, err := c.ListBackupTargets(ctx, organizationId, harborId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListBackupTargetsRes(rsp)
+}
+
+// CreateBackupTargetCrdWithBodyWithResponse request with arbitrary body returning *CreateBackupTargetCrdRes
+func (c *ClientWithResponses) CreateBackupTargetCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateBackupTargetCrdRes, error) {
+	rsp, err := c.CreateBackupTargetCrdWithBody(ctx, organizationId, harborId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateBackupTargetCrdRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateBackupTargetCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateBackupTargetCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateBackupTargetCrdRes, error) {
+	rsp, err := c.CreateBackupTargetCrd(ctx, organizationId, harborId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateBackupTargetCrdRes(rsp)
+}
+
 // ListContainerAppsWithResponse request returning *ListContainerAppsRes
 func (c *ClientWithResponses) ListContainerAppsWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListContainerAppsRes, error) {
 	rsp, err := c.ListContainerApps(ctx, organizationId, harborId, reqEditors...)
@@ -20176,6 +23549,32 @@ func (c *ClientWithResponses) CreateContainerAppCrdWithResponse(ctx context.Cont
 	return ParseCreateContainerAppCrdRes(rsp)
 }
 
+// ListManagedPostgresqlsWithResponse request returning *ListManagedPostgresqlsRes
+func (c *ClientWithResponses) ListManagedPostgresqlsWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListManagedPostgresqlsRes, error) {
+	rsp, err := c.ListManagedPostgresqls(ctx, organizationId, harborId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListManagedPostgresqlsRes(rsp)
+}
+
+// CreateManagedPostgresqlCrdWithBodyWithResponse request with arbitrary body returning *CreateManagedPostgresqlCrdRes
+func (c *ClientWithResponses) CreateManagedPostgresqlCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateManagedPostgresqlCrdRes, error) {
+	rsp, err := c.CreateManagedPostgresqlCrdWithBody(ctx, organizationId, harborId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateManagedPostgresqlCrdRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateManagedPostgresqlCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateManagedPostgresqlCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateManagedPostgresqlCrdRes, error) {
+	rsp, err := c.CreateManagedPostgresqlCrd(ctx, organizationId, harborId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateManagedPostgresqlCrdRes(rsp)
+}
+
 // CheckHarborNameAvailableWithResponse request returning *CheckHarborNameAvailableRes
 func (c *ClientWithResponses) CheckHarborNameAvailableWithResponse(ctx context.Context, organizationId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*CheckHarborNameAvailableRes, error) {
 	rsp, err := c.CheckHarborNameAvailable(ctx, organizationId, name, reqEditors...)
@@ -20183,6 +23582,173 @@ func (c *ClientWithResponses) CheckHarborNameAvailableWithResponse(ctx context.C
 		return nil, err
 	}
 	return ParseCheckHarborNameAvailableRes(rsp)
+}
+
+// GetManagedPostgresqlBackupWithResponse request returning *GetManagedPostgresqlBackupRes
+func (c *ClientWithResponses) GetManagedPostgresqlBackupWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetManagedPostgresqlBackupRes, error) {
+	rsp, err := c.GetManagedPostgresqlBackup(ctx, organizationId, backupId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetManagedPostgresqlBackupRes(rsp)
+}
+
+// DeleteManagedPostgresqlBackupCrdWithResponse request returning *DeleteManagedPostgresqlBackupCrdRes
+func (c *ClientWithResponses) DeleteManagedPostgresqlBackupCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteManagedPostgresqlBackupCrdRes, error) {
+	rsp, err := c.DeleteManagedPostgresqlBackupCrd(ctx, organizationId, backupId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteManagedPostgresqlBackupCrdRes(rsp)
+}
+
+// GetManagedPostgresqlBackupCrdWithResponse request returning *GetManagedPostgresqlBackupCrdRes
+func (c *ClientWithResponses) GetManagedPostgresqlBackupCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, backupId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetManagedPostgresqlBackupCrdRes, error) {
+	rsp, err := c.GetManagedPostgresqlBackupCrd(ctx, organizationId, backupId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetManagedPostgresqlBackupCrdRes(rsp)
+}
+
+// ListManagedPostgresqlUsersWithResponse request returning *ListManagedPostgresqlUsersRes
+func (c *ClientWithResponses) ListManagedPostgresqlUsersWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListManagedPostgresqlUsersRes, error) {
+	rsp, err := c.ListManagedPostgresqlUsers(ctx, organizationId, clusterId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListManagedPostgresqlUsersRes(rsp)
+}
+
+// CreateManagedPostgresqlUserCrdWithBodyWithResponse request with arbitrary body returning *CreateManagedPostgresqlUserCrdRes
+func (c *ClientWithResponses) CreateManagedPostgresqlUserCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateManagedPostgresqlUserCrdRes, error) {
+	rsp, err := c.CreateManagedPostgresqlUserCrdWithBody(ctx, organizationId, clusterId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateManagedPostgresqlUserCrdRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateManagedPostgresqlUserCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, body CreateManagedPostgresqlUserCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateManagedPostgresqlUserCrdRes, error) {
+	rsp, err := c.CreateManagedPostgresqlUserCrd(ctx, organizationId, clusterId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateManagedPostgresqlUserCrdRes(rsp)
+}
+
+// GetManagedPostgresqlUserWithResponse request returning *GetManagedPostgresqlUserRes
+func (c *ClientWithResponses) GetManagedPostgresqlUserWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetManagedPostgresqlUserRes, error) {
+	rsp, err := c.GetManagedPostgresqlUser(ctx, organizationId, clusterId, userId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetManagedPostgresqlUserRes(rsp)
+}
+
+// DeleteManagedPostgresqlUserCrdWithResponse request returning *DeleteManagedPostgresqlUserCrdRes
+func (c *ClientWithResponses) DeleteManagedPostgresqlUserCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteManagedPostgresqlUserCrdRes, error) {
+	rsp, err := c.DeleteManagedPostgresqlUserCrd(ctx, organizationId, clusterId, userId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteManagedPostgresqlUserCrdRes(rsp)
+}
+
+// GetManagedPostgresqlUserCrdWithResponse request returning *GetManagedPostgresqlUserCrdRes
+func (c *ClientWithResponses) GetManagedPostgresqlUserCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetManagedPostgresqlUserCrdRes, error) {
+	rsp, err := c.GetManagedPostgresqlUserCrd(ctx, organizationId, clusterId, userId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetManagedPostgresqlUserCrdRes(rsp)
+}
+
+// PatchManagedPostgresqlUserCrdWithBodyWithResponse request with arbitrary body returning *PatchManagedPostgresqlUserCrdRes
+func (c *ClientWithResponses) PatchManagedPostgresqlUserCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchManagedPostgresqlUserCrdRes, error) {
+	rsp, err := c.PatchManagedPostgresqlUserCrdWithBody(ctx, organizationId, clusterId, userId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchManagedPostgresqlUserCrdRes(rsp)
+}
+
+func (c *ClientWithResponses) PatchManagedPostgresqlUserCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, clusterId openapi_types.UUID, userId openapi_types.UUID, body PatchManagedPostgresqlUserCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchManagedPostgresqlUserCrdRes, error) {
+	rsp, err := c.PatchManagedPostgresqlUserCrd(ctx, organizationId, clusterId, userId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchManagedPostgresqlUserCrdRes(rsp)
+}
+
+// GetManagedPostgresqlWithResponse request returning *GetManagedPostgresqlRes
+func (c *ClientWithResponses) GetManagedPostgresqlWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetManagedPostgresqlRes, error) {
+	rsp, err := c.GetManagedPostgresql(ctx, organizationId, instanceId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetManagedPostgresqlRes(rsp)
+}
+
+// DeleteManagedPostgresqlCrdWithResponse request returning *DeleteManagedPostgresqlCrdRes
+func (c *ClientWithResponses) DeleteManagedPostgresqlCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteManagedPostgresqlCrdRes, error) {
+	rsp, err := c.DeleteManagedPostgresqlCrd(ctx, organizationId, instanceId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteManagedPostgresqlCrdRes(rsp)
+}
+
+// GetManagedPostgresqlCrdWithResponse request returning *GetManagedPostgresqlCrdRes
+func (c *ClientWithResponses) GetManagedPostgresqlCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetManagedPostgresqlCrdRes, error) {
+	rsp, err := c.GetManagedPostgresqlCrd(ctx, organizationId, instanceId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetManagedPostgresqlCrdRes(rsp)
+}
+
+// PatchManagedPostgresqlCrdWithBodyWithResponse request with arbitrary body returning *PatchManagedPostgresqlCrdRes
+func (c *ClientWithResponses) PatchManagedPostgresqlCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchManagedPostgresqlCrdRes, error) {
+	rsp, err := c.PatchManagedPostgresqlCrdWithBody(ctx, organizationId, instanceId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchManagedPostgresqlCrdRes(rsp)
+}
+
+func (c *ClientWithResponses) PatchManagedPostgresqlCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, body PatchManagedPostgresqlCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchManagedPostgresqlCrdRes, error) {
+	rsp, err := c.PatchManagedPostgresqlCrd(ctx, organizationId, instanceId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchManagedPostgresqlCrdRes(rsp)
+}
+
+// ListManagedPostgresqlBackupsWithResponse request returning *ListManagedPostgresqlBackupsRes
+func (c *ClientWithResponses) ListManagedPostgresqlBackupsWithResponse(ctx context.Context, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, params *ListManagedPostgresqlBackupsParams, reqEditors ...RequestEditorFn) (*ListManagedPostgresqlBackupsRes, error) {
+	rsp, err := c.ListManagedPostgresqlBackups(ctx, organizationId, managedPostgresqlId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListManagedPostgresqlBackupsRes(rsp)
+}
+
+// CreateManagedPostgresqlBackupCrdWithBodyWithResponse request with arbitrary body returning *CreateManagedPostgresqlBackupCrdRes
+func (c *ClientWithResponses) CreateManagedPostgresqlBackupCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateManagedPostgresqlBackupCrdRes, error) {
+	rsp, err := c.CreateManagedPostgresqlBackupCrdWithBody(ctx, organizationId, managedPostgresqlId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateManagedPostgresqlBackupCrdRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateManagedPostgresqlBackupCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, managedPostgresqlId openapi_types.UUID, body CreateManagedPostgresqlBackupCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateManagedPostgresqlBackupCrdRes, error) {
+	rsp, err := c.CreateManagedPostgresqlBackupCrd(ctx, organizationId, managedPostgresqlId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateManagedPostgresqlBackupCrdRes(rsp)
 }
 
 // ListModelServingsWithResponse request returning *ListModelServingsRes
@@ -20264,6 +23830,32 @@ func (c *ClientWithResponses) DeletePipelineWithResponse(ctx context.Context, or
 	return ParseDeletePipelineRes(rsp)
 }
 
+// CountPipelineRefsWithBodyWithResponse request with arbitrary body returning *CountPipelineRefsRes
+func (c *ClientWithResponses) CountPipelineRefsWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CountPipelineRefsRes, error) {
+	rsp, err := c.CountPipelineRefsWithBody(ctx, organizationId, pipelineId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCountPipelineRefsRes(rsp)
+}
+
+func (c *ClientWithResponses) CountPipelineRefsWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body CountPipelineRefsJSONRequestBody, reqEditors ...RequestEditorFn) (*CountPipelineRefsRes, error) {
+	rsp, err := c.CountPipelineRefs(ctx, organizationId, pipelineId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCountPipelineRefsRes(rsp)
+}
+
+// ResumePipelineWithResponse request returning *ResumePipelineRes
+func (c *ClientWithResponses) ResumePipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ResumePipelineRes, error) {
+	rsp, err := c.ResumePipeline(ctx, organizationId, pipelineId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseResumePipelineRes(rsp)
+}
+
 // ListPipelineRunsWithResponse request returning *ListPipelineRunsRes
 func (c *ClientWithResponses) ListPipelineRunsWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListPipelineRunsRes, error) {
 	rsp, err := c.ListPipelineRuns(ctx, organizationId, pipelineId, reqEditors...)
@@ -20280,6 +23872,15 @@ func (c *ClientWithResponses) GetPipelineRunWithResponse(ctx context.Context, or
 		return nil, err
 	}
 	return ParseGetPipelineRunRes(rsp)
+}
+
+// SuspendPipelineWithResponse request returning *SuspendPipelineRes
+func (c *ClientWithResponses) SuspendPipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*SuspendPipelineRes, error) {
+	rsp, err := c.SuspendPipeline(ctx, organizationId, pipelineId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSuspendPipelineRes(rsp)
 }
 
 // TriggerPipelineWithResponse request returning *TriggerPipelineRes
@@ -20324,6 +23925,15 @@ func (c *ClientWithResponses) CountSecretsWithResponse(ctx context.Context, orga
 		return nil, err
 	}
 	return ParseCountSecretsRes(rsp)
+}
+
+// DeleteDirectoryWithResponse request returning *DeleteDirectoryRes
+func (c *ClientWithResponses) DeleteDirectoryWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *DeleteDirectoryParams, reqEditors ...RequestEditorFn) (*DeleteDirectoryRes, error) {
+	rsp, err := c.DeleteDirectory(ctx, organizationId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteDirectoryRes(rsp)
 }
 
 // DeleteSecretWithResponse request returning *DeleteSecretRes
@@ -21705,6 +25315,32 @@ func ParseCreateSchemaRes(rsp *http.Response) (*CreateSchemaRes, error) {
 	return response, nil
 }
 
+// ParseGetTableColumnsRes parses an HTTP response from a GetTableColumnsWithResponse call
+func ParseGetTableColumnsRes(rsp *http.Response) (*GetTableColumnsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetTableColumnsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []IcebergColumnDefinition
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetTablesRes parses an HTTP response from a GetTablesWithResponse call
 func ParseGetTablesRes(rsp *http.Response) (*GetTablesRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -21950,7 +25586,7 @@ func ParseCreateDataDockCrdRes(rsp *http.Response) (*CreateDataDockCrdRes, error
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest DataDockResponseData
+		var dest DataDockExternalResponseData
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -22363,6 +25999,32 @@ func ParseGetKafkaMetadataRes(rsp *http.Response) (*GetKafkaMetadataRes, error) 
 	return response, nil
 }
 
+// ParseGetOpenDataCatalogRes parses an HTTP response from a GetOpenDataCatalogWithResponse call
+func ParseGetOpenDataCatalogRes(rsp *http.Response) (*GetOpenDataCatalogRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOpenDataCatalogRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest OpenDataCatalogResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListOrganizationsRes parses an HTTP response from a ListOrganizationsWithResponse call
 func ParseListOrganizationsRes(rsp *http.Response) (*ListOrganizationsRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -22586,6 +26248,90 @@ func ParseRevokeApiKeyRes(rsp *http.Response) (*RevokeApiKeyRes, error) {
 	}
 
 	response := &RevokeApiKeyRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetBackupTargetRes parses an HTTP response from a GetBackupTargetWithResponse call
+func ParseGetBackupTargetRes(rsp *http.Response) (*GetBackupTargetRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetBackupTargetRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest BackupTargetResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteBackupTargetCrdRes parses an HTTP response from a DeleteBackupTargetCrdWithResponse call
+func ParseDeleteBackupTargetCrdRes(rsp *http.Response) (*DeleteBackupTargetCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteBackupTargetCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetBackupTargetCrdRes parses an HTTP response from a GetBackupTargetCrdWithResponse call
+func ParseGetBackupTargetCrdRes(rsp *http.Response) (*GetBackupTargetCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetBackupTargetCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest BackupTargetCrdSpecResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchBackupTargetCrdRes parses an HTTP response from a PatchBackupTargetCrdWithResponse call
+func ParsePatchBackupTargetCrdRes(rsp *http.Response) (*PatchBackupTargetCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchBackupTargetCrdRes{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -22835,6 +26581,58 @@ func ParseDeleteHarborCrdRes(rsp *http.Response) (*DeleteHarborCrdRes, error) {
 	return response, nil
 }
 
+// ParseListBackupTargetsRes parses an HTTP response from a ListBackupTargetsWithResponse call
+func ParseListBackupTargetsRes(rsp *http.Response) (*ListBackupTargetsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListBackupTargetsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []BackupTargetResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateBackupTargetCrdRes parses an HTTP response from a CreateBackupTargetCrdWithResponse call
+func ParseCreateBackupTargetCrdRes(rsp *http.Response) (*CreateBackupTargetCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateBackupTargetCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest BackupTargetResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListContainerAppsRes parses an HTTP response from a ListContainerAppsWithResponse call
 func ParseListContainerAppsRes(rsp *http.Response) (*ListContainerAppsRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -22877,6 +26675,58 @@ func ParseCreateContainerAppCrdRes(rsp *http.Response) (*CreateContainerAppCrdRe
 	return response, nil
 }
 
+// ParseListManagedPostgresqlsRes parses an HTTP response from a ListManagedPostgresqlsWithResponse call
+func ParseListManagedPostgresqlsRes(rsp *http.Response) (*ListManagedPostgresqlsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListManagedPostgresqlsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []ManagedPostgresqlResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateManagedPostgresqlCrdRes parses an HTTP response from a CreateManagedPostgresqlCrdWithResponse call
+func ParseCreateManagedPostgresqlCrdRes(rsp *http.Response) (*CreateManagedPostgresqlCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateManagedPostgresqlCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ManagedPostgresqlResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseCheckHarborNameAvailableRes parses an HTTP response from a CheckHarborNameAvailableWithResponse call
 func ParseCheckHarborNameAvailableRes(rsp *http.Response) (*CheckHarborNameAvailableRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -22897,6 +26747,346 @@ func ParseCheckHarborNameAvailableRes(rsp *http.Response) (*CheckHarborNameAvail
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetManagedPostgresqlBackupRes parses an HTTP response from a GetManagedPostgresqlBackupWithResponse call
+func ParseGetManagedPostgresqlBackupRes(rsp *http.Response) (*GetManagedPostgresqlBackupRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetManagedPostgresqlBackupRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ManagedPostgresqlBackupResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteManagedPostgresqlBackupCrdRes parses an HTTP response from a DeleteManagedPostgresqlBackupCrdWithResponse call
+func ParseDeleteManagedPostgresqlBackupCrdRes(rsp *http.Response) (*DeleteManagedPostgresqlBackupCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteManagedPostgresqlBackupCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetManagedPostgresqlBackupCrdRes parses an HTTP response from a GetManagedPostgresqlBackupCrdWithResponse call
+func ParseGetManagedPostgresqlBackupCrdRes(rsp *http.Response) (*GetManagedPostgresqlBackupCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetManagedPostgresqlBackupCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ManagedPostgresqlBackupCrdResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListManagedPostgresqlUsersRes parses an HTTP response from a ListManagedPostgresqlUsersWithResponse call
+func ParseListManagedPostgresqlUsersRes(rsp *http.Response) (*ListManagedPostgresqlUsersRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListManagedPostgresqlUsersRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []ManagedPostgresqlUserResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateManagedPostgresqlUserCrdRes parses an HTTP response from a CreateManagedPostgresqlUserCrdWithResponse call
+func ParseCreateManagedPostgresqlUserCrdRes(rsp *http.Response) (*CreateManagedPostgresqlUserCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateManagedPostgresqlUserCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ManagedPostgresqlUserResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetManagedPostgresqlUserRes parses an HTTP response from a GetManagedPostgresqlUserWithResponse call
+func ParseGetManagedPostgresqlUserRes(rsp *http.Response) (*GetManagedPostgresqlUserRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetManagedPostgresqlUserRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ManagedPostgresqlUserResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteManagedPostgresqlUserCrdRes parses an HTTP response from a DeleteManagedPostgresqlUserCrdWithResponse call
+func ParseDeleteManagedPostgresqlUserCrdRes(rsp *http.Response) (*DeleteManagedPostgresqlUserCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteManagedPostgresqlUserCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetManagedPostgresqlUserCrdRes parses an HTTP response from a GetManagedPostgresqlUserCrdWithResponse call
+func ParseGetManagedPostgresqlUserCrdRes(rsp *http.Response) (*GetManagedPostgresqlUserCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetManagedPostgresqlUserCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ManagedPostgresqlUserCrdSpecResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchManagedPostgresqlUserCrdRes parses an HTTP response from a PatchManagedPostgresqlUserCrdWithResponse call
+func ParsePatchManagedPostgresqlUserCrdRes(rsp *http.Response) (*PatchManagedPostgresqlUserCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchManagedPostgresqlUserCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetManagedPostgresqlRes parses an HTTP response from a GetManagedPostgresqlWithResponse call
+func ParseGetManagedPostgresqlRes(rsp *http.Response) (*GetManagedPostgresqlRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetManagedPostgresqlRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ManagedPostgresqlResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteManagedPostgresqlCrdRes parses an HTTP response from a DeleteManagedPostgresqlCrdWithResponse call
+func ParseDeleteManagedPostgresqlCrdRes(rsp *http.Response) (*DeleteManagedPostgresqlCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteManagedPostgresqlCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetManagedPostgresqlCrdRes parses an HTTP response from a GetManagedPostgresqlCrdWithResponse call
+func ParseGetManagedPostgresqlCrdRes(rsp *http.Response) (*GetManagedPostgresqlCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetManagedPostgresqlCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ManagedPostgresqlCrdSpecResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchManagedPostgresqlCrdRes parses an HTTP response from a PatchManagedPostgresqlCrdWithResponse call
+func ParsePatchManagedPostgresqlCrdRes(rsp *http.Response) (*PatchManagedPostgresqlCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchManagedPostgresqlCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseListManagedPostgresqlBackupsRes parses an HTTP response from a ListManagedPostgresqlBackupsWithResponse call
+func ParseListManagedPostgresqlBackupsRes(rsp *http.Response) (*ListManagedPostgresqlBackupsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListManagedPostgresqlBackupsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ManagedPostgresqlBackupsPage
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateManagedPostgresqlBackupCrdRes parses an HTTP response from a CreateManagedPostgresqlBackupCrdWithResponse call
+func ParseCreateManagedPostgresqlBackupCrdRes(rsp *http.Response) (*CreateManagedPostgresqlBackupCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateManagedPostgresqlBackupCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ManagedPostgresqlBackupResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
 
 	}
 
@@ -23065,6 +27255,38 @@ func ParseDeletePipelineRes(rsp *http.Response) (*DeletePipelineRes, error) {
 	return response, nil
 }
 
+// ParseCountPipelineRefsRes parses an HTTP response from a CountPipelineRefsWithResponse call
+func ParseCountPipelineRefsRes(rsp *http.Response) (*CountPipelineRefsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CountPipelineRefsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseResumePipelineRes parses an HTTP response from a ResumePipelineWithResponse call
+func ParseResumePipelineRes(rsp *http.Response) (*ResumePipelineRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ResumePipelineRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
 // ParseListPipelineRunsRes parses an HTTP response from a ListPipelineRunsWithResponse call
 func ParseListPipelineRunsRes(rsp *http.Response) (*ListPipelineRunsRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -23112,6 +27334,22 @@ func ParseGetPipelineRunRes(rsp *http.Response) (*GetPipelineRunRes, error) {
 		}
 		response.JSON200 = &dest
 
+	}
+
+	return response, nil
+}
+
+// ParseSuspendPipelineRes parses an HTTP response from a SuspendPipelineWithResponse call
+func ParseSuspendPipelineRes(rsp *http.Response) (*SuspendPipelineRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SuspendPipelineRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
 	}
 
 	return response, nil
@@ -23201,6 +27439,32 @@ func ParseCountSecretsRes(rsp *http.Response) (*CountSecretsRes, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest CountSecretsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteDirectoryRes parses an HTTP response from a DeleteDirectoryWithResponse call
+func ParseDeleteDirectoryRes(rsp *http.Response) (*DeleteDirectoryRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteDirectoryRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DeleteDirectoryResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
