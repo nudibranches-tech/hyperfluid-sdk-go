@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/builders"
 	"github.com/nudibranches-tech/hyperfluid-sdk-go/sdk/utils"
@@ -113,12 +114,23 @@ func (t *TableQueryBuilder) buildParams() url.Values {
 
 	// Add SELECT columns
 	if len(t.selectCols) > 0 {
-		params.Set("select", fmt.Sprintf("%s", t.selectCols))
+		params.Set("__select", strings.Join(t.selectCols, ","))
 	}
 
-	// Add WHERE filters
+	// Add WHERE filters: column.op=value (e.g. commune.eq=75111)
+	operatorMap := map[string]string{
+		"=":    "eq",
+		"!=":   "neq",
+		">":    "gt",
+		">=":   "gte",
+		"<":    "lt",
+		"<=":   "lte",
+		"LIKE": "like",
+		"IN":   "in",
+	}
 	for _, filter := range t.filters {
-		paramName := fmt.Sprintf("%s[%s]", filter.Column, filter.Operator)
+		op := operatorMap[filter.Operator]
+		paramName := fmt.Sprintf("%s.%s", filter.Column, op)
 		params.Add(paramName, fmt.Sprintf("%v", filter.Value))
 	}
 
