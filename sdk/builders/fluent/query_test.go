@@ -56,9 +56,9 @@ func TestQueryBuilder_WithSelect(t *testing.T) {
 		DataDockID: "test-datadock",
 	}, func(req *http.Request) (*http.Response, error) {
 		query := req.URL.Query()
-		selectParam := query.Get("select")
+		selectParam := query.Get("__select")
 		if selectParam != "id,name,email" {
-			t.Errorf("Expected select=id,name,email, got %s", selectParam)
+			t.Errorf("Expected __select=id,name,email, got %s", selectParam)
 		}
 
 		return &http.Response{
@@ -85,9 +85,9 @@ func TestQueryBuilder_WithMultipleSelects(t *testing.T) {
 		DataDockID: "test-datadock",
 	}, func(req *http.Request) (*http.Response, error) {
 		query := req.URL.Query()
-		selectParam := query.Get("select")
+		selectParam := query.Get("__select")
 		if selectParam != "id,name,email,phone" {
-			t.Errorf("Expected select=id,name,email,phone, got %s", selectParam)
+			t.Errorf("Expected __select=id,name,email,phone, got %s", selectParam)
 		}
 
 		return &http.Response{
@@ -360,8 +360,8 @@ func TestQueryBuilder_ComplexQuery(t *testing.T) {
 		query := req.URL.Query()
 
 		// Verify all parameters are present
-		if query.Get("select") != "id,name,email" {
-			t.Errorf("Unexpected select parameter: %s", query.Get("select"))
+		if query.Get("__select") != "id,name,email" {
+			t.Errorf("Unexpected __select parameter: %s", query.Get("__select"))
 		}
 		if query.Get("_limit") != "100" {
 			t.Errorf("Unexpected limit: %s", query.Get("_limit"))
