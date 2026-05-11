@@ -93,7 +93,7 @@ func (qb *QueryBuilder) Select(columns ...string) *QueryBuilder {
 func (qb *QueryBuilder) Where(column, operator string, value interface{}) *QueryBuilder {
 	validOperators := map[string]bool{
 		"=": true, ">": true, "<": true, ">=": true, "<=": true,
-		"!=": true, "LIKE": true, "IN": true,
+		"!=": true, "LIKE": true, "ILIKE": true, "IN": true,
 	}
 
 	if !validOperators[operator] {
@@ -224,8 +224,9 @@ func (qb *QueryBuilder) buildParams() url.Values {
 		">=":   "gte",
 		"<":    "lt",
 		"<=":   "lte",
-		"LIKE": "like",
-		"IN":   "in",
+		"LIKE":  "like",
+		"ILIKE": "ilike",
+		"IN":    "in",
 	}
 	for _, filter := range qb.filters {
 		op := operatorMap[filter.Operator]
@@ -248,12 +249,12 @@ func (qb *QueryBuilder) buildParams() url.Values {
 
 	// Add LIMIT
 	if qb.limitVal > 0 {
-		params.Set("_limit", strconv.Itoa(qb.limitVal))
+		params.Set("__limit", strconv.Itoa(qb.limitVal))
 	}
 
 	// Add OFFSET
 	if qb.offsetVal > 0 {
-		params.Set("_offset", strconv.Itoa(qb.offsetVal))
+		params.Set("__offset", strconv.Itoa(qb.offsetVal))
 	}
 
 	return params
@@ -294,7 +295,7 @@ func (qb *QueryBuilder) Count(ctx context.Context) (int, error) {
 
 	// Add count parameter (API-specific)
 	params.Set("count", "exact")
-	params.Set("_limit", "0")
+	params.Set("__limit", "0")
 
 	endpoint += "?" + params.Encode()
 

@@ -149,12 +149,12 @@ func (t *TableQueryBuilder) buildParams() url.Values {
 
 	// Add LIMIT
 	if t.limitVal > 0 {
-		params.Set("_limit", fmt.Sprintf("%d", t.limitVal))
+		params.Set("__limit", fmt.Sprintf("%d", t.limitVal))
 	}
 
 	// Add OFFSET
 	if t.offsetVal > 0 {
-		params.Set("_offset", fmt.Sprintf("%d", t.offsetVal))
+		params.Set("__offset", fmt.Sprintf("%d", t.offsetVal))
 	}
 
 	return params
