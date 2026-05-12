@@ -89,11 +89,13 @@ func (qb *QueryBuilder) Select(columns ...string) *QueryBuilder {
 }
 
 // Where adds a filter condition to the query.
-// Supported operators: =, >, <, >=, <=, !=, LIKE, IN
+// Supported operators: =, !=, >, >=, <, <=, LIKE, NOT_LIKE, CONTAINS, IEQ, ILIKE, ICONTAINS, IN
 func (qb *QueryBuilder) Where(column, operator string, value interface{}) *QueryBuilder {
 	validOperators := map[string]bool{
-		"=": true, ">": true, "<": true, ">=": true, "<=": true,
-		"!=": true, "LIKE": true, "ILIKE": true, "IN": true,
+		"=": true, "!=": true, ">": true, ">=": true, "<": true, "<=": true,
+		"LIKE": true, "NOT_LIKE": true, "CONTAINS": true,
+		"IEQ": true, "ILIKE": true, "ICONTAINS": true,
+		"IN": true,
 	}
 
 	if !validOperators[operator] {
@@ -218,15 +220,19 @@ func (qb *QueryBuilder) buildParams() url.Values {
 
 	// Add WHERE filters: column.op=value (e.g. commune.eq=75111)
 	operatorMap := map[string]string{
-		"=":    "eq",
-		"!=":   "neq",
-		">":    "gt",
-		">=":   "gte",
-		"<":    "lt",
-		"<=":   "lte",
-		"LIKE":  "like",
-		"ILIKE": "ilike",
-		"IN":    "in",
+		"=":         "eq",
+		"!=":        "ne",
+		">":         "gt",
+		">=":        "gte",
+		"<":         "lt",
+		"<=":        "lte",
+		"LIKE":      "like",
+		"NOT_LIKE":  "not_like",
+		"CONTAINS":  "contains",
+		"IEQ":       "ieq",
+		"ILIKE":     "ilike",
+		"ICONTAINS": "icontains",
+		"IN":        "in",
 	}
 	for _, filter := range qb.filters {
 		op := operatorMap[filter.Operator]

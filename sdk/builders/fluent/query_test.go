@@ -352,6 +352,52 @@ func TestQueryBuilder_RawParams(t *testing.T) {
 	}
 }
 
+func TestQueryBuilder_OperatorEncoding(t *testing.T) {
+	testOperatorsTable := []struct {
+		operator   string
+		expectedOp string
+	}{
+		{"=", "eq"},
+		{"!=", "ne"},
+		{">", "gt"},
+		{">=", "gte"},
+		{"<", "lt"},
+		{"<=", "lte"},
+		{"LIKE", "like"},
+		{"NOT_LIKE", "not_like"},
+		{"CONTAINS", "contains"},
+		{"IEQ", "ieq"},
+		{"ILIKE", "ilike"},
+		{"ICONTAINS", "icontains"},
+		{"IN", "in"},
+	}
+
+	for _, testOperatorsTable := range testOperatorsTable {
+		t.Run(testOperatorsTable.operator, func(t *testing.T) {
+			qb := newTestQueryBuilder(utils.Configuration{
+				Token:      "test-token",
+				DataDockID: "test-datadock",
+			}, func(req *http.Request) (*http.Response, error) {
+				expected := "col." + testOperatorsTable.expectedOp
+				if req.URL.Query().Get(expected) != "val" {
+					t.Errorf("operator %s: expected param %s=val, got query: %s", testOperatorsTable.operator, expected, req.URL.RawQuery)
+				}
+				return &http.Response{
+					StatusCode: http.StatusOK,
+					Body:       io.NopCloser(strings.NewReader(`[]`)),
+				}, nil
+			})
+
+			_, err := qb.Catalog("cat").Schema("s").Table("t").
+				Where("col", testOperatorsTable.operator, "val").
+				Get(context.Background())
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+		})
+	}
+}
+
 func TestQueryBuilder_ComplexQuery(t *testing.T) {
 	qb := newTestQueryBuilder(utils.Configuration{
 		Token:      "test-token",

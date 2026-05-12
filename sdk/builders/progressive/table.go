@@ -119,14 +119,19 @@ func (t *TableQueryBuilder) buildParams() url.Values {
 
 	// Add WHERE filters: column.op=value (e.g. commune.eq=75111)
 	operatorMap := map[string]string{
-		"=":    "eq",
-		"!=":   "neq",
-		">":    "gt",
-		">=":   "gte",
-		"<":    "lt",
-		"<=":   "lte",
-		"LIKE": "like",
-		"IN":   "in",
+		"=":         "eq",
+		"!=":        "ne",
+		">":         "gt",
+		">=":        "gte",
+		"<":         "lt",
+		"<=":        "lte",
+		"LIKE":      "like",
+		"NOT_LIKE":  "not_like",
+		"CONTAINS":  "contains",
+		"IEQ":       "ieq",
+		"ILIKE":     "ilike",
+		"ICONTAINS": "icontains",
+		"IN":        "in",
 	}
 	for _, filter := range t.filters {
 		op := operatorMap[filter.Operator]
