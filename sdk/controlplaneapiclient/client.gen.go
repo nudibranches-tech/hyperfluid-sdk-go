@@ -60,6 +60,16 @@ const (
 	Primary       BackupTargetInstance = "primary"
 )
 
+// Defines values for BackupTargetSourceRequest0Mode.
+const (
+	BackupTargetSourceRequest0ModeInternal BackupTargetSourceRequest0Mode = "internal"
+)
+
+// Defines values for BackupTargetSourceRequest1Mode.
+const (
+	External BackupTargetSourceRequest1Mode = "external"
+)
+
 // Defines values for Configuration.
 const (
 	HighAvailability Configuration = "high-availability"
@@ -70,6 +80,26 @@ const (
 const (
 	ShowDemoBanner ConsoleConfigFeatureFlag = "show_demo_banner"
 	VaubanPreview  ConsoleConfigFeatureFlag = "vauban_preview"
+)
+
+// Defines values for CrdOwner0Kind.
+const (
+	Ui CrdOwner0Kind = "ui"
+)
+
+// Defines values for CrdOwner1Kind.
+const (
+	CrdOwner1KindPipeline CrdOwner1Kind = "pipeline"
+)
+
+// Defines values for CrdOwner2Kind.
+const (
+	Gitops CrdOwner2Kind = "gitops"
+)
+
+// Defines values for CrdOwner3Kind.
+const (
+	Unknown CrdOwner3Kind = "unknown"
 )
 
 // Defines values for CreatePipelineRequestV20Type.
@@ -179,10 +209,18 @@ const (
 
 // Defines values for DataDockStatus.
 const (
+	DataDockStatusChecking DataDockStatus = "Checking"
+	DataDockStatusDeleting DataDockStatus = "Deleting"
 	DataDockStatusOffline  DataDockStatus = "Offline"
 	DataDockStatusOnline   DataDockStatus = "Online"
 	DataDockStatusPending  DataDockStatus = "Pending"
 	DataDockStatusSleeping DataDockStatus = "Sleeping"
+)
+
+// Defines values for DomainVerificationStateDto.
+const (
+	DomainVerificationStateDtoPending  DomainVerificationStateDto = "pending"
+	DomainVerificationStateDtoVerified DomainVerificationStateDto = "verified"
 )
 
 // Defines values for Engine.
@@ -352,17 +390,17 @@ const (
 
 // Defines values for QuotaStatus.
 const (
-	Exceeded QuotaStatus = "exceeded"
-	Ok       QuotaStatus = "ok"
-	Warning  QuotaStatus = "warning"
+	QuotaStatusExceeded QuotaStatus = "exceeded"
+	QuotaStatusOk       QuotaStatus = "ok"
+	QuotaStatusWarning  QuotaStatus = "warning"
 )
 
 // Defines values for RefStatus.
 const (
-	Done    RefStatus = "done"
-	Failed  RefStatus = "failed"
-	Pending RefStatus = "pending"
-	Skipped RefStatus = "skipped"
+	RefStatusDone    RefStatus = "done"
+	RefStatusFailed  RefStatus = "failed"
+	RefStatusPending RefStatus = "pending"
+	RefStatusSkipped RefStatus = "skipped"
 )
 
 // Defines values for ResourceSource.
@@ -405,10 +443,17 @@ const (
 
 // Defines values for SensitivityLevel.
 const (
-	Confidential SensitivityLevel = "confidential"
-	Internal     SensitivityLevel = "internal"
-	Public       SensitivityLevel = "public"
-	Restricted   SensitivityLevel = "restricted"
+	SensitivityLevelConfidential SensitivityLevel = "confidential"
+	SensitivityLevelInternal     SensitivityLevel = "internal"
+	SensitivityLevelPublic       SensitivityLevel = "public"
+	SensitivityLevelRestricted   SensitivityLevel = "restricted"
+)
+
+// Defines values for WarningSeverity.
+const (
+	WarningSeverityDanger  WarningSeverity = "danger"
+	WarningSeverityInfo    WarningSeverity = "info"
+	WarningSeverityWarning WarningSeverity = "warning"
 )
 
 // AbortMultipartUploadRequest defines model for AbortMultipartUploadRequest.
@@ -504,6 +549,21 @@ type ApiKeyResponse struct {
 	Scopes     []string           `json:"scopes"`
 }
 
+// AppUsageRef Reference to a ContainerApp that has a custom domain under this apex.
+//
+// Populated by walking the org namespace's ContainerApps and matching FQDNs that
+// fall under the apex. Empty in list responses; may be populated on detail.
+type AppUsageRef struct {
+	// ContainerAppId Console DB id of the ContainerApp.
+	ContainerAppId openapi_types.UUID `json:"containerAppId"`
+
+	// Fqdn Specific FQDN under this apex declared on the ContainerApp's `customDomains`.
+	Fqdn string `json:"fqdn"`
+
+	// Name Container app slug (also the CRD name in the org namespace).
+	Name string `json:"name"`
+}
+
 // ArchiveDownloadResponse defines model for ArchiveDownloadResponse.
 type ArchiveDownloadResponse struct {
 	ExpiresInSeconds int64  `json:"expires_in_seconds"`
@@ -590,6 +650,49 @@ type BackupTargetResponse struct {
 	Tags                      []string           `json:"tags"`
 	UpdatedAt                 time.Time          `json:"updated_at"`
 }
+
+// BackupTargetSourceRequest Where the backup target writes to. `Internal` derives endpoint, path,
+// and credentials from a Hyperfluid-managed DataDock that has already
+// published its keys (see `DataDockSecretsStatus`); `External` lets the
+// caller specify everything by hand (e.g. AWS, third-party MinIO).
+type BackupTargetSourceRequest struct {
+	union json.RawMessage
+}
+
+// BackupTargetSourceRequest0 All four S3 fields (endpoint, bucket path, access key, secret key)
+// are resolved from the data dock. The data dock must be `Running`
+// so its credentials have been published and the operator's
+// in-cluster endpoint is known.
+type BackupTargetSourceRequest0 struct {
+	// BucketName Bucket inside the data dock to write backups under. The
+	// resulting `destination_path` is `s3://{bucket_name}/`.
+	BucketName string                         `json:"bucket_name"`
+	DataDockId openapi_types.UUID             `json:"data_dock_id"`
+	Mode       BackupTargetSourceRequest0Mode `json:"mode"`
+}
+
+// BackupTargetSourceRequest0Mode defines model for BackupTargetSourceRequest.0.Mode.
+type BackupTargetSourceRequest0Mode string
+
+// BackupTargetSourceRequest1 Caller supplies a fully-formed S3 endpoint and pre-existing
+// control-plane secrets. Used for external backends (AWS, etc.).
+type BackupTargetSourceRequest1 struct {
+	// AccessKeySecretName Name of the control-plane secret holding the S3 access key id.
+	AccessKeySecretName string `json:"access_key_secret_name"`
+
+	// DestinationPath Bucket + prefix (e.g. "s3://backups/").
+	DestinationPath string `json:"destination_path"`
+
+	// EndpointUrl S3-compatible endpoint URL (e.g. "https://s3.eu-west-3.amazonaws.com").
+	EndpointUrl string                         `json:"endpoint_url"`
+	Mode        BackupTargetSourceRequest1Mode `json:"mode"`
+
+	// SecretAccessKeySecretName Name of the control-plane secret holding the S3 secret access key.
+	SecretAccessKeySecretName string `json:"secret_access_key_secret_name"`
+}
+
+// BackupTargetSourceRequest1Mode defines model for BackupTargetSourceRequest.1.Mode.
+type BackupTargetSourceRequest1Mode string
 
 // BucketArchiveOperation defines model for BucketArchiveOperation.
 type BucketArchiveOperation struct {
@@ -942,6 +1045,57 @@ type CountSecretsResponse struct {
 	Count int64 `json:"count"`
 }
 
+// CrdOwner Who "owns" a CRD from the console's point of view — derived purely
+// from metadata markers, never from the CRD's spec. Useful to explain to
+// the user what will happen when they delete it.
+type CrdOwner struct {
+	union json.RawMessage
+}
+
+// CrdOwner0 Stamped with `source=ui`. Deleting from the UI is the normal path.
+type CrdOwner0 struct {
+	Kind CrdOwner0Kind `json:"kind"`
+}
+
+// CrdOwner0Kind defines model for CrdOwner.0.Kind.
+type CrdOwner0Kind string
+
+// CrdOwner1 Stamped with `source=pipeline`. Deleting is legit (one-shot
+// imports, cleanup after a bad run) but should be explicit —
+// `name` carries whichever pipeline identifier the operator wrote.
+type CrdOwner1 struct {
+	Kind CrdOwner1Kind `json:"kind"`
+	Name *string       `json:"name"`
+}
+
+// CrdOwner1Kind defines model for CrdOwner.1.Kind.
+type CrdOwner1Kind string
+
+// CrdOwner2 Any ArgoCD/Flux/Helm marker detected. Deleting here is almost
+// always pointless — the GitOps reconciler will recreate the CRD
+// on its next sync.
+type CrdOwner2 struct {
+	Kind CrdOwner2Kind `json:"kind"`
+
+	// Reference Best-effort app / release identifier (ArgoCD app name, Helm
+	// release name, Flux kustomization). `None` if the marker is a
+	// bare `managed-by` label without a qualifying annotation.
+	Reference *string `json:"reference"`
+	Tool      string  `json:"tool"`
+}
+
+// CrdOwner2Kind defines model for CrdOwner.2.Kind.
+type CrdOwner2Kind string
+
+// CrdOwner3 No ownership markers at all — legacy CRD or created by a tool we
+// don't recognize.
+type CrdOwner3 struct {
+	Kind CrdOwner3Kind `json:"kind"`
+}
+
+// CrdOwner3Kind defines model for CrdOwner.3.Kind.
+type CrdOwner3Kind string
+
 // CrdStatusSnapshot Projection of a Hyperfluid CRD's `.status` subresource, suitable for
 // surfacing in list endpoints so the UI can render a live status badge
 // without having to call kube-apiserver itself.
@@ -986,27 +1140,23 @@ type CreateApiKeyResponse struct {
 
 // CreateBackupTargetCrdRequestBody defines model for CreateBackupTargetCrdRequestBody.
 type CreateBackupTargetCrdRequestBody struct {
-	// AccessKeySecretName Name of the control-plane secret holding the S3 access key id
-	AccessKeySecretName string `json:"access_key_secret_name"`
-
 	// Description Optional description (DB-only, not stored in CRD)
 	Description *string `json:"description"`
 
-	// DestinationPath Bucket + prefix (e.g. "s3://backups/")
-	DestinationPath string `json:"destination_path"`
-
-	// EndpointUrl S3-compatible endpoint URL (e.g. "http://minio.minio.svc:9000")
-	EndpointUrl string `json:"endpoint_url"`
-
 	// Insecure Skip TLS certificate verification when probing the S3 endpoint.
 	// Intended for development (self-signed certs). Defaults to false.
+	// Ignored for `internal` source — internal endpoints are plaintext
+	// cluster-local URLs.
 	Insecure *bool `json:"insecure,omitempty"`
 
 	// Name Must be a valid slug: lowercase letters, digits, and hyphens only; cannot start or end with a hyphen.
 	Name string `json:"name"`
 
-	// SecretAccessKeySecretName Name of the control-plane secret holding the S3 secret access key
-	SecretAccessKeySecretName string `json:"secret_access_key_secret_name"`
+	// Source Where the backup target writes to. `Internal` derives endpoint, path,
+	// and credentials from a Hyperfluid-managed DataDock that has already
+	// published its keys (see `DataDockSecretsStatus`); `External` lets the
+	// caller specify everything by hand (e.g. AWS, third-party MinIO).
+	Source BackupTargetSourceRequest `json:"source"`
 
 	// Tags User-defined tags (DB-only, not stored in CRD)
 	Tags *[]string `json:"tags,omitempty"`
@@ -1103,6 +1253,13 @@ type CreateDataDockRequestBody struct {
 	HarborId       openapi_types.UUID  `json:"harbor_id"`
 	Name           string              `json:"name"`
 	Slug           string              `json:"slug"`
+}
+
+// CreateDomainVerificationRequestBody defines model for CreateDomainVerificationRequestBody.
+type CreateDomainVerificationRequestBody struct {
+	// Apex Apex domain to verify ownership of, e.g. `acme.com`. Must be a lowercase
+	// fully-qualified domain name; immutable after creation.
+	Apex string `json:"apex"`
 }
 
 // CreateFakerSchemaRequest defines model for CreateFakerSchemaRequest.
@@ -1831,6 +1988,61 @@ type DeleteDirectoryResponse struct {
 	Deleted int `json:"deleted"`
 }
 
+// DeletePreviewDownstream A downstream resource that will be affected by the delete.
+// Currently scoped to child tables for a schema preview; the shape is
+// generic so we can add pipelines / queries later without breaking the
+// contract.
+type DeletePreviewDownstream struct {
+	// Detail Optional hint surfaced next to the name (e.g. owner of the child
+	// table, next run time for a pipeline).
+	Detail *string `json:"detail"`
+
+	// Kind `trino_table` / `pipeline` — a short tag the UI switches on.
+	Kind string `json:"kind"`
+	Name string `json:"name"`
+}
+
+// DeletePreviewResponse defines model for DeletePreviewResponse.
+type DeletePreviewResponse struct {
+	// CrdPresent `true` when a matching Hyperfluid CRD was found. If `false`, the
+	// delete will go straight to DDL and no cascade concerns apply.
+	CrdPresent bool `json:"crd_present"`
+
+	// Downstream Resources that will also be affected. Empty for table deletes
+	// today; populated for schema deletes with child-table count.
+	Downstream []DeletePreviewDownstream `json:"downstream"`
+
+	// Fqn Fully-qualified name of the target (`catalog.schema` or
+	// `catalog.schema.table`).
+	Fqn string `json:"fqn"`
+
+	// Owner Who "owns" a CRD from the console's point of view — derived purely
+	// from metadata markers, never from the CRD's spec. Useful to explain to
+	// the user what will happen when they delete it.
+	Owner *CrdOwner `json:"owner,omitempty"`
+
+	// ShortName Canonical unqualified name the user types in the confirm box.
+	// Emitted by the server (instead of letting the client `split(".")`
+	// the `fqn`) so identifiers with embedded dots — Trino allows
+	// `"schema.with.dots"` when quoted — don't round-trip to a garbled
+	// token the user can't physically type.
+	ShortName string `json:"short_name"`
+
+	// Warnings Pre-rendered, user-facing warnings. The UI can render them
+	// directly; severity controls the color.
+	Warnings []DeleteWarning `json:"warnings"`
+}
+
+// DeleteWarning defines model for DeleteWarning.
+type DeleteWarning struct {
+	Message string `json:"message"`
+
+	// Severity Severity shapes the UI's visual treatment: `danger` is red (Argo/Flux
+	// resurrection), `warning` is amber (pipeline resurrection, cascading
+	// drops), `info` is blue (child counts, row estimates).
+	Severity WarningSeverity `json:"severity"`
+}
+
 // DestinationConfig Configuration for a FileRouter destination
 // Allows routing to different Data Docks with specific prefixes
 type DestinationConfig struct {
@@ -1843,6 +2055,40 @@ type DestinationConfig struct {
 	// Prefix Prefix path within the destination bucket (e.g., "invoices/processed/")
 	Prefix string `json:"prefix"`
 }
+
+// DomainVerificationResponse defines model for DomainVerificationResponse.
+type DomainVerificationResponse struct {
+	// Apex Apex domain being verified, e.g. `acme.com`.
+	Apex string `json:"apex"`
+
+	// AppsUsing ContainerApps in the same org that have a `customDomain` falling under this apex.
+	// Always empty in list responses to avoid N+1 K8s calls — populated on detail only.
+	AppsUsing *[]AppUsageRef `json:"appsUsing,omitempty"`
+	CreatedAt time.Time      `json:"createdAt"`
+
+	// ExpectedTxtRecord Pre-computed DNS record name where the user must place the TXT challenge,
+	// e.g. `_hyperfluid-challenge.acme.com`.
+	ExpectedTxtRecord string `json:"expectedTxtRecord"`
+
+	// ExpectedTxtValue Pre-computed TXT value the user must publish, e.g.
+	// `hyperfluid-domain-verification=ABCD1234...`.
+	ExpectedTxtValue string             `json:"expectedTxtValue"`
+	Id               openapi_types.UUID `json:"id"`
+
+	// LastCheckError Error from the most recent failed poll. Cleared on success.
+	LastCheckError *string `json:"lastCheckError"`
+
+	// LastCheckedAt Timestamp of the most recent poll attempt (regardless of outcome).
+	LastCheckedAt  *time.Time                 `json:"lastCheckedAt"`
+	OrganizationId openapi_types.UUID         `json:"organizationId"`
+	State          DomainVerificationStateDto `json:"state"`
+
+	// VerifiedAt Timestamp at which ownership was successfully verified.
+	VerifiedAt *time.Time `json:"verifiedAt"`
+}
+
+// DomainVerificationStateDto defines model for DomainVerificationStateDto.
+type DomainVerificationStateDto string
 
 // DownloadServiceAccountResponse defines model for DownloadServiceAccountResponse.
 type DownloadServiceAccountResponse struct {
@@ -2923,6 +3169,33 @@ type PatchModelServingRequest struct {
 // PermissionLevel Permission level granted to the Postgres role.
 type PermissionLevel string
 
+// PipelineDetailField A single labeled field shown on a connector detail page.
+// Sensitive fields are masked in the UI; copyable fields show a copy button.
+type PipelineDetailField struct {
+	Copyable  bool   `json:"copyable"`
+	Label     string `json:"label"`
+	Sensitive bool   `json:"sensitive"`
+	Value     string `json:"value"`
+}
+
+// PipelineDetailResponse defines model for PipelineDetailResponse.
+type PipelineDetailResponse struct {
+	CreatedAt time.Time `json:"created_at"`
+
+	// DestinationPrefix The destination prefix applied to all files written to the destination bucket.
+	// Used to construct the correct S3 browser path from a source-relative ref key.
+	DestinationPrefix *string               `json:"destination_prefix"`
+	Fields            []PipelineDetailField `json:"fields"`
+	Id                openapi_types.UUID    `json:"id"`
+	Name              string                `json:"name"`
+
+	// Schedule Cron expression for scheduled pipelines, or "one_off" for one-time runs.
+	Schedule  string `json:"schedule"`
+	Status    bool   `json:"status"`
+	Suspended bool   `json:"suspended"`
+	Type      string `json:"type"`
+}
+
 // PipelineInputParameters defines model for PipelineInputParameters.
 type PipelineInputParameters struct {
 	// DcBucketId UUID of the bucket Data Container (not required for Copy pipeline)
@@ -3137,6 +3410,15 @@ type PipelineRun struct {
 
 // PipelineRunStatus defines model for PipelineRunStatus.
 type PipelineRunStatus string
+
+// PipelineStats Aggregated statistics for a pipeline, derived from its run history.
+type PipelineStats struct {
+	CompletedRuns int64   `json:"completed_runs"`
+	FailedRuns    int64   `json:"failed_runs"`
+	LastRunAt     *string `json:"last_run_at"`
+	TotalFailures int64   `json:"total_failures"`
+	TotalRuns     int64   `json:"total_runs"`
+}
 
 // PipelineType defines model for PipelineType.
 type PipelineType string
@@ -3743,6 +4025,12 @@ type UpdateOrgSecuritySettingsBody struct {
 	ZeroTrustMode       *bool   `json:"zero_trust_mode"`
 }
 
+// UpdatePipelineRequest Request body for PATCH /organizations/{org_id}/pipelines/{pipeline_id}
+type UpdatePipelineRequest struct {
+	// Suspend When true the underlying CronJob is suspended (no new runs will be scheduled).
+	Suspend bool `json:"suspend"`
+}
+
 // UpdateRefRequest defines model for UpdateRefRequest.
 type UpdateRefRequest struct {
 	Attempts         int64              `json:"attempts"`
@@ -3839,6 +4127,11 @@ type UserWithRoles struct {
 // Value defines model for Value.
 type Value = interface{}
 
+// WarningSeverity Severity shapes the UI's visual treatment: `danger` is red (Argo/Flux
+// resurrection), `warning` is amber (pipeline resurrection, cascading
+// drops), `info` is blue (child counts, row estimates).
+type WarningSeverity string
+
 // WorkerAutoScaling defines model for WorkerAutoScaling.
 type WorkerAutoScaling struct {
 	Enabled                 *bool  `json:"enabled,omitempty"`
@@ -3933,6 +4226,15 @@ type ListManagedPostgresqlBackupsParams struct {
 
 	// Limit Page size (max 50).
 	Limit *int64 `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// CountPipelineRefsParams defines parameters for CountPipelineRefs.
+type CountPipelineRefsParams struct {
+	Status          *RefStatus `form:"status,omitempty" json:"status,omitempty"`
+	Key             *string    `form:"key,omitempty" json:"key,omitempty"`
+	Locked          *bool      `form:"locked,omitempty" json:"locked,omitempty"`
+	UpdatedAtBefore *time.Time `form:"updated_at_before,omitempty" json:"updated_at_before,omitempty"`
+	UpdatedAtAfter  *time.Time `form:"updated_at_after,omitempty" json:"updated_at_after,omitempty"`
 }
 
 // ListSecretsParams defines parameters for ListSecrets.
@@ -4173,6 +4475,9 @@ type PatchBackupTargetCrdJSONRequestBody = PatchBackupTargetCrdRequestBody
 // PatchContainerAppCrdJSONRequestBody defines body for PatchContainerAppCrd for application/json ContentType.
 type PatchContainerAppCrdJSONRequestBody = PatchContainerAppCrdRequestBody
 
+// CreateDomainVerificationJSONRequestBody defines body for CreateDomainVerification for application/json ContentType.
+type CreateDomainVerificationJSONRequestBody = CreateDomainVerificationRequestBody
+
 // CreateHarborCrdJSONRequestBody defines body for CreateHarborCrd for application/json ContentType.
 type CreateHarborCrdJSONRequestBody = CreateHarborCrdRequestBody
 
@@ -4203,8 +4508,8 @@ type CreateModelServingJSONRequestBody = CreateModelServingRequest
 // PatchModelServingJSONRequestBody defines body for PatchModelServing for application/json ContentType.
 type PatchModelServingJSONRequestBody = PatchModelServingRequest
 
-// CountPipelineRefsJSONRequestBody defines body for CountPipelineRefs for application/json ContentType.
-type CountPipelineRefsJSONRequestBody = CountRefRequest
+// UpdatePipelineJSONRequestBody defines body for UpdatePipeline for application/json ContentType.
+type UpdatePipelineJSONRequestBody = UpdatePipelineRequest
 
 // CreateSecretJSONRequestBody defines body for CreateSecret for application/json ContentType.
 type CreateSecretJSONRequestBody = CreateSecretRequestBody
@@ -4271,6 +4576,182 @@ type CreateUserJSONRequestBody = CreateUser
 
 // CreatePipelineV2JSONRequestBody defines body for CreatePipelineV2 for application/json ContentType.
 type CreatePipelineV2JSONRequestBody = CreatePipelineRequestV2
+
+// AsBackupTargetSourceRequest0 returns the union data inside the BackupTargetSourceRequest as a BackupTargetSourceRequest0
+func (t BackupTargetSourceRequest) AsBackupTargetSourceRequest0() (BackupTargetSourceRequest0, error) {
+	var body BackupTargetSourceRequest0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromBackupTargetSourceRequest0 overwrites any union data inside the BackupTargetSourceRequest as the provided BackupTargetSourceRequest0
+func (t *BackupTargetSourceRequest) FromBackupTargetSourceRequest0(v BackupTargetSourceRequest0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeBackupTargetSourceRequest0 performs a merge with any union data inside the BackupTargetSourceRequest, using the provided BackupTargetSourceRequest0
+func (t *BackupTargetSourceRequest) MergeBackupTargetSourceRequest0(v BackupTargetSourceRequest0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsBackupTargetSourceRequest1 returns the union data inside the BackupTargetSourceRequest as a BackupTargetSourceRequest1
+func (t BackupTargetSourceRequest) AsBackupTargetSourceRequest1() (BackupTargetSourceRequest1, error) {
+	var body BackupTargetSourceRequest1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromBackupTargetSourceRequest1 overwrites any union data inside the BackupTargetSourceRequest as the provided BackupTargetSourceRequest1
+func (t *BackupTargetSourceRequest) FromBackupTargetSourceRequest1(v BackupTargetSourceRequest1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeBackupTargetSourceRequest1 performs a merge with any union data inside the BackupTargetSourceRequest, using the provided BackupTargetSourceRequest1
+func (t *BackupTargetSourceRequest) MergeBackupTargetSourceRequest1(v BackupTargetSourceRequest1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t BackupTargetSourceRequest) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *BackupTargetSourceRequest) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsCrdOwner0 returns the union data inside the CrdOwner as a CrdOwner0
+func (t CrdOwner) AsCrdOwner0() (CrdOwner0, error) {
+	var body CrdOwner0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCrdOwner0 overwrites any union data inside the CrdOwner as the provided CrdOwner0
+func (t *CrdOwner) FromCrdOwner0(v CrdOwner0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCrdOwner0 performs a merge with any union data inside the CrdOwner, using the provided CrdOwner0
+func (t *CrdOwner) MergeCrdOwner0(v CrdOwner0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCrdOwner1 returns the union data inside the CrdOwner as a CrdOwner1
+func (t CrdOwner) AsCrdOwner1() (CrdOwner1, error) {
+	var body CrdOwner1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCrdOwner1 overwrites any union data inside the CrdOwner as the provided CrdOwner1
+func (t *CrdOwner) FromCrdOwner1(v CrdOwner1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCrdOwner1 performs a merge with any union data inside the CrdOwner, using the provided CrdOwner1
+func (t *CrdOwner) MergeCrdOwner1(v CrdOwner1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCrdOwner2 returns the union data inside the CrdOwner as a CrdOwner2
+func (t CrdOwner) AsCrdOwner2() (CrdOwner2, error) {
+	var body CrdOwner2
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCrdOwner2 overwrites any union data inside the CrdOwner as the provided CrdOwner2
+func (t *CrdOwner) FromCrdOwner2(v CrdOwner2) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCrdOwner2 performs a merge with any union data inside the CrdOwner, using the provided CrdOwner2
+func (t *CrdOwner) MergeCrdOwner2(v CrdOwner2) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCrdOwner3 returns the union data inside the CrdOwner as a CrdOwner3
+func (t CrdOwner) AsCrdOwner3() (CrdOwner3, error) {
+	var body CrdOwner3
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCrdOwner3 overwrites any union data inside the CrdOwner as the provided CrdOwner3
+func (t *CrdOwner) FromCrdOwner3(v CrdOwner3) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCrdOwner3 performs a merge with any union data inside the CrdOwner, using the provided CrdOwner3
+func (t *CrdOwner) MergeCrdOwner3(v CrdOwner3) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t CrdOwner) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *CrdOwner) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
 
 // AsCreatePipelineRequestV20 returns the union data inside the CreatePipelineRequestV2 as a CreatePipelineRequestV20
 func (t CreatePipelineRequestV2) AsCreatePipelineRequestV20() (CreatePipelineRequestV20, error) {
@@ -5534,6 +6015,9 @@ type ClientInterface interface {
 	// DeleteFakerSchema request
 	DeleteFakerSchema(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteFakerSchemaPreview request
+	DeleteFakerSchemaPreview(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// CreateFakerTableWithBody request with any body
 	CreateFakerTableWithBody(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -5557,6 +6041,9 @@ type ClientInterface interface {
 	UpdateFakerTableWithBody(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	UpdateFakerTable(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, body UpdateFakerTableJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteFakerTablePreview request
+	DeleteFakerTablePreview(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CreateIcebergDataContainerWithBody request with any body
 	CreateIcebergDataContainerWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -5765,6 +6252,26 @@ type ClientInterface interface {
 	// DeleteOrganizationCrd request
 	DeleteOrganizationCrd(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListDomainVerifications request
+	ListDomainVerifications(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateDomainVerificationWithBody request with any body
+	CreateDomainVerificationWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateDomainVerification(ctx context.Context, organizationId openapi_types.UUID, body CreateDomainVerificationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteDomainVerification request
+	DeleteDomainVerification(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetDomainVerification request
+	GetDomainVerification(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RotateDomainVerificationToken request
+	RotateDomainVerificationToken(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// VerifyDomainVerificationNow request
+	VerifyDomainVerificationNow(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListHarbors request
 	ListHarbors(ctx context.Context, organizationId openapi_types.UUID, params *ListHarborsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -5881,10 +6388,16 @@ type ClientInterface interface {
 	// DeletePipeline request
 	DeletePipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// CountPipelineRefsWithBody request with any body
-	CountPipelineRefsWithBody(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetPipelineDetail request
+	GetPipelineDetail(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	CountPipelineRefs(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body CountPipelineRefsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// UpdatePipelineWithBody request with any body
+	UpdatePipelineWithBody(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdatePipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body UpdatePipelineJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CountPipelineRefs request
+	CountPipelineRefs(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, params *CountPipelineRefsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ResumePipeline request
 	ResumePipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -5894,6 +6407,9 @@ type ClientInterface interface {
 
 	// GetPipelineRun request
 	GetPipelineRun(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, runId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetPipelineStats request
+	GetPipelineStats(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// SuspendPipeline request
 	SuspendPipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -6447,6 +6963,18 @@ func (c *Client) DeleteFakerSchema(ctx context.Context, dataContainerId openapi_
 	return c.Client.Do(req)
 }
 
+func (c *Client) DeleteFakerSchemaPreview(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteFakerSchemaPreviewRequest(c.Server, dataContainerId, schemaId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) CreateFakerTableWithBody(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateFakerTableRequestWithBody(c.Server, dataContainerId, schemaId, contentType, body)
 	if err != nil {
@@ -6545,6 +7073,18 @@ func (c *Client) UpdateFakerTableWithBody(ctx context.Context, dataContainerId o
 
 func (c *Client) UpdateFakerTable(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, body UpdateFakerTableJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateFakerTableRequest(c.Server, dataContainerId, tableId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteFakerTablePreview(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteFakerTablePreviewRequest(c.Server, dataContainerId, tableId)
 	if err != nil {
 		return nil, err
 	}
@@ -7455,6 +7995,90 @@ func (c *Client) DeleteOrganizationCrd(ctx context.Context, organizationId opena
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListDomainVerifications(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListDomainVerificationsRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateDomainVerificationWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateDomainVerificationRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateDomainVerification(ctx context.Context, organizationId openapi_types.UUID, body CreateDomainVerificationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateDomainVerificationRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteDomainVerification(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteDomainVerificationRequest(c.Server, organizationId, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetDomainVerification(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetDomainVerificationRequest(c.Server, organizationId, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RotateDomainVerificationToken(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRotateDomainVerificationTokenRequest(c.Server, organizationId, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) VerifyDomainVerificationNow(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewVerifyDomainVerificationNowRequest(c.Server, organizationId, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListHarbors(ctx context.Context, organizationId openapi_types.UUID, params *ListHarborsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListHarborsRequest(c.Server, organizationId, params)
 	if err != nil {
@@ -7959,8 +8583,8 @@ func (c *Client) DeletePipeline(ctx context.Context, organizationId openapi_type
 	return c.Client.Do(req)
 }
 
-func (c *Client) CountPipelineRefsWithBody(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCountPipelineRefsRequestWithBody(c.Server, organizationId, pipelineId, contentType, body)
+func (c *Client) GetPipelineDetail(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetPipelineDetailRequest(c.Server, organizationId, pipelineId)
 	if err != nil {
 		return nil, err
 	}
@@ -7971,8 +8595,32 @@ func (c *Client) CountPipelineRefsWithBody(ctx context.Context, organizationId o
 	return c.Client.Do(req)
 }
 
-func (c *Client) CountPipelineRefs(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body CountPipelineRefsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCountPipelineRefsRequest(c.Server, organizationId, pipelineId, body)
+func (c *Client) UpdatePipelineWithBody(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdatePipelineRequestWithBody(c.Server, organizationId, pipelineId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdatePipeline(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body UpdatePipelineJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdatePipelineRequest(c.Server, organizationId, pipelineId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CountPipelineRefs(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, params *CountPipelineRefsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCountPipelineRefsRequest(c.Server, organizationId, pipelineId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -8009,6 +8657,18 @@ func (c *Client) ListPipelineRuns(ctx context.Context, organizationId openapi_ty
 
 func (c *Client) GetPipelineRun(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, runId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetPipelineRunRequest(c.Server, organizationId, pipelineId, runId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetPipelineStats(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetPipelineStatsRequest(c.Server, organizationId, pipelineId)
 	if err != nil {
 		return nil, err
 	}
@@ -9865,6 +10525,47 @@ func NewDeleteFakerSchemaRequest(server string, dataContainerId openapi_types.UU
 	return req, nil
 }
 
+// NewDeleteFakerSchemaPreviewRequest generates requests for DeleteFakerSchemaPreview
+func NewDeleteFakerSchemaPreviewRequest(server string, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "schema_id", runtime.ParamLocationPath, schemaId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/faker/%s/schemas/%s/delete-preview", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewCreateFakerTableRequest calls the generic CreateFakerTable builder with application/json body
 func NewCreateFakerTableRequest(server string, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, body CreateFakerTableJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -10139,6 +10840,47 @@ func NewUpdateFakerTableRequestWithBody(server string, dataContainerId openapi_t
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteFakerTablePreviewRequest generates requests for DeleteFakerTablePreview
+func NewDeleteFakerTablePreviewRequest(server string, dataContainerId openapi_types.UUID, tableId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "table_id", runtime.ParamLocationPath, tableId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/faker/%s/tables/%s/delete-preview", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -12729,6 +13471,251 @@ func NewDeleteOrganizationCrdRequest(server string, organizationId openapi_types
 	return req, nil
 }
 
+// NewListDomainVerificationsRequest generates requests for ListDomainVerifications
+func NewListDomainVerificationsRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/domains", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateDomainVerificationRequest calls the generic CreateDomainVerification builder with application/json body
+func NewCreateDomainVerificationRequest(server string, organizationId openapi_types.UUID, body CreateDomainVerificationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateDomainVerificationRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewCreateDomainVerificationRequestWithBody generates requests for CreateDomainVerification with any type of body
+func NewCreateDomainVerificationRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/domains", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteDomainVerificationRequest generates requests for DeleteDomainVerification
+func NewDeleteDomainVerificationRequest(server string, organizationId openapi_types.UUID, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/domains/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetDomainVerificationRequest generates requests for GetDomainVerification
+func NewGetDomainVerificationRequest(server string, organizationId openapi_types.UUID, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/domains/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewRotateDomainVerificationTokenRequest generates requests for RotateDomainVerificationToken
+func NewRotateDomainVerificationTokenRequest(server string, organizationId openapi_types.UUID, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/domains/%s/rotate-token", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewVerifyDomainVerificationNowRequest generates requests for VerifyDomainVerificationNow
+func NewVerifyDomainVerificationNowRequest(server string, organizationId openapi_types.UUID, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/domains/%s/verify-now", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewListHarborsRequest generates requests for ListHarbors
 func NewListHarborsRequest(server string, organizationId openapi_types.UUID, params *ListHarborsParams) (*http.Request, error) {
 	var err error
@@ -14272,19 +15259,103 @@ func NewDeletePipelineRequest(server string, organizationId openapi_types.UUID, 
 	return req, nil
 }
 
-// NewCountPipelineRefsRequest calls the generic CountPipelineRefs builder with application/json body
-func NewCountPipelineRefsRequest(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body CountPipelineRefsJSONRequestBody) (*http.Request, error) {
+// NewGetPipelineDetailRequest generates requests for GetPipelineDetail
+func NewGetPipelineDetailRequest(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "pipeline_id", runtime.ParamLocationPath, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/pipelines/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdatePipelineRequest calls the generic UpdatePipeline builder with application/json body
+func NewUpdatePipelineRequest(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body UpdatePipelineJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewCountPipelineRefsRequestWithBody(server, organizationId, pipelineId, "application/json", bodyReader)
+	return NewUpdatePipelineRequestWithBody(server, organizationId, pipelineId, "application/json", bodyReader)
 }
 
-// NewCountPipelineRefsRequestWithBody generates requests for CountPipelineRefs with any type of body
-func NewCountPipelineRefsRequestWithBody(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+// NewUpdatePipelineRequestWithBody generates requests for UpdatePipeline with any type of body
+func NewUpdatePipelineRequestWithBody(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "pipeline_id", runtime.ParamLocationPath, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/pipelines/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCountPipelineRefsRequest generates requests for CountPipelineRefs
+func NewCountPipelineRefsRequest(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, params *CountPipelineRefsParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -14316,12 +15387,96 @@ func NewCountPipelineRefsRequestWithBody(server string, organizationId openapi_t
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", queryURL.String(), body)
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Status != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "status", runtime.ParamLocationQuery, *params.Status); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Key != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "key", runtime.ParamLocationQuery, *params.Key); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Locked != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "locked", runtime.ParamLocationQuery, *params.Locked); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.UpdatedAtBefore != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "updated_at_before", runtime.ParamLocationQuery, *params.UpdatedAtBefore); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.UpdatedAtAfter != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "updated_at_after", runtime.ParamLocationQuery, *params.UpdatedAtAfter); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -14439,6 +15594,47 @@ func NewGetPipelineRunRequest(server string, organizationId openapi_types.UUID, 
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/organizations/%s/pipelines/%s/runs/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetPipelineStatsRequest generates requests for GetPipelineStats
+func NewGetPipelineStatsRequest(server string, organizationId openapi_types.UUID, pipelineId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "pipeline_id", runtime.ParamLocationPath, pipelineId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/pipelines/%s/stats", pathParam0, pathParam1)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17903,6 +19099,9 @@ type ClientWithResponsesInterface interface {
 	// DeleteFakerSchemaWithResponse request
 	DeleteFakerSchemaWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteFakerSchemaRes, error)
 
+	// DeleteFakerSchemaPreviewWithResponse request
+	DeleteFakerSchemaPreviewWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteFakerSchemaPreviewRes, error)
+
 	// CreateFakerTableWithBodyWithResponse request with any body
 	CreateFakerTableWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateFakerTableRes, error)
 
@@ -17926,6 +19125,9 @@ type ClientWithResponsesInterface interface {
 	UpdateFakerTableWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateFakerTableRes, error)
 
 	UpdateFakerTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, body UpdateFakerTableJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateFakerTableRes, error)
+
+	// DeleteFakerTablePreviewWithResponse request
+	DeleteFakerTablePreviewWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteFakerTablePreviewRes, error)
 
 	// CreateIcebergDataContainerWithBodyWithResponse request with any body
 	CreateIcebergDataContainerWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateIcebergDataContainerRes, error)
@@ -18134,6 +19336,26 @@ type ClientWithResponsesInterface interface {
 	// DeleteOrganizationCrdWithResponse request
 	DeleteOrganizationCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteOrganizationCrdRes, error)
 
+	// ListDomainVerificationsWithResponse request
+	ListDomainVerificationsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDomainVerificationsRes, error)
+
+	// CreateDomainVerificationWithBodyWithResponse request with any body
+	CreateDomainVerificationWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateDomainVerificationRes, error)
+
+	CreateDomainVerificationWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateDomainVerificationJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateDomainVerificationRes, error)
+
+	// DeleteDomainVerificationWithResponse request
+	DeleteDomainVerificationWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteDomainVerificationRes, error)
+
+	// GetDomainVerificationWithResponse request
+	GetDomainVerificationWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDomainVerificationRes, error)
+
+	// RotateDomainVerificationTokenWithResponse request
+	RotateDomainVerificationTokenWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*RotateDomainVerificationTokenRes, error)
+
+	// VerifyDomainVerificationNowWithResponse request
+	VerifyDomainVerificationNowWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*VerifyDomainVerificationNowRes, error)
+
 	// ListHarborsWithResponse request
 	ListHarborsWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *ListHarborsParams, reqEditors ...RequestEditorFn) (*ListHarborsRes, error)
 
@@ -18250,10 +19472,16 @@ type ClientWithResponsesInterface interface {
 	// DeletePipelineWithResponse request
 	DeletePipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeletePipelineRes, error)
 
-	// CountPipelineRefsWithBodyWithResponse request with any body
-	CountPipelineRefsWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CountPipelineRefsRes, error)
+	// GetPipelineDetailWithResponse request
+	GetPipelineDetailWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetPipelineDetailRes, error)
 
-	CountPipelineRefsWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body CountPipelineRefsJSONRequestBody, reqEditors ...RequestEditorFn) (*CountPipelineRefsRes, error)
+	// UpdatePipelineWithBodyWithResponse request with any body
+	UpdatePipelineWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdatePipelineRes, error)
+
+	UpdatePipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body UpdatePipelineJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdatePipelineRes, error)
+
+	// CountPipelineRefsWithResponse request
+	CountPipelineRefsWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, params *CountPipelineRefsParams, reqEditors ...RequestEditorFn) (*CountPipelineRefsRes, error)
 
 	// ResumePipelineWithResponse request
 	ResumePipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ResumePipelineRes, error)
@@ -18263,6 +19491,9 @@ type ClientWithResponsesInterface interface {
 
 	// GetPipelineRunWithResponse request
 	GetPipelineRunWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, runId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetPipelineRunRes, error)
+
+	// GetPipelineStatsWithResponse request
+	GetPipelineStatsWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetPipelineStatsRes, error)
 
 	// SuspendPipelineWithResponse request
 	SuspendPipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*SuspendPipelineRes, error)
@@ -18935,6 +20166,28 @@ func (r DeleteFakerSchemaRes) StatusCode() int {
 	return 0
 }
 
+type DeleteFakerSchemaPreviewRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DeletePreviewResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteFakerSchemaPreviewRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteFakerSchemaPreviewRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type CreateFakerTableRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -19060,6 +20313,28 @@ func (r UpdateFakerTableRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r UpdateFakerTableRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteFakerTablePreviewRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DeletePreviewResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteFakerTablePreviewRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteFakerTablePreviewRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -20302,6 +21577,137 @@ func (r DeleteOrganizationCrdRes) StatusCode() int {
 	return 0
 }
 
+type ListDomainVerificationsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]DomainVerificationResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListDomainVerificationsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListDomainVerificationsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateDomainVerificationRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *DomainVerificationResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateDomainVerificationRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateDomainVerificationRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteDomainVerificationRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteDomainVerificationRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteDomainVerificationRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetDomainVerificationRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DomainVerificationResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetDomainVerificationRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetDomainVerificationRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type RotateDomainVerificationTokenRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DomainVerificationResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r RotateDomainVerificationTokenRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RotateDomainVerificationTokenRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type VerifyDomainVerificationNowRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DomainVerificationResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r VerifyDomainVerificationNowRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r VerifyDomainVerificationNowRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type ListHarborsRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -20997,6 +22403,49 @@ func (r DeletePipelineRes) StatusCode() int {
 	return 0
 }
 
+type GetPipelineDetailRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PipelineDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetPipelineDetailRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetPipelineDetailRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdatePipelineRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdatePipelineRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdatePipelineRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type CountPipelineRefsRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -21077,6 +22526,28 @@ func (r GetPipelineRunRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetPipelineRunRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetPipelineStatsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PipelineStats
+}
+
+// Status returns HTTPResponse.Status
+func (r GetPipelineStatsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetPipelineStatsRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -22727,6 +24198,15 @@ func (c *ClientWithResponses) DeleteFakerSchemaWithResponse(ctx context.Context,
 	return ParseDeleteFakerSchemaRes(rsp)
 }
 
+// DeleteFakerSchemaPreviewWithResponse request returning *DeleteFakerSchemaPreviewRes
+func (c *ClientWithResponses) DeleteFakerSchemaPreviewWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteFakerSchemaPreviewRes, error) {
+	rsp, err := c.DeleteFakerSchemaPreview(ctx, dataContainerId, schemaId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteFakerSchemaPreviewRes(rsp)
+}
+
 // CreateFakerTableWithBodyWithResponse request with arbitrary body returning *CreateFakerTableRes
 func (c *ClientWithResponses) CreateFakerTableWithBodyWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateFakerTableRes, error) {
 	rsp, err := c.CreateFakerTableWithBody(ctx, dataContainerId, schemaId, contentType, body, reqEditors...)
@@ -22803,6 +24283,15 @@ func (c *ClientWithResponses) UpdateFakerTableWithResponse(ctx context.Context, 
 		return nil, err
 	}
 	return ParseUpdateFakerTableRes(rsp)
+}
+
+// DeleteFakerTablePreviewWithResponse request returning *DeleteFakerTablePreviewRes
+func (c *ClientWithResponses) DeleteFakerTablePreviewWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, tableId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteFakerTablePreviewRes, error) {
+	rsp, err := c.DeleteFakerTablePreview(ctx, dataContainerId, tableId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteFakerTablePreviewRes(rsp)
 }
 
 // CreateIcebergDataContainerWithBodyWithResponse request with arbitrary body returning *CreateIcebergDataContainerRes
@@ -23462,6 +24951,68 @@ func (c *ClientWithResponses) DeleteOrganizationCrdWithResponse(ctx context.Cont
 	return ParseDeleteOrganizationCrdRes(rsp)
 }
 
+// ListDomainVerificationsWithResponse request returning *ListDomainVerificationsRes
+func (c *ClientWithResponses) ListDomainVerificationsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDomainVerificationsRes, error) {
+	rsp, err := c.ListDomainVerifications(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListDomainVerificationsRes(rsp)
+}
+
+// CreateDomainVerificationWithBodyWithResponse request with arbitrary body returning *CreateDomainVerificationRes
+func (c *ClientWithResponses) CreateDomainVerificationWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateDomainVerificationRes, error) {
+	rsp, err := c.CreateDomainVerificationWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateDomainVerificationRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateDomainVerificationWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateDomainVerificationJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateDomainVerificationRes, error) {
+	rsp, err := c.CreateDomainVerification(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateDomainVerificationRes(rsp)
+}
+
+// DeleteDomainVerificationWithResponse request returning *DeleteDomainVerificationRes
+func (c *ClientWithResponses) DeleteDomainVerificationWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteDomainVerificationRes, error) {
+	rsp, err := c.DeleteDomainVerification(ctx, organizationId, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteDomainVerificationRes(rsp)
+}
+
+// GetDomainVerificationWithResponse request returning *GetDomainVerificationRes
+func (c *ClientWithResponses) GetDomainVerificationWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDomainVerificationRes, error) {
+	rsp, err := c.GetDomainVerification(ctx, organizationId, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetDomainVerificationRes(rsp)
+}
+
+// RotateDomainVerificationTokenWithResponse request returning *RotateDomainVerificationTokenRes
+func (c *ClientWithResponses) RotateDomainVerificationTokenWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*RotateDomainVerificationTokenRes, error) {
+	rsp, err := c.RotateDomainVerificationToken(ctx, organizationId, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRotateDomainVerificationTokenRes(rsp)
+}
+
+// VerifyDomainVerificationNowWithResponse request returning *VerifyDomainVerificationNowRes
+func (c *ClientWithResponses) VerifyDomainVerificationNowWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*VerifyDomainVerificationNowRes, error) {
+	rsp, err := c.VerifyDomainVerificationNow(ctx, organizationId, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseVerifyDomainVerificationNowRes(rsp)
+}
+
 // ListHarborsWithResponse request returning *ListHarborsRes
 func (c *ClientWithResponses) ListHarborsWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *ListHarborsParams, reqEditors ...RequestEditorFn) (*ListHarborsRes, error) {
 	rsp, err := c.ListHarbors(ctx, organizationId, params, reqEditors...)
@@ -23830,17 +25381,35 @@ func (c *ClientWithResponses) DeletePipelineWithResponse(ctx context.Context, or
 	return ParseDeletePipelineRes(rsp)
 }
 
-// CountPipelineRefsWithBodyWithResponse request with arbitrary body returning *CountPipelineRefsRes
-func (c *ClientWithResponses) CountPipelineRefsWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CountPipelineRefsRes, error) {
-	rsp, err := c.CountPipelineRefsWithBody(ctx, organizationId, pipelineId, contentType, body, reqEditors...)
+// GetPipelineDetailWithResponse request returning *GetPipelineDetailRes
+func (c *ClientWithResponses) GetPipelineDetailWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetPipelineDetailRes, error) {
+	rsp, err := c.GetPipelineDetail(ctx, organizationId, pipelineId, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCountPipelineRefsRes(rsp)
+	return ParseGetPipelineDetailRes(rsp)
 }
 
-func (c *ClientWithResponses) CountPipelineRefsWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body CountPipelineRefsJSONRequestBody, reqEditors ...RequestEditorFn) (*CountPipelineRefsRes, error) {
-	rsp, err := c.CountPipelineRefs(ctx, organizationId, pipelineId, body, reqEditors...)
+// UpdatePipelineWithBodyWithResponse request with arbitrary body returning *UpdatePipelineRes
+func (c *ClientWithResponses) UpdatePipelineWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdatePipelineRes, error) {
+	rsp, err := c.UpdatePipelineWithBody(ctx, organizationId, pipelineId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdatePipelineRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdatePipelineWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, body UpdatePipelineJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdatePipelineRes, error) {
+	rsp, err := c.UpdatePipeline(ctx, organizationId, pipelineId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdatePipelineRes(rsp)
+}
+
+// CountPipelineRefsWithResponse request returning *CountPipelineRefsRes
+func (c *ClientWithResponses) CountPipelineRefsWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, params *CountPipelineRefsParams, reqEditors ...RequestEditorFn) (*CountPipelineRefsRes, error) {
+	rsp, err := c.CountPipelineRefs(ctx, organizationId, pipelineId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -23872,6 +25441,15 @@ func (c *ClientWithResponses) GetPipelineRunWithResponse(ctx context.Context, or
 		return nil, err
 	}
 	return ParseGetPipelineRunRes(rsp)
+}
+
+// GetPipelineStatsWithResponse request returning *GetPipelineStatsRes
+func (c *ClientWithResponses) GetPipelineStatsWithResponse(ctx context.Context, organizationId openapi_types.UUID, pipelineId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetPipelineStatsRes, error) {
+	rsp, err := c.GetPipelineStats(ctx, organizationId, pipelineId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetPipelineStatsRes(rsp)
 }
 
 // SuspendPipelineWithResponse request returning *SuspendPipelineRes
@@ -25065,6 +26643,32 @@ func ParseDeleteFakerSchemaRes(rsp *http.Response) (*DeleteFakerSchemaRes, error
 	return response, nil
 }
 
+// ParseDeleteFakerSchemaPreviewRes parses an HTTP response from a DeleteFakerSchemaPreviewWithResponse call
+func ParseDeleteFakerSchemaPreviewRes(rsp *http.Response) (*DeleteFakerSchemaPreviewRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteFakerSchemaPreviewRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DeletePreviewResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseCreateFakerTableRes parses an HTTP response from a CreateFakerTableWithResponse call
 func ParseCreateFakerTableRes(rsp *http.Response) (*CreateFakerTableRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -25201,6 +26805,32 @@ func ParseUpdateFakerTableRes(rsp *http.Response) (*UpdateFakerTableRes, error) 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest FakerTableOverview
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteFakerTablePreviewRes parses an HTTP response from a DeleteFakerTablePreviewWithResponse call
+func ParseDeleteFakerTablePreviewRes(rsp *http.Response) (*DeleteFakerTablePreviewRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteFakerTablePreviewRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DeletePreviewResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -26513,6 +28143,152 @@ func ParseDeleteOrganizationCrdRes(rsp *http.Response) (*DeleteOrganizationCrdRe
 	return response, nil
 }
 
+// ParseListDomainVerificationsRes parses an HTTP response from a ListDomainVerificationsWithResponse call
+func ParseListDomainVerificationsRes(rsp *http.Response) (*ListDomainVerificationsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListDomainVerificationsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []DomainVerificationResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateDomainVerificationRes parses an HTTP response from a CreateDomainVerificationWithResponse call
+func ParseCreateDomainVerificationRes(rsp *http.Response) (*CreateDomainVerificationRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateDomainVerificationRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest DomainVerificationResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteDomainVerificationRes parses an HTTP response from a DeleteDomainVerificationWithResponse call
+func ParseDeleteDomainVerificationRes(rsp *http.Response) (*DeleteDomainVerificationRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteDomainVerificationRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetDomainVerificationRes parses an HTTP response from a GetDomainVerificationWithResponse call
+func ParseGetDomainVerificationRes(rsp *http.Response) (*GetDomainVerificationRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetDomainVerificationRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DomainVerificationResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRotateDomainVerificationTokenRes parses an HTTP response from a RotateDomainVerificationTokenWithResponse call
+func ParseRotateDomainVerificationTokenRes(rsp *http.Response) (*RotateDomainVerificationTokenRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RotateDomainVerificationTokenRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DomainVerificationResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseVerifyDomainVerificationNowRes parses an HTTP response from a VerifyDomainVerificationNowWithResponse call
+func ParseVerifyDomainVerificationNowRes(rsp *http.Response) (*VerifyDomainVerificationNowRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &VerifyDomainVerificationNowRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DomainVerificationResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListHarborsRes parses an HTTP response from a ListHarborsWithResponse call
 func ParseListHarborsRes(rsp *http.Response) (*ListHarborsRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -27255,6 +29031,48 @@ func ParseDeletePipelineRes(rsp *http.Response) (*DeletePipelineRes, error) {
 	return response, nil
 }
 
+// ParseGetPipelineDetailRes parses an HTTP response from a GetPipelineDetailWithResponse call
+func ParseGetPipelineDetailRes(rsp *http.Response) (*GetPipelineDetailRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetPipelineDetailRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PipelineDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdatePipelineRes parses an HTTP response from a UpdatePipelineWithResponse call
+func ParseUpdatePipelineRes(rsp *http.Response) (*UpdatePipelineRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdatePipelineRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
 // ParseCountPipelineRefsRes parses an HTTP response from a CountPipelineRefsWithResponse call
 func ParseCountPipelineRefsRes(rsp *http.Response) (*CountPipelineRefsRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -27329,6 +29147,32 @@ func ParseGetPipelineRunRes(rsp *http.Response) (*GetPipelineRunRes, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest GetRunResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetPipelineStatsRes parses an HTTP response from a GetPipelineStatsWithResponse call
+func ParseGetPipelineStatsRes(rsp *http.Response) (*GetPipelineStatsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetPipelineStatsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PipelineStats
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

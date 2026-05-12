@@ -716,7 +716,53 @@
             "description": "Faker schema deleted"
           },
           "404": {
-            "description": "Data container not found"
+            "description": "Data container or schema not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/faker/{data_container_id}/schemas/{schema_id}/delete-preview": {
+      "get": {
+        "tags": [
+          "faker::delete_schema_preview"
+        ],
+        "operationId": "delete_faker_schema_preview",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "schema_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete preview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletePreviewResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data container or schema not found"
           },
           "500": {
             "description": "Internal server error"
@@ -997,6 +1043,55 @@
         "responses": {
           "204": {
             "description": "Faker table deleted"
+          },
+          "404": {
+            "description": "Data container or table not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/data-containers/faker/{data_container_id}/tables/{table_id}/delete-preview": {
+      "get": {
+        "tags": [
+          "faker::delete_table_preview"
+        ],
+        "operationId": "delete_faker_table_preview",
+        "parameters": [
+          {
+            "name": "data_container_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete preview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletePreviewResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data container or table not found"
           },
           "500": {
             "description": "Internal server error"
@@ -3464,6 +3559,272 @@
         }
       }
     },
+    "/api/v1/organizations/{organization_id}/domains": {
+      "get": {
+        "tags": [
+          "DomainVerifications"
+        ],
+        "operationId": "list_domain_verifications",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Domain verifications listed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DomainVerificationResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "DomainVerifications"
+        ],
+        "operationId": "create_domain_verification",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDomainVerificationRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Domain verification created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainVerificationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid apex"
+          },
+          "404": {
+            "description": "Organization not found"
+          },
+          "409": {
+            "description": "Domain verification already exists for this apex"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/domains/{id}": {
+      "get": {
+        "tags": [
+          "DomainVerifications"
+        ],
+        "operationId": "get_domain_verification",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Domain verification detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainVerificationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Domain verification not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "DomainVerifications"
+        ],
+        "operationId": "delete_domain_verification",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Domain verification deleted"
+          },
+          "404": {
+            "description": "Domain verification not found"
+          },
+          "409": {
+            "description": "Cannot delete: ContainerApps still reference this apex"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/domains/{id}/rotate-token": {
+      "post": {
+        "tags": [
+          "DomainVerifications"
+        ],
+        "operationId": "rotate_domain_verification_token",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rotation triggered; operator will reset the token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainVerificationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Domain verification not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/domains/{id}/verify-now": {
+      "post": {
+        "tags": [
+          "DomainVerifications"
+        ],
+        "operationId": "verify_domain_verification_now",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operator notified to re-check the TXT record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainVerificationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Domain verification not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/organizations/{organization_id}/harbors": {
       "get": {
         "tags": [
@@ -5000,6 +5361,53 @@
       }
     },
     "/api/v1/organizations/{organization_id}/pipelines/{pipeline_id}": {
+      "get": {
+        "tags": [
+          "Pipelines"
+        ],
+        "operationId": "get_pipeline_detail",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pipeline detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipelineDetailResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
       "delete": {
         "tags": [
           "Pipelines"
@@ -5036,6 +5444,53 @@
             "description": "Internal server error"
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "Pipelines"
+        ],
+        "operationId": "update_pipeline",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePipelineRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Pipeline updated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
       }
     },
     "/api/v1/organizations/{organization_id}/pipelines/{pipeline_id}/refs": {
@@ -5062,18 +5517,55 @@
               "type": "string",
               "format": "uuid"
             }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CountRefRequest"
-              }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/RefStatus",
+              "nullable": true
             }
           },
-          "required": true
-        },
+          {
+            "name": "key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "locked",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "updated_at_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            }
+          },
+          {
+            "name": "updated_at_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Count of references for the pipeline matching filters",
@@ -5231,6 +5723,52 @@
           },
           "404": {
             "description": "Run not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/pipelines/{pipeline_id}/stats": {
+      "get": {
+        "tags": [
+          "Pipelines"
+        ],
+        "operationId": "get_pipeline_stats",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Aggregated pipeline statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipelineStats"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "500": {
             "description": "Internal server error"
@@ -8451,6 +8989,30 @@
           }
         }
       },
+      "AppUsageRef": {
+        "type": "object",
+        "description": "Reference to a ContainerApp that has a custom domain under this apex.\n\nPopulated by walking the org namespace's ContainerApps and matching FQDNs that\nfall under the apex. Empty in list responses; may be populated on detail.",
+        "required": [
+          "containerAppId",
+          "name",
+          "fqdn"
+        ],
+        "properties": {
+          "containerAppId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Console DB id of the ContainerApp."
+          },
+          "fqdn": {
+            "type": "string",
+            "description": "Specific FQDN under this apex declared on the ContainerApp's `customDomains`."
+          },
+          "name": {
+            "type": "string",
+            "description": "Container app slug (also the CRD name in the org namespace)."
+          }
+        }
+      },
       "ArchiveDownloadResponse": {
         "type": "object",
         "required": [
@@ -8679,6 +9241,71 @@
             "format": "date-time"
           }
         }
+      },
+      "BackupTargetSourceRequest": {
+        "oneOf": [
+          {
+            "type": "object",
+            "description": "All four S3 fields (endpoint, bucket path, access key, secret key)\nare resolved from the data dock. The data dock must be `Running`\nso its credentials have been published and the operator's\nin-cluster endpoint is known.",
+            "required": [
+              "data_dock_id",
+              "bucket_name",
+              "mode"
+            ],
+            "properties": {
+              "bucket_name": {
+                "type": "string",
+                "description": "Bucket inside the data dock to write backups under. The\nresulting `destination_path` is `s3://{bucket_name}/`."
+              },
+              "data_dock_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "internal"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Caller supplies a fully-formed S3 endpoint and pre-existing\ncontrol-plane secrets. Used for external backends (AWS, etc.).",
+            "required": [
+              "endpoint_url",
+              "destination_path",
+              "access_key_secret_name",
+              "secret_access_key_secret_name",
+              "mode"
+            ],
+            "properties": {
+              "access_key_secret_name": {
+                "type": "string",
+                "description": "Name of the control-plane secret holding the S3 access key id."
+              },
+              "destination_path": {
+                "type": "string",
+                "description": "Bucket + prefix (e.g. \"s3://backups/\")."
+              },
+              "endpoint_url": {
+                "type": "string",
+                "description": "S3-compatible endpoint URL (e.g. \"https://s3.eu-west-3.amazonaws.com\")."
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "external"
+                ]
+              },
+              "secret_access_key_secret_name": {
+                "type": "string",
+                "description": "Name of the control-plane secret holding the S3 secret access key."
+              }
+            }
+          }
+        ],
+        "description": "Where the backup target writes to. `Internal` derives endpoint, path,\nand credentials from a Hyperfluid-managed DataDock that has already\npublished its keys (see `DataDockSecretsStatus`); `External` lets the\ncaller specify everything by hand (e.g. AWS, third-party MinIO)."
       },
       "BucketArchiveOperation": {
         "type": "object",
@@ -9635,6 +10262,84 @@
           }
         }
       },
+      "CrdOwner": {
+        "oneOf": [
+          {
+            "type": "object",
+            "description": "Stamped with `source=ui`. Deleting from the UI is the normal path.",
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "ui"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Stamped with `source=pipeline`. Deleting is legit (one-shot\nimports, cleanup after a bad run) but should be explicit —\n`name` carries whichever pipeline identifier the operator wrote.",
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "pipeline"
+                ]
+              },
+              "name": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Any ArgoCD/Flux/Helm marker detected. Deleting here is almost\nalways pointless — the GitOps reconciler will recreate the CRD\non its next sync.",
+            "required": [
+              "tool",
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "gitops"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Best-effort app / release identifier (ArgoCD app name, Helm\nrelease name, Flux kustomization). `None` if the marker is a\nbare `managed-by` label without a qualifying annotation.",
+                "nullable": true
+              },
+              "tool": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "No ownership markers at all — legacy CRD or created by a tool we\ndon't recognize.",
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "unknown"
+                ]
+              }
+            }
+          }
+        ],
+        "description": "Who \"owns\" a CRD from the console's point of view — derived purely\nfrom metadata markers, never from the CRD's spec. Useful to explain to\nthe user what will happen when they delete it."
+      },
       "CrdStatusSnapshot": {
         "type": "object",
         "description": "Projection of a Hyperfluid CRD's `.status` subresource, suitable for\nsurfacing in list endpoints so the UI can render a live status badge\nwithout having to call kube-apiserver itself.\n\n- For `TrinoSchema`: `phase` + `message` are populated; drift fields\n  stay empty.\n- For `TrinoTable`: all four fields are meaningful — `missing_columns`\n  and `extra_columns` come from the reconciler's drift detection.",
@@ -9734,40 +10439,24 @@
         "type": "object",
         "required": [
           "name",
-          "endpoint_url",
-          "destination_path",
-          "access_key_secret_name",
-          "secret_access_key_secret_name"
+          "source"
         ],
         "properties": {
-          "access_key_secret_name": {
-            "type": "string",
-            "description": "Name of the control-plane secret holding the S3 access key id"
-          },
           "description": {
             "type": "string",
             "description": "Optional description (DB-only, not stored in CRD)",
             "nullable": true
           },
-          "destination_path": {
-            "type": "string",
-            "description": "Bucket + prefix (e.g. \"s3://backups/\")"
-          },
-          "endpoint_url": {
-            "type": "string",
-            "description": "S3-compatible endpoint URL (e.g. \"http://minio.minio.svc:9000\")"
-          },
           "insecure": {
             "type": "boolean",
-            "description": "Skip TLS certificate verification when probing the S3 endpoint.\nIntended for development (self-signed certs). Defaults to false."
+            "description": "Skip TLS certificate verification when probing the S3 endpoint.\nIntended for development (self-signed certs). Defaults to false.\nIgnored for `internal` source — internal endpoints are plaintext\ncluster-local URLs."
           },
           "name": {
             "type": "string",
             "description": "Must be a valid slug: lowercase letters, digits, and hyphens only; cannot start or end with a hyphen."
           },
-          "secret_access_key_secret_name": {
-            "type": "string",
-            "description": "Name of the control-plane secret holding the S3 secret access key"
+          "source": {
+            "$ref": "#/components/schemas/BackupTargetSourceRequest"
           },
           "tags": {
             "type": "array",
@@ -9996,6 +10685,18 @@
           },
           "slug": {
             "type": "string"
+          }
+        }
+      },
+      "CreateDomainVerificationRequestBody": {
+        "type": "object",
+        "required": [
+          "apex"
+        ],
+        "properties": {
+          "apex": {
+            "type": "string",
+            "description": "Apex domain to verify ownership of, e.g. `acme.com`. Must be a lowercase\nfully-qualified domain name; immutable after creation."
           }
         }
       },
@@ -11392,7 +12093,9 @@
           "Offline",
           "Online",
           "Pending",
-          "Sleeping"
+          "Sleeping",
+          "Deleting",
+          "Checking"
         ]
       },
       "DedupingStrategy": {
@@ -11423,6 +12126,85 @@
           }
         }
       },
+      "DeletePreviewDownstream": {
+        "type": "object",
+        "description": "A downstream resource that will be affected by the delete.\nCurrently scoped to child tables for a schema preview; the shape is\ngeneric so we can add pipelines / queries later without breaking the\ncontract.",
+        "required": [
+          "kind",
+          "name"
+        ],
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "Optional hint surfaced next to the name (e.g. owner of the child\ntable, next run time for a pipeline).",
+            "nullable": true
+          },
+          "kind": {
+            "type": "string",
+            "description": "`trino_table` / `pipeline` — a short tag the UI switches on."
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "DeletePreviewResponse": {
+        "type": "object",
+        "required": [
+          "fqn",
+          "short_name",
+          "crd_present",
+          "downstream",
+          "warnings"
+        ],
+        "properties": {
+          "crd_present": {
+            "type": "boolean",
+            "description": "`true` when a matching Hyperfluid CRD was found. If `false`, the\ndelete will go straight to DDL and no cascade concerns apply."
+          },
+          "downstream": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeletePreviewDownstream"
+            },
+            "description": "Resources that will also be affected. Empty for table deletes\ntoday; populated for schema deletes with child-table count."
+          },
+          "fqn": {
+            "type": "string",
+            "description": "Fully-qualified name of the target (`catalog.schema` or\n`catalog.schema.table`)."
+          },
+          "owner": {
+            "$ref": "#/components/schemas/CrdOwner",
+            "nullable": true
+          },
+          "short_name": {
+            "type": "string",
+            "description": "Canonical unqualified name the user types in the confirm box.\nEmitted by the server (instead of letting the client `split(\".\")`\nthe `fqn`) so identifiers with embedded dots — Trino allows\n`\"schema.with.dots\"` when quoted — don't round-trip to a garbled\ntoken the user can't physically type."
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeleteWarning"
+            },
+            "description": "Pre-rendered, user-facing warnings. The UI can render them\ndirectly; severity controls the color."
+          }
+        }
+      },
+      "DeleteWarning": {
+        "type": "object",
+        "required": [
+          "severity",
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/WarningSeverity"
+          }
+        }
+      },
       "DestinationConfig": {
         "type": "object",
         "description": "Configuration for a FileRouter destination\nAllows routing to different Data Docks with specific prefixes",
@@ -11447,6 +12229,78 @@
             "description": "Prefix path within the destination bucket (e.g., \"invoices/processed/\")"
           }
         }
+      },
+      "DomainVerificationResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "organizationId",
+          "apex",
+          "state",
+          "expectedTxtRecord",
+          "expectedTxtValue",
+          "createdAt"
+        ],
+        "properties": {
+          "apex": {
+            "type": "string",
+            "description": "Apex domain being verified, e.g. `acme.com`."
+          },
+          "appsUsing": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppUsageRef"
+            },
+            "description": "ContainerApps in the same org that have a `customDomain` falling under this apex.\nAlways empty in list responses to avoid N+1 K8s calls — populated on detail only."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expectedTxtRecord": {
+            "type": "string",
+            "description": "Pre-computed DNS record name where the user must place the TXT challenge,\ne.g. `_hyperfluid-challenge.acme.com`."
+          },
+          "expectedTxtValue": {
+            "type": "string",
+            "description": "Pre-computed TXT value the user must publish, e.g.\n`hyperfluid-domain-verification=ABCD1234...`."
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "lastCheckError": {
+            "type": "string",
+            "description": "Error from the most recent failed poll. Cleared on success.",
+            "nullable": true
+          },
+          "lastCheckedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of the most recent poll attempt (regardless of outcome).",
+            "nullable": true
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "$ref": "#/components/schemas/DomainVerificationStateDto"
+          },
+          "verifiedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp at which ownership was successfully verified.",
+            "nullable": true
+          }
+        }
+      },
+      "DomainVerificationStateDto": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "verified"
+        ]
       },
       "DownloadServiceAccountResponse": {
         "type": "object",
@@ -14257,6 +15111,80 @@
           "editor"
         ]
       },
+      "PipelineDetailField": {
+        "type": "object",
+        "description": "A single labeled field shown on a connector detail page.\nSensitive fields are masked in the UI; copyable fields show a copy button.",
+        "required": [
+          "label",
+          "value",
+          "sensitive",
+          "copyable"
+        ],
+        "properties": {
+          "copyable": {
+            "type": "boolean"
+          },
+          "label": {
+            "type": "string"
+          },
+          "sensitive": {
+            "type": "boolean"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "PipelineDetailResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "type",
+          "status",
+          "suspended",
+          "created_at",
+          "schedule",
+          "fields"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "destination_prefix": {
+            "type": "string",
+            "description": "The destination prefix applied to all files written to the destination bucket.\nUsed to construct the correct S3 browser path from a source-relative ref key.",
+            "nullable": true
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PipelineDetailField"
+            }
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "schedule": {
+            "type": "string",
+            "description": "Cron expression for scheduled pipelines, or \"one_off\" for one-time runs."
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "suspended": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
       "PipelineInputParameters": {
         "type": "object",
         "properties": {
@@ -14580,6 +15508,38 @@
           "completed",
           "failed"
         ]
+      },
+      "PipelineStats": {
+        "type": "object",
+        "description": "Aggregated statistics for a pipeline, derived from its run history.",
+        "required": [
+          "total_runs",
+          "completed_runs",
+          "failed_runs",
+          "total_failures"
+        ],
+        "properties": {
+          "completed_runs": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "failed_runs": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "last_run_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "total_failures": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total_runs": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
       },
       "PipelineType": {
         "type": "string",
@@ -16368,6 +17328,19 @@
           }
         }
       },
+      "UpdatePipelineRequest": {
+        "type": "object",
+        "description": "Request body for PATCH /organizations/{org_id}/pipelines/{pipeline_id}",
+        "required": [
+          "suspend"
+        ],
+        "properties": {
+          "suspend": {
+            "type": "boolean",
+            "description": "When true the underlying CronJob is suspended (no new runs will be scheduled)."
+          }
+        }
+      },
       "UpdateRefRequest": {
         "type": "object",
         "required": [
@@ -16618,6 +17591,15 @@
         ]
       },
       "Value": {},
+      "WarningSeverity": {
+        "type": "string",
+        "description": "Severity shapes the UI's visual treatment: `danger` is red (Argo/Flux\nresurrection), `warning` is amber (pipeline resurrection, cascading\ndrops), `info` is blue (child counts, row estimates).",
+        "enum": [
+          "info",
+          "warning",
+          "danger"
+        ]
+      },
       "WorkerAutoScaling": {
         "type": "object",
         "properties": {
@@ -16740,6 +17722,10 @@
     {
       "name": "ContainerApps",
       "description": "Container apps management"
+    },
+    {
+      "name": "DomainVerifications",
+      "description": "Domain ownership verifications"
     },
     {
       "name": "ManagedPostgreSQLs",
