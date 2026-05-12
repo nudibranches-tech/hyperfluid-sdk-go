@@ -25,8 +25,8 @@ func TestQueryBuilder_BasicChaining(t *testing.T) {
 
 		// Verify query parameters
 		query := req.URL.Query()
-		if query.Get("_limit") != "10" {
-			t.Errorf("Expected _limit=10, got %s", query.Get("_limit"))
+		if query.Get("__limit") != "10" {
+			t.Errorf("Expected __limit=10, got %s", query.Get("__limit"))
 		}
 
 		return &http.Response{
@@ -56,9 +56,9 @@ func TestQueryBuilder_WithSelect(t *testing.T) {
 		DataDockID: "test-datadock",
 	}, func(req *http.Request) (*http.Response, error) {
 		query := req.URL.Query()
-		selectParam := query.Get("select")
+		selectParam := query.Get("__select")
 		if selectParam != "id,name,email" {
-			t.Errorf("Expected select=id,name,email, got %s", selectParam)
+			t.Errorf("Expected __select=id,name,email, got %s", selectParam)
 		}
 
 		return &http.Response{
@@ -85,9 +85,9 @@ func TestQueryBuilder_WithMultipleSelects(t *testing.T) {
 		DataDockID: "test-datadock",
 	}, func(req *http.Request) (*http.Response, error) {
 		query := req.URL.Query()
-		selectParam := query.Get("select")
+		selectParam := query.Get("__select")
 		if selectParam != "id,name,email,phone" {
-			t.Errorf("Expected select=id,name,email,phone, got %s", selectParam)
+			t.Errorf("Expected __select=id,name,email,phone, got %s", selectParam)
 		}
 
 		return &http.Response{
@@ -177,11 +177,11 @@ func TestQueryBuilder_WithPagination(t *testing.T) {
 		DataDockID: "test-datadock",
 	}, func(req *http.Request) (*http.Response, error) {
 		query := req.URL.Query()
-		if query.Get("_limit") != "25" {
-			t.Errorf("Expected _limit=25, got %s", query.Get("_limit"))
+		if query.Get("__limit") != "25" {
+			t.Errorf("Expected __limit=25, got %s", query.Get("__limit"))
 		}
-		if query.Get("_offset") != "50" {
-			t.Errorf("Expected _offset=50, got %s", query.Get("_offset"))
+		if query.Get("__offset") != "50" {
+			t.Errorf("Expected __offset=50, got %s", query.Get("__offset"))
 		}
 
 		return &http.Response{
@@ -352,6 +352,52 @@ func TestQueryBuilder_RawParams(t *testing.T) {
 	}
 }
 
+func TestQueryBuilder_OperatorEncoding(t *testing.T) {
+	testOperatorsTable := []struct {
+		operator   string
+		expectedOp string
+	}{
+		{"=", "eq"},
+		{"!=", "ne"},
+		{">", "gt"},
+		{">=", "gte"},
+		{"<", "lt"},
+		{"<=", "lte"},
+		{"LIKE", "like"},
+		{"NOT_LIKE", "not_like"},
+		{"CONTAINS", "contains"},
+		{"IEQ", "ieq"},
+		{"ILIKE", "ilike"},
+		{"ICONTAINS", "icontains"},
+		{"IN", "in"},
+	}
+
+	for _, testOperatorsTable := range testOperatorsTable {
+		t.Run(testOperatorsTable.operator, func(t *testing.T) {
+			qb := newTestQueryBuilder(utils.Configuration{
+				Token:      "test-token",
+				DataDockID: "test-datadock",
+			}, func(req *http.Request) (*http.Response, error) {
+				expected := "col." + testOperatorsTable.expectedOp
+				if req.URL.Query().Get(expected) != "val" {
+					t.Errorf("operator %s: expected param %s=val, got query: %s", testOperatorsTable.operator, expected, req.URL.RawQuery)
+				}
+				return &http.Response{
+					StatusCode: http.StatusOK,
+					Body:       io.NopCloser(strings.NewReader(`[]`)),
+				}, nil
+			})
+
+			_, err := qb.Catalog("cat").Schema("s").Table("t").
+				Where("col", testOperatorsTable.operator, "val").
+				Get(context.Background())
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+		})
+	}
+}
+
 func TestQueryBuilder_ComplexQuery(t *testing.T) {
 	qb := newTestQueryBuilder(utils.Configuration{
 		Token:      "test-token",
@@ -360,14 +406,14 @@ func TestQueryBuilder_ComplexQuery(t *testing.T) {
 		query := req.URL.Query()
 
 		// Verify all parameters are present
-		if query.Get("select") != "id,name,email" {
-			t.Errorf("Unexpected select parameter: %s", query.Get("select"))
+		if query.Get("__select") != "id,name,email" {
+			t.Errorf("Unexpected __select parameter: %s", query.Get("__select"))
 		}
-		if query.Get("_limit") != "100" {
-			t.Errorf("Unexpected limit: %s", query.Get("_limit"))
+		if query.Get("__limit") != "100" {
+			t.Errorf("Unexpected __limit: %s", query.Get("__limit"))
 		}
-		if query.Get("_offset") != "200" {
-			t.Errorf("Unexpected offset: %s", query.Get("_offset"))
+		if query.Get("__offset") != "200" {
+			t.Errorf("Unexpected __offset: %s", query.Get("__offset"))
 		}
 		if query.Get("order") != "created_at.desc" {
 			t.Errorf("Unexpected order: %s", query.Get("order"))

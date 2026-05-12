@@ -89,11 +89,13 @@ func (qb *QueryBuilder) Select(columns ...string) *QueryBuilder {
 }
 
 // Where adds a filter condition to the query.
-// Supported operators: =, >, <, >=, <=, !=, LIKE, IN
+// Supported operators: =, !=, >, >=, <, <=, LIKE, NOT_LIKE, CONTAINS, IEQ, ILIKE, ICONTAINS, IN
 func (qb *QueryBuilder) Where(column, operator string, value interface{}) *QueryBuilder {
 	validOperators := map[string]bool{
-		"=": true, ">": true, "<": true, ">=": true, "<=": true,
-		"!=": true, "LIKE": true, "IN": true,
+		"=": true, "!=": true, ">": true, ">=": true, "<": true, "<=": true,
+		"LIKE": true, "NOT_LIKE": true, "CONTAINS": true,
+		"IEQ": true, "ILIKE": true, "ICONTAINS": true,
+		"IN": true,
 	}
 
 	if !validOperators[operator] {
@@ -213,14 +215,28 @@ func (qb *QueryBuilder) buildParams() url.Values {
 
 	// Add SELECT columns
 	if len(qb.selectCols) > 0 {
-		params.Set("select", strings.Join(qb.selectCols, ","))
+		params.Set("__select", strings.Join(qb.selectCols, ","))
 	}
 
-	// Add WHERE filters
-	// TODO - Note: This assumes the API supports filter parameters
-	// Adjust based on actual API capabilities
+	// Add WHERE filters: column.op=value (e.g. commune.eq=75111)
+	operatorMap := map[string]string{
+		"=":         "eq",
+		"!=":        "ne",
+		">":         "gt",
+		">=":        "gte",
+		"<":         "lt",
+		"<=":        "lte",
+		"LIKE":      "like",
+		"NOT_LIKE":  "not_like",
+		"CONTAINS":  "contains",
+		"IEQ":       "ieq",
+		"ILIKE":     "ilike",
+		"ICONTAINS": "icontains",
+		"IN":        "in",
+	}
 	for _, filter := range qb.filters {
-		paramName := fmt.Sprintf("%s[%s]", filter.Column, filter.Operator)
+		op := operatorMap[filter.Operator]
+		paramName := fmt.Sprintf("%s.%s", filter.Column, op)
 		params.Add(paramName, fmt.Sprintf("%v", filter.Value))
 	}
 
@@ -239,12 +255,12 @@ func (qb *QueryBuilder) buildParams() url.Values {
 
 	// Add LIMIT
 	if qb.limitVal > 0 {
-		params.Set("_limit", strconv.Itoa(qb.limitVal))
+		params.Set("__limit", strconv.Itoa(qb.limitVal))
 	}
 
 	// Add OFFSET
 	if qb.offsetVal > 0 {
-		params.Set("_offset", strconv.Itoa(qb.offsetVal))
+		params.Set("__offset", strconv.Itoa(qb.offsetVal))
 	}
 
 	return params
@@ -285,7 +301,7 @@ func (qb *QueryBuilder) Count(ctx context.Context) (int, error) {
 
 	// Add count parameter (API-specific)
 	params.Set("count", "exact")
-	params.Set("_limit", "0")
+	params.Set("__limit", "0")
 
 	endpoint += "?" + params.Encode()
 
