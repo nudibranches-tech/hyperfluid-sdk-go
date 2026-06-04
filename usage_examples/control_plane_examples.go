@@ -60,19 +60,11 @@ func runControlPlaneListArchiveOperationsExample() {
 		return
 	}
 
-	// Parse data container ID to UUID
-	dataContainerUUID, err := uuid.Parse(dataContainerID)
-	if err != nil {
-		fmt.Printf("❌ Invalid data container ID: %v\n", err)
-		fmt.Println()
-		return
-	}
-
 	// List Archive Operations
 	fmt.Printf("📋 Listing Archive Operations for DataDock %s, DataContainer %s...\n", dataDockID, dataContainerID)
 	fmt.Println()
 
-	resp, err := cp.ListArchiveOperationsWithResponse(ctx, dataDockUUID, dataContainerUUID, &controlplaneapiclient.ListArchiveOperationsParams{})
+	resp, err := cp.ListArchiveOperationsWithResponse(ctx, dataDockUUID, dataContainerID, &controlplaneapiclient.ListArchiveOperationsParams{})
 	if err != nil {
 		fmt.Printf("❌ Failed to list archive operations: %v\n", err)
 		fmt.Println()
