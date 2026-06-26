@@ -436,8 +436,15 @@ const (
 
 // Defines values for PermissionLevel.
 const (
-	PermissionLevelEditor PermissionLevel = "editor"
-	PermissionLevelViewer PermissionLevel = "viewer"
+	Editor PermissionLevel = "editor"
+	Viewer PermissionLevel = "viewer"
+)
+
+// Defines values for PermissionReply.
+const (
+	Always PermissionReply = "always"
+	Once   PermissionReply = "once"
+	Reject PermissionReply = "reject"
 )
 
 // Defines values for PipelineOutputParameters0Type.
@@ -500,12 +507,6 @@ const (
 // Defines values for PrepareArchiveImportResponse1UploadType.
 const (
 	Multipart PrepareArchiveImportResponse1UploadType = "multipart"
-)
-
-// Defines values for ProjectMemberRole.
-const (
-	ProjectMemberRoleEditor ProjectMemberRole = "editor"
-	ProjectMemberRoleViewer ProjectMemberRole = "viewer"
 )
 
 // Defines values for QuotaCapacityDimension.
@@ -661,24 +662,6 @@ type AbortMultipartUploadRequest struct {
 
 // AcceptInvitationBody defines model for AcceptInvitationBody.
 type AcceptInvitationBody = map[string]interface{}
-
-// AddRegistryProjectMemberRequestBody defines model for AddRegistryProjectMemberRequestBody.
-type AddRegistryProjectMemberRequestBody struct {
-	// Role Role of a **named user** member within a registry project, expressed as the
-	// set of grants they hold at the project scope path.
-	//
-	// ## Design note — owner vs editor
-	//
-	// ADR-0014 v1 defined `viewer | editor | owner`. In the grants-based
-	// implementation, `owner` is indistinguishable from `editor`: both hold
-	// `registry:pull + registry:push + registry:delete` at the project scope.
-	// The management API therefore exposes only `viewer | editor`. If
-	// per-project-owner semantics (e.g. a `registry:manage` permission for
-	// adding/removing members) are needed in the future, add a new permission key
-	// rather than re-introducing a members table or a third role variant.
-	Role   ProjectMemberRole  `json:"role"`
-	UserId openapi_types.UUID `json:"user_id"`
-}
 
 // AddUser defines model for AddUser.
 type AddUser struct {
@@ -2207,6 +2190,10 @@ type CreateGrantRequestBody struct {
 // CreateHFBucketRequest defines model for CreateHFBucketRequest.
 type CreateHFBucketRequest struct {
 	Name string `json:"name"`
+
+	// ZoneId Storage zone the bucket lands in; omit for the primary. A non-default
+	// value must be a zone the org has enabled.
+	ZoneId *string `json:"zone_id"`
 }
 
 // CreateHarborCrdRequestBody defines model for CreateHarborCrdRequestBody.
@@ -2280,6 +2267,11 @@ type CreateIcebergTableMetadataRequest struct {
 // CreateInboundEmailPipelineRequest Inbound email pipeline request: extract attachments from incoming emails and land to S3.
 // Transport-agnostic — the `source` config determines how emails are received (IMAP, SMTP, etc.)
 type CreateInboundEmailPipelineRequest struct {
+	// AllowedSenders Optional allowlist of sender patterns. When non-empty, only emails whose
+	// `From` address matches at least one pattern are processed; all others are
+	// skipped and marked as seen without uploading attachments.
+	AllowedSenders *[]SenderPattern `json:"allowed_senders,omitempty"`
+
 	// Destination S3 destination for an inbound email pipeline.
 	//
 	// Two variants are accepted:
@@ -2704,6 +2696,11 @@ type CreatePipelineRequestV27Type string
 
 // CreatePipelineRequestV28 defines model for .
 type CreatePipelineRequestV28 struct {
+	// AllowedSenders Optional allowlist of sender patterns. When non-empty, only emails whose
+	// `From` address matches at least one pattern are processed; all others are
+	// skipped and marked as seen without uploading attachments.
+	AllowedSenders *[]SenderPattern `json:"allowed_senders,omitempty"`
+
 	// Destination S3 destination for an inbound email pipeline.
 	//
 	// Two variants are accepted:
@@ -2759,32 +2756,11 @@ type CreatePostgresqlDataContainerRequestBody struct {
 	Name string `json:"name"`
 }
 
-// CreateRegistryHarborRobotRequestBody defines model for CreateRegistryHarborRobotRequestBody.
-type CreateRegistryHarborRobotRequestBody struct {
-	// Name Human-readable name for the robot; also used as the display name of the
-	// underlying service account. Must be 3–64 characters.
-	Name string `json:"name"`
-
-	// Role Role of a **named user** member within a registry project, expressed as the
-	// set of grants they hold at the project scope path.
-	//
-	// ## Design note — owner vs editor
-	//
-	// ADR-0014 v1 defined `viewer | editor | owner`. In the grants-based
-	// implementation, `owner` is indistinguishable from `editor`: both hold
-	// `registry:pull + registry:push + registry:delete` at the project scope.
-	// The management API therefore exposes only `viewer | editor`. If
-	// per-project-owner semantics (e.g. a `registry:manage` permission for
-	// adding/removing members) are needed in the future, add a new permission key
-	// rather than re-introducing a members table or a third role variant.
-	Role ProjectMemberRole `json:"role"`
-}
-
 // CreateRegistryProjectRequestBody defines model for CreateRegistryProjectRequestBody.
 type CreateRegistryProjectRequestBody struct {
 	Description *string `json:"description"`
 
-	// Name The `<project>` path segment in `<org>/<harbor>/<project>/<image>`.
+	// Name The `<project>` path segment in `<harbor>/<project>/<image>`.
 	Name string `json:"name"`
 }
 
@@ -4103,6 +4079,9 @@ type HFBucketDetail struct {
 	// unavailable.
 	SizeBytes     *int64  `json:"size_bytes"`
 	StatusMessage *string `json:"status_message"`
+
+	// ZoneId Storage zone the bucket lives in (`"default"` for the primary).
+	ZoneId string `json:"zone_id"`
 }
 
 // HFBucketView defines model for HFBucketView.
@@ -4116,6 +4095,9 @@ type HFBucketView struct {
 	// Ready True when the operator has marked the bucket as Ready in `.status`.
 	Ready         bool    `json:"ready"`
 	StatusMessage *string `json:"status_message"`
+
+	// ZoneId Storage zone the bucket lives in (`"default"` for the primary).
+	ZoneId string `json:"zone_id"`
 }
 
 // Harbor A harbor is a collection of [DataDocks](super::datadock::Datadock)
@@ -4152,6 +4134,9 @@ type HarborStorageBindingView struct {
 	StsRoleArn    *string `json:"sts_role_arn"`
 	Tenant        string  `json:"tenant"`
 	TenantEnsured bool    `json:"tenant_ensured"`
+
+	// ZoneId Storage zone this tenant lives in (`"default"` for the primary).
+	ZoneId string `json:"zone_id"`
 }
 
 // HfCollumn defines model for HfCollumn.
@@ -5442,6 +5427,30 @@ type PatchOrgStorageRequest struct {
 	StorageQuotaGb *int32 `json:"storage_quota_gb"`
 }
 
+// PendingPermission One opencode permission request that is CURRENTLY pending (awaiting a user
+// decision), normalized into the same `{ id, sessionId, action, resources }`
+// shape the frontend already derives from the live `permission.asked` event
+// stream. The list endpoint returns ALL pending requests across ALL sessions
+// of the workstation (parent + `task` sub-agents) so the browser can reconcile
+// prompts it never saw on the socket (reconnect, connection gap) and so a
+// prompt is never lost.
+type PendingPermission struct {
+	// Action The permission being requested (e.g. `bash`, `external_directory`).
+	Action string `json:"action"`
+
+	// Id Opencode permission request id (`per_...`); reply via the existing
+	// `.../permissions/{rid}/reply` route.
+	Id string `json:"id"`
+
+	// Resources Human-readable subjects of the request: the request's `patterns` when
+	// present, else the single command / filepath from `metadata`, else empty.
+	Resources []string `json:"resources"`
+
+	// SessionId Opencode session id (`ses_...`) the request belongs to — parent or a
+	// `task` sub-agent's child session.
+	SessionId string `json:"session_id"`
+}
+
 // PermissionCatalogEntry A row of the permission catalog, as exposed to the management UI.
 type PermissionCatalogEntry struct {
 	Action      string             `json:"action"`
@@ -5455,6 +5464,24 @@ type PermissionCatalogEntry struct {
 
 // PermissionLevel Permission level granted to the Postgres role.
 type PermissionLevel string
+
+// PermissionReply How the user answered an opencode permission prompt. Mirrors opencode's
+// reply endpoint contract: `once` allows this single invocation, `always`
+// allows future invocations of the same action, `reject` denies it. Invalid
+// values are rejected at deserialize time so the BFF never forwards garbage.
+type PermissionReply string
+
+// PermissionReplyRequest defines model for PermissionReplyRequest.
+type PermissionReplyRequest struct {
+	// Message Optional human note forwarded to opencode (e.g. a reject reason).
+	Message *string `json:"message"`
+
+	// Reply How the user answered an opencode permission prompt. Mirrors opencode's
+	// reply endpoint contract: `once` allows this single invocation, `always`
+	// allows future invocations of the same action, `reject` denies it. Invalid
+	// values are rejected at deserialize time so the BFF never forwards garbage.
+	Reply PermissionReply `json:"reply"`
+}
 
 // PersistenceInput One persistent volume attached to the container.
 //
@@ -5883,20 +5910,6 @@ type PreviewUrl struct {
 	Url  string `json:"url"`
 }
 
-// ProjectMemberRole Role of a **named user** member within a registry project, expressed as the
-// set of grants they hold at the project scope path.
-//
-// ## Design note — owner vs editor
-//
-// ADR-0014 v1 defined `viewer | editor | owner`. In the grants-based
-// implementation, `owner` is indistinguishable from `editor`: both hold
-// `registry:pull + registry:push + registry:delete` at the project scope.
-// The management API therefore exposes only `viewer | editor`. If
-// per-project-owner semantics (e.g. a `registry:manage` permission for
-// adding/removing members) are needed in the future, add a new permission key
-// rather than re-introducing a members table or a third role variant.
-type ProjectMemberRole string
-
 // QueryHistoryEntry defines model for QueryHistoryEntry.
 type QueryHistoryEntry struct {
 	AnalysisTimeMs     *int64              `json:"analysis_time_ms"`
@@ -6042,60 +6055,6 @@ type RegisterInvitationRequest struct {
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
 	Password  string `json:"password"`
-}
-
-// RegistryHarborRobotCreatedResponse Response returned **once** when a harbor robot is created or its secret is
-// rotated.
-type RegistryHarborRobotCreatedResponse struct {
-	ClientId         string             `json:"client_id"`
-	ClientSecret     string             `json:"client_secret"`
-	Name             string             `json:"name"`
-	ServiceAccountId openapi_types.UUID `json:"service_account_id"`
-}
-
-// RegistryHarborRobotListItem Summary of a registry harbor robot (SA) returned by the list endpoint.
-type RegistryHarborRobotListItem struct {
-	// ClientId Stable identifier: the Keycloak `clientId` of the service account.
-	ClientId string `json:"client_id"`
-
-	// Name Human-readable name given at creation time.
-	Name string `json:"name"`
-
-	// Role Role of a **named user** member within a registry project, expressed as the
-	// set of grants they hold at the project scope path.
-	//
-	// ## Design note — owner vs editor
-	//
-	// ADR-0014 v1 defined `viewer | editor | owner`. In the grants-based
-	// implementation, `owner` is indistinguishable from `editor`: both hold
-	// `registry:pull + registry:push + registry:delete` at the project scope.
-	// The management API therefore exposes only `viewer | editor`. If
-	// per-project-owner semantics (e.g. a `registry:manage` permission for
-	// adding/removing members) are needed in the future, add a new permission key
-	// rather than re-introducing a members table or a third role variant.
-	Role ProjectMemberRole `json:"role"`
-
-	// ServiceAccountId DB UUID of the service account row.
-	ServiceAccountId openapi_types.UUID `json:"service_account_id"`
-}
-
-// RegistryProjectMemberListItem API response for a single project member — list variant (no `added_at`
-// when we batch-group grants; timestamp is the earliest grant for this user).
-type RegistryProjectMemberListItem struct {
-	// Role Role of a **named user** member within a registry project, expressed as the
-	// set of grants they hold at the project scope path.
-	//
-	// ## Design note — owner vs editor
-	//
-	// ADR-0014 v1 defined `viewer | editor | owner`. In the grants-based
-	// implementation, `owner` is indistinguishable from `editor`: both hold
-	// `registry:pull + registry:push + registry:delete` at the project scope.
-	// The management API therefore exposes only `viewer | editor`. If
-	// per-project-owner semantics (e.g. a `registry:manage` permission for
-	// adding/removing members) are needed in the future, add a new permission key
-	// rather than re-introducing a members table or a third role variant.
-	Role   ProjectMemberRole  `json:"role"`
-	UserId openapi_types.UUID `json:"user_id"`
 }
 
 // RegistryProjectResponse defines model for RegistryProjectResponse.
@@ -6273,14 +6232,6 @@ type Role struct {
 	UpdatedAt      time.Time          `json:"updated_at"`
 }
 
-// RotateRegistryHarborRobotRequestBody defines model for RotateRegistryHarborRobotRequestBody.
-type RotateRegistryHarborRobotRequestBody struct {
-	// Name Human-readable name to preserve on the new SA. Required to avoid a
-	// round-trip lookup (the old SA's name is not guaranteed to survive the
-	// delete-recreate cycle in all timing windows).
-	Name string `json:"name"`
-}
-
 // S3OutputParameters defines model for S3OutputParameters.
 type S3OutputParameters = map[string]interface{}
 
@@ -6418,6 +6369,12 @@ type SecretValueResponse struct {
 	Value SecretValue `json:"value"`
 }
 
+// SenderPattern A sender pattern used to filter inbound email by the `From` address.
+// The pattern is matched case-insensitively as an exact address or domain suffix.
+type SenderPattern struct {
+	Pattern string `json:"pattern"`
+}
+
 // SensitivityLevel Sensitivity level for data classification
 type SensitivityLevel string
 
@@ -6504,6 +6461,25 @@ type SharedModelResponse struct {
 // SigningKeys defines model for SigningKeys.
 type SigningKeys struct {
 	GpgPublicKeys []GpgPublicKey `json:"gpg_public_keys"`
+}
+
+// StorageZoneView A `cephZones` catalog entry joined with whether the org has enabled it.
+type StorageZoneView struct {
+	Description *string `json:"description"`
+
+	// Enabled Whether an OrgStorage exists for this org in this zone.
+	Enabled bool `json:"enabled"`
+
+	// ExternalEndpoint External S3 endpoint of the zone's OrgStorage, once provisioned.
+	ExternalEndpoint *string `json:"external_endpoint"`
+	Name             string  `json:"name"`
+
+	// Primary The primary zone every org has; always enabled and never removable.
+	Primary bool `json:"primary"`
+
+	// Ready Whether the zone's OrgStorage is Ready (only meaningful when enabled).
+	Ready  bool   `json:"ready"`
+	ZoneId string `json:"zone_id"`
 }
 
 // TableClassificationResponse Response for a table classification.
@@ -6885,23 +6861,6 @@ type UpdateRefRequest struct {
 	PipelineChecksum string             `json:"pipeline_checksum"`
 	PipelineId       openapi_types.UUID `json:"pipeline_id"`
 	Status           RefStatus          `json:"status"`
-}
-
-// UpdateRegistryProjectMemberRequestBody defines model for UpdateRegistryProjectMemberRequestBody.
-type UpdateRegistryProjectMemberRequestBody struct {
-	// Role Role of a **named user** member within a registry project, expressed as the
-	// set of grants they hold at the project scope path.
-	//
-	// ## Design note — owner vs editor
-	//
-	// ADR-0014 v1 defined `viewer | editor | owner`. In the grants-based
-	// implementation, `owner` is indistinguishable from `editor`: both hold
-	// `registry:pull + registry:push + registry:delete` at the project scope.
-	// The management API therefore exposes only `viewer | editor`. If
-	// per-project-owner semantics (e.g. a `registry:manage` permission for
-	// adding/removing members) are needed in the future, add a new permission key
-	// rather than re-introducing a members table or a third role variant.
-	Role ProjectMemberRole `json:"role"`
 }
 
 // UpdateSavedQueryRequest defines model for UpdateSavedQueryRequest.
@@ -7549,6 +7508,9 @@ type CreateSessionJSONRequestBody = CreateSessionRequest
 // PostSessionMessageJSONRequestBody defines body for PostSessionMessage for application/json ContentType.
 type PostSessionMessageJSONRequestBody = PostMessageRequest
 
+// ReplyPermissionJSONRequestBody defines body for ReplyPermission for application/json ContentType.
+type ReplyPermissionJSONRequestBody = PermissionReplyRequest
+
 // AiEditJSONRequestBody defines body for AiEdit for application/json ContentType.
 type AiEditJSONRequestBody = AiEditRequest
 
@@ -7704,18 +7666,6 @@ type CreateManagedPostgresqlCrdJSONRequestBody = CreateManagedPostgresqlCrdReque
 
 // CreateRegistryProjectJSONRequestBody defines body for CreateRegistryProject for application/json ContentType.
 type CreateRegistryProjectJSONRequestBody = CreateRegistryProjectRequestBody
-
-// AddRegistryProjectMemberJSONRequestBody defines body for AddRegistryProjectMember for application/json ContentType.
-type AddRegistryProjectMemberJSONRequestBody = AddRegistryProjectMemberRequestBody
-
-// UpdateRegistryProjectMemberJSONRequestBody defines body for UpdateRegistryProjectMember for application/json ContentType.
-type UpdateRegistryProjectMemberJSONRequestBody = UpdateRegistryProjectMemberRequestBody
-
-// CreateRegistryHarborRobotJSONRequestBody defines body for CreateRegistryHarborRobot for application/json ContentType.
-type CreateRegistryHarborRobotJSONRequestBody = CreateRegistryHarborRobotRequestBody
-
-// RotateRegistryHarborRobotJSONRequestBody defines body for RotateRegistryHarborRobot for application/json ContentType.
-type RotateRegistryHarborRobotJSONRequestBody = RotateRegistryHarborRobotRequestBody
 
 // PatchHfKeyValueCacheCrdJSONRequestBody defines body for PatchHfKeyValueCacheCrd for application/json ContentType.
 type PatchHfKeyValueCacheCrdJSONRequestBody = PatchHfKeyValueCacheCrdRequestBody
@@ -9737,6 +9687,9 @@ type ClientInterface interface {
 	// ListAgentModes request
 	ListAgentModes(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListPendingPermissions request
+	ListPendingPermissions(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListSessions request
 	ListSessions(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -9744,6 +9697,12 @@ type ClientInterface interface {
 	CreateSessionWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	CreateSession(ctx context.Context, id openapi_types.UUID, body CreateSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteSession request
+	DeleteSession(ctx context.Context, id openapi_types.UUID, sid string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AbortSession request
+	AbortSession(ctx context.Context, id openapi_types.UUID, sid string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CompactSession request
 	CompactSession(ctx context.Context, id openapi_types.UUID, sid string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9755,6 +9714,11 @@ type ClientInterface interface {
 	PostSessionMessageWithBody(ctx context.Context, id openapi_types.UUID, sid string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	PostSessionMessage(ctx context.Context, id openapi_types.UUID, sid string, body PostSessionMessageJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ReplyPermissionWithBody request with any body
+	ReplyPermissionWithBody(ctx context.Context, id openapi_types.UUID, sid string, rid string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ReplyPermission(ctx context.Context, id openapi_types.UUID, sid string, rid string, body ReplyPermissionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AiEditWithBody request with any body
 	AiEditWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -10376,38 +10340,6 @@ type ClientInterface interface {
 	// GetRegistryImageTags request
 	GetRegistryImageTags(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, image string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListRegistryProjectMembers request
-	ListRegistryProjectMembers(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// AddRegistryProjectMemberWithBody request with any body
-	AddRegistryProjectMemberWithBody(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	AddRegistryProjectMember(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, body AddRegistryProjectMemberJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// RemoveRegistryProjectMember request
-	RemoveRegistryProjectMember(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// UpdateRegistryProjectMemberWithBody request with any body
-	UpdateRegistryProjectMemberWithBody(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	UpdateRegistryProjectMember(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID, body UpdateRegistryProjectMemberJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ListRegistryHarborRobots request
-	ListRegistryHarborRobots(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// CreateRegistryHarborRobotWithBody request with any body
-	CreateRegistryHarborRobotWithBody(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	CreateRegistryHarborRobot(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateRegistryHarborRobotJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// DeleteRegistryHarborRobot request
-	DeleteRegistryHarborRobot(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// RotateRegistryHarborRobotWithBody request with any body
-	RotateRegistryHarborRobotWithBody(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	RotateRegistryHarborRobot(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string, body RotateRegistryHarborRobotJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// GetRegistryUsage request
 	GetRegistryUsage(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -10668,6 +10600,12 @@ type ClientInterface interface {
 
 	// ListOrphanedPools request
 	ListOrphanedPools(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListOrgStorageZones request
+	ListOrgStorageZones(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// EnableOrgStorageZone request
+	EnableOrgStorageZone(ctx context.Context, organizationId openapi_types.UUID, zoneId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListOrgUserAttributesHandler request
 	ListOrgUserAttributesHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -11309,6 +11247,18 @@ func (c *Client) ListAgentModes(ctx context.Context, id openapi_types.UUID, reqE
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListPendingPermissions(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListPendingPermissionsRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListSessions(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListSessionsRequest(c.Server, id)
 	if err != nil {
@@ -11335,6 +11285,30 @@ func (c *Client) CreateSessionWithBody(ctx context.Context, id openapi_types.UUI
 
 func (c *Client) CreateSession(ctx context.Context, id openapi_types.UUID, body CreateSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateSessionRequest(c.Server, id, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteSession(ctx context.Context, id openapi_types.UUID, sid string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteSessionRequest(c.Server, id, sid)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AbortSession(ctx context.Context, id openapi_types.UUID, sid string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAbortSessionRequest(c.Server, id, sid)
 	if err != nil {
 		return nil, err
 	}
@@ -11383,6 +11357,30 @@ func (c *Client) PostSessionMessageWithBody(ctx context.Context, id openapi_type
 
 func (c *Client) PostSessionMessage(ctx context.Context, id openapi_types.UUID, sid string, body PostSessionMessageJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPostSessionMessageRequest(c.Server, id, sid, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ReplyPermissionWithBody(ctx context.Context, id openapi_types.UUID, sid string, rid string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReplyPermissionRequestWithBody(c.Server, id, sid, rid, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ReplyPermission(ctx context.Context, id openapi_types.UUID, sid string, rid string, body ReplyPermissionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReplyPermissionRequest(c.Server, id, sid, rid, body)
 	if err != nil {
 		return nil, err
 	}
@@ -14081,150 +14079,6 @@ func (c *Client) GetRegistryImageTags(ctx context.Context, organizationId openap
 	return c.Client.Do(req)
 }
 
-func (c *Client) ListRegistryProjectMembers(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListRegistryProjectMembersRequest(c.Server, organizationId, harborId, projectId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) AddRegistryProjectMemberWithBody(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAddRegistryProjectMemberRequestWithBody(c.Server, organizationId, harborId, projectId, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) AddRegistryProjectMember(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, body AddRegistryProjectMemberJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAddRegistryProjectMemberRequest(c.Server, organizationId, harborId, projectId, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) RemoveRegistryProjectMember(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewRemoveRegistryProjectMemberRequest(c.Server, organizationId, harborId, projectId, userId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) UpdateRegistryProjectMemberWithBody(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateRegistryProjectMemberRequestWithBody(c.Server, organizationId, harborId, projectId, userId, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) UpdateRegistryProjectMember(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID, body UpdateRegistryProjectMemberJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateRegistryProjectMemberRequest(c.Server, organizationId, harborId, projectId, userId, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ListRegistryHarborRobots(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListRegistryHarborRobotsRequest(c.Server, organizationId, harborId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) CreateRegistryHarborRobotWithBody(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateRegistryHarborRobotRequestWithBody(c.Server, organizationId, harborId, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) CreateRegistryHarborRobot(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateRegistryHarborRobotJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateRegistryHarborRobotRequest(c.Server, organizationId, harborId, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DeleteRegistryHarborRobot(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteRegistryHarborRobotRequest(c.Server, organizationId, harborId, clientId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) RotateRegistryHarborRobotWithBody(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewRotateRegistryHarborRobotRequestWithBody(c.Server, organizationId, harborId, clientId, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) RotateRegistryHarborRobot(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string, body RotateRegistryHarborRobotJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewRotateRegistryHarborRobotRequest(c.Server, organizationId, harborId, clientId, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) GetRegistryUsage(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetRegistryUsageRequest(c.Server, organizationId, harborId)
 	if err != nil {
@@ -15331,6 +15185,30 @@ func (c *Client) PatchHarborBinding(ctx context.Context, organizationId openapi_
 
 func (c *Client) ListOrphanedPools(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListOrphanedPoolsRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListOrgStorageZones(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListOrgStorageZonesRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) EnableOrgStorageZone(ctx context.Context, organizationId openapi_types.UUID, zoneId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEnableOrgStorageZoneRequest(c.Server, organizationId, zoneId)
 	if err != nil {
 		return nil, err
 	}
@@ -17505,6 +17383,40 @@ func NewListAgentModesRequest(server string, id openapi_types.UUID) (*http.Reque
 	return req, nil
 }
 
+// NewListPendingPermissionsRequest generates requests for ListPendingPermissions
+func NewListPendingPermissionsRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/workstations/%s/agent/permissions", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewListSessionsRequest generates requests for ListSessions
 func NewListSessionsRequest(server string, id openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -17582,6 +17494,88 @@ func NewCreateSessionRequestWithBody(server string, id openapi_types.UUID, conte
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteSessionRequest generates requests for DeleteSession
+func NewDeleteSessionRequest(server string, id openapi_types.UUID, sid string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "sid", runtime.ParamLocationPath, sid)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/workstations/%s/agent/sessions/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAbortSessionRequest generates requests for AbortSession
+func NewAbortSessionRequest(server string, id openapi_types.UUID, sid string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "sid", runtime.ParamLocationPath, sid)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/workstations/%s/agent/sessions/%s/abort", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -17703,6 +17697,67 @@ func NewPostSessionMessageRequestWithBody(server string, id openapi_types.UUID, 
 	}
 
 	operationPath := fmt.Sprintf("/api/dev/workstations/%s/agent/sessions/%s/messages", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewReplyPermissionRequest calls the generic ReplyPermission builder with application/json body
+func NewReplyPermissionRequest(server string, id openapi_types.UUID, sid string, rid string, body ReplyPermissionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewReplyPermissionRequestWithBody(server, id, sid, rid, "application/json", bodyReader)
+}
+
+// NewReplyPermissionRequestWithBody generates requests for ReplyPermission with any type of body
+func NewReplyPermissionRequestWithBody(server string, id openapi_types.UUID, sid string, rid string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "sid", runtime.ParamLocationPath, sid)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "rid", runtime.ParamLocationPath, rid)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/workstations/%s/agent/sessions/%s/permissions/%s/reply", pathParam0, pathParam1, pathParam2)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -25566,442 +25621,6 @@ func NewGetRegistryImageTagsRequest(server string, organizationId openapi_types.
 	return req, nil
 }
 
-// NewListRegistryProjectMembersRequest generates requests for ListRegistryProjectMembers
-func NewListRegistryProjectMembersRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam2 string
-
-	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "project_id", runtime.ParamLocationPath, projectId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/registry/projects/%s/members", pathParam0, pathParam1, pathParam2)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewAddRegistryProjectMemberRequest calls the generic AddRegistryProjectMember builder with application/json body
-func NewAddRegistryProjectMemberRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, body AddRegistryProjectMemberJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewAddRegistryProjectMemberRequestWithBody(server, organizationId, harborId, projectId, "application/json", bodyReader)
-}
-
-// NewAddRegistryProjectMemberRequestWithBody generates requests for AddRegistryProjectMember with any type of body
-func NewAddRegistryProjectMemberRequestWithBody(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam2 string
-
-	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "project_id", runtime.ParamLocationPath, projectId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/registry/projects/%s/members", pathParam0, pathParam1, pathParam2)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewRemoveRegistryProjectMemberRequest generates requests for RemoveRegistryProjectMember
-func NewRemoveRegistryProjectMemberRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam2 string
-
-	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "project_id", runtime.ParamLocationPath, projectId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam3 string
-
-	pathParam3, err = runtime.StyleParamWithLocation("simple", false, "user_id", runtime.ParamLocationPath, userId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/registry/projects/%s/members/%s", pathParam0, pathParam1, pathParam2, pathParam3)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewUpdateRegistryProjectMemberRequest calls the generic UpdateRegistryProjectMember builder with application/json body
-func NewUpdateRegistryProjectMemberRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID, body UpdateRegistryProjectMemberJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewUpdateRegistryProjectMemberRequestWithBody(server, organizationId, harborId, projectId, userId, "application/json", bodyReader)
-}
-
-// NewUpdateRegistryProjectMemberRequestWithBody generates requests for UpdateRegistryProjectMember with any type of body
-func NewUpdateRegistryProjectMemberRequestWithBody(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam2 string
-
-	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "project_id", runtime.ParamLocationPath, projectId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam3 string
-
-	pathParam3, err = runtime.StyleParamWithLocation("simple", false, "user_id", runtime.ParamLocationPath, userId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/registry/projects/%s/members/%s", pathParam0, pathParam1, pathParam2, pathParam3)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("PUT", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewListRegistryHarborRobotsRequest generates requests for ListRegistryHarborRobots
-func NewListRegistryHarborRobotsRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/registry/robots", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewCreateRegistryHarborRobotRequest calls the generic CreateRegistryHarborRobot builder with application/json body
-func NewCreateRegistryHarborRobotRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateRegistryHarborRobotJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewCreateRegistryHarborRobotRequestWithBody(server, organizationId, harborId, "application/json", bodyReader)
-}
-
-// NewCreateRegistryHarborRobotRequestWithBody generates requests for CreateRegistryHarborRobot with any type of body
-func NewCreateRegistryHarborRobotRequestWithBody(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/registry/robots", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewDeleteRegistryHarborRobotRequest generates requests for DeleteRegistryHarborRobot
-func NewDeleteRegistryHarborRobotRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam2 string
-
-	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "client_id", runtime.ParamLocationPath, clientId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/registry/robots/%s", pathParam0, pathParam1, pathParam2)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewRotateRegistryHarborRobotRequest calls the generic RotateRegistryHarborRobot builder with application/json body
-func NewRotateRegistryHarborRobotRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string, body RotateRegistryHarborRobotJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewRotateRegistryHarborRobotRequestWithBody(server, organizationId, harborId, clientId, "application/json", bodyReader)
-}
-
-// NewRotateRegistryHarborRobotRequestWithBody generates requests for RotateRegistryHarborRobot with any type of body
-func NewRotateRegistryHarborRobotRequestWithBody(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam2 string
-
-	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "client_id", runtime.ParamLocationPath, clientId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/organizations/%s/harbors/%s/registry/robots/%s/rotate", pathParam0, pathParam1, pathParam2)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
 // NewGetRegistryUsageRequest generates requests for GetRegistryUsage
 func NewGetRegistryUsageRequest(server string, organizationId openapi_types.UUID, harborId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -29774,6 +29393,81 @@ func NewListOrphanedPoolsRequest(server string, organizationId openapi_types.UUI
 	return req, nil
 }
 
+// NewListOrgStorageZonesRequest generates requests for ListOrgStorageZones
+func NewListOrgStorageZonesRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/storage/zones", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewEnableOrgStorageZoneRequest generates requests for EnableOrgStorageZone
+func NewEnableOrgStorageZoneRequest(server string, organizationId openapi_types.UUID, zoneId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "zone_id", runtime.ParamLocationPath, zoneId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/storage/zones/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewListOrgUserAttributesHandlerRequest generates requests for ListOrgUserAttributesHandler
 func NewListOrgUserAttributesHandlerRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -33486,6 +33180,9 @@ type ClientWithResponsesInterface interface {
 	// ListAgentModesWithResponse request
 	ListAgentModesWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListAgentModesRes, error)
 
+	// ListPendingPermissionsWithResponse request
+	ListPendingPermissionsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListPendingPermissionsRes, error)
+
 	// ListSessionsWithResponse request
 	ListSessionsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListSessionsRes, error)
 
@@ -33493,6 +33190,12 @@ type ClientWithResponsesInterface interface {
 	CreateSessionWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateSessionRes, error)
 
 	CreateSessionWithResponse(ctx context.Context, id openapi_types.UUID, body CreateSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateSessionRes, error)
+
+	// DeleteSessionWithResponse request
+	DeleteSessionWithResponse(ctx context.Context, id openapi_types.UUID, sid string, reqEditors ...RequestEditorFn) (*DeleteSessionRes, error)
+
+	// AbortSessionWithResponse request
+	AbortSessionWithResponse(ctx context.Context, id openapi_types.UUID, sid string, reqEditors ...RequestEditorFn) (*AbortSessionRes, error)
 
 	// CompactSessionWithResponse request
 	CompactSessionWithResponse(ctx context.Context, id openapi_types.UUID, sid string, reqEditors ...RequestEditorFn) (*CompactSessionRes, error)
@@ -33504,6 +33207,11 @@ type ClientWithResponsesInterface interface {
 	PostSessionMessageWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, sid string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostSessionMessageRes, error)
 
 	PostSessionMessageWithResponse(ctx context.Context, id openapi_types.UUID, sid string, body PostSessionMessageJSONRequestBody, reqEditors ...RequestEditorFn) (*PostSessionMessageRes, error)
+
+	// ReplyPermissionWithBodyWithResponse request with any body
+	ReplyPermissionWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, sid string, rid string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReplyPermissionRes, error)
+
+	ReplyPermissionWithResponse(ctx context.Context, id openapi_types.UUID, sid string, rid string, body ReplyPermissionJSONRequestBody, reqEditors ...RequestEditorFn) (*ReplyPermissionRes, error)
 
 	// AiEditWithBodyWithResponse request with any body
 	AiEditWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AiEditRes, error)
@@ -34125,38 +33833,6 @@ type ClientWithResponsesInterface interface {
 	// GetRegistryImageTagsWithResponse request
 	GetRegistryImageTagsWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, image string, reqEditors ...RequestEditorFn) (*GetRegistryImageTagsRes, error)
 
-	// ListRegistryProjectMembersWithResponse request
-	ListRegistryProjectMembersWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListRegistryProjectMembersRes, error)
-
-	// AddRegistryProjectMemberWithBodyWithResponse request with any body
-	AddRegistryProjectMemberWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddRegistryProjectMemberRes, error)
-
-	AddRegistryProjectMemberWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, body AddRegistryProjectMemberJSONRequestBody, reqEditors ...RequestEditorFn) (*AddRegistryProjectMemberRes, error)
-
-	// RemoveRegistryProjectMemberWithResponse request
-	RemoveRegistryProjectMemberWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RemoveRegistryProjectMemberRes, error)
-
-	// UpdateRegistryProjectMemberWithBodyWithResponse request with any body
-	UpdateRegistryProjectMemberWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateRegistryProjectMemberRes, error)
-
-	UpdateRegistryProjectMemberWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID, body UpdateRegistryProjectMemberJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateRegistryProjectMemberRes, error)
-
-	// ListRegistryHarborRobotsWithResponse request
-	ListRegistryHarborRobotsWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListRegistryHarborRobotsRes, error)
-
-	// CreateRegistryHarborRobotWithBodyWithResponse request with any body
-	CreateRegistryHarborRobotWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateRegistryHarborRobotRes, error)
-
-	CreateRegistryHarborRobotWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateRegistryHarborRobotJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateRegistryHarborRobotRes, error)
-
-	// DeleteRegistryHarborRobotWithResponse request
-	DeleteRegistryHarborRobotWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string, reqEditors ...RequestEditorFn) (*DeleteRegistryHarborRobotRes, error)
-
-	// RotateRegistryHarborRobotWithBodyWithResponse request with any body
-	RotateRegistryHarborRobotWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RotateRegistryHarborRobotRes, error)
-
-	RotateRegistryHarborRobotWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string, body RotateRegistryHarborRobotJSONRequestBody, reqEditors ...RequestEditorFn) (*RotateRegistryHarborRobotRes, error)
-
 	// GetRegistryUsageWithResponse request
 	GetRegistryUsageWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetRegistryUsageRes, error)
 
@@ -34417,6 +34093,12 @@ type ClientWithResponsesInterface interface {
 
 	// ListOrphanedPoolsWithResponse request
 	ListOrphanedPoolsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListOrphanedPoolsRes, error)
+
+	// ListOrgStorageZonesWithResponse request
+	ListOrgStorageZonesWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListOrgStorageZonesRes, error)
+
+	// EnableOrgStorageZoneWithResponse request
+	EnableOrgStorageZoneWithResponse(ctx context.Context, organizationId openapi_types.UUID, zoneId string, reqEditors ...RequestEditorFn) (*EnableOrgStorageZoneRes, error)
 
 	// ListOrgUserAttributesHandlerWithResponse request
 	ListOrgUserAttributesHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListOrgUserAttributesHandlerRes, error)
@@ -35202,6 +34884,28 @@ func (r ListAgentModesRes) StatusCode() int {
 	return 0
 }
 
+type ListPendingPermissionsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]PendingPermission
+}
+
+// Status returns HTTPResponse.Status
+func (r ListPendingPermissionsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListPendingPermissionsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type ListSessionsRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -35240,6 +34944,48 @@ func (r CreateSessionRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r CreateSessionRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteSessionRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteSessionRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteSessionRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AbortSessionRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r AbortSessionRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AbortSessionRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -35305,6 +35051,27 @@ func (r PostSessionMessageRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PostSessionMessageRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ReplyPermissionRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r ReplyPermissionRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ReplyPermissionRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -39042,180 +38809,6 @@ func (r GetRegistryImageTagsRes) StatusCode() int {
 	return 0
 }
 
-type ListRegistryProjectMembersRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]RegistryProjectMemberListItem
-}
-
-// Status returns HTTPResponse.Status
-func (r ListRegistryProjectMembersRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListRegistryProjectMembersRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type AddRegistryProjectMemberRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON201      *RegistryProjectMemberListItem
-}
-
-// Status returns HTTPResponse.Status
-func (r AddRegistryProjectMemberRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r AddRegistryProjectMemberRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type RemoveRegistryProjectMemberRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-}
-
-// Status returns HTTPResponse.Status
-func (r RemoveRegistryProjectMemberRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r RemoveRegistryProjectMemberRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type UpdateRegistryProjectMemberRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *RegistryProjectMemberListItem
-}
-
-// Status returns HTTPResponse.Status
-func (r UpdateRegistryProjectMemberRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r UpdateRegistryProjectMemberRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ListRegistryHarborRobotsRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]RegistryHarborRobotListItem
-}
-
-// Status returns HTTPResponse.Status
-func (r ListRegistryHarborRobotsRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListRegistryHarborRobotsRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type CreateRegistryHarborRobotRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON201      *RegistryHarborRobotCreatedResponse
-}
-
-// Status returns HTTPResponse.Status
-func (r CreateRegistryHarborRobotRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r CreateRegistryHarborRobotRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DeleteRegistryHarborRobotRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-}
-
-// Status returns HTTPResponse.Status
-func (r DeleteRegistryHarborRobotRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeleteRegistryHarborRobotRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type RotateRegistryHarborRobotRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *RegistryHarborRobotCreatedResponse
-}
-
-// Status returns HTTPResponse.Status
-func (r RotateRegistryHarborRobotRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r RotateRegistryHarborRobotRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type GetRegistryUsageRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -40838,6 +40431,50 @@ func (r ListOrphanedPoolsRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ListOrphanedPoolsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListOrgStorageZonesRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]StorageZoneView
+}
+
+// Status returns HTTPResponse.Status
+func (r ListOrgStorageZonesRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListOrgStorageZonesRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type EnableOrgStorageZoneRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *OrgStorageView
+}
+
+// Status returns HTTPResponse.Status
+func (r EnableOrgStorageZoneRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r EnableOrgStorageZoneRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -42819,6 +42456,15 @@ func (c *ClientWithResponses) ListAgentModesWithResponse(ctx context.Context, id
 	return ParseListAgentModesRes(rsp)
 }
 
+// ListPendingPermissionsWithResponse request returning *ListPendingPermissionsRes
+func (c *ClientWithResponses) ListPendingPermissionsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListPendingPermissionsRes, error) {
+	rsp, err := c.ListPendingPermissions(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListPendingPermissionsRes(rsp)
+}
+
 // ListSessionsWithResponse request returning *ListSessionsRes
 func (c *ClientWithResponses) ListSessionsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListSessionsRes, error) {
 	rsp, err := c.ListSessions(ctx, id, reqEditors...)
@@ -42843,6 +42489,24 @@ func (c *ClientWithResponses) CreateSessionWithResponse(ctx context.Context, id 
 		return nil, err
 	}
 	return ParseCreateSessionRes(rsp)
+}
+
+// DeleteSessionWithResponse request returning *DeleteSessionRes
+func (c *ClientWithResponses) DeleteSessionWithResponse(ctx context.Context, id openapi_types.UUID, sid string, reqEditors ...RequestEditorFn) (*DeleteSessionRes, error) {
+	rsp, err := c.DeleteSession(ctx, id, sid, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteSessionRes(rsp)
+}
+
+// AbortSessionWithResponse request returning *AbortSessionRes
+func (c *ClientWithResponses) AbortSessionWithResponse(ctx context.Context, id openapi_types.UUID, sid string, reqEditors ...RequestEditorFn) (*AbortSessionRes, error) {
+	rsp, err := c.AbortSession(ctx, id, sid, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAbortSessionRes(rsp)
 }
 
 // CompactSessionWithResponse request returning *CompactSessionRes
@@ -42878,6 +42542,23 @@ func (c *ClientWithResponses) PostSessionMessageWithResponse(ctx context.Context
 		return nil, err
 	}
 	return ParsePostSessionMessageRes(rsp)
+}
+
+// ReplyPermissionWithBodyWithResponse request with arbitrary body returning *ReplyPermissionRes
+func (c *ClientWithResponses) ReplyPermissionWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, sid string, rid string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReplyPermissionRes, error) {
+	rsp, err := c.ReplyPermissionWithBody(ctx, id, sid, rid, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReplyPermissionRes(rsp)
+}
+
+func (c *ClientWithResponses) ReplyPermissionWithResponse(ctx context.Context, id openapi_types.UUID, sid string, rid string, body ReplyPermissionJSONRequestBody, reqEditors ...RequestEditorFn) (*ReplyPermissionRes, error) {
+	rsp, err := c.ReplyPermission(ctx, id, sid, rid, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReplyPermissionRes(rsp)
 }
 
 // AiEditWithBodyWithResponse request with arbitrary body returning *AiEditRes
@@ -44844,110 +44525,6 @@ func (c *ClientWithResponses) GetRegistryImageTagsWithResponse(ctx context.Conte
 	return ParseGetRegistryImageTagsRes(rsp)
 }
 
-// ListRegistryProjectMembersWithResponse request returning *ListRegistryProjectMembersRes
-func (c *ClientWithResponses) ListRegistryProjectMembersWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListRegistryProjectMembersRes, error) {
-	rsp, err := c.ListRegistryProjectMembers(ctx, organizationId, harborId, projectId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseListRegistryProjectMembersRes(rsp)
-}
-
-// AddRegistryProjectMemberWithBodyWithResponse request with arbitrary body returning *AddRegistryProjectMemberRes
-func (c *ClientWithResponses) AddRegistryProjectMemberWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddRegistryProjectMemberRes, error) {
-	rsp, err := c.AddRegistryProjectMemberWithBody(ctx, organizationId, harborId, projectId, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAddRegistryProjectMemberRes(rsp)
-}
-
-func (c *ClientWithResponses) AddRegistryProjectMemberWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, body AddRegistryProjectMemberJSONRequestBody, reqEditors ...RequestEditorFn) (*AddRegistryProjectMemberRes, error) {
-	rsp, err := c.AddRegistryProjectMember(ctx, organizationId, harborId, projectId, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAddRegistryProjectMemberRes(rsp)
-}
-
-// RemoveRegistryProjectMemberWithResponse request returning *RemoveRegistryProjectMemberRes
-func (c *ClientWithResponses) RemoveRegistryProjectMemberWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RemoveRegistryProjectMemberRes, error) {
-	rsp, err := c.RemoveRegistryProjectMember(ctx, organizationId, harborId, projectId, userId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseRemoveRegistryProjectMemberRes(rsp)
-}
-
-// UpdateRegistryProjectMemberWithBodyWithResponse request with arbitrary body returning *UpdateRegistryProjectMemberRes
-func (c *ClientWithResponses) UpdateRegistryProjectMemberWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateRegistryProjectMemberRes, error) {
-	rsp, err := c.UpdateRegistryProjectMemberWithBody(ctx, organizationId, harborId, projectId, userId, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseUpdateRegistryProjectMemberRes(rsp)
-}
-
-func (c *ClientWithResponses) UpdateRegistryProjectMemberWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, projectId openapi_types.UUID, userId openapi_types.UUID, body UpdateRegistryProjectMemberJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateRegistryProjectMemberRes, error) {
-	rsp, err := c.UpdateRegistryProjectMember(ctx, organizationId, harborId, projectId, userId, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseUpdateRegistryProjectMemberRes(rsp)
-}
-
-// ListRegistryHarborRobotsWithResponse request returning *ListRegistryHarborRobotsRes
-func (c *ClientWithResponses) ListRegistryHarborRobotsWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListRegistryHarborRobotsRes, error) {
-	rsp, err := c.ListRegistryHarborRobots(ctx, organizationId, harborId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseListRegistryHarborRobotsRes(rsp)
-}
-
-// CreateRegistryHarborRobotWithBodyWithResponse request with arbitrary body returning *CreateRegistryHarborRobotRes
-func (c *ClientWithResponses) CreateRegistryHarborRobotWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateRegistryHarborRobotRes, error) {
-	rsp, err := c.CreateRegistryHarborRobotWithBody(ctx, organizationId, harborId, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCreateRegistryHarborRobotRes(rsp)
-}
-
-func (c *ClientWithResponses) CreateRegistryHarborRobotWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, body CreateRegistryHarborRobotJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateRegistryHarborRobotRes, error) {
-	rsp, err := c.CreateRegistryHarborRobot(ctx, organizationId, harborId, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCreateRegistryHarborRobotRes(rsp)
-}
-
-// DeleteRegistryHarborRobotWithResponse request returning *DeleteRegistryHarborRobotRes
-func (c *ClientWithResponses) DeleteRegistryHarborRobotWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string, reqEditors ...RequestEditorFn) (*DeleteRegistryHarborRobotRes, error) {
-	rsp, err := c.DeleteRegistryHarborRobot(ctx, organizationId, harborId, clientId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteRegistryHarborRobotRes(rsp)
-}
-
-// RotateRegistryHarborRobotWithBodyWithResponse request with arbitrary body returning *RotateRegistryHarborRobotRes
-func (c *ClientWithResponses) RotateRegistryHarborRobotWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RotateRegistryHarborRobotRes, error) {
-	rsp, err := c.RotateRegistryHarborRobotWithBody(ctx, organizationId, harborId, clientId, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseRotateRegistryHarborRobotRes(rsp)
-}
-
-func (c *ClientWithResponses) RotateRegistryHarborRobotWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, clientId string, body RotateRegistryHarborRobotJSONRequestBody, reqEditors ...RequestEditorFn) (*RotateRegistryHarborRobotRes, error) {
-	rsp, err := c.RotateRegistryHarborRobot(ctx, organizationId, harborId, clientId, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseRotateRegistryHarborRobotRes(rsp)
-}
-
 // GetRegistryUsageWithResponse request returning *GetRegistryUsageRes
 func (c *ClientWithResponses) GetRegistryUsageWithResponse(ctx context.Context, organizationId openapi_types.UUID, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetRegistryUsageRes, error) {
 	rsp, err := c.GetRegistryUsage(ctx, organizationId, harborId, reqEditors...)
@@ -45765,6 +45342,24 @@ func (c *ClientWithResponses) ListOrphanedPoolsWithResponse(ctx context.Context,
 		return nil, err
 	}
 	return ParseListOrphanedPoolsRes(rsp)
+}
+
+// ListOrgStorageZonesWithResponse request returning *ListOrgStorageZonesRes
+func (c *ClientWithResponses) ListOrgStorageZonesWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListOrgStorageZonesRes, error) {
+	rsp, err := c.ListOrgStorageZones(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListOrgStorageZonesRes(rsp)
+}
+
+// EnableOrgStorageZoneWithResponse request returning *EnableOrgStorageZoneRes
+func (c *ClientWithResponses) EnableOrgStorageZoneWithResponse(ctx context.Context, organizationId openapi_types.UUID, zoneId string, reqEditors ...RequestEditorFn) (*EnableOrgStorageZoneRes, error) {
+	rsp, err := c.EnableOrgStorageZone(ctx, organizationId, zoneId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEnableOrgStorageZoneRes(rsp)
 }
 
 // ListOrgUserAttributesHandlerWithResponse request returning *ListOrgUserAttributesHandlerRes
@@ -47224,6 +46819,32 @@ func ParseListAgentModesRes(rsp *http.Response) (*ListAgentModesRes, error) {
 	return response, nil
 }
 
+// ParseListPendingPermissionsRes parses an HTTP response from a ListPendingPermissionsWithResponse call
+func ParseListPendingPermissionsRes(rsp *http.Response) (*ListPendingPermissionsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListPendingPermissionsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []PendingPermission
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListSessionsRes parses an HTTP response from a ListSessionsWithResponse call
 func ParseListSessionsRes(rsp *http.Response) (*ListSessionsRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -47271,6 +46892,38 @@ func ParseCreateSessionRes(rsp *http.Response) (*CreateSessionRes, error) {
 		}
 		response.JSON200 = &dest
 
+	}
+
+	return response, nil
+}
+
+// ParseDeleteSessionRes parses an HTTP response from a DeleteSessionWithResponse call
+func ParseDeleteSessionRes(rsp *http.Response) (*DeleteSessionRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteSessionRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseAbortSessionRes parses an HTTP response from a AbortSessionWithResponse call
+func ParseAbortSessionRes(rsp *http.Response) (*AbortSessionRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AbortSessionRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
 	}
 
 	return response, nil
@@ -47339,6 +46992,22 @@ func ParsePostSessionMessageRes(rsp *http.Response) (*PostSessionMessageRes, err
 		}
 		response.JSON200 = &dest
 
+	}
+
+	return response, nil
+}
+
+// ParseReplyPermissionRes parses an HTTP response from a ReplyPermissionWithResponse call
+func ParseReplyPermissionRes(rsp *http.Response) (*ReplyPermissionRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ReplyPermissionRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
 	}
 
 	return response, nil
@@ -51286,194 +50955,6 @@ func ParseGetRegistryImageTagsRes(rsp *http.Response) (*GetRegistryImageTagsRes,
 	return response, nil
 }
 
-// ParseListRegistryProjectMembersRes parses an HTTP response from a ListRegistryProjectMembersWithResponse call
-func ParseListRegistryProjectMembersRes(rsp *http.Response) (*ListRegistryProjectMembersRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListRegistryProjectMembersRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []RegistryProjectMemberListItem
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseAddRegistryProjectMemberRes parses an HTTP response from a AddRegistryProjectMemberWithResponse call
-func ParseAddRegistryProjectMemberRes(rsp *http.Response) (*AddRegistryProjectMemberRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &AddRegistryProjectMemberRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest RegistryProjectMemberListItem
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseRemoveRegistryProjectMemberRes parses an HTTP response from a RemoveRegistryProjectMemberWithResponse call
-func ParseRemoveRegistryProjectMemberRes(rsp *http.Response) (*RemoveRegistryProjectMemberRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &RemoveRegistryProjectMemberRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	return response, nil
-}
-
-// ParseUpdateRegistryProjectMemberRes parses an HTTP response from a UpdateRegistryProjectMemberWithResponse call
-func ParseUpdateRegistryProjectMemberRes(rsp *http.Response) (*UpdateRegistryProjectMemberRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &UpdateRegistryProjectMemberRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest RegistryProjectMemberListItem
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListRegistryHarborRobotsRes parses an HTTP response from a ListRegistryHarborRobotsWithResponse call
-func ParseListRegistryHarborRobotsRes(rsp *http.Response) (*ListRegistryHarborRobotsRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListRegistryHarborRobotsRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []RegistryHarborRobotListItem
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseCreateRegistryHarborRobotRes parses an HTTP response from a CreateRegistryHarborRobotWithResponse call
-func ParseCreateRegistryHarborRobotRes(rsp *http.Response) (*CreateRegistryHarborRobotRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &CreateRegistryHarborRobotRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest RegistryHarborRobotCreatedResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeleteRegistryHarborRobotRes parses an HTTP response from a DeleteRegistryHarborRobotWithResponse call
-func ParseDeleteRegistryHarborRobotRes(rsp *http.Response) (*DeleteRegistryHarborRobotRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeleteRegistryHarborRobotRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	return response, nil
-}
-
-// ParseRotateRegistryHarborRobotRes parses an HTTP response from a RotateRegistryHarborRobotWithResponse call
-func ParseRotateRegistryHarborRobotRes(rsp *http.Response) (*RotateRegistryHarborRobotRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &RotateRegistryHarborRobotRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest RegistryHarborRobotCreatedResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseGetRegistryUsageRes parses an HTTP response from a GetRegistryUsageWithResponse call
 func ParseGetRegistryUsageRes(rsp *http.Response) (*GetRegistryUsageRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -53194,6 +52675,58 @@ func ParseListOrphanedPoolsRes(rsp *http.Response) (*ListOrphanedPoolsRes, error
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest []OrphanedPoolView
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListOrgStorageZonesRes parses an HTTP response from a ListOrgStorageZonesWithResponse call
+func ParseListOrgStorageZonesRes(rsp *http.Response) (*ListOrgStorageZonesRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListOrgStorageZonesRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []StorageZoneView
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseEnableOrgStorageZoneRes parses an HTTP response from a EnableOrgStorageZoneWithResponse call
+func ParseEnableOrgStorageZoneRes(rsp *http.Response) (*EnableOrgStorageZoneRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &EnableOrgStorageZoneRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest OrgStorageView
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

@@ -979,6 +979,50 @@
         }
       }
     },
+    "/api/dev/workstations/{id}/agent/permissions": {
+      "get": {
+        "tags": [
+          "Dev Workstations — Agent Chat"
+        ],
+        "operationId": "list_pending_permissions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Dev workstation id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Currently pending permission requests across all sessions of the workstation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PendingPermission"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Workstation not found"
+          },
+          "502": {
+            "description": "Opencode upstream error"
+          }
+        }
+      }
+    },
     "/api/dev/workstations/{id}/agent/sessions": {
       "get": {
         "tags": [
@@ -1068,6 +1112,92 @@
           },
           "404": {
             "description": "Workstation not found"
+          },
+          "502": {
+            "description": "Opencode upstream error"
+          }
+        }
+      }
+    },
+    "/api/dev/workstations/{id}/agent/sessions/{sid}": {
+      "delete": {
+        "tags": [
+          "Dev Workstations — Agent Chat"
+        ],
+        "operationId": "delete_session",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Dev workstation id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sid",
+            "in": "path",
+            "description": "Opencode session id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Session deleted"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Workstation or session not found"
+          },
+          "502": {
+            "description": "Opencode upstream error"
+          }
+        }
+      }
+    },
+    "/api/dev/workstations/{id}/agent/sessions/{sid}/abort": {
+      "post": {
+        "tags": [
+          "Dev Workstations — Agent Chat"
+        ],
+        "operationId": "abort_session",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Dev workstation id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sid",
+            "in": "path",
+            "description": "Opencode session id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "In-flight turn aborted (or nothing was running)"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Workstation or session not found"
           },
           "502": {
             "description": "Opencode upstream error"
@@ -1222,6 +1352,68 @@
           },
           "404": {
             "description": "Workstation or session not found"
+          },
+          "502": {
+            "description": "Opencode upstream error"
+          }
+        }
+      }
+    },
+    "/api/dev/workstations/{id}/agent/sessions/{sid}/permissions/{rid}/reply": {
+      "post": {
+        "tags": [
+          "Dev Workstations — Agent Chat"
+        ],
+        "operationId": "reply_permission",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Dev workstation id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sid",
+            "in": "path",
+            "description": "Opencode session id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rid",
+            "in": "path",
+            "description": "Opencode permission request id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PermissionReplyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Permission reply forwarded to opencode"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Workstation, session or permission not found"
           },
           "502": {
             "description": "Opencode upstream error"
@@ -8082,6 +8274,9 @@
           "400": {
             "description": "Invalid request"
           },
+          "403": {
+            "description": "Organization capacity quota exceeded"
+          },
           "404": {
             "description": "Organization or harbor not found"
           },
@@ -8894,7 +9089,7 @@
         "tags": [
           "RegistryViews"
         ],
-        "summary": "List tags for `<org>/<harbor>/<project>/<image>`, with each tag's manifest digest and\nbest-effort size, **gated on the caller's Hyperfluid org role**.",
+        "summary": "List tags for `<harbor>/<project>/<image>`, with each tag's manifest digest and\nbest-effort size, **gated on the caller's Hyperfluid org role**.",
         "description": "Any org member (viewer / editor / owner) can read tags for any project in\nthe harbor's registry. A caller with no org role gets `404` (indistinguishable\nfrom \"no such project\" — no existence leak). This mirrors how caas / dbaas /\nbuckets are gated — a single org-level role, no per-project membership table.",
         "operationId": "get_registry_image_tags",
         "parameters": [
@@ -8928,7 +9123,7 @@
           {
             "name": "image",
             "in": "path",
-            "description": "The image (repository leaf) under the project — the `<image>` segment of\n`<org>/<harbor>/<project>/<image>`.",
+            "description": "The image (repository leaf) under the project — the `<image>` segment of\n`<harbor>/<project>/<image>`.",
             "required": true,
             "schema": {
               "type": "string"
@@ -8948,461 +9143,6 @@
           },
           "404": {
             "description": "Project/registry not found, or caller has no org role"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
-    "/api/v1/organizations/{organization_id}/harbors/{harbor_id}/registry/projects/{project_id}/members": {
-      "get": {
-        "tags": [
-          "RegistryProjectMembers"
-        ],
-        "operationId": "list_registry_project_members",
-        "parameters": [
-          {
-            "name": "organization_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "harbor_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "project_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of project members",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RegistryProjectMemberListItem"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Harbor or registry project not found"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "RegistryProjectMembers"
-        ],
-        "operationId": "add_registry_project_member",
-        "parameters": [
-          {
-            "name": "organization_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "harbor_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "project_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddRegistryProjectMemberRequestBody"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Member added",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegistryProjectMemberListItem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Harbor, project, or user not found"
-          },
-          "409": {
-            "description": "User is already a member (idempotent ensure — returns 201 regardless)"
-          }
-        }
-      }
-    },
-    "/api/v1/organizations/{organization_id}/harbors/{harbor_id}/registry/projects/{project_id}/members/{user_id}": {
-      "put": {
-        "tags": [
-          "RegistryProjectMembers"
-        ],
-        "operationId": "update_registry_project_member",
-        "parameters": [
-          {
-            "name": "organization_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "harbor_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "project_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "user_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRegistryProjectMemberRequestBody"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Member role updated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegistryProjectMemberListItem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Harbor, project, or user not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "RegistryProjectMembers"
-        ],
-        "operationId": "remove_registry_project_member",
-        "parameters": [
-          {
-            "name": "organization_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "harbor_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "project_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "user_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Member removed"
-          },
-          "404": {
-            "description": "Harbor or project not found"
-          }
-        }
-      }
-    },
-    "/api/v1/organizations/{organization_id}/harbors/{harbor_id}/registry/robots": {
-      "get": {
-        "tags": [
-          "RegistryHarborRobots"
-        ],
-        "operationId": "list_registry_harbor_robots",
-        "parameters": [
-          {
-            "name": "organization_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "harbor_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of harbor robots",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RegistryHarborRobotListItem"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Harbor not found or has no registry"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "RegistryHarborRobots"
-        ],
-        "operationId": "create_registry_harbor_robot",
-        "parameters": [
-          {
-            "name": "organization_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "harbor_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRegistryHarborRobotRequestBody"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Harbor robot created — credentials shown ONCE",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegistryHarborRobotCreatedResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid robot name or role"
-          },
-          "404": {
-            "description": "Harbor not found or has no registry"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
-    "/api/v1/organizations/{organization_id}/harbors/{harbor_id}/registry/robots/{client_id}": {
-      "delete": {
-        "tags": [
-          "RegistryHarborRobots"
-        ],
-        "operationId": "delete_registry_harbor_robot",
-        "parameters": [
-          {
-            "name": "organization_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "harbor_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "client_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Harbor robot deleted"
-          },
-          "404": {
-            "description": "Harbor, registry, or robot not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
-    "/api/v1/organizations/{organization_id}/harbors/{harbor_id}/registry/robots/{client_id}/rotate": {
-      "post": {
-        "tags": [
-          "RegistryHarborRobots"
-        ],
-        "operationId": "rotate_registry_harbor_robot",
-        "parameters": [
-          {
-            "name": "organization_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "harbor_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "client_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RotateRegistryHarborRobotRequestBody"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Harbor robot rotated — new credentials shown ONCE",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegistryHarborRobotCreatedResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Harbor, registry, or robot not found"
           },
           "500": {
             "description": "Internal server error"
@@ -10484,6 +10224,9 @@
           },
           "400": {
             "description": "Invalid request"
+          },
+          "403": {
+            "description": "Organization capacity quota exceeded"
           },
           "404": {
             "description": "Managed PostgreSQL not found"
@@ -13110,6 +12853,86 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/storage/zones": {
+      "get": {
+        "tags": [
+          "OrgStorage"
+        ],
+        "operationId": "list_org_storage_zones",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StorageZoneView"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/storage/zones/{zone_id}": {
+      "post": {
+        "tags": [
+          "OrgStorage"
+        ],
+        "operationId": "enable_org_storage_zone",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "zone_id",
+            "in": "path",
+            "description": "Catalog id of the storage zone (matches a `cephZones` entry and the\nOrgStorage CR name in the org namespace).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Zone enabled (or already enabled)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrgStorageView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Primary zone, unknown zone id, or zone shares the primary's CephCluster"
+          },
+          "404": {
+            "description": "Primary storage backend not provisioned for this organization"
           }
         }
       }
@@ -16248,22 +16071,6 @@
       },
       "AcceptInvitationBody": {
         "type": "object"
-      },
-      "AddRegistryProjectMemberRequestBody": {
-        "type": "object",
-        "required": [
-          "user_id",
-          "role"
-        ],
-        "properties": {
-          "role": {
-            "$ref": "#/components/schemas/ProjectMemberRole"
-          },
-          "user_id": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
       },
       "AddUser": {
         "type": "object",
@@ -19523,6 +19330,11 @@
         "properties": {
           "name": {
             "type": "string"
+          },
+          "zone_id": {
+            "type": "string",
+            "description": "Storage zone the bucket lands in; omit for the primary. A non-default\nvalue must be a zone the org has enabled.",
+            "nullable": true
           }
         }
       },
@@ -19673,6 +19485,13 @@
           "destination"
         ],
         "properties": {
+          "allowed_senders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SenderPattern"
+            },
+            "description": "Optional allowlist of sender patterns. When non-empty, only emails whose\n`From` address matches at least one pattern are processed; all others are\nskipped and marked as seen without uploading attachments."
+          },
           "destination": {
             "$ref": "#/components/schemas/InboundEmailDestinationConfig"
           },
@@ -20265,22 +20084,6 @@
           }
         }
       },
-      "CreateRegistryHarborRobotRequestBody": {
-        "type": "object",
-        "required": [
-          "name",
-          "role"
-        ],
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Human-readable name for the robot; also used as the display name of the\nunderlying service account. Must be 3–64 characters."
-          },
-          "role": {
-            "$ref": "#/components/schemas/ProjectMemberRole"
-          }
-        }
-      },
       "CreateRegistryProjectRequestBody": {
         "type": "object",
         "required": [
@@ -20293,7 +20096,7 @@
           },
           "name": {
             "type": "string",
-            "description": "The `<project>` path segment in `<org>/<harbor>/<project>/<image>`."
+            "description": "The `<project>` path segment in `<harbor>/<project>/<image>`."
           }
         }
       },
@@ -22855,6 +22658,7 @@
         "required": [
           "name",
           "harbor_name",
+          "zone_id",
           "created_at",
           "ready",
           "quota_is_default",
@@ -22917,6 +22721,10 @@
           "status_message": {
             "type": "string",
             "nullable": true
+          },
+          "zone_id": {
+            "type": "string",
+            "description": "Storage zone the bucket lives in (`\"default\"` for the primary)."
           }
         }
       },
@@ -22926,6 +22734,7 @@
           "name",
           "namespace",
           "harbor_name",
+          "zone_id",
           "ready"
         ],
         "properties": {
@@ -22950,6 +22759,10 @@
           "status_message": {
             "type": "string",
             "nullable": true
+          },
+          "zone_id": {
+            "type": "string",
+            "description": "Storage zone the bucket lives in (`\"default\"` for the primary)."
           }
         }
       },
@@ -22991,6 +22804,7 @@
           "namespace",
           "harbor_slug",
           "tenant",
+          "zone_id",
           "quota_gb",
           "ready",
           "tenant_ensured",
@@ -23051,6 +22865,10 @@
           },
           "tenant_ensured": {
             "type": "boolean"
+          },
+          "zone_id": {
+            "type": "string",
+            "description": "Storage zone this tenant lives in (`\"default\"` for the primary)."
           }
         }
       },
@@ -26075,6 +25893,37 @@
           }
         }
       },
+      "PendingPermission": {
+        "type": "object",
+        "description": "One opencode permission request that is CURRENTLY pending (awaiting a user\ndecision), normalized into the same `{ id, sessionId, action, resources }`\nshape the frontend already derives from the live `permission.asked` event\nstream. The list endpoint returns ALL pending requests across ALL sessions\nof the workstation (parent + `task` sub-agents) so the browser can reconcile\nprompts it never saw on the socket (reconnect, connection gap) and so a\nprompt is never lost.",
+        "required": [
+          "id",
+          "session_id",
+          "action",
+          "resources"
+        ],
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "The permission being requested (e.g. `bash`, `external_directory`)."
+          },
+          "id": {
+            "type": "string",
+            "description": "Opencode permission request id (`per_...`); reply via the existing\n`.../permissions/{rid}/reply` route."
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Human-readable subjects of the request: the request's `patterns` when\npresent, else the single command / filepath from `metadata`, else empty."
+          },
+          "session_id": {
+            "type": "string",
+            "description": "Opencode session id (`ses_...`) the request belongs to — parent or a\n`task` sub-agent's child session."
+          }
+        }
+      },
       "PermissionCatalogEntry": {
         "type": "object",
         "description": "A row of the permission catalog, as exposed to the management UI.",
@@ -26112,6 +25961,31 @@
           "viewer",
           "editor"
         ]
+      },
+      "PermissionReply": {
+        "type": "string",
+        "description": "How the user answered an opencode permission prompt. Mirrors opencode's\nreply endpoint contract: `once` allows this single invocation, `always`\nallows future invocations of the same action, `reject` denies it. Invalid\nvalues are rejected at deserialize time so the BFF never forwards garbage.",
+        "enum": [
+          "once",
+          "always",
+          "reject"
+        ]
+      },
+      "PermissionReplyRequest": {
+        "type": "object",
+        "required": [
+          "reply"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Optional human note forwarded to opencode (e.g. a reject reason).",
+            "nullable": true
+          },
+          "reply": {
+            "$ref": "#/components/schemas/PermissionReply"
+          }
+        }
       },
       "PersistenceInput": {
         "type": "object",
@@ -26915,14 +26789,6 @@
           }
         }
       },
-      "ProjectMemberRole": {
-        "type": "string",
-        "description": "Role of a **named user** member within a registry project, expressed as the\nset of grants they hold at the project scope path.\n\n## Design note — owner vs editor\n\nADR-0014 v1 defined `viewer | editor | owner`. In the grants-based\nimplementation, `owner` is indistinguishable from `editor`: both hold\n`registry:pull + registry:push + registry:delete` at the project scope.\nThe management API therefore exposes only `viewer | editor`. If\nper-project-owner semantics (e.g. a `registry:manage` permission for\nadding/removing members) are needed in the future, add a new permission key\nrather than re-introducing a members table or a third role variant.",
-        "enum": [
-          "viewer",
-          "editor"
-        ]
-      },
       "QueryHistoryEntry": {
         "type": "object",
         "required": [
@@ -27393,76 +27259,6 @@
           }
         }
       },
-      "RegistryHarborRobotCreatedResponse": {
-        "type": "object",
-        "description": "Response returned **once** when a harbor robot is created or its secret is\nrotated.",
-        "required": [
-          "client_id",
-          "client_secret",
-          "name",
-          "service_account_id"
-        ],
-        "properties": {
-          "client_id": {
-            "type": "string"
-          },
-          "client_secret": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "service_account_id": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
-      },
-      "RegistryHarborRobotListItem": {
-        "type": "object",
-        "description": "Summary of a registry harbor robot (SA) returned by the list endpoint.",
-        "required": [
-          "client_id",
-          "name",
-          "service_account_id",
-          "role"
-        ],
-        "properties": {
-          "client_id": {
-            "type": "string",
-            "description": "Stable identifier: the Keycloak `clientId` of the service account."
-          },
-          "name": {
-            "type": "string",
-            "description": "Human-readable name given at creation time."
-          },
-          "role": {
-            "$ref": "#/components/schemas/ProjectMemberRole"
-          },
-          "service_account_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "DB UUID of the service account row."
-          }
-        }
-      },
-      "RegistryProjectMemberListItem": {
-        "type": "object",
-        "description": "API response for a single project member — list variant (no `added_at`\nwhen we batch-group grants; timestamp is the earliest grant for this user).",
-        "required": [
-          "user_id",
-          "role"
-        ],
-        "properties": {
-          "role": {
-            "$ref": "#/components/schemas/ProjectMemberRole"
-          },
-          "user_id": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
-      },
       "RegistryProjectResponse": {
         "type": "object",
         "required": [
@@ -27843,18 +27639,6 @@
           }
         }
       },
-      "RotateRegistryHarborRobotRequestBody": {
-        "type": "object",
-        "required": [
-          "name"
-        ],
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Human-readable name to preserve on the new SA. Required to avoid a\nround-trip lookup (the old SA's name is not guaranteed to survive the\ndelete-recreate cycle in all timing windows)."
-          }
-        }
-      },
       "S3OutputParameters": {
         "type": "object"
       },
@@ -28180,6 +27964,18 @@
           }
         }
       },
+      "SenderPattern": {
+        "type": "object",
+        "description": "A sender pattern used to filter inbound email by the `From` address.\nThe pattern is matched case-insensitively as an exact address or domain suffix.",
+        "required": [
+          "pattern"
+        ],
+        "properties": {
+          "pattern": {
+            "type": "string"
+          }
+        }
+      },
       "SensitivityLevel": {
         "type": "string",
         "description": "Sensitivity level for data classification",
@@ -28363,6 +28159,46 @@
             "items": {
               "$ref": "#/components/schemas/GpgPublicKey"
             }
+          }
+        }
+      },
+      "StorageZoneView": {
+        "type": "object",
+        "description": "A `cephZones` catalog entry joined with whether the org has enabled it.",
+        "required": [
+          "zone_id",
+          "name",
+          "primary",
+          "enabled",
+          "ready"
+        ],
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether an OrgStorage exists for this org in this zone."
+          },
+          "external_endpoint": {
+            "type": "string",
+            "description": "External S3 endpoint of the zone's OrgStorage, once provisioned.",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "primary": {
+            "type": "boolean",
+            "description": "The primary zone every org has; always enabled and never removable."
+          },
+          "ready": {
+            "type": "boolean",
+            "description": "Whether the zone's OrgStorage is Ready (only meaningful when enabled)."
+          },
+          "zone_id": {
+            "type": "string"
           }
         }
       },
@@ -29430,17 +29266,6 @@
           }
         }
       },
-      "UpdateRegistryProjectMemberRequestBody": {
-        "type": "object",
-        "required": [
-          "role"
-        ],
-        "properties": {
-          "role": {
-            "$ref": "#/components/schemas/ProjectMemberRole"
-          }
-        }
-      },
       "UpdateSavedQueryRequest": {
         "type": "object",
         "properties": {
@@ -30168,14 +29993,6 @@
     {
       "name": "RegistryProjects",
       "description": "Registry project management"
-    },
-    {
-      "name": "RegistryProjectMembers",
-      "description": "Registry project member management"
-    },
-    {
-      "name": "RegistryHarborRobots",
-      "description": "Registry harbor robot management"
     },
     {
       "name": "Registries",
