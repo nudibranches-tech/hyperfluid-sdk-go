@@ -25063,6 +25063,11 @@
                 "type": "string",
                 "nullable": true
               },
+              "text_layer_fastpath": {
+                "type": "boolean",
+                "description": "When true, extract the embedded PDF text layer per page and skip OCR\nfor pages that already have enough text. Opt-in; defaults to false.",
+                "nullable": true
+              },
               "type": {
                 "type": "string",
                 "enum": [
