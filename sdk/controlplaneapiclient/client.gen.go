@@ -5043,10 +5043,14 @@ type OcrProviderConfig0Type string
 
 // OcrProviderConfig1 Use a local vLLM OCR model (e.g. DeepSeek-OCR on GPU)
 type OcrProviderConfig1 struct {
-	ApiKey *string                `json:"api_key"`
-	Model  *string                `json:"model"`
-	Type   OcrProviderConfig1Type `json:"type"`
-	Url    string                 `json:"url"`
+	ApiKey *string `json:"api_key"`
+	Model  *string `json:"model"`
+
+	// TextLayerFastpath When true, extract the embedded PDF text layer per page and skip OCR
+	// for pages that already have enough text. Opt-in; defaults to false.
+	TextLayerFastpath *bool                  `json:"text_layer_fastpath"`
+	Type              OcrProviderConfig1Type `json:"type"`
+	Url               string                 `json:"url"`
 }
 
 // OcrProviderConfig1Type defines model for OcrProviderConfig.1.Type.
