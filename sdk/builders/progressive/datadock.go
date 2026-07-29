@@ -12,6 +12,7 @@ import (
 // DataDockBuilder represents a datadock context.
 // Available methods:
 //   - Catalog(name) - Navigate to a specific catalog
+//   - IcebergContainer(name) - Navigate to a named Iceberg data container
 //   - GetCatalog(ctx) - Get the full catalog metadata
 //   - RefreshCatalog(ctx) - Trigger catalog introspection
 //   - WakeUp(ctx) - Bring datadock online
@@ -33,6 +34,18 @@ func (d *DataDockBuilder) Catalog(catalogName string) *CatalogBuilder {
 		orgID:       d.orgID,
 		dataDockID:  d.dataDockID,
 		catalogName: catalogName,
+	}
+}
+
+// IcebergContainer navigates to a named Iceberg data container in this
+// datadock.
+func (d *DataDockBuilder) IcebergContainer(name string) *IcebergContainerBuilder {
+	return &IcebergContainerBuilder{
+		client:        d.client,
+		orgID:         d.orgID,
+		harborID:      d.harborID,
+		dataDockID:    d.dataDockID,
+		containerName: name,
 	}
 }
 
