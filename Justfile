@@ -18,6 +18,8 @@ sync-openapi branch="main":
   jq -e '(.components.schemas | length > 0) and (.paths | length > 0)' "$tmp" > /dev/null \
     || { echo "fetched spec is empty or malformed; keeping the committed one" >&2; exit 1; }
   echo "spec ok: $(jq '.components.schemas | length' "$tmp") schemas, $(jq '.paths | length' "$tmp") paths"
+  # The raw media type returns no trailing newline; end-of-file-fixer requires one.
+  [ -n "$(tail -c1 "$tmp")" ] && printf '\n' >> "$tmp"
   mv "$tmp" "$dest"
   trap - EXIT
   go generate ./...
