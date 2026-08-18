@@ -24,6 +24,19 @@ const (
 	Shared_secretScopes = "shared_secret.Scopes"
 )
 
+// Defines values for AiAgentMailModeDto.
+const (
+	AiAgentMailModeDtoExternal AiAgentMailModeDto = "external"
+	AiAgentMailModeDtoManaged  AiAgentMailModeDto = "managed"
+)
+
+// Defines values for AiAgentMailboxPhaseDto.
+const (
+	AiAgentMailboxPhaseDtoError        AiAgentMailboxPhaseDto = "error"
+	AiAgentMailboxPhaseDtoProvisioning AiAgentMailboxPhaseDto = "provisioning"
+	AiAgentMailboxPhaseDtoReady        AiAgentMailboxPhaseDto = "ready"
+)
+
 // Defines values for ArchiveFileType.
 const (
 	Applicationzip ArchiveFileType = "application/zip"
@@ -68,7 +81,7 @@ const (
 
 // Defines values for BackupTargetSourceRequest1Mode.
 const (
-	External BackupTargetSourceRequest1Mode = "external"
+	BackupTargetSourceRequest1ModeExternal BackupTargetSourceRequest1Mode = "external"
 )
 
 // Defines values for BifrostEventStatus.
@@ -87,6 +100,13 @@ const (
 	Vector  BifrostProtocol = "vector"
 )
 
+// Defines values for ChannelKind.
+const (
+	DiscordWebhook ChannelKind = "discord_webhook"
+	Email          ChannelKind = "email"
+	SlackWebhook   ChannelKind = "slack_webhook"
+)
+
 // Defines values for ChartType.
 const (
 	ChartTypeArea    ChartType = "area"
@@ -98,6 +118,12 @@ const (
 	ChartTypeStat    ChartType = "stat"
 	ChartTypeTable   ChartType = "table"
 	ChartTypeText    ChartType = "text"
+)
+
+// Defines values for Comparator.
+const (
+	Gt Comparator = "gt"
+	Lt Comparator = "lt"
 )
 
 // Defines values for Condition0Kind.
@@ -118,13 +144,15 @@ const (
 
 // Defines values for ConsoleConfigFeatureFlag.
 const (
-	AirflowEnabled           ConsoleConfigFeatureFlag = "airflow_enabled"
-	DagsterEnabled           ConsoleConfigFeatureFlag = "dagster_enabled"
-	SapienceAgentEnabled     ConsoleConfigFeatureFlag = "sapience_agent_enabled"
-	SapienceResourcesEnabled ConsoleConfigFeatureFlag = "sapience_resources_enabled"
-	ShowDemoBanner           ConsoleConfigFeatureFlag = "show_demo_banner"
-	ShowMarketing            ConsoleConfigFeatureFlag = "show_marketing"
-	VaubanPreview            ConsoleConfigFeatureFlag = "vauban_preview"
+	ConsoleConfigFeatureFlagAirflowEnabled           ConsoleConfigFeatureFlag = "airflow_enabled"
+	ConsoleConfigFeatureFlagAlertingEnabled          ConsoleConfigFeatureFlag = "alerting_enabled"
+	ConsoleConfigFeatureFlagDagsterEnabled           ConsoleConfigFeatureFlag = "dagster_enabled"
+	ConsoleConfigFeatureFlagOntologyEnabled          ConsoleConfigFeatureFlag = "ontology_enabled"
+	ConsoleConfigFeatureFlagSapienceAgentEnabled     ConsoleConfigFeatureFlag = "sapience_agent_enabled"
+	ConsoleConfigFeatureFlagSapienceResourcesEnabled ConsoleConfigFeatureFlag = "sapience_resources_enabled"
+	ConsoleConfigFeatureFlagShowDemoBanner           ConsoleConfigFeatureFlag = "show_demo_banner"
+	ConsoleConfigFeatureFlagShowMarketing            ConsoleConfigFeatureFlag = "show_marketing"
+	ConsoleConfigFeatureFlagVaubanPreview            ConsoleConfigFeatureFlag = "vauban_preview"
 )
 
 // Defines values for CopyDestinationConfig0Type.
@@ -290,6 +318,19 @@ const (
 	EffectDeny  Effect = "deny"
 )
 
+// Defines values for EgressDestinationKindDto.
+const (
+	Fqdn     EgressDestinationKindDto = "fqdn"
+	Identity EgressDestinationKindDto = "identity"
+	Pod      EgressDestinationKindDto = "pod"
+)
+
+// Defines values for EgressVerdictDto.
+const (
+	Dropped   EgressVerdictDto = "dropped"
+	Forwarded EgressVerdictDto = "forwarded"
+)
+
 // Defines values for EmailAuthPolicy.
 const (
 	Permissive          EmailAuthPolicy = "permissive"
@@ -306,8 +347,8 @@ const (
 
 // Defines values for ExposureMode.
 const (
-	All      ExposureMode = "all"
-	Selected ExposureMode = "selected"
+	ExposureModeAll      ExposureMode = "all"
+	ExposureModeSelected ExposureMode = "selected"
 )
 
 // Defines values for FileMountSourceInput0Type.
@@ -380,6 +421,12 @@ const (
 	Imap InboundEmailSourceConfig0Transport = "imap"
 )
 
+// Defines values for IntendedUse.
+const (
+	Evaluation IntendedUse = "evaluation"
+	Production IntendedUse = "production"
+)
+
 // Defines values for Label0Type.
 const (
 	Label0TypeStatic Label0Type = "static"
@@ -405,7 +452,6 @@ const (
 	LogLevelDebug LogLevel = "debug"
 	LogLevelError LogLevel = "error"
 	LogLevelInfo  LogLevel = "info"
-	LogLevelTrace LogLevel = "trace"
 	LogLevelWarn  LogLevel = "warn"
 )
 
@@ -501,6 +547,16 @@ const (
 	Local OcrProviderConfig1Type = "local"
 )
 
+// Defines values for OrgFeature.
+const (
+	OrgFeatureAirflowEnabled           OrgFeature = "airflow_enabled"
+	OrgFeatureAlertingEnabled          OrgFeature = "alerting_enabled"
+	OrgFeatureDagsterEnabled           OrgFeature = "dagster_enabled"
+	OrgFeatureOntologyEnabled          OrgFeature = "ontology_enabled"
+	OrgFeatureSapienceAgentEnabled     OrgFeature = "sapience_agent_enabled"
+	OrgFeatureSapienceResourcesEnabled OrgFeature = "sapience_resources_enabled"
+)
+
 // Defines values for PanelKind.
 const (
 	Stat       PanelKind = "stat"
@@ -524,6 +580,8 @@ const (
 	PermissionKeyAirflowDelete                 PermissionKey = "airflow:delete"
 	PermissionKeyAirflowRead                   PermissionKey = "airflow:read"
 	PermissionKeyAirflowUpdate                 PermissionKey = "airflow:update"
+	PermissionKeyAlertingManage                PermissionKey = "alerting:manage"
+	PermissionKeyAlertingRead                  PermissionKey = "alerting:read"
 	PermissionKeyApiKeyCreate                  PermissionKey = "api_key:create"
 	PermissionKeyApiKeyDelete                  PermissionKey = "api_key:delete"
 	PermissionKeyApiKeyRead                    PermissionKey = "api_key:read"
@@ -537,6 +595,7 @@ const (
 	PermissionKeyBackupTargetRead              PermissionKey = "backup_target:read"
 	PermissionKeyBackupTargetUpdate            PermissionKey = "backup_target:update"
 	PermissionKeyBucketCreate                  PermissionKey = "bucket:create"
+	PermissionKeyBucketCredentialsRead         PermissionKey = "bucket:credentials_read"
 	PermissionKeyBucketDelete                  PermissionKey = "bucket:delete"
 	PermissionKeyBucketRead                    PermissionKey = "bucket:read"
 	PermissionKeyBucketUpdate                  PermissionKey = "bucket:update"
@@ -606,6 +665,11 @@ const (
 	PermissionKeyManagedPostgresqlUserRead     PermissionKey = "managed_postgresql_user:read"
 	PermissionKeyManagedPostgresqlUserUpdate   PermissionKey = "managed_postgresql_user:update"
 	PermissionKeyMonitoringRead                PermissionKey = "monitoring:read"
+	PermissionKeyOntologyCreate                PermissionKey = "ontology:create"
+	PermissionKeyOntologyDelete                PermissionKey = "ontology:delete"
+	PermissionKeyOntologyExecute               PermissionKey = "ontology:execute"
+	PermissionKeyOntologyRead                  PermissionKey = "ontology:read"
+	PermissionKeyOntologyUpdate                PermissionKey = "ontology:update"
 	PermissionKeyOrgStorageRead                PermissionKey = "org_storage:read"
 	PermissionKeyOrgStorageUpdate              PermissionKey = "org_storage:update"
 	PermissionKeyOrganizationDelete            PermissionKey = "organization:delete"
@@ -672,6 +736,21 @@ const (
 	Reject PermissionReply = "reject"
 )
 
+// Defines values for PipelineFieldReference0Kind.
+const (
+	Bucket PipelineFieldReference0Kind = "bucket"
+)
+
+// Defines values for PipelineFieldReference1Kind.
+const (
+	SharedModel PipelineFieldReference1Kind = "shared_model"
+)
+
+// Defines values for PipelineFieldReference2Kind.
+const (
+	PipelineFieldReference2KindTable PipelineFieldReference2Kind = "table"
+)
+
 // Defines values for PipelineOutputParameters0Type.
 const (
 	PipelineOutputParameters0TypeTrino PipelineOutputParameters0Type = "trino"
@@ -698,6 +777,13 @@ const (
 	PipelineRunStatusFailed    PipelineRunStatus = "failed"
 	PipelineRunStatusPending   PipelineRunStatus = "pending"
 	PipelineRunStatusRunning   PipelineRunStatus = "running"
+)
+
+// Defines values for PipelineStatusFilter.
+const (
+	PipelineStatusFilterActive    PipelineStatusFilter = "active"
+	PipelineStatusFilterAll       PipelineStatusFilter = "all"
+	PipelineStatusFilterSuspended PipelineStatusFilter = "suspended"
 )
 
 // Defines values for PipelineType.
@@ -763,9 +849,9 @@ const (
 
 // Defines values for QuotaStatus.
 const (
-	QuotaStatusExceeded QuotaStatus = "exceeded"
-	QuotaStatusOk       QuotaStatus = "ok"
-	QuotaStatusWarning  QuotaStatus = "warning"
+	Exceeded QuotaStatus = "exceeded"
+	Ok       QuotaStatus = "ok"
+	Warning  QuotaStatus = "warning"
 )
 
 // Defines values for RefStatus.
@@ -774,6 +860,30 @@ const (
 	RefStatusFailed  RefStatus = "failed"
 	RefStatusPending RefStatus = "pending"
 	RefStatusSkipped RefStatus = "skipped"
+)
+
+// Defines values for RequestedSize.
+const (
+	M RequestedSize = "m"
+	S RequestedSize = "s"
+)
+
+// Defines values for RequesterKind.
+const (
+	Company           RequesterKind = "company"
+	Personal          RequesterKind = "personal"
+	PublicInstitution RequesterKind = "public_institution"
+)
+
+// Defines values for ResourceKind.
+const (
+	ContainerApp    ResourceKind = "container_app"
+	DevWorkstation  ResourceKind = "dev_workstation"
+	HfKeyValueCache ResourceKind = "hf_key_value_cache"
+	Kafka           ResourceKind = "kafka"
+	Model           ResourceKind = "model"
+	Postgres        ResourceKind = "postgres"
+	Trino           ResourceKind = "trino"
 )
 
 // Defines values for ResourceSource.
@@ -811,6 +921,12 @@ const (
 const (
 	Regex SearchMode = "regex"
 	Text  SearchMode = "text"
+)
+
+// Defines values for SecretScope.
+const (
+	SecretScopeOrganization SecretScope = "organization"
+	SecretScopeUser         SecretScope = "user"
 )
 
 // Defines values for SecretType.
@@ -875,10 +991,10 @@ const (
 
 // Defines values for TopDimension.
 const (
-	Principal TopDimension = "principal"
-	Protocol  TopDimension = "protocol"
-	Table     TopDimension = "table"
-	Tier      TopDimension = "tier"
+	TopDimensionPrincipal TopDimension = "principal"
+	TopDimensionProtocol  TopDimension = "protocol"
+	TopDimensionTable     TopDimension = "table"
+	TopDimensionTier      TopDimension = "tier"
 )
 
 // Defines values for Unit.
@@ -1008,6 +1124,61 @@ type AccessCheckResult struct {
 	ResourceId string        `json:"resource_id"`
 }
 
+// ActionParameter One declared parameter of an [`ActionType`] — a named input mapped to a
+// backing column *through* a property of the target object type
+// (`property_api_name`), never a raw column. At execution the property
+// resolves to its `source_column` + `data_type`, and the caller-supplied
+// value is rendered to a typed SQL literal — the only way a value enters DML.
+type ActionParameter struct {
+	// ApiName Machine name the caller uses as the key in `ExecuteActionRequest.parameters`.
+	ApiName string `json:"api_name"`
+
+	// DataType Semantic type driving literal rendering (string/integer/double/...),
+	// re-derived from the resolved property at execution time; carried here so
+	// the definition is self-describing.
+	DataType    string `json:"data_type"`
+	DisplayName string `json:"display_name"`
+
+	// PropertyApiName The target object type's property this parameter writes — resolved to a
+	// physical `source_column` at execution time.
+	PropertyApiName string `json:"property_api_name"`
+	Required        *bool  `json:"required,omitempty"`
+}
+
+// ActionResult Result of executing an [`ActionType`] — the DML ran (and was audited via
+// query history); this reports the outcome, not the affected rows.
+type ActionResult struct {
+	ActionTypeId openapi_types.UUID `json:"action_type_id"`
+	Executed     bool               `json:"executed"`
+	Message      string             `json:"message"`
+	Operation    string             `json:"operation"`
+}
+
+// ActionType A governed, parameterized write-back to an object type's backing Iceberg
+// table — the Kinetic layer's unit. Declares WHAT a write may do (target,
+// operation, parameter shape); executing it builds ONE constrained DML
+// statement run through the caller's JWT (Vauban/OPA + Trino authorize the
+// actual write, and it is recorded in query history). Never arbitrary DML.
+type ActionType struct {
+	// ApiName Stable machine name, unique per org. Immutable after creation (same
+	// rationale as [`ObjectType::api_name`]).
+	ApiName      string             `json:"api_name"`
+	CreatedAt    time.Time          `json:"created_at"`
+	CreatorId    openapi_types.UUID `json:"creator_id"`
+	Description  *string            `json:"description"`
+	DisplayName  string             `json:"display_name"`
+	Id           openapi_types.UUID `json:"id"`
+	ObjectTypeId openapi_types.UUID `json:"object_type_id"`
+
+	// Operation One of [`ACTION_OPERATIONS`].
+	Operation      string             `json:"operation"`
+	OrganizationId openapi_types.UUID `json:"organization_id"`
+
+	// Parameters Decoded straight from the JSONB `parameters` column.
+	Parameters []ActionParameter `json:"parameters"`
+	UpdatedAt  time.Time         `json:"updated_at"`
+}
+
 // AddGroupMemberRequestBody defines model for AddGroupMemberRequestBody.
 type AddGroupMemberRequestBody struct {
 	PrincipalId openapi_types.UUID `json:"principal_id"`
@@ -1028,6 +1199,21 @@ type AddUserAttributeRequest struct {
 	Attribute string `json:"attribute"`
 }
 
+// AddWorkstationRepositoryResponse Result of adding a repository to a workstation.
+type AddWorkstationRepositoryResponse struct {
+	// Cloned Whether the repository was cloned into the running pod straight away.
+	// `false` means the workstation was not running (or the clone failed, e.g.
+	// egress down) — the declared state is saved either way and the entrypoint
+	// clones it on the pod's next start.
+	Cloned bool `json:"cloned"`
+
+	// Message Clone failure detail when `cloned` is false and the pod was reachable.
+	Message *string `json:"message"`
+
+	// Repository One repository of a workstation, as the console shows it.
+	Repository WorkstationRepositoryResponse `json:"repository"`
+}
+
 // AgentMode An opencode agent/mode the user can switch between (Build, Plan, ...). The
 // chat toolbar renders one toggle per primary agent.
 type AgentMode struct {
@@ -1039,6 +1225,16 @@ type AgentMode struct {
 
 	// Name opencode agent name (e.g. "build", "plan").
 	Name string `json:"name"`
+}
+
+// AiAgentBudgetsDto What the agent may spend answering one question. Both unset means the
+// runtime derives them from the serving's advertised context window.
+type AiAgentBudgetsDto struct {
+	// MaxCompletionTokens Completion tokens per turn.
+	MaxCompletionTokens *int32 `json:"max_completion_tokens"`
+
+	// MaxTurns Tool-call round-trips per question (runtime default 10).
+	MaxTurns *int32 `json:"max_turns"`
 }
 
 // AiAgentDataSourceDto A data dock the agent may read.
@@ -1067,36 +1263,62 @@ type AiAgentInferenceDto struct {
 
 // AiAgentMailDto Mailbox configuration for the `mail` interface: one account used for both
 // IMAP (inbound) and SMTP (replies).
+//
+// Every field below `mode` besides `display_name`/`allowed_senders` is
+// meaningful, and accepted, **only** in `External` mode (FR6): a `Managed`
+// payload need not — and, per `validate_mail`, must not — set them.
 type AiAgentMailDto struct {
 	// AllowedSenders Senders the agent answers (substring/domain match against the parsed
-	// address). Empty = answer everyone.
+	// address). Empty = answer everyone. Both modes.
 	AllowedSenders *[]string `json:"allowed_senders,omitempty"`
 
-	// FromAddress From address on replies (usually the mailbox address).
-	FromAddress string `json:"from_address"`
+	// DisplayName Friendly name recipients see instead of the bare address
+	// (`Support Assistant <agent@example.com>`), so several agents sharing a
+	// domain stay distinguishable. Omit to fall back to the agent's name. Printable
+	// single-line text, at most 64 characters. Both modes.
+	DisplayName *string `json:"display_name"`
 
-	// ImapHost IMAP server host (e.g. `ssl0.ovh.net`).
-	ImapHost string `json:"imap_host"`
+	// FromAddress From address on replies (usually the mailbox address). External mode
+	// only.
+	FromAddress *string `json:"from_address"`
 
-	// ImapPort IMAP port (993 for implicit TLS).
-	ImapPort int32 `json:"imap_port"`
+	// ImapHost IMAP server host (e.g. `ssl0.ovh.net`). External mode only.
+	ImapHost *string `json:"imap_host"`
+
+	// ImapPort IMAP port (993 for implicit TLS). External mode only.
+	ImapPort *int32 `json:"imap_port"`
+
+	// Mode How the mailbox is provisioned (ADR-0027 / PRD-006). `External` is the
+	// default: the create-agent payload predating this field (or one that omits
+	// `mode`) keeps today's bring-your-own behaviour.
+	Mode *AiAgentMailModeDto `json:"mode,omitempty"`
 
 	// PasswordSecretId Id of a Passe Partout secret of type `plaintext` holding the mailbox
-	// password.
-	PasswordSecretId openapi_types.UUID `json:"password_secret_id"`
+	// password. External mode only.
+	PasswordSecretId *openapi_types.UUID `json:"password_secret_id"`
 
-	// SmtpHost SMTP server host (e.g. `ssl0.ovh.net`).
-	SmtpHost string `json:"smtp_host"`
+	// SmtpHost SMTP server host (e.g. `ssl0.ovh.net`). External mode only.
+	SmtpHost *string `json:"smtp_host"`
 
-	// SmtpPort SMTP port (465 implicit TLS, 587 STARTTLS).
-	SmtpPort int32 `json:"smtp_port"`
+	// SmtpPort SMTP port (465 implicit TLS, 587 STARTTLS). External mode only.
+	SmtpPort *int32 `json:"smtp_port"`
 
-	// UseTls TLS on the mail connections. Disable only for in-cluster dev servers.
-	UseTls *bool `json:"use_tls,omitempty"`
+	// UseTls TLS on the mail connections; defaults to `true` when omitted. Disable
+	// only for in-cluster dev servers. External mode only — a managed payload
+	// must leave it unset (managed mode is always in-cluster plaintext), and
+	// an explicit value is rejected there like every other external-only
+	// field rather than silently overridden.
+	UseTls *bool `json:"use_tls"`
 
-	// Username Login for both IMAP and SMTP (usually the mailbox address).
-	Username string `json:"username"`
+	// Username Login for both IMAP and SMTP (usually the mailbox address). External
+	// mode only.
+	Username *string `json:"username"`
 }
+
+// AiAgentMailModeDto How the mailbox is provisioned (ADR-0027 / PRD-006). `External` is the
+// default: the create-agent payload predating this field (or one that omits
+// `mode`) keeps today's bring-your-own behaviour.
+type AiAgentMailModeDto string
 
 // AiAgentMailStatsResponse Mail activity counters as reported by the agent runtime. In-memory on the
 // pod: they reset on restart (persistent activity is a later milestone).
@@ -1104,7 +1326,9 @@ type AiAgentMailStatsResponse struct {
 	// Enabled Whether the runtime has the mail interface configured.
 	Enabled bool `json:"enabled"`
 
-	// Errors Failed processing (error replies + undeliverable replies).
+	// Errors Messages that could not be handled: an error reply, or a reply given up on
+	// after its send failed repeatedly. NOT incremented while a reply is still
+	// being retried — see `undelivered` for that.
 	Errors int64 `json:"errors"`
 
 	// IgnoredSenders Messages dropped by the sender allowlist.
@@ -1118,10 +1342,45 @@ type AiAgentMailStatsResponse struct {
 
 	// Replied Answers emailed back.
 	Replied int64 `json:"replied"`
+
+	// Undelivered Replies generated but not yet delivered, waiting on a send that keeps
+	// failing. A gauge, not a counter: it returns to zero when they go out or are
+	// given up on (at which point `errors` counts one).
+	//
+	// `serde(default)` so a console talking to an agent from before this field
+	// existed — mid-rollout — reads zero instead of failing the whole response.
+	Undelivered *int `json:"undelivered,omitempty"`
 }
+
+// AiAgentMailStatusDto Mail runtime state (PRD-006 FR7): mode, resolved address, and — managed
+// mode only — a phase/message mirroring the owned `MailAccount`. Read-only,
+// sourced verbatim from `AiAgent.status.mail` (the console never talks to
+// Stalwart, ADR-0027 §2).
+type AiAgentMailStatusDto struct {
+	// Address The address the agent is reachable at. `None` in managed mode until
+	// the mailbox is provisioned.
+	Address *string `json:"address"`
+	Message *string `json:"message"`
+
+	// Mode How the mailbox is provisioned (ADR-0027 / PRD-006). `External` is the
+	// default: the create-agent payload predating this field (or one that omits
+	// `mode`) keeps today's bring-your-own behaviour.
+	Mode AiAgentMailModeDto `json:"mode"`
+
+	// Phase Managed-mode mailbox phase (PRD-006 FR7), mirroring the owned
+	// `MailAccount`'s status.
+	Phase *AiAgentMailboxPhaseDto `json:"phase,omitempty"`
+}
+
+// AiAgentMailboxPhaseDto Managed-mode mailbox phase (PRD-006 FR7), mirroring the owned
+// `MailAccount`'s status.
+type AiAgentMailboxPhaseDto string
 
 // AiAgentResponse defines model for AiAgentResponse.
 type AiAgentResponse struct {
+	// Budgets What the agent may spend answering one question. Both unset means the
+	// runtime derives them from the serving's advertised context window.
+	Budgets     AiAgentBudgetsDto      `json:"budgets"`
 	Context     *string                `json:"context"`
 	CreatedAt   time.Time              `json:"created_at"`
 	DataSources []AiAgentDataSourceDto `json:"data_sources"`
@@ -1135,18 +1394,39 @@ type AiAgentResponse struct {
 
 	// Mail Mailbox configuration for the `mail` interface: one account used for both
 	// IMAP (inbound) and SMTP (replies).
+	//
+	// Every field below `mode` besides `display_name`/`allowed_senders` is
+	// meaningful, and accepted, **only** in `External` mode (FR6): a `Managed`
+	// payload need not — and, per `validate_mail`, must not — set them.
 	Mail           *AiAgentMailDto    `json:"mail,omitempty"`
+	Mission        *string            `json:"mission"`
 	Name           string             `json:"name"`
 	OrganizationId openapi_types.UUID `json:"organization_id"`
 	OwnerUserId    string             `json:"owner_user_id"`
 	QuestionSet    []string           `json:"question_set"`
 
 	// Scaling Scale-to-zero bounds for the agent runtime.
-	Scaling          AiAgentScalingDto     `json:"scaling"`
-	ServiceAccountId *openapi_types.UUID   `json:"service_account_id"`
-	Status           AiAgentStatusResponse `json:"status"`
-	SystemPrompt     string                `json:"system_prompt"`
-	UpdatedAt        time.Time             `json:"updated_at"`
+	Scaling          AiAgentScalingDto   `json:"scaling"`
+	ServiceAccountId *openapi_types.UUID `json:"service_account_id"`
+
+	// Slug This agent's URL-safe identifier: its display name, slugified.
+	//
+	// Exposed because `subagent_of` is resolved against this value, so a caller
+	// attaching a capability to this agent needs the identifier the platform will look
+	// for. The alternative — re-implementing `slugify` in the caller — puts that rule in
+	// two languages, and a disagreement between them leaves a capability waiting forever
+	// for a parent that does not exist.
+	//
+	// Named `slug` rather than after the object it happens to name: an external API
+	// should not teach a caller the platform's internals, and the value is a slug
+	// whatever stores it (review on #3485).
+	Slug         string                `json:"slug"`
+	Speciality   *string               `json:"speciality"`
+	Status       AiAgentStatusResponse `json:"status"`
+	SubagentOf   *string               `json:"subagent_of"`
+	SystemPrompt string                `json:"system_prompt"`
+	Tools        []string              `json:"tools"`
+	UpdatedAt    time.Time             `json:"updated_at"`
 }
 
 // AiAgentScalingDto Scale-to-zero bounds for the agent runtime.
@@ -1158,8 +1438,51 @@ type AiAgentScalingDto struct {
 	MinReplicas int32 `json:"min_replicas"`
 }
 
+// AiAgentSessionSummary One chat conversation in the list.
+type AiAgentSessionSummary struct {
+	CreatedAt time.Time          `json:"created_at"`
+	Id        openapi_types.UUID `json:"id"`
+
+	// Interface Always `web` on this endpoint — carried through from the agent rather than
+	// stripped, so a client can assert it.
+	Interface      string    `json:"interface"`
+	LastActivityAt time.Time `json:"last_activity_at"`
+
+	// Title The opening question, or the mail subject for a thread. Absent for a
+	// conversation that has not been titled yet.
+	Title *string `json:"title"`
+
+	// Turns Messages stored, counting both sides.
+	Turns int64 `json:"turns"`
+}
+
+// AiAgentSessionTurn One message of a transcript.
+type AiAgentSessionTurn struct {
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"created_at"`
+
+	// Role `user` or `assistant`.
+	Role string `json:"role"`
+}
+
+// AiAgentSessionTurnsResponse defines model for AiAgentSessionTurnsResponse.
+type AiAgentSessionTurnsResponse struct {
+	Turns []AiAgentSessionTurn `json:"turns"`
+}
+
+// AiAgentSessionsResponse defines model for AiAgentSessionsResponse.
+type AiAgentSessionsResponse struct {
+	Sessions []AiAgentSessionSummary `json:"sessions"`
+}
+
 // AiAgentStatusResponse defines model for AiAgentStatusResponse.
 type AiAgentStatusResponse struct {
+	// Mail Mail runtime state (PRD-006 FR7): mode, resolved address, and — managed
+	// mode only — a phase/message mirroring the owned `MailAccount`. Read-only,
+	// sourced verbatim from `AiAgent.status.mail` (the console never talks to
+	// Stalwart, ADR-0027 §2).
+	Mail *AiAgentMailStatusDto `json:"mail,omitempty"`
+
 	// Message Human-readable detail for the current phase.
 	Message *string `json:"message"`
 
@@ -1275,6 +1598,89 @@ type AirflowResponse struct {
 	WebUrl                *string            `json:"web_url"`
 }
 
+// AlertEventDto defines model for AlertEventDto.
+type AlertEventDto struct {
+	FiredAt        time.Time          `json:"fired_at"`
+	Id             openapi_types.UUID `json:"id"`
+	LastNotifiedAt *time.Time         `json:"last_notified_at"`
+	ResolvedAt     *time.Time         `json:"resolved_at"`
+	ResourceId     string             `json:"resource_id"`
+	ResourceName   string             `json:"resource_name"`
+	Severity       string             `json:"severity"`
+	Signal         string             `json:"signal"`
+	Status         string             `json:"status"`
+	ValuePct       float64            `json:"value_pct"`
+}
+
+// AlertRuleBody Write payload; maps 1:1 to [`AlertRuleInput`].
+type AlertRuleBody struct {
+	// Comparator Which side of the threshold is the bad side.
+	Comparator    Comparator `json:"comparator"`
+	CriticalValue *float64   `json:"critical_value"`
+	Enabled       *bool      `json:"enabled,omitempty"`
+
+	// ForSeconds Mirrors the column's own default: vmalert-style rules are usually left
+	// at five minutes unless a customer has a reason to tighten or loosen it.
+	ForSeconds *int32 `json:"for_seconds,omitempty"`
+
+	// PanelId `PanelSpec::id` from the catalog, e.g. `trino_queued_queries` — see
+	// `GET /alertable-panels`.
+	PanelId string `json:"panel_id"`
+
+	// ResourceKind Which monitoring target family a rule watches. One variant per
+	// `MonitoringTarget`, because that is what decides how `resource_ref` is
+	// resolved into a live target at evaluation time.
+	ResourceKind ResourceKind `json:"resource_kind"`
+	ResourceName string       `json:"resource_name"`
+
+	// ResourceRef The console-side identity of the watched resource — the same value the
+	// Monitoring page resolves to a `MonitoringTarget` for this kind.
+	ResourceRef  string   `json:"resource_ref"`
+	WarningValue *float64 `json:"warning_value"`
+}
+
+// AlertRuleDto A rule plus its live evaluation, so the UI never has to reconstruct
+// pending/firing from raw timestamps itself.
+type AlertRuleDto struct {
+	// Comparator Which side of the threshold is the bad side.
+	Comparator     Comparator         `json:"comparator"`
+	CreatedAt      time.Time          `json:"created_at"`
+	CriticalValue  *float64           `json:"critical_value"`
+	Enabled        bool               `json:"enabled"`
+	ForSeconds     int32              `json:"for_seconds"`
+	Id             openapi_types.UUID `json:"id"`
+	LastError      *string            `json:"last_error"`
+	LastValue      *float64           `json:"last_value"`
+	OrganizationId openapi_types.UUID `json:"organization_id"`
+	PanelId        string             `json:"panel_id"`
+
+	// ResourceKind Which monitoring target family a rule watches. One variant per
+	// `MonitoringTarget`, because that is what decides how `resource_ref` is
+	// resolved into a live target at evaluation time.
+	ResourceKind ResourceKind `json:"resource_kind"`
+	ResourceName string       `json:"resource_name"`
+	ResourceRef  string       `json:"resource_ref"`
+
+	// State "firing" | "pending" | "ok" | "unknown", derived here so every caller
+	// (console UI, CLI) renders the same thing without duplicating the rule.
+	State        string    `json:"state"`
+	UpdatedAt    time.Time `json:"updated_at"`
+	WarningValue *float64  `json:"warning_value"`
+}
+
+// AlertablePanelDto One catalog panel offered as "alert on this panel" — everything the UI
+// needs without also shipping the PromQL template it renders from.
+type AlertablePanelDto struct {
+	PanelId string `json:"panel_id"`
+
+	// ResourceKind Which monitoring target family a rule watches. One variant per
+	// `MonitoringTarget`, because that is what decides how `resource_ref` is
+	// resolved into a live target at evaluation time.
+	ResourceKind ResourceKind `json:"resource_kind"`
+	Title        string       `json:"title"`
+	Unit         Unit         `json:"unit"`
+}
+
 // AnalyticsSummary defines model for AnalyticsSummary.
 type AnalyticsSummary struct {
 	AvgExecutionTimeMs *float64 `json:"avg_execution_time_ms"`
@@ -1374,16 +1780,46 @@ type AppTemplateResponse struct {
 // AppUsageRef Reference to a ContainerApp that has a custom domain under this apex.
 //
 // Populated by walking the org namespace's ContainerApps and matching FQDNs that
-// fall under the apex. Empty in list responses; may be populated on detail.
+// fall under the apex. Empty in list responses; populated on detail.
 type AppUsageRef struct {
-	// ContainerAppId Console DB id of the ContainerApp.
-	ContainerAppId openapi_types.UUID `json:"containerAppId"`
+	// ContainerAppId Console DB id of the ContainerApp. `None` before the operator's first reconcile.
+	ContainerAppId *openapi_types.UUID `json:"containerAppId"`
 
 	// Fqdn Specific FQDN under this apex declared on the ContainerApp's `customDomains`.
 	Fqdn string `json:"fqdn"`
 
 	// Name Container app slug (also the CRD name in the org namespace).
 	Name string `json:"name"`
+}
+
+// AppliedProposal Result of persisting an [`OntologyProposal`] — counts only, not the
+// created rows themselves (the caller re-lists if it needs them). An
+// existing `api_name` (object type or link type) is skipped rather than
+// failing the whole batch, so re-applying a proposal after editing it is
+// safe.
+type AppliedProposal struct {
+	LinkTypesCreated   int `json:"link_types_created"`
+	LinkTypesSkipped   int `json:"link_types_skipped"`
+	ObjectTypesCreated int `json:"object_types_created"`
+	ObjectTypesSkipped int `json:"object_types_skipped"`
+	PropertiesCreated  int `json:"properties_created"`
+
+	// PropertiesSkipped Properties dropped by the apply-side sanitation (invalid `api_name`,
+	// or belonging to a dropped object type).
+	PropertiesSkipped int `json:"properties_skipped"`
+}
+
+// ApplyOntologyProposalRequest Body for `POST /ontology/apply` — the reviewed proposal plus the
+// grounding (data dock/catalog/schema) every object type it creates is
+// stamped with.
+type ApplyOntologyProposalRequest struct {
+	Catalog    string             `json:"catalog"`
+	DataDockId openapi_types.UUID `json:"data_dock_id"`
+
+	// Proposal The full AI-proposed semantic model, returned by `generate` and the
+	// request body `apply` persists (after the user has reviewed/edited it).
+	Proposal OntologyProposal `json:"proposal"`
+	Schema   string           `json:"schema"`
 }
 
 // ArchiveDownloadResponse defines model for ArchiveDownloadResponse.
@@ -1433,18 +1869,53 @@ type ArchiveOperationType string
 type AskAiAgentRequest struct {
 	// Question Natural-language question for the agent.
 	Question string `json:"question"`
+
+	// SessionId Conversation this question belongs to, so the agent can answer with the
+	// history of the exchange rather than treating every message as the first.
+	//
+	// Omit it to start a new conversation — the response carries the id that was
+	// minted, and sending it back on the next question continues the thread. Mail
+	// needs no equivalent: it derives its conversation from the message headers.
+	//
+	// This id IS the conversation's key: the same value comes back from
+	// `GET …/sessions` and addresses the transcript and delete routes. Typed as a
+	// `Uuid` so a value the read routes could not accept is rejected here rather
+	// than reaching the agent.
+	SessionId *openapi_types.UUID `json:"session_id"`
 }
 
 // AskAiAgentResponse defines model for AskAiAgentResponse.
 type AskAiAgentResponse struct {
 	// Answer The agent's answer, plain text.
 	Answer string `json:"answer"`
+
+	// SessionId The conversation this answer belongs to — either the id the caller sent, or
+	// a freshly minted one. Echoed so a client that did not supply one still ends
+	// up with a conversation it can continue, and so the id format has a single
+	// authority rather than every caller inventing its own.
+	SessionId openapi_types.UUID `json:"session_id"`
 }
 
-// AssignSubscriptionBody defines model for AssignSubscriptionBody.
-type AssignSubscriptionBody struct {
-	CustomLimits   interface{}        `json:"custom_limits,omitempty"`
-	QuotaProfileId openapi_types.UUID `json:"quota_profile_id"`
+// AssistantAnswer The assistant's grounded answer plus machine-usable pointers the UI turns
+// into one-click chips: `suggested_object_types`/`suggested_actions` are
+// `api_name`s that MUST exist in the model (the server drops any the LLM
+// invents before returning — same defence-in-depth posture as
+// `sanitize_proposal`).
+type AssistantAnswer struct {
+	Answer               string    `json:"answer"`
+	SuggestedActions     *[]string `json:"suggested_actions,omitempty"`
+	SuggestedObjectTypes *[]string `json:"suggested_object_types,omitempty"`
+}
+
+// AssistantRequest A natural-language question about the org's ontology. The assistant is
+// grounded ONLY on the semantic definitions (object types, properties, links,
+// actions) — pure console-DB metadata, no Trino — so it can answer "how do
+// Patient and Encounter relate?" or "what can I do to an Encounter?" and point
+// the user at the right object type / action to open next. It resolves no
+// instances itself; navigating to real rows stays the (JWT-governed) instance
+// layer's job.
+type AssistantRequest struct {
+	Question string `json:"question"`
 }
 
 // BackupOrigin Whether the backup was user-initiated or produced by a scheduled run that
@@ -1459,9 +1930,13 @@ type BackupPolicy string
 
 // BackupTargetCrdSpecResponse defines model for BackupTargetCrdSpecResponse.
 type BackupTargetCrdSpecResponse struct {
-	AccessKeySecretName       string `json:"access_key_secret_name"`
-	DestinationPath           string `json:"destination_path"`
-	EndpointUrl               string `json:"endpoint_url"`
+	AccessKeySecretName string `json:"access_key_secret_name"`
+	DestinationPath     string `json:"destination_path"`
+	EndpointUrl         string `json:"endpoint_url"`
+
+	// RetentionDays Effective retention window in days — the spec value, or the platform
+	// default when the spec leaves it unset.
+	RetentionDays             int32  `json:"retention_days"`
 	SecretAccessKeySecretName string `json:"secret_access_key_secret_name"`
 }
 
@@ -1470,22 +1945,25 @@ type BackupTargetInstance string
 
 // BackupTargetResponse defines model for BackupTargetResponse.
 type BackupTargetResponse struct {
-	AccessKeySecretName       *string            `json:"access_key_secret_name"`
-	Conditions                interface{}        `json:"conditions,omitempty"`
-	CreatedAt                 time.Time          `json:"created_at"`
-	Description               *string            `json:"description"`
-	DestinationPath           string             `json:"destination_path"`
-	EndpointUrl               string             `json:"endpoint_url"`
-	HarborId                  openapi_types.UUID `json:"harbor_id"`
-	Id                        openapi_types.UUID `json:"id"`
-	Insecure                  bool               `json:"insecure"`
-	Name                      string             `json:"name"`
-	OrganizationId            openapi_types.UUID `json:"organization_id"`
-	Phase                     string             `json:"phase"`
-	SecretAccessKeySecretName *string            `json:"secret_access_key_secret_name"`
-	Slug                      string             `json:"slug"`
-	Tags                      []string           `json:"tags"`
-	UpdatedAt                 time.Time          `json:"updated_at"`
+	AccessKeySecretName *string            `json:"access_key_secret_name"`
+	Conditions          interface{}        `json:"conditions,omitempty"`
+	CreatedAt           time.Time          `json:"created_at"`
+	Description         *string            `json:"description"`
+	DestinationPath     string             `json:"destination_path"`
+	EndpointUrl         string             `json:"endpoint_url"`
+	HarborId            openapi_types.UUID `json:"harbor_id"`
+	Id                  openapi_types.UUID `json:"id"`
+	Insecure            bool               `json:"insecure"`
+	Name                string             `json:"name"`
+	OrganizationId      openapi_types.UUID `json:"organization_id"`
+	Phase               string             `json:"phase"`
+
+	// RetentionDays Days of backups and WAL archives this target keeps before expiring them.
+	RetentionDays             int32     `json:"retention_days"`
+	SecretAccessKeySecretName *string   `json:"secret_access_key_secret_name"`
+	Slug                      string    `json:"slug"`
+	Tags                      []string  `json:"tags"`
+	UpdatedAt                 time.Time `json:"updated_at"`
 }
 
 // BackupTargetSourceRequest Where the backup target writes to.
@@ -1922,6 +2400,46 @@ type CephZoneResponse struct {
 	Name string `json:"name"`
 }
 
+// ChangelogEntryResponse One release note as tenants see it. Deliberately narrower than the stored
+// row: `published` is always true here, and `created_at`/`updated_at` are
+// authoring metadata that would only invite the console to display an edit
+// date instead of the release date.
+type ChangelogEntryResponse struct {
+	// Announce False for entries that belong in the history without popping the
+	// what's-new dialog (a small patch note).
+	Announce     bool   `json:"announce"`
+	BodyMarkdown string `json:"body_markdown"`
+
+	// Id Stable identity, and the console's "already seen" key — unchanged by
+	// edits to the body, so amending a note does not re-notify every user.
+	Id          openapi_types.UUID `json:"id"`
+	PublishedAt time.Time          `json:"published_at"`
+	Title       string             `json:"title"`
+	Version     string             `json:"version"`
+}
+
+// ChannelBody defines model for ChannelBody.
+type ChannelBody struct {
+	Enabled *bool `json:"enabled,omitempty"`
+
+	// Kind Delivery kinds, all three delivered end to end. The two webhook kinds share
+	// one transport (an HTTPS POST to a capability URL) and differ only in payload
+	// shape, so they differ here only by the host their URL must be on.
+	Kind       ChannelKind `json:"kind"`
+	Name       string      `json:"name"`
+	Recipients *[]string   `json:"recipients,omitempty"`
+
+	// Url Webhook kinds only, rejected for email. Required on create; on update,
+	// omitting it keeps the stored URL — reads never return it in full, so a
+	// caller cannot echo it back.
+	Url *string `json:"url"`
+}
+
+// ChannelKind Delivery kinds, all three delivered end to end. The two webhook kinds share
+// one transport (an HTTPS POST to a capability URL) and differ only in payload
+// shape, so they differ here only by the host their URL must be on.
+type ChannelKind string
+
 // ChartEncodings Maps result-set columns to visual channels. Which fields matter depends on
 // the chart type (`stat` reads `value`, `pie` reads `category`+`value`,
 // cartesian charts read `x`+`y`).
@@ -1998,6 +2516,17 @@ type ClassificationConfig struct {
 	// Labels Document classification labels (supports both static and dynamic labels)
 	Labels []Label `json:"labels"`
 
+	// MaxContentChars Hard cap on document content (in chars) sent to the LLM per request.
+	// Oversize content is reduced via map-reduce summarization. Uses the
+	// executor's library default (120_000) when absent.
+	//
+	// The cap is in characters while the model bounds its input in tokens, so
+	// the safe value depends on the corpus: dense text (OCR'd accounting
+	// tables, amounts, dates, accented French) costs more tokens per character
+	// than the default assumes, and the default then overflows the context
+	// window. Lower it for such a corpus; raise it for a wider-context model.
+	MaxContentChars *int `json:"max_content_chars"`
+
 	// ModelBaseUrl Base URL for the model API. Defaults to Mistral API when not set.
 	// Set to a vLLM/KServe endpoint for self-hosted models (e.g., "http://ministral-3-8b-rocm-predictor.kserve.svc.cluster.local/v1").
 	ModelBaseUrl *string `json:"model_base_url"`
@@ -2048,6 +2577,9 @@ type CommitRequest struct {
 type CommitResponse struct {
 	Sha string `json:"sha"`
 }
+
+// Comparator Which side of the threshold is the bad side.
+type Comparator string
 
 // CompleteMultipartUploadRequest defines model for CompleteMultipartUploadRequest.
 type CompleteMultipartUploadRequest struct {
@@ -2203,12 +2735,18 @@ type ContainerAppPodInfo struct {
 
 // ContainerAppResponse defines model for ContainerAppResponse.
 type ContainerAppResponse struct {
-	AvailableReplicas    int32              `json:"available_replicas"`
-	Conditions           interface{}        `json:"conditions,omitempty"`
-	CreatedAt            time.Time          `json:"created_at"`
-	Description          *string            `json:"description"`
-	DesiredReplicas      int32              `json:"desired_replicas"`
-	Endpoint             *string            `json:"endpoint"`
+	AvailableReplicas int32       `json:"available_replicas"`
+	Conditions        interface{} `json:"conditions,omitempty"`
+	CreatedAt         time.Time   `json:"created_at"`
+	Description       *string     `json:"description"`
+	DesiredReplicas   int32       `json:"desired_replicas"`
+	Endpoint          *string     `json:"endpoint"`
+
+	// Endpoints Every public URL this app answers on: the platform endpoint when it is still
+	// advertised, plus each custom domain that is serving. Empty when the app has no
+	// public route. Populated on list/get; the `From` impl leaves it empty because the
+	// DB row alone does not know about custom domains.
+	Endpoints            *[]string          `json:"endpoints,omitempty"`
 	HarborId             openapi_types.UUID `json:"harbor_id"`
 	Id                   openapi_types.UUID `json:"id"`
 	Name                 string             `json:"name"`
@@ -2517,8 +3055,24 @@ type CrdStatusSnapshot struct {
 	Phase string `json:"phase"`
 }
 
+// CreateActionTypeRequest defines model for CreateActionTypeRequest.
+type CreateActionTypeRequest struct {
+	ApiName      string             `json:"api_name"`
+	Description  *string            `json:"description"`
+	DisplayName  string             `json:"display_name"`
+	ObjectTypeId openapi_types.UUID `json:"object_type_id"`
+
+	// Operation One of [`ACTION_OPERATIONS`] (validated by the service).
+	Operation  string             `json:"operation"`
+	Parameters *[]ActionParameter `json:"parameters,omitempty"`
+}
+
 // CreateAiAgentRequest defines model for CreateAiAgentRequest.
 type CreateAiAgentRequest struct {
+	// Budgets What the agent may spend answering one question. Both unset means the
+	// runtime derives them from the serving's advertised context window.
+	Budgets *AiAgentBudgetsDto `json:"budgets,omitempty"`
+
 	// Context Extra context appended to the system prompt.
 	Context *string `json:"context"`
 
@@ -2537,7 +3091,17 @@ type CreateAiAgentRequest struct {
 
 	// Mail Mailbox configuration for the `mail` interface: one account used for both
 	// IMAP (inbound) and SMTP (replies).
+	//
+	// Every field below `mode` besides `display_name`/`allowed_senders` is
+	// meaningful, and accepted, **only** in `External` mode (FR6): a `Managed`
+	// payload need not — and, per `validate_mail`, must not — set them.
 	Mail *AiAgentMailDto `json:"mail,omitempty"`
+
+	// Mission The user's own instructions for a CAPABILITY, layered on top of the catalogue
+	// preamble in `system_prompt` — which, for a capability, is the console's rather
+	// than the user's. Kept separate so the runtime composes the two in a fixed order
+	// and user text cannot contradict the tool subset the capability was given (#3477).
+	Mission *string `json:"mission"`
 
 	// Name Agent name (unique within the organization; slugified for the CR name).
 	Name string `json:"name"`
@@ -2552,8 +3116,21 @@ type CreateAiAgentRequest struct {
 	// be viewer-scoped. Optional at creation.
 	ServiceAccountId *openapi_types.UUID `json:"service_account_id"`
 
+	// Speciality What this agent is for, and what a routing agent matches a question
+	// against: `routing`, `platform-ops`, `data-sql`, `documents`, or a value of
+	// your own. Omit for an unspecialized agent.
+	Speciality *string `json:"speciality"`
+
+	// SubagentOf The routing agent this one answers for, by CR name. Omit for a standalone
+	// agent. A subagent must declare a speciality and cannot have a mailbox.
+	SubagentOf *string `json:"subagent_of"`
+
 	// SystemPrompt System prompt injected at the start of every agent run.
 	SystemPrompt string `json:"system_prompt"`
+
+	// Tools Tools the agent may use: `ask_sender`, `hfctl` (all commands) or
+	// `hfctl:<command>`. Empty means every tool and command.
+	Tools *[]string `json:"tools,omitempty"`
 }
 
 // CreateAirflowCrdRequestBody defines model for CreateAirflowCrdRequestBody.
@@ -2641,6 +3218,10 @@ type CreateBackupTargetCrdRequestBody struct {
 
 	// Name Must be a valid slug: lowercase letters, digits, and hyphens only; cannot start or end with a hyphen.
 	Name string `json:"name"`
+
+	// RetentionDays Days of backups and WAL archives to keep before expiring them, 1..=35.
+	// Omitted means the platform default (7 days).
+	RetentionDays *int32 `json:"retention_days"`
 
 	// Source Where the backup target writes to.
 	Source BackupTargetSourceRequest `json:"source"`
@@ -2892,6 +3473,17 @@ type CreateDataDockRequestBody struct {
 
 // CreateDevWorkstationRequest defines model for CreateDevWorkstationRequest.
 type CreateDevWorkstationRequest struct {
+	// AdditionalRepositories Repositories cloned alongside the primary one, each into its own directory
+	// under `/workspace`. Every entry must use the same `repo_provider` as the
+	// primary: one SCM credential covers the whole workstation.
+	AdditionalRepositories *[]WorkstationRepositoryInput `json:"additional_repositories,omitempty"`
+
+	// Allowlists Names of `EgressAllowlist` CRs (created via the harbor-scoped
+	// egress-allowlists API) this workstation may reach on top of
+	// `extra_fqdns`. Each must already exist in the harbor's workstation
+	// namespace.
+	Allowlists *[]string `json:"allowlists,omitempty"`
+
 	// EgressProfile Egress allow-list profile: `default` | `restricted` | `extended`.
 	EgressProfile *string `json:"egress_profile"`
 
@@ -2904,8 +3496,9 @@ type CreateDevWorkstationRequest struct {
 	// the workstation entrypoint's curated default for the provider applies.
 	InferenceModel *string `json:"inference_model"`
 
-	// InferenceProvider Inference provider for the agent: `sapience` (in-cluster LLMaaS, default)
-	// or `openrouter` (external). Omitted/empty falls back to `sapience`.
+	// InferenceProvider Inference provider for the agent: `sapience` (in-cluster LLMaaS, default),
+	// `openrouter` (external), or `claude` (Claude Code as the workstation
+	// agent, Anthropic API). Omitted/empty falls back to `sapience`.
 	InferenceProvider *string `json:"inference_provider"`
 
 	// LlmProviders Managed external LLM providers the agent may reach (openrouter,
@@ -2924,8 +3517,10 @@ type CreateDevWorkstationRequest struct {
 	// "20Gi" when oci_enabled is true and size is unset. Only used when enabled.
 	OciStoreSize *string `json:"oci_store_size"`
 
-	// OpenrouterKeySecretId Id of a Passe Partout secret of type `plaintext` holding the OpenRouter
-	// API key (`sk-or-...`). Required when `inference_provider` is `openrouter`.
+	// OpenrouterKeySecretId Id of a Passe Partout secret of type `plaintext` holding the external
+	// provider API key (`sk-or-...` for OpenRouter, `sk-ant-...` for Claude).
+	// Required when `inference_provider` is `openrouter`; optional for
+	// `claude` (without it the user signs in interactively in the TUI).
 	OpenrouterKeySecretId *openapi_types.UUID `json:"openrouter_key_secret_id"`
 
 	// RepoProvider SCM provider: `github` (external, default) or `forgejo` (in-cluster forge).
@@ -3280,6 +3875,18 @@ type CreateKafkaHFTopicRequest struct {
 	Replicas *int32 `json:"replicas"`
 }
 
+// CreateLinkTypeRequest defines model for CreateLinkTypeRequest.
+type CreateLinkTypeRequest struct {
+	ApiName            string             `json:"api_name"`
+	Cardinality        string             `json:"cardinality"`
+	Description        *string            `json:"description"`
+	DisplayName        string             `json:"display_name"`
+	SourceObjectTypeId openapi_types.UUID `json:"source_object_type_id"`
+	SourceProperty     *string            `json:"source_property"`
+	TargetObjectTypeId openapi_types.UUID `json:"target_object_type_id"`
+	TargetProperty     *string            `json:"target_property"`
+}
+
 // CreateManagedPostgresqlBackupCrdRequestBody defines model for CreateManagedPostgresqlBackupCrdRequestBody.
 type CreateManagedPostgresqlBackupCrdRequestBody struct {
 	Target *BackupTargetInstance `json:"target,omitempty"`
@@ -3379,6 +3986,21 @@ type CreateModelServingRequest struct {
 	Runtime ModelRuntime `json:"runtime"`
 }
 
+// CreateObjectTypeRequest defines model for CreateObjectTypeRequest.
+type CreateObjectTypeRequest struct {
+	ApiName           string              `json:"api_name"`
+	BackingCatalog    *string             `json:"backing_catalog"`
+	BackingSchema     *string             `json:"backing_schema"`
+	BackingTable      *string             `json:"backing_table"`
+	Color             *string             `json:"color"`
+	DataDockId        *openapi_types.UUID `json:"data_dock_id"`
+	Description       *string             `json:"description"`
+	DisplayName       string              `json:"display_name"`
+	Icon              *string             `json:"icon"`
+	PluralDisplayName *string             `json:"plural_display_name"`
+	PrimaryKeyColumn  *string             `json:"primary_key_column"`
+}
+
 // CreateOpenDataPipelineRequest Open Data pipeline request: download open data CSV and load into Iceberg table
 type CreateOpenDataPipelineRequest struct {
 	// Destination Metadata storage configuration (Trino/Iceberg for document metadata)
@@ -3389,6 +4011,21 @@ type CreateOpenDataPipelineRequest struct {
 
 	// Source Open Data connector source configuration
 	Source OpenDataSourceConfig `json:"source"`
+}
+
+// CreateOrUpdateEgressAllowlistRequest Request body to create or fully replace an `EgressAllowlist`.
+type CreateOrUpdateEgressAllowlistRequest struct {
+	Description *string `json:"description"`
+	DisplayName *string `json:"display_name"`
+
+	// Fqdns FQDNs a referencing workstation may reach. `1..=MAX_ALLOWLIST_FQDNS`
+	// entries, each validated by `egress_rules::validate_fqdn`.
+	Fqdns []string `json:"fqdns"`
+
+	// Name Desired CRD name (must be a DNS-1123 label). When absent on create, the
+	// server derives a slug from `display_name`. Ignored on update — the path
+	// `{name}` is authoritative.
+	Name *string `json:"name"`
 }
 
 // CreateOrganizationPolicyRequestBody defines model for CreateOrganizationPolicyRequestBody.
@@ -3409,9 +4046,18 @@ type CreateOrganizationPolicyRequestBody struct {
 
 // CreateOrganizationRequestBody defines model for CreateOrganizationRequestBody.
 type CreateOrganizationRequestBody struct {
-	Name             string  `json:"name"`
-	QuotaProfileSlug *string `json:"quota_profile_slug"`
-	Slug             string  `json:"slug"`
+	// DedicatedHarborNamespaces ADR-0031 (namespace-per-harbor) opt-in for the org being created, from
+	// the `Organization` CRD's `spec.dedicatedHarborNamespaces`. Omitted /
+	// `null` stores `false` (legacy shared `hf-{org}` placement).
+	//
+	// Only settable here and through the enable-only flip route — the org's
+	// bootstrap `default` Harbor is created moments after this call, and a
+	// harbor's namespace is stamped once at INSERT, so a new org that must be
+	// namespace-per-harbor from the start has to state it here.
+	DedicatedHarborNamespaces *bool   `json:"dedicated_harbor_namespaces"`
+	Name                      string  `json:"name"`
+	QuotaProfileSlug          *string `json:"quota_profile_slug"`
+	Slug                      string  `json:"slug"`
 }
 
 // CreatePageSplitterPipelineRequest PageSplitter pipeline request: splits OCR'd documents by page markers
@@ -3737,6 +4383,17 @@ type CreatePostgresqlDataContainerRequestBody struct {
 	Name string `json:"name"`
 }
 
+// CreatePropertyDefinitionRequest defines model for CreatePropertyDefinitionRequest.
+type CreatePropertyDefinitionRequest struct {
+	ApiName      string  `json:"api_name"`
+	DataType     string  `json:"data_type"`
+	Description  *string `json:"description"`
+	DisplayName  string  `json:"display_name"`
+	IsPrimaryKey *bool   `json:"is_primary_key,omitempty"`
+	IsTitle      *bool   `json:"is_title,omitempty"`
+	SourceColumn *string `json:"source_column"`
+}
+
 // CreateRegistryProjectRequestBody defines model for CreateRegistryProjectRequestBody.
 type CreateRegistryProjectRequestBody struct {
 	Description *string `json:"description"`
@@ -3790,7 +4447,18 @@ type CreateSavedQueryRequest struct {
 // CreateSecretRequestBody defines model for CreateSecretRequestBody.
 type CreateSecretRequestBody struct {
 	Description *string `json:"description"`
-	Name        string  `json:"name"`
+
+	// Name Hierarchical name, `/`-separated (`prod/db`). Max 255 characters and 10
+	// segments of at least 3 characters each.
+	//
+	// With `scope: user` this is a **leaf**: the stored name becomes
+	// `users/<your oidc sub>/<name>`, so the budget left for it is 212
+	// characters and 8 segments. `users` is a reserved top-level segment and is
+	// refused in either scope. Every response echoes the full stored name.
+	Name string `json:"name"`
+
+	// Scope Visibility scope of a secret. Immutable after creation.
+	Scope *SecretScope `json:"scope,omitempty"`
 
 	// SecretType The type of value stored in the secret.
 	SecretType SecretType  `json:"secret_type"`
@@ -3798,10 +4466,22 @@ type CreateSecretRequestBody struct {
 	Value      interface{} `json:"value"`
 }
 
-// CreateServiceAccountCrdRequestBody defines model for CreateServiceAccountCrdRequestBody.
+// CreateServiceAccountCrdRequestBody The Keycloak client settings that can be chosen up front.
+//
+// All of them are optional and fall back to the confidential-machine-account
+// defaults this endpoint has always applied, so a caller that only sends
+// `client_id` gets exactly the account it used to get.
+//
+// `public_client` is worth setting here rather than editing afterwards:
+// switching a confidential client to public later destroys its stored secret
+// and there is no way to recover the old one.
 type CreateServiceAccountCrdRequestBody struct {
-	ClientId    string  `json:"client_id"`
-	Description *string `json:"description"`
+	ClientId     string    `json:"client_id"`
+	Description  *string   `json:"description"`
+	Enabled      *bool     `json:"enabled"`
+	PublicClient *bool     `json:"public_client"`
+	RedirectUris *[]string `json:"redirect_uris"`
+	WebOrigins   *[]string `json:"web_origins"`
 }
 
 // CreateSessionRequest defines model for CreateSessionRequest.
@@ -3818,6 +4498,35 @@ type CreateSessionResponse struct {
 	// Named `id` so the frontend's `AgentSession` shape lines up with both
 	// this create response and the normalized session list.
 	Id string `json:"id"`
+}
+
+// CreateSignupRequestBody defines model for CreateSignupRequestBody.
+type CreateSignupRequestBody struct {
+	Email string `json:"email"`
+
+	// IntendedUse What the requester intends to use the trial for.
+	IntendedUse IntendedUse `json:"intended_use"`
+
+	// OrganizationName Company/institution name; expected (but not strictly required) when
+	// `requester_kind` isn't `personal`.
+	OrganizationName *string `json:"organization_name"`
+
+	// RequestedSize The trial tier requested on the public form; maps to the `trial-s` /
+	// `trial-m` quota profiles (`quota_profile_slug`), prefilled as the default
+	// in the admin approve dialog.
+	RequestedSize RequestedSize `json:"requested_size"`
+
+	// RequesterKind Who is requesting a trial (public signup form). Stored as the matching
+	// lowercase/snake_case string in `signup_requests.requester_kind` (see the
+	// table's CHECK constraint) — `as_str`/`parse_str` are the single source of
+	// truth for that mapping.
+	RequesterKind RequesterKind `json:"requester_kind"`
+	UseCase       string        `json:"use_case"`
+}
+
+// CreateSignupRequestResponse defines model for CreateSignupRequestResponse.
+type CreateSignupRequestResponse struct {
+	Id openapi_types.UUID `json:"id"`
 }
 
 // CreateTableClassificationBody Request to create a table classification.
@@ -3916,6 +4625,60 @@ type CreateWorkstationTemplateRequest struct {
 	Version string `json:"version"`
 }
 
+// CustomDomainAvailabilityResponse defines model for CustomDomainAvailabilityResponse.
+type CustomDomainAvailabilityResponse struct {
+	// Available True when the FQDN is well-formed, unclaimed, and covered by a verified domain —
+	// i.e. assigning it now would succeed.
+	Available bool                   `json:"available"`
+	DnsRecord *CustomDomainDnsRecord `json:"dns_record,omitempty"`
+
+	// Fqdn The normalised FQDN the rest of the response describes.
+	Fqdn string `json:"fqdn"`
+
+	// Holder Who holds an FQDN. Identity is filled in only for holders in the caller's own org.
+	Holder *CustomDomainHolder `json:"holder,omitempty"`
+
+	// OwnershipVerified True when a `Verified` domain in this organization covers the FQDN.
+	OwnershipVerified bool `json:"ownership_verified"`
+
+	// Reason Why the FQDN cannot be used, when `available` is false.
+	Reason *string `json:"reason"`
+
+	// RequiredApex Domain the organization needs to verify to use this FQDN, when it has not.
+	RequiredApex *string `json:"required_apex"`
+
+	// VerifiedByApex The verified domain covering the FQDN, when there is one.
+	VerifiedByApex *string `json:"verified_by_apex"`
+}
+
+// CustomDomainDnsRecord defines model for CustomDomainDnsRecord.
+type CustomDomainDnsRecord struct {
+	// Name Record name to create — the FQDN itself.
+	Name string `json:"name"`
+
+	// RecordType Always `"A"`.
+	RecordType string `json:"record_type"`
+
+	// Value Value to point it at: the platform ingress address.
+	Value string `json:"value"`
+}
+
+// CustomDomainHolder Who holds an FQDN. Identity is filled in only for holders in the caller's own org.
+type CustomDomainHolder struct {
+	// AppSlug Slug of the holding app. `None` for holders in another organization.
+	AppSlug *string `json:"app_slug"`
+
+	// ContainerAppId Console id of the holding app. `None` for holders in another organization.
+	ContainerAppId *openapi_types.UUID `json:"container_app_id"`
+
+	// HarborSlug Harbor the holding app lives in, needed to link to it. `None` for holders in
+	// another organization.
+	HarborSlug *string `json:"harbor_slug"`
+
+	// SameOrganization True when the holding app belongs to the caller's organization.
+	SameOrganization bool `json:"same_organization"`
+}
+
 // CustomDomainInput defines model for CustomDomainInput.
 type CustomDomainInput struct {
 	// Fqdn FQDN to expose, e.g. `app.acme.com`.
@@ -3932,15 +4695,19 @@ type CustomDomainResponse struct {
 	CertificateSecretName *string `json:"certificate_secret_name"`
 	Fqdn                  string  `json:"fqdn"`
 
-	// Message Operator-supplied explanation for `pendingVerification` / `error` states.
+	// Message Operator-supplied explanation for every non-`ready` state.
 	Message *string `json:"message"`
 
-	// State Per-domain lifecycle from `status.customDomains[]`.
-	// One of `pendingVerification`, `provisioning`, `ready`, `error`. `None` until the
-	// operator has reconciled this entry.
+	// ObservedAddresses Addresses this FQDN currently resolves to, as last observed by the operator.
+	// Populated when the entry is stuck in `pendingDns`.
+	ObservedAddresses *[]string `json:"observed_addresses,omitempty"`
+
+	// State Per-domain lifecycle from `status.customDomains[]`. One of
+	// `pendingVerification`, `conflict`, `pendingDns`, `provisioning`, `ready`,
+	// `error`. `None` until the operator has reconciled this entry.
 	State *string `json:"state"`
 
-	// Target CNAME target the user must point their DNS at. Surfaced once the route exists.
+	// Target IPv4 address the user must point this FQDN at with an `A` record.
 	Target *string `json:"target"`
 
 	// TlsMode `"acme"` or `"secret"`.
@@ -3948,6 +4715,15 @@ type CustomDomainResponse struct {
 
 	// TlsSecretName User-provided TLS Secret name when `tls_mode == "secret"`.
 	TlsSecretName *string `json:"tls_secret_name"`
+}
+
+// CustomDomainTargetResponse The DNS record value tenants point custom domains at.
+type CustomDomainTargetResponse struct {
+	// RecordType Always `"A"`.
+	RecordType string `json:"record_type"`
+
+	// Value IPv4 address of the cluster ingress.
+	Value string `json:"value"`
 }
 
 // CustomDomainTlsModeInput defines model for CustomDomainTlsModeInput.
@@ -3992,12 +4768,13 @@ type DagsterResponse struct {
 
 // Dashboard defines model for Dashboard.
 type Dashboard struct {
-	CreatedAt      time.Time          `json:"created_at"`
-	CreatedBy      openapi_types.UUID `json:"created_by"`
-	Description    *string            `json:"description"`
-	Id             openapi_types.UUID `json:"id"`
-	Name           string             `json:"name"`
-	OrganizationId openapi_types.UUID `json:"organization_id"`
+	CreatedAt      time.Time           `json:"created_at"`
+	CreatedBy      openapi_types.UUID  `json:"created_by"`
+	Description    *string             `json:"description"`
+	HarborId       *openapi_types.UUID `json:"harbor_id"`
+	Id             openapi_types.UUID  `json:"id"`
+	Name           string              `json:"name"`
+	OrganizationId openapi_types.UUID  `json:"organization_id"`
 
 	// RefreshIntervalSeconds Auto-refresh cadence in seconds; `None` = manual only (issue #2958).
 	RefreshIntervalSeconds *int32 `json:"refresh_interval_seconds"`
@@ -4023,11 +4800,12 @@ type DashboardSummary struct {
 	CreatedBy openapi_types.UUID `json:"created_by"`
 
 	// DeletedAt Set on trash listings only.
-	DeletedAt      *time.Time         `json:"deleted_at"`
-	Description    *string            `json:"description"`
-	Id             openapi_types.UUID `json:"id"`
-	Name           string             `json:"name"`
-	OrganizationId openapi_types.UUID `json:"organization_id"`
+	DeletedAt      *time.Time          `json:"deleted_at"`
+	Description    *string             `json:"description"`
+	HarborId       *openapi_types.UUID `json:"harbor_id"`
+	Id             openapi_types.UUID  `json:"id"`
+	Name           string              `json:"name"`
+	OrganizationId openapi_types.UUID  `json:"organization_id"`
 
 	// Status Draft dashboards are visible to their author and org editors only;
 	// published ones to everyone with read access (issue #2952).
@@ -4259,6 +5037,18 @@ type DataDockSearchRequest struct {
 	// Limit Final number of results (default 20, max 100).
 	Limit *int32 `json:"limit"`
 
+	// MaxBytes Optional byte budget for the returned records. Whole records are dropped from
+	// the tail of the ranking until the set fits, while `total` keeps reporting how
+	// many matched — so a caller can tell a bounded set from an exhausted one.
+	//
+	// Why a byte budget as well as `limit`: rows have no fixed size, so a count
+	// cannot express "fit in what I can read". A dozen hits are a few kilobytes on a
+	// corpus of notes and 60 KB on a corpus of PDFs. The budget belongs to the
+	// consumer — how much context it has — rather than to the data (#3234).
+	//
+	// Omit it for the previous behaviour: unbounded, however large the documents are.
+	MaxBytes *int64 `json:"max_bytes"`
+
 	// Query Text to search for; used for both keyword (BM25) and semantic legs.
 	Query string `json:"query"`
 
@@ -4392,6 +5182,30 @@ type DestinationConfig struct {
 	Prefix string `json:"prefix"`
 }
 
+// DevWorkstationEgressFlowsResponse Aggregated egress flows for a workstation pod. Best-effort: Hubble
+// Relay's ring buffer, not a complete historical record — see the module doc.
+type DevWorkstationEgressFlowsResponse struct {
+	Flows []EgressFlowSummaryDto `json:"flows"`
+
+	// WindowSecs Effective lookback window this response covers, in seconds.
+	WindowSecs int64 `json:"window_secs"`
+}
+
+// DevWorkstationEgressResponse Response for `GET /api/dev/workstations/{id}/egress` and the network PATCH.
+type DevWorkstationEgressResponse struct {
+	// EffectiveFqdns The FQDN allow-list the operator actually rendered into the
+	// `CiliumNetworkPolicy` on its most recent successful apply.
+	EffectiveFqdns []string `json:"effective_fqdns"`
+
+	// Network Wire shape of `DevWorkstation.spec.network`.
+	Network DevWorkstationNetworkResponse `json:"network"`
+
+	// Pending `true` when the CR's `spec` has moved ahead of what the operator last
+	// observed (`status.egressObservedGeneration != metadata.generation`) —
+	// i.e. `effective_fqdns` may not reflect `network` yet.
+	Pending bool `json:"pending"`
+}
+
 // DevWorkstationMetrics Live resource usage for a workstation pod. Every field is independently
 // nullable: a `null` means "couldn't be measured right now" (metrics-server
 // unavailable, exec failed, no limit set), not zero.
@@ -4417,20 +5231,40 @@ type DevWorkstationMetrics struct {
 	MemoryLimitBytes *int64 `json:"memory_limit_bytes"`
 }
 
+// DevWorkstationNetworkResponse Wire shape of `DevWorkstation.spec.network`.
+type DevWorkstationNetworkResponse struct {
+	Allowlists    []string `json:"allowlists"`
+	EgressProfile string   `json:"egress_profile"`
+	ExtraFqdns    []string `json:"extra_fqdns"`
+	LlmProviders  []string `json:"llm_providers"`
+}
+
 // DevWorkstationResponse defines model for DevWorkstationResponse.
 type DevWorkstationResponse struct {
-	CreatedAt      time.Time          `json:"created_at"`
-	HarborId       openapi_types.UUID `json:"harbor_id"`
-	Id             openapi_types.UUID `json:"id"`
-	Name           string             `json:"name"`
-	OrganizationId openapi_types.UUID `json:"organization_id"`
-	OwnerUserId    string             `json:"owner_user_id"`
+	CreatedAt time.Time          `json:"created_at"`
+	HarborId  openapi_types.UUID `json:"harbor_id"`
+	Id        openapi_types.UUID `json:"id"`
+
+	// InferenceProvider Inference provider from the live CR (`sapience` | `openrouter` |
+	// `claude`). Populated on the detail GET only (the CR read is per-resource);
+	// `null` in list responses. Drives provider-dependent UI such as the
+	// Agents tab surface (opencode chat vs Claude Code terminals).
+	InferenceProvider *string            `json:"inference_provider"`
+	Name              string             `json:"name"`
+	OrganizationId    openapi_types.UUID `json:"organization_id"`
+	OwnerUserId       string             `json:"owner_user_id"`
 
 	// PreviewUrls Dev-server previews exposed as per-port subdomains.
-	PreviewUrls []PreviewUrl                 `json:"preview_urls"`
-	RepoRef     string                       `json:"repo_ref"`
-	RepoUrl     string                       `json:"repo_url"`
-	Status      DevWorkstationStatusResponse `json:"status"`
+	PreviewUrls []PreviewUrl `json:"preview_urls"`
+	RepoRef     string       `json:"repo_ref"`
+
+	// RepoUrl Primary repository. Kept as a flat field for existing clients; it is
+	// always `repositories[0]`.
+	RepoUrl string `json:"repo_url"`
+
+	// Repositories Every repository the workstation clones, primary first.
+	Repositories []WorkstationRepositoryResponse `json:"repositories"`
+	Status       DevWorkstationStatusResponse    `json:"status"`
 }
 
 // DevWorkstationStatusResponse defines model for DevWorkstationStatusResponse.
@@ -4591,6 +5425,41 @@ type EffectiveSecuritySettingsResponse struct {
 	ZeroTrustMode                 bool     `json:"zero_trust_mode"`
 }
 
+// EgressAllowlistResponse An `EgressAllowlist` CR as returned by the harbor-scoped egress-allowlists API.
+type EgressAllowlistResponse struct {
+	// CreatedAt RFC 3339 creation timestamp, straight off `metadata.creationTimestamp`
+	// (same string-passthrough as `buckets::HFBucketView::created_at` — avoids
+	// a `k8s_openapi::jiff` <-> `chrono` conversion for a display-only field).
+	CreatedAt   *string  `json:"created_at"`
+	Description *string  `json:"description"`
+	DisplayName *string  `json:"display_name"`
+	Fqdns       []string `json:"fqdns"`
+
+	// Name Kubernetes CRD name — the identifier referenced from
+	// `DevWorkstation.spec.network.allowlists`.
+	Name string `json:"name"`
+}
+
+// EgressDestinationKindDto defines model for EgressDestinationKindDto.
+type EgressDestinationKindDto string
+
+// EgressFlowSummaryDto One aggregated (destination, verdict, port) row.
+type EgressFlowSummaryDto struct {
+	Count       int64                    `json:"count"`
+	Destination string                   `json:"destination"`
+	Kind        EgressDestinationKindDto `json:"kind"`
+	LastSeen    time.Time                `json:"last_seen"`
+
+	// Port Destination port shared by every flow counted in this row — the same
+	// host on two ports is two rows. `null` when the L4 protocol was neither
+	// TCP nor UDP.
+	Port    *int32           `json:"port"`
+	Verdict EgressVerdictDto `json:"verdict"`
+}
+
+// EgressVerdictDto defines model for EgressVerdictDto.
+type EgressVerdictDto string
+
 // EmailAuthPolicy How the pipeline responds to email authentication failures (SPF/DKIM/DMARC).
 // Verdicts are always recorded in attachment metadata regardless of policy.
 type EmailAuthPolicy string
@@ -4654,6 +5523,18 @@ type EnvVarInput struct {
 type EnvVarSpecResponse struct {
 	Name  string `json:"name"`
 	Value string `json:"value"`
+}
+
+// ExecuteActionRequest Body for `POST /ontology/action-types/{id}/execute` — the caller-supplied
+// values, keyed by parameter `api_name`. `primary_key` identifies the target
+// row and is required for `modify`/`delete` (ignored for `create`).
+type ExecuteActionRequest struct {
+	// Parameters `parameter api_name -> value`. Each key must name a declared parameter.
+	Parameters *map[string]interface{} `json:"parameters,omitempty"`
+
+	// PrimaryKey Primary-key value of the row to modify/delete (rendered via the PK
+	// property's typed literal). Required for `modify`/`delete`.
+	PrimaryKey *string `json:"primary_key"`
 }
 
 // ExecuteRequest defines model for ExecuteRequest.
@@ -5075,6 +5956,33 @@ type GcStatusResponse struct {
 	Suspended bool `json:"suspended"`
 }
 
+// GenerateOntologyRequest Body for `POST /ontology/generate` — points the copilot at a Data Dock
+// (and optionally narrows the grounding to one catalog/schema/table set).
+type GenerateOntologyRequest struct {
+	// Catalog Narrow grounding to one catalog (defaults to every catalog visible
+	// through the dock).
+	Catalog *string `json:"catalog"`
+
+	// DataDockId Data Dock whose schema grounds the generation (fetched with the
+	// caller's own JWT — same trust boundary as the dashboard copilot and
+	// the SQL editor).
+	DataDockId openapi_types.UUID `json:"data_dock_id"`
+
+	// Instructions Free-form extra guidance appended to the system prompt ("skip the
+	// audit_* tables", "prefer plural display names in French"...).
+	Instructions *string `json:"instructions"`
+
+	// Model Model override; defaults to the platform's generation model.
+	Model *string `json:"model"`
+
+	// Schema Narrow grounding to one schema within `catalog`.
+	Schema *string `json:"schema"`
+
+	// Tables Narrow grounding to specific tables (by name, any schema/catalog
+	// matched above). Empty means "every table in scope".
+	Tables *[]string `json:"tables,omitempty"`
+}
+
 // GetConsoleConfigResponse defines model for GetConsoleConfigResponse.
 type GetConsoleConfigResponse struct {
 	AppVersion string `json:"app_version"`
@@ -5096,17 +6004,26 @@ type GetConsoleConfigResponse struct {
 	// ConsolePublicUrl Full canonical public URL of the console (e.g. "https://console.hyperfluid.cloud").
 	// Lets the frontend show canonical URLs (e.g. the CLI install command) instead
 	// of the org-subdomain origin the user happens to be browsing.
-	ConsolePublicUrl              string                     `json:"console_public_url"`
-	ConsoleServiceAccountClientId string                     `json:"console_service_account_client_id"`
-	FeatureFlags                  []ConsoleConfigFeatureFlag `json:"feature_flags"`
+	ConsolePublicUrl              string `json:"console_public_url"`
+	ConsoleServiceAccountClientId string `json:"console_service_account_client_id"`
+
+	// CustomDomainTarget The DNS record value tenants point custom domains at.
+	CustomDomainTarget *CustomDomainTargetResponse `json:"custom_domain_target,omitempty"`
+	FeatureFlags       []ConsoleConfigFeatureFlag  `json:"feature_flags"`
 
 	// LlmGatewayPublicUrl Public ingress URL of the LLMaaS gateway, shown in copy-paste endpoint
 	// snippets on model detail pages. Empty when the gateway has no public
 	// ingress; the console then falls back to its own origin.
-	LlmGatewayPublicUrl   string   `json:"llm_gateway_public_url"`
-	OidcBaseUrl           string   `json:"oidc_base_url"`
-	OidcExpectedAudiences []string `json:"oidc_expected_audiences"`
-	SapienceApiUrl        string   `json:"sapience_api_url"`
+	LlmGatewayPublicUrl string `json:"llm_gateway_public_url"`
+
+	// ManagedMail Managed agent-mail availability (ADR-0027 / PRD-006). Contract with the
+	// console wizard — keep this exact shape: `enabled` is always present,
+	// `domain` is the platform mail domain (e.g. `"agents.acme-cloud.eu"`) and
+	// `null` when managed mail is disabled.
+	ManagedMail           ManagedMailConfigResponse `json:"managed_mail"`
+	OidcBaseUrl           string                    `json:"oidc_base_url"`
+	OidcExpectedAudiences []string                  `json:"oidc_expected_audiences"`
+	SapienceApiUrl        string                    `json:"sapience_api_url"`
 }
 
 // GetFakerFieldTypesResponse defines model for GetFakerFieldTypesResponse.
@@ -5152,6 +6069,30 @@ type GitFileStatus struct {
 
 	// Status Two-char porcelain status (e.g. " M", "A ", "??").
 	Status string `json:"status"`
+}
+
+// GitRepoStatus A workstation repository with the live state of its clone. This is what the
+// Source Control panel's repo switcher renders: one entry per repo, each with
+// enough state to show a badge without a round-trip per repo.
+type GitRepoStatus struct {
+	// Branch Current branch. Empty when not cloned.
+	Branch string `json:"branch"`
+
+	// Cloned False when the directory is not (yet) a git clone in the pod: the
+	// workstation was just created, the clone failed, or the repo was added
+	// while the pod was down.
+	Cloned bool `json:"cloned"`
+
+	// Dir Clone directory under `/workspace` — the value to pass back as `repo`.
+	Dir string `json:"dir"`
+
+	// Dirty Whether the working tree has uncommitted changes.
+	Dirty bool `json:"dirty"`
+
+	// Id `null` for the primary repository, which cannot be removed.
+	Id        *openapi_types.UUID `json:"id"`
+	IsPrimary bool                `json:"is_primary"`
+	Url       string              `json:"url"`
 }
 
 // GpgPublicKey defines model for GpgPublicKey.
@@ -5391,8 +6332,15 @@ type HFBucketView struct {
 // Each harbor belongs to an [Org](super::org::Org)
 // Each harbor has an owner who is a [User](super::user::User)
 type Harbor struct {
-	Id             openapi_types.UUID  `json:"id"`
-	Name           string              `json:"name"`
+	Id   openapi_types.UUID `json:"id"`
+	Name string             `json:"name"`
+
+	// Namespace Dedicated Kubernetes workload namespace for this harbor (ADR-0031).
+	// `None` = legacy shared placement in `hf-{org}`. Stamped at INSERT only
+	// when the owning organization opted in (`dedicated_harbor_namespaces`);
+	// the stored value is the single source of truth — always READ, never
+	// recomputed.
+	Namespace      *string             `json:"namespace"`
 	OrganizationId openapi_types.UUID  `json:"organization_id"`
 	OwnerId        *openapi_types.UUID `json:"owner_id"`
 	Slug           string              `json:"slug"`
@@ -5827,6 +6775,20 @@ type InboundEmailSourceConfig0 struct {
 // InboundEmailSourceConfig0Transport defines model for InboundEmailSourceConfig.0.Transport.
 type InboundEmailSourceConfig0Transport string
 
+// InstancePage A page of instances plus the cursor echoed back and whether more rows exist.
+type InstancePage struct {
+	// HasMore `true` when the backing table has at least one more row past this page
+	// (computed by over-fetching one row, so it needs no `COUNT(*)`).
+	HasMore      bool               `json:"has_more"`
+	Instances    []ObjectInstance   `json:"instances"`
+	Limit        int64              `json:"limit"`
+	ObjectTypeId openapi_types.UUID `json:"object_type_id"`
+	Offset       int64              `json:"offset"`
+}
+
+// IntendedUse What the requester intends to use the trial for.
+type IntendedUse string
+
 // InvitationIdentityProvider An identity provider offered on the invitation page, so the invitee can
 // sign in through it instead of setting a password. Only the fields the public
 // invite page needs — never any secret.
@@ -5983,6 +6945,32 @@ type LabelType1 struct {
 // LabelType1Type defines model for LabelType.1.Type.
 type LabelType1Type string
 
+// LinkType A typed, directed relationship between two Object Types — the analogue of
+// a JOIN between their backing tables. Relationships are modelled
+// explicitly, never inferred.
+type LinkType struct {
+	ApiName string `json:"api_name"`
+
+	// Cardinality One of [`LINK_CARDINALITIES`].
+	Cardinality        string             `json:"cardinality"`
+	CreatedAt          time.Time          `json:"created_at"`
+	Description        *string            `json:"description"`
+	DisplayName        string             `json:"display_name"`
+	Id                 openapi_types.UUID `json:"id"`
+	OrganizationId     openapi_types.UUID `json:"organization_id"`
+	SourceObjectTypeId openapi_types.UUID `json:"source_object_type_id"`
+	SourceProperty     *string            `json:"source_property"`
+	TargetObjectTypeId openapi_types.UUID `json:"target_object_type_id"`
+	TargetProperty     *string            `json:"target_property"`
+	UpdatedAt          time.Time          `json:"updated_at"`
+}
+
+// ListChangelogsResponse defines model for ListChangelogsResponse.
+type ListChangelogsResponse struct {
+	// Entries Newest first.
+	Entries []ChangelogEntryResponse `json:"entries"`
+}
+
 // ListConnectorsResponse defines model for ListConnectorsResponse.
 type ListConnectorsResponse struct {
 	Connectors []ConnectorDescriptorResponse `json:"connectors"`
@@ -5996,11 +6984,6 @@ type ListContextProvidersResponse struct {
 // ListContextualRestrictionsResponse Response for list of contextual restrictions.
 type ListContextualRestrictionsResponse struct {
 	Restrictions []ContextualRestrictionResponse `json:"restrictions"`
-}
-
-// ListLogsResponse defines model for ListLogsResponse.
-type ListLogsResponse struct {
-	Logs []Log `json:"logs"`
 }
 
 // ListQuotaProfilesResponse defines model for ListQuotaProfilesResponse.
@@ -6047,18 +7030,6 @@ type ListUserAttributesResponse struct {
 	Attributes []string `json:"attributes"`
 }
 
-// Log defines model for Log.
-type Log struct {
-	Id               openapi_types.UUID `json:"id"`
-	LogLevel         LogLevel           `json:"log_level"`
-	Message          string             `json:"message"`
-	OrganizationId   openapi_types.UUID `json:"organization_id"`
-	PipelineChecksum string             `json:"pipeline_checksum"`
-	PipelineId       openapi_types.UUID `json:"pipeline_id"`
-	RunId            openapi_types.UUID `json:"run_id"`
-	Timestamp        time.Time          `json:"timestamp"`
-}
-
 // LogEntryDto defines model for LogEntryDto.
 type LogEntryDto struct {
 	Container *string `json:"container"`
@@ -6073,7 +7044,13 @@ type LogEntryDto struct {
 	Ts string `json:"ts"`
 }
 
-// LogLevel defines model for LogLevel.
+// LogLevel Log severity filter (ADR-0020, Decision 3).
+//
+// Maps to a STATIC LogsQL clause (see `logsql::level_clause`) — it never
+// interpolates user text, so it adds zero injection surface. The mapping is a
+// case-insensitive prefix-token heuristic over the unstructured message text
+// (platform binaries do not emit structured levels — see the ADR non-goals),
+// so false positives (a line merely containing the word "error") are accepted.
 type LogLevel string
 
 // LogSourceDto A (pod, container) log source in scope, with a hit count — powers the logs
@@ -6088,6 +7065,20 @@ type LogSourceDto struct {
 // LogStream CRI log stream a line was emitted on. Maps to a STATIC exact `stream:="…"`
 // LogsQL filter (the value comes from this closed enum, never user text).
 type LogStream string
+
+// ManagedMailConfigResponse Managed agent-mail availability (ADR-0027 / PRD-006). Contract with the
+// console wizard — keep this exact shape: `enabled` is always present,
+// `domain` is the platform mail domain (e.g. `"agents.acme-cloud.eu"`) and
+// `null` when managed mail is disabled.
+type ManagedMailConfigResponse struct {
+	// Domain Domain managed mailboxes are provisioned under. `null` iff `enabled`
+	// is false.
+	Domain *string `json:"domain"`
+
+	// Enabled True when the platform is configured for managed mailboxes
+	// (`HF_MAIL_DOMAIN` set on the console).
+	Enabled bool `json:"enabled"`
+}
 
 // ManagedPostgresqlBackupCrdResponse defines model for ManagedPostgresqlBackupCrdResponse.
 type ManagedPostgresqlBackupCrdResponse struct {
@@ -6252,6 +7243,12 @@ type MessagePart1Kind string
 
 // MessagePart2 A tool invocation: read / edit / write / bash / grep / glob / list / ...
 type MessagePart2 struct {
+	// CallId opencode tool-call id (`call_...`, `part.callID`). Lets a pending
+	// interactive request (e.g. the `question` tool) be matched back to
+	// the message part it came from, so the UI can render the prompt
+	// inline in the thread.
+	CallId *string `json:"call_id"`
+
 	// Id opencode part id (`prt_...`); see `Text::id`.
 	Id *string `json:"id"`
 
@@ -6435,6 +7432,19 @@ type ModelUsage struct {
 	RequestCount int64  `json:"request_count"`
 }
 
+// ModelUsageTimePoint One point of the consumption-over-time series, for a single model.
+//
+// `ts` is the bucket timestamp (unix secs) — the hour start for the History
+// rollup, the step end for Realtime. A bucket carries one point per model that
+// saw traffic, so the chart can draw a series per model; a model with no usage
+// in a bucket is simply absent from it.
+type ModelUsageTimePoint struct {
+	InputTokens  int64  `json:"input_tokens"`
+	Model        string `json:"model"`
+	OutputTokens int64  `json:"output_tokens"`
+	Ts           int64  `json:"ts"`
+}
+
 // MultipartPartUrl defines model for MultipartPartUrl.
 type MultipartPartUrl struct {
 	PartNumber int32  `json:"part_number"`
@@ -6460,6 +7470,13 @@ type NormalizedMessage struct {
 	// CreatedAt ISO-8601 timestamp derived from opencode's `info.time.created` (epoch ms).
 	CreatedAt string `json:"created_at"`
 
+	// Error Human-readable failure of the turn, when opencode aborted it
+	// (`info.error`, e.g. a provider rejecting the API key). The UI renders it
+	// as an error callout in the assistant bubble — without this, a failed
+	// turn shows as an EMPTY assistant message and looks like a mystery
+	// instead of an actionable error.
+	Error *string `json:"error"`
+
 	// Id Opencode message id (`msg_...`).
 	Id string `json:"id"`
 
@@ -6474,6 +7491,78 @@ type NormalizedMessage struct {
 
 	// Tokens Total tokens for the turn, if opencode reported a step-finish.
 	Tokens *int32 `json:"tokens"`
+}
+
+// NotificationChannelDto defines model for NotificationChannelDto.
+type NotificationChannelDto struct {
+	CreatedAt time.Time          `json:"created_at"`
+	Enabled   bool               `json:"enabled"`
+	Id        openapi_types.UUID `json:"id"`
+
+	// Kind Delivery kinds, all three delivered end to end. The two webhook kinds share
+	// one transport (an HTTPS POST to a capability URL) and differ only in payload
+	// shape, so they differ here only by the host their URL must be on.
+	Kind ChannelKind `json:"kind"`
+	Name string      `json:"name"`
+
+	// Recipients Email channels only. Empty means "the organization's admins".
+	Recipients []string  `json:"recipients"`
+	UpdatedAt  time.Time `json:"updated_at"`
+
+	// UrlMasked Webhook channels only, and deliberately truncated — the full URL is a
+	// credential.
+	UrlMasked *string `json:"url_masked"`
+}
+
+// ObjectInstance One resolved row of an object type's backing table, keyed by property
+// `api_name` (not physical column) so the shape matches the semantic model.
+type ObjectInstance struct {
+	// PrimaryKey Value of the primary-key column for this row — the handle used to fetch
+	// this instance or traverse a link from it.
+	PrimaryKey interface{} `json:"primary_key"`
+
+	// Properties `property api_name -> value` for every source-column-mapped property.
+	Properties interface{} `json:"properties"`
+
+	// Title The `is_title` property's value when the object type designates one — a
+	// human label for the instance (e.g. a patient's name).
+	Title *string `json:"title"`
+}
+
+// ObjectType A class of business entity (Customer, Invoice, Flight...), optionally
+// grounded to one Iceberg table (`backing_*`, all nullable — a type can be
+// authored as a pure concept first).
+type ObjectType struct {
+	// ApiName Stable machine name, unique per org — the identity consumers/SDKs bind
+	// to. Immutable after creation (mirrors why `Label.key`/`value` are
+	// mutable but an Object Type's `api_name` is not: renaming it would
+	// break every Link Type and external SDK reference to it).
+	ApiName           string              `json:"api_name"`
+	BackingCatalog    *string             `json:"backing_catalog"`
+	BackingSchema     *string             `json:"backing_schema"`
+	BackingTable      *string             `json:"backing_table"`
+	Color             *string             `json:"color"`
+	CreatedAt         time.Time           `json:"created_at"`
+	CreatorId         openapi_types.UUID  `json:"creator_id"`
+	DataDockId        *openapi_types.UUID `json:"data_dock_id"`
+	Description       *string             `json:"description"`
+	DisplayName       string              `json:"display_name"`
+	Icon              *string             `json:"icon"`
+	Id                openapi_types.UUID  `json:"id"`
+	OrganizationId    openapi_types.UUID  `json:"organization_id"`
+	PluralDisplayName *string             `json:"plural_display_name"`
+	PrimaryKeyColumn  *string             `json:"primary_key_column"`
+	UpdatedAt         time.Time           `json:"updated_at"`
+}
+
+// ObjectTypeWithProperties [`ObjectType`] plus its [`PropertyDefinition`]s — what `get_object_type`
+// returns, so a single call gets the whole shape of the type.
+type ObjectTypeWithProperties struct {
+	// ObjectType A class of business entity (Customer, Invoice, Flight...), optionally
+	// grounded to one Iceberg table (`backing_*`, all nullable — a type can be
+	// authored as a pure concept first).
+	ObjectType ObjectType           `json:"object_type"`
+	Properties []PropertyDefinition `json:"properties"`
 }
 
 // OciRegistryAuth defines model for OciRegistryAuth.
@@ -6516,6 +7605,16 @@ type OcrProviderConfig1 struct {
 // OcrProviderConfig1Type defines model for OcrProviderConfig.1.Type.
 type OcrProviderConfig1Type string
 
+// OntologyProposal The full AI-proposed semantic model, returned by `generate` and the
+// request body `apply` persists (after the user has reviewed/edited it).
+type OntologyProposal struct {
+	LinkTypes *[]ProposedLinkType `json:"link_types,omitempty"`
+
+	// Notes Copilot commentary (assumptions, caveats), shown to the reviewer.
+	Notes       *string              `json:"notes"`
+	ObjectTypes []ProposedObjectType `json:"object_types"`
+}
+
 // OpenDataCatalogResponse defines model for OpenDataCatalogResponse.
 type OpenDataCatalogResponse struct {
 	Datasets []OpenDataDatasetResponse `json:"datasets"`
@@ -6552,6 +7651,14 @@ type OpenDataSourceConfig struct {
 type Org struct {
 	CreatedAt time.Time `json:"created_at"`
 
+	// DedicatedHarborNamespaces ADR-0031 (namespace-per-harbor) opt-in flag. `false` (the default)
+	// keeps every harbor of this org on the legacy shared `hf-{org}`
+	// namespace. `true` makes newly created harbors receive a dedicated
+	// `hf-{org}-{harbor}` namespace. The `#[serde(default)]` is load-bearing
+	// deploy-skew safety: an `Org` serialized by an old console without this
+	// field must deserialize to `false` (the legacy path).
+	DedicatedHarborNamespaces *bool `json:"dedicated_harbor_namespaces,omitempty"`
+
 	// ExternalS3Endpoint External HTTPS S3/RGW endpoint for this org's shared object storage,
 	// set by the operator's OrgStorage reconciler once it is exposed
 	// (`https://<slug>.s3.<domain>`). `None` until provisioned.
@@ -6566,6 +7673,36 @@ type Org struct {
 	LogsRetentionDays *int32 `json:"logs_retention_days"`
 	Name              string `json:"name"`
 	Slug              string `json:"slug"`
+}
+
+// OrgFeature The per-org sellable feature entitlements.
+//
+// Every variant maps 1:1 onto a [`ConsoleConfigFeatureFlag`] variant — the
+// deployment-wide Helm flag stays the kill switch and the org entitlement
+// decides within it (`effective = global AND org`). Deployment-posture flags
+// (`ShowMarketing`, `ShowDemoBanner`, `VaubanPreview`) deliberately have no
+// counterpart here: they are unauthenticated-bootstrap state, not
+// entitlements.
+type OrgFeature string
+
+// OrgFeatureState defines model for OrgFeatureState.
+type OrgFeatureState struct {
+	Enabled bool `json:"enabled"`
+
+	// Feature The per-org sellable feature entitlements.
+	//
+	// Every variant maps 1:1 onto a [`ConsoleConfigFeatureFlag`] variant — the
+	// deployment-wide Helm flag stays the kill switch and the org entitlement
+	// decides within it (`effective = global AND org`). Deployment-posture flags
+	// (`ShowMarketing`, `ShowDemoBanner`, `VaubanPreview`) deliberately have no
+	// counterpart here: they are unauthenticated-bootstrap state, not
+	// entitlements.
+	Feature OrgFeature `json:"feature"`
+}
+
+// OrgFeaturesResponse defines model for OrgFeaturesResponse.
+type OrgFeaturesResponse struct {
+	Features []OrgFeatureState `json:"features"`
 }
 
 // OrgSecuritySettingsResponse Response for organization security settings.
@@ -6613,11 +7750,14 @@ type OrgUserAttributesResponse struct {
 // (`token_hash`), and the raw token is delivered to the invitee by email. This
 // keeps the org-viewer-gated list endpoint from ever exposing a usable token.
 type OrganizationInvitation struct {
-	CreatedAt      time.Time           `json:"created_at"`
-	Email          string              `json:"email"`
-	ExpiresAt      time.Time           `json:"expires_at"`
-	Id             openapi_types.UUID  `json:"id"`
-	InvitedBy      openapi_types.UUID  `json:"invited_by"`
+	CreatedAt time.Time          `json:"created_at"`
+	Email     string             `json:"email"`
+	ExpiresAt time.Time          `json:"expires_at"`
+	Id        openapi_types.UUID `json:"id"`
+
+	// InvitedBy `None` for owner-bootstrap invitations sent by the platform backoffice,
+	// whose admins are not console users.
+	InvitedBy      *openapi_types.UUID `json:"invited_by"`
 	OrganizationId openapi_types.UUID  `json:"organization_id"`
 	RespondedAt    *time.Time          `json:"responded_at"`
 	RoleId         *openapi_types.UUID `json:"role_id"`
@@ -6830,10 +7970,13 @@ type PatchAppInstanceRequestBody struct {
 
 // PatchBackupTargetCrdRequestBody defines model for PatchBackupTargetCrdRequestBody.
 type PatchBackupTargetCrdRequestBody struct {
-	AccessKeySecretName       *string   `json:"access_key_secret_name"`
-	Description               *string   `json:"description"`
-	DestinationPath           *string   `json:"destination_path"`
-	EndpointUrl               *string   `json:"endpoint_url"`
+	AccessKeySecretName *string `json:"access_key_secret_name"`
+	Description         *string `json:"description"`
+	DestinationPath     *string `json:"destination_path"`
+	EndpointUrl         *string `json:"endpoint_url"`
+
+	// RetentionDays Days of backups and WAL archives to keep before expiring them, 1..=35.
+	RetentionDays             *int32    `json:"retention_days"`
 	SecretAccessKeySecretName *string   `json:"secret_access_key_secret_name"`
 	Tags                      *[]string `json:"tags"`
 }
@@ -7064,6 +8207,30 @@ type PendingPermission struct {
 	SessionId string `json:"session_id"`
 }
 
+// PendingQuestion One opencode question request that is CURRENTLY pending (awaiting the
+// user's answers), normalized like `PendingPermission`. The list endpoint
+// returns ALL pending requests across ALL sessions of the workstation so the
+// browser can reconcile prompts it never saw on the socket.
+type PendingQuestion struct {
+	// CallId The asking tool call's id (`call_...`); matches the message part's
+	// `call_id` so the UI can render the prompt inline in the thread.
+	CallId *string `json:"call_id"`
+
+	// Id Opencode question request id (`que_...`); reply via the
+	// `.../questions/{rid}/reply` route.
+	Id string `json:"id"`
+
+	// MessageId Message the asking `question` tool call belongs to (`msg_...`), when
+	// opencode linked the request to a tool call.
+	MessageId *string `json:"message_id"`
+
+	// Questions The questions to put to the user, in order.
+	Questions []QuestionInfo `json:"questions"`
+
+	// SessionId Opencode session id (`ses_...`) the request belongs to.
+	SessionId string `json:"session_id"`
+}
+
 // PermissionAction The standing permission policy for a tool, as opencode evaluates it before
 // each invocation. `ask` prompts the user (surfaced as a `PendingPermission`),
 // `allow` runs silently, `deny` blocks the call outright.
@@ -7156,10 +8323,44 @@ type PersistenceResponse struct {
 // PipelineDetailField A single labeled field shown on a connector detail page.
 // Sensitive fields are masked in the UI; copyable fields show a copy button.
 type PipelineDetailField struct {
-	Copyable  bool   `json:"copyable"`
-	Label     string `json:"label"`
-	Sensitive bool   `json:"sensitive"`
-	Value     string `json:"value"`
+	Copyable bool   `json:"copyable"`
+	Label    string `json:"label"`
+
+	// Reference The Hyperfluid resource a detail field's value refers to, so the console can
+	// link to it instead of printing a dead string.
+	//
+	// Resolved on this side rather than by sniffing the rendered value: the console
+	// would otherwise have to re-derive from a display string (`s3://bucket/prefix`,
+	// `catalog.schema.table`) what is known exactly here, and would follow the
+	// wrong link the first time a rendering changed.
+	//
+	// Every variant carries what the console's route needs, already resolved — a
+	// table names its data container by id, because that is what the catalog page
+	// is addressed by, even though the executor spec only ever names its catalog.
+	Reference *PipelineFieldReference `json:"reference,omitempty"`
+	Sensitive bool                    `json:"sensitive"`
+	Value     string                  `json:"value"`
+}
+
+// PipelineDetailGroup One section of a pipeline's configuration — its connections, or one step.
+//
+// Grouped rather than flat because the flat form had to carry the structure in
+// every label ("Labelize · Api key"), repeating the step name down the panel
+// and leaving the reader to spot where one step ended and the next began.
+type PipelineDetailGroup struct {
+	// Description What the step does, where the spec says so.
+	Description *string               `json:"description"`
+	Fields      []PipelineDetailField `json:"fields"`
+
+	// StepType The executor step type this section describes, e.g.
+	// `hyperfluid.builtins.labelize`. Passed through rather than translated:
+	// naming and iconography for a step belong to the console, which owns the
+	// graph vocabulary the reader has just seen above. Absent for the
+	// connections section, and for a step whose spec omits its type.
+	StepType *string `json:"step_type"`
+
+	// Title The step's name, or the heading for the pipeline's connections.
+	Title string `json:"title"`
 }
 
 // PipelineDetailResponse defines model for PipelineDetailResponse.
@@ -7169,14 +8370,9 @@ type PipelineDetailResponse struct {
 	// DestinationPrefix The destination prefix applied to all files written to the destination bucket.
 	// Used to construct the correct S3 browser path from a source-relative ref key.
 	DestinationPrefix *string               `json:"destination_prefix"`
-	Fields            []PipelineDetailField `json:"fields"`
+	Groups            []PipelineDetailGroup `json:"groups"`
 	Id                openapi_types.UUID    `json:"id"`
 	Name              string                `json:"name"`
-
-	// PersistLogs Whether run logs are persisted to the console. False when the pipeline
-	// was created with `persist_logs: false` (executor logs go to stdout
-	// only), in which case the run-logs page shows a dedicated empty state.
-	PersistLogs bool `json:"persist_logs"`
 
 	// Schedule Cron expression for scheduled pipelines, or "one_off" for one-time runs.
 	Schedule  string `json:"schedule"`
@@ -7184,6 +8380,50 @@ type PipelineDetailResponse struct {
 	Suspended bool   `json:"suspended"`
 	Type      string `json:"type"`
 }
+
+// PipelineFieldReference The Hyperfluid resource a detail field's value refers to, so the console can
+// link to it instead of printing a dead string.
+//
+// Resolved on this side rather than by sniffing the rendered value: the console
+// would otherwise have to re-derive from a display string (`s3://bucket/prefix`,
+// `catalog.schema.table`) what is known exactly here, and would follow the
+// wrong link the first time a rendering changed.
+//
+// Every variant carries what the console's route needs, already resolved — a
+// table names its data container by id, because that is what the catalog page
+// is addressed by, even though the executor spec only ever names its catalog.
+type PipelineFieldReference struct {
+	union json.RawMessage
+}
+
+// PipelineFieldReference0 An object-storage bucket, by name — which is how its page is addressed.
+type PipelineFieldReference0 struct {
+	Kind PipelineFieldReference0Kind `json:"kind"`
+	Name string                      `json:"name"`
+}
+
+// PipelineFieldReference0Kind defines model for PipelineFieldReference.0.Kind.
+type PipelineFieldReference0Kind string
+
+// PipelineFieldReference1 A model served by the LLM Gateway, by catalog name.
+type PipelineFieldReference1 struct {
+	Kind PipelineFieldReference1Kind `json:"kind"`
+	Name string                      `json:"name"`
+}
+
+// PipelineFieldReference1Kind defines model for PipelineFieldReference.1.Kind.
+type PipelineFieldReference1Kind string
+
+// PipelineFieldReference2 One Iceberg table, in the data container its catalog belongs to.
+type PipelineFieldReference2 struct {
+	DataContainerId openapi_types.UUID          `json:"data_container_id"`
+	Kind            PipelineFieldReference2Kind `json:"kind"`
+	Schema          string                      `json:"schema"`
+	Table           string                      `json:"table"`
+}
+
+// PipelineFieldReference2Kind defines model for PipelineFieldReference.2.Kind.
+type PipelineFieldReference2Kind string
 
 // PipelineInputParameters defines model for PipelineInputParameters.
 type PipelineInputParameters struct {
@@ -7217,7 +8457,8 @@ type PipelineInputParameters struct {
 
 // PipelineMetadata Pipeline metadata configuration (common to all pipeline types)
 type PipelineMetadata struct {
-	// Enabled Whether the pipeline is enabled (only applies to CronJobs)
+	// Enabled Whether the pipeline is enabled. A disabled pipeline is created
+	// suspended and runs nothing until it is resumed.
 	Enabled *bool `json:"enabled,omitempty"`
 
 	// Name Pipeline name
@@ -7229,16 +8470,16 @@ type PipelineMetadata struct {
 	// OrganizationSlug Organization slug (used for Keycloak realm)
 	OrganizationSlug string `json:"organization_slug"`
 
-	// PersistLogs When true, runtime logs are persisted to the console (queryable from the
-	// UI). When false, logs are emitted to stdout only and not persisted.
-	// Defaults to true.
-	PersistLogs *bool `json:"persist_logs,omitempty"`
-
 	// Schedule Cron expression (5-field) or "one_off" for a one-time run.
-	Schedule *string `json:"schedule,omitempty"`
+	//
+	// Omit it to get the pipeline type's own default cadence — every ten
+	// minutes for most, every six hours for the context enricher — which is
+	// the value each of them used to apply. Send `"one_off"` explicitly to ask
+	// for a single run.
+	Schedule *string `json:"schedule"`
 
 	// TriggerImmediateRun When true, spawn an immediate Job in addition to the CronJob on creation.
-	// Only meaningful for scheduled (non-one_off) pipelines.
+	// Only meaningful for scheduled (non-one_off), enabled pipelines.
 	TriggerImmediateRun *bool `json:"trigger_immediate_run,omitempty"`
 }
 
@@ -7365,15 +8606,17 @@ type PipelineOutputParameters3Type string
 
 // PipelineParameters defines model for PipelineParameters.
 type PipelineParameters struct {
-	// Enabled Whether the pipeline is enabled. Only applies to CronJob pipelines.
-	// When false, the CronJob will be suspended. Defaults to true (enabled).
+	// Enabled Whether the pipeline is enabled. A disabled pipeline is created
+	// suspended and runs nothing until it is resumed. Defaults to true.
 	Enabled *bool              `json:"enabled,omitempty"`
 	Name    string             `json:"name"`
 	OrgId   openapi_types.UUID `json:"org_id"`
 	OrgSlug string             `json:"org_slug"`
 
 	// Schedule Cron expression (5-field) or "one_off" for a one-time run.
-	Schedule *string `json:"schedule,omitempty"`
+	//
+	// Omit it for a single run — the V1 API's historical default.
+	Schedule *string `json:"schedule"`
 
 	// TriggerImmediateRun When true, spawn an immediate Job in addition to the CronJob on creation.
 	TriggerImmediateRun *bool  `json:"trigger_immediate_run,omitempty"`
@@ -7386,8 +8629,16 @@ type PipelineResponseData struct {
 	Id        openapi_types.UUID `json:"id"`
 	Name      string             `json:"name"`
 	OrgId     openapi_types.UUID `json:"org_id"`
-	Status    bool               `json:"status"`
-	Type      string             `json:"type"`
+
+	// Status `true` while the pipeline is scheduling runs — the inverse of
+	// [`Self::suspended`], kept as the field older clients read.
+	Status bool `json:"status"`
+
+	// Suspended Whether the underlying CronJob is suspended (no new scheduled runs).
+	// Read from the pipeline CRD, so it reflects what the cluster will do
+	// rather than what the console last asked for.
+	Suspended bool   `json:"suspended"`
+	Type      string `json:"type"`
 }
 
 // PipelineRun defines model for PipelineRun.
@@ -7401,9 +8652,14 @@ type PipelineRun struct {
 	LastHeartbeatAt           time.Time          `json:"last_heartbeat_at"`
 	OrganizationId            openapi_types.UUID `json:"organization_id"`
 	PipelineId                openapi_types.UUID `json:"pipeline_id"`
-	RunDurationMillis         int64              `json:"run_duration_millis"`
-	Status                    PipelineRunStatus  `json:"status"`
-	UpdatedAt                 time.Time          `json:"updated_at"`
+
+	// PodName Name of the pod that executed the run, reported by the executor via the
+	// downward API. Scopes the run's log query to that pod's collected stream
+	// (ADR-0020); `None` falls back to the console-written stream.
+	PodName           *string           `json:"pod_name"`
+	RunDurationMillis int64             `json:"run_duration_millis"`
+	Status            PipelineRunStatus `json:"status"`
+	UpdatedAt         time.Time         `json:"updated_at"`
 }
 
 // PipelineRunStatus defines model for PipelineRunStatus.
@@ -7418,8 +8674,60 @@ type PipelineStats struct {
 	TotalRuns     int64   `json:"total_runs"`
 }
 
+// PipelineStatusFilter Server-side status filter for `GET .../pipelines`, over the `suspended`
+// column (persisted from the CRD — see the `pipelines.suspended` migration).
+type PipelineStatusFilter string
+
 // PipelineType defines model for PipelineType.
 type PipelineType string
+
+// PipelineTypeCount One pipeline type's share of the organization's pipelines, for the "types
+// in use" breakdown on the pipelines overview page.
+type PipelineTypeCount struct {
+	// Count Pipelines of this type, in the organization.
+	Count int64  `json:"count"`
+	Type  string `json:"type"`
+}
+
+// PipelinesPage One page of `GET /organizations/{organization_id}/pipelines`.
+//
+// Shape mirrors `ManagedPostgresqlBackupsPage` (`data`/`total`/`page`/`limit`) —
+// same pagination contract, different resource.
+type PipelinesPage struct {
+	Data []PipelineResponseData `json:"data"`
+
+	// Limit Page size actually served.
+	Limit int64 `json:"limit"`
+
+	// Page Zero-based page index actually served.
+	Page int64 `json:"page"`
+
+	// Total Total rows matching the filters, ignoring `page`/`limit` — for the
+	// caller to compute page count.
+	Total int64 `json:"total"`
+}
+
+// PipelinesStats Response for `GET /organizations/{organization_id}/pipelines/stats` — every
+// number the pipelines overview page needs, aggregated in SQL rather than
+// derived client-side from a fetched page of rows (which silently undercounts
+// past the list endpoint's page-size ceiling).
+type PipelinesStats struct {
+	// Active Pipelines currently scheduling runs (`suspended = false`).
+	Active int64 `json:"active"`
+
+	// ByType Per-type counts, most common type first.
+	ByType []PipelineTypeCount `json:"by_type"`
+
+	// Recent The most recently created pipelines, newest first. Capped at 6 to match
+	// `RECENT_LIMIT` in the console's `pipelines/overview.tsx`.
+	Recent []PipelineResponseData `json:"recent"`
+
+	// Suspended Pipelines with no new scheduled runs (`suspended = true`).
+	Suspended int64 `json:"suspended"`
+
+	// Total Total pipelines in the organization, across every type and suspend state.
+	Total int64 `json:"total"`
+}
 
 // Platform An OS/architecture pair. Shared with the registry read views
 // ([`TagResponse`](crate::hf_console::inbound::http::handlers::registry_views::TagResponse)`::platforms`)
@@ -7579,6 +8887,86 @@ type PrincipalUsage struct {
 	RequestCount  int64   `json:"request_count"`
 }
 
+// PrincipalUsageTimePoint One point of the consumption-over-time series, for a single principal.
+//
+// Bucket geometry matches [`ModelUsageTimePoint`]. The principal fields carry
+// the same identity and name-resolution semantics as [`PrincipalUsage`]:
+// `name` is `None` for the unknown sentinel or a since-deleted principal, and
+// `key_prefix` is populated for API keys only.
+type PrincipalUsageTimePoint struct {
+	InputTokens   int64   `json:"input_tokens"`
+	KeyPrefix     *string `json:"key_prefix"`
+	Name          *string `json:"name"`
+	OutputTokens  int64   `json:"output_tokens"`
+	PrincipalId   string  `json:"principal_id"`
+	PrincipalType string  `json:"principal_type"`
+	Ts            int64   `json:"ts"`
+}
+
+// PropertyDefinition A typed attribute of an Object Type, optionally mapped to a physical
+// column of the backing table. `data_type` is a free-form semantic type
+// (string/integer/double/boolean/date/timestamp/geo/array/struct/...),
+// intentionally not a Rust enum — same posture as the migration's own
+// comment: the vocabulary must evolve without a schema migration.
+type PropertyDefinition struct {
+	ApiName      string             `json:"api_name"`
+	CreatedAt    time.Time          `json:"created_at"`
+	DataType     string             `json:"data_type"`
+	Description  *string            `json:"description"`
+	DisplayName  string             `json:"display_name"`
+	Id           openapi_types.UUID `json:"id"`
+	IsPrimaryKey bool               `json:"is_primary_key"`
+	IsTitle      bool               `json:"is_title"`
+	ObjectTypeId openapi_types.UUID `json:"object_type_id"`
+	SourceColumn *string            `json:"source_column"`
+	UpdatedAt    time.Time          `json:"updated_at"`
+}
+
+// ProposedLinkType One proposed [`LinkType`], with its endpoints named by `api_name` (not
+// `Uuid` — those don't exist yet) so it can only ever reference an object
+// type present in the same proposal.
+type ProposedLinkType struct {
+	ApiName string `json:"api_name"`
+
+	// Cardinality One of [`LINK_CARDINALITIES`] — re-validated by both
+	// `OntologyCopilotService::generate` and `apply_proposal`; an invalid
+	// value is dropped, never trusted as-is.
+	Cardinality      string  `json:"cardinality"`
+	Description      *string `json:"description"`
+	DisplayName      string  `json:"display_name"`
+	SourceObjectType string  `json:"source_object_type"`
+	SourceProperty   *string `json:"source_property"`
+	TargetObjectType string  `json:"target_object_type"`
+	TargetProperty   *string `json:"target_property"`
+}
+
+// ProposedObjectType One proposed [`ObjectType`], ungrounded (no `id`/`organization_id` — those
+// only exist once `apply_proposal` persists it).
+type ProposedObjectType struct {
+	ApiName           string             `json:"api_name"`
+	BackingTable      string             `json:"backing_table"`
+	Description       *string            `json:"description"`
+	DisplayName       string             `json:"display_name"`
+	PluralDisplayName *string            `json:"plural_display_name"`
+	PrimaryKeyColumn  string             `json:"primary_key_column"`
+	Properties        []ProposedProperty `json:"properties"`
+}
+
+// ProposedProperty One proposed [`PropertyDefinition`] on a [`ProposedObjectType`].
+type ProposedProperty struct {
+	ApiName string `json:"api_name"`
+
+	// DataType One of string|integer|double|boolean|date|timestamp (open-ended like
+	// [`PropertyDefinition::data_type`] — not validated against a closed
+	// set, since the vocabulary is free-form by design).
+	DataType     string  `json:"data_type"`
+	Description  *string `json:"description"`
+	DisplayName  string  `json:"display_name"`
+	IsPrimaryKey *bool   `json:"is_primary_key,omitempty"`
+	IsTitle      *bool   `json:"is_title,omitempty"`
+	SourceColumn string  `json:"source_column"`
+}
+
 // QueryHistoryEntry defines model for QueryHistoryEntry.
 type QueryHistoryEntry struct {
 	AnalysisTimeMs     *int64              `json:"analysis_time_ms"`
@@ -7622,6 +9010,42 @@ type QueryResult struct {
 type QueryResultColumn struct {
 	DataType string `json:"data_type"`
 	Name     string `json:"name"`
+}
+
+// QuestionInfo One question inside a pending question request.
+type QuestionInfo struct {
+	// Custom True when a free-text custom answer is allowed (opencode defaults to
+	// allowing it when the field is absent).
+	Custom bool `json:"custom"`
+
+	// Header Very short label (chip/tag) for the question.
+	Header string `json:"header"`
+
+	// Multiple True when several options may be selected.
+	Multiple bool `json:"multiple"`
+
+	// Options The available choices.
+	Options []QuestionOption `json:"options"`
+
+	// Question The complete question to ask the user.
+	Question string `json:"question"`
+}
+
+// QuestionOption One selectable choice of a question.
+type QuestionOption struct {
+	// Description Explanation of what choosing this option means.
+	Description string `json:"description"`
+
+	// Label Display text (short, 1–5 words).
+	Label string `json:"label"`
+}
+
+// QuestionReplyRequest defines model for QuestionReplyRequest.
+type QuestionReplyRequest struct {
+	// Answers User answers in the order of the request's questions. Each answer is
+	// the list of selected option labels (or one custom free-text answer);
+	// a single-select question sends a one-element list.
+	Answers [][]string `json:"answers"`
 }
 
 // QuotaCapacityDimension The three compute dimensions that can be capacity-constrained.
@@ -7839,6 +9263,17 @@ type RenameTerminalRequest struct {
 	Name string `json:"name"`
 }
 
+// RequestedSize The trial tier requested on the public form; maps to the `trial-s` /
+// `trial-m` quota profiles (`quota_profile_slug`), prefilled as the default
+// in the admin approve dialog.
+type RequestedSize string
+
+// RequesterKind Who is requesting a trial (public signup form). Stored as the matching
+// lowercase/snake_case string in `signup_requests.requester_kind` (see the
+// table's CHECK constraint) — `as_str`/`parse_str` are the single source of
+// truth for that mapping.
+type RequesterKind string
+
 // ResolvedGrant One fully-resolved effective permission for a principal: a permission the
 // principal can exercise — directly, expanded from a role bundle, or inherited
 // through a group — together with the scope it applies at and its effect. This
@@ -7878,6 +9313,11 @@ type ResourceFamily struct {
 	// for a root / org-scoped family.
 	Parent *string `json:"parent"`
 }
+
+// ResourceKind Which monitoring target family a rule watches. One variant per
+// `MonitoringTarget`, because that is what decides how `resource_ref` is
+// resolved into a live target at evaluation time.
+type ResourceKind string
 
 // ResourceLogsResponse defines model for ResourceLogsResponse.
 type ResourceLogsResponse struct {
@@ -8091,7 +9531,14 @@ type SecretMetadataResponse struct {
 	Description *string            `json:"description"`
 	Id          openapi_types.UUID `json:"id"`
 	Name        string             `json:"name"`
-	SecretPath  string             `json:"secret_path"`
+
+	// OwnerUserId Set only for user-scoped secrets: the owning principal's oidc sub, which
+	// is also the second segment of `name` (`users/<owner_user_id>/<leaf>`).
+	OwnerUserId *openapi_types.UUID `json:"owner_user_id"`
+
+	// Scope Visibility scope of a secret. Immutable after creation.
+	Scope      SecretScope `json:"scope"`
+	SecretPath string      `json:"secret_path"`
 
 	// SecretType The type of value stored in the secret.
 	SecretType SecretType `json:"secret_type"`
@@ -8110,6 +9557,9 @@ type SecretRefSpecResponse struct {
 	EnvVarName string `json:"env_var_name"`
 	SecretName string `json:"secret_name"`
 }
+
+// SecretScope Visibility scope of a secret. Immutable after creation.
+type SecretScope string
 
 // SecretType The type of value stored in the secret.
 type SecretType string
@@ -8193,6 +9643,9 @@ type ServiceAccount struct {
 	CreatedAt   time.Time `json:"created_at"`
 	Description *string   `json:"description"`
 
+	// Enabled Mirrored from the CRD. `false` means the account cannot obtain new tokens.
+	Enabled bool `json:"enabled"`
+
 	// IamSaClientId The client_id of the Keycloak client.
 	IamSaClientId string `json:"iam_sa_client_id"`
 
@@ -8204,7 +9657,35 @@ type ServiceAccount struct {
 	Id             openapi_types.UUID `json:"id"`
 	Name           string             `json:"name"`
 	OrganizationId openapi_types.UUID `json:"organization_id"`
-	UpdatedAt      time.Time          `json:"updated_at"`
+
+	// PublicClient Mirrored from the `ServiceAccount` CRD by the operator. Kept on the row
+	// so the list screen can show and filter the client type without reading
+	// custom resources.
+	PublicClient bool      `json:"public_client"`
+	UpdatedAt    time.Time `json:"updated_at"`
+}
+
+// ServiceAccountCrdConfig Keycloak-client settings read back from the `ServiceAccount` CRD, for the
+// console's configuration screen. These live only on the CRD — the console
+// database row carries identity and credentials, not client settings.
+type ServiceAccountCrdConfig struct {
+	ClientId                  string  `json:"client_id"`
+	Description               *string `json:"description"`
+	DirectAccessGrantsEnabled bool    `json:"direct_access_grants_enabled"`
+	Enabled                   bool    `json:"enabled"`
+
+	// PublicClient `true` means a browser-flow (public) client that authenticates without a
+	// secret. Such an account has no downloadable credentials.
+	PublicClient bool `json:"public_client"`
+
+	// Ready `true` once the operator has reconciled the spec into Keycloak.
+	Ready        bool     `json:"ready"`
+	RedirectUris []string `json:"redirect_uris"`
+
+	// SecretRotationPending Set while a requested secret rotation has not been applied yet.
+	SecretRotationPending  bool     `json:"secret_rotation_pending"`
+	ServiceAccountsEnabled bool     `json:"service_accounts_enabled"`
+	WebOrigins             []string `json:"web_origins"`
 }
 
 // SessionSummary A session row for the chat session rail. `title` is whatever opencode
@@ -8218,8 +9699,27 @@ type SessionSummary struct {
 	// Id Opencode session id (`ses_...`).
 	Id string `json:"id"`
 
+	// ParentId Parent session id when this is a `task` sub-agent's child session
+	// (opencode's `parentID`). Lets the frontend scope prompts to a session's
+	// family and keep child sessions out of the rail.
+	ParentId *string `json:"parent_id"`
+
 	// Title Human title set at create time; empty if opencode had none.
 	Title string `json:"title"`
+}
+
+// SetBindingsBody defines model for SetBindingsBody.
+type SetBindingsBody struct {
+	// ChannelIds Channels that receive this signal. Empty = every enabled channel.
+	ChannelIds []openapi_types.UUID `json:"channel_ids"`
+}
+
+// SetDedicatedHarborNamespacesRequestBody Body to enable/disable the org's ADR-0031 "dedicated harbor namespaces"
+// opt-in. Unlike the nullable settings above, this mirrors the underlying
+// `NOT NULL bool` column — the caller always states the desired value, there
+// is no "clear" state.
+type SetDedicatedHarborNamespacesRequestBody struct {
+	DedicatedHarborNamespaces bool `json:"dedicated_harbor_namespaces"`
 }
 
 // SetOrganizationLogsRetentionRequestBody Body to set an org's per-org logs retention (ADR-0020 query-time visibility
@@ -8235,6 +9735,12 @@ type SetOrganizationLogsRetentionRequestBody struct {
 type SetRolePermissionsRequestBody struct {
 	// PermissionIds The complete set of permission ids the role should hold after the save.
 	PermissionIds []openapi_types.UUID `json:"permission_ids"`
+}
+
+// SetThresholdsBody defines model for SetThresholdsBody.
+type SetThresholdsBody struct {
+	CriticalPct int32 `json:"critical_pct"`
+	WarningPct  int32 `json:"warning_pct"`
 }
 
 // SetUserAttributesRequest Request to set all attributes for a user (replaces existing).
@@ -8255,6 +9761,13 @@ type Sha256HashDedupingStrategy struct {
 
 // SharedModelResponse defines model for SharedModelResponse.
 type SharedModelResponse struct {
+	// ActiveModel Flavor-only: the highest-weight ready target's shared-model name (the
+	// one shown to users as "active").
+	ActiveModel *string `json:"active_model"`
+
+	// ContextTokens Flavor-only: the active target's served context window.
+	ContextTokens *int32 `json:"context_tokens"`
+
 	// Cpu CPU resources
 	Cpu string `json:"cpu"`
 
@@ -8264,23 +9777,54 @@ type SharedModelResponse struct {
 	// Gpu GPU count
 	Gpu int32 `json:"gpu"`
 
+	// Kind `"model"` for a raw shared model, `"flavor"` for a platform-owned
+	// `ModelFlavor` binding (ADR-0032). Existing entries carry `kind:
+	// "model"` and `None` for the fields below, so this stays
+	// backward-compatible for callers that don't know about flavors yet.
+	Kind string `json:"kind"`
+
 	// Memory Memory resources
 	Memory string `json:"memory"`
 
 	// ModelType Model type (generation, embedding, ocr)
 	ModelType string `json:"model_type"`
 
-	// Name InferenceService name (or external-model name)
+	// Name InferenceService name (or external-model name), or a flavor's public
+	// routing name when `kind == "flavor"`
 	Name string `json:"name"`
 
-	// Phase Current phase (Ready, Provisioning, Failed)
+	// Phase Current phase (Ready, Provisioning, Failed) — or a flavor's phase
+	// (Bound, Degraded, Unbound) when `kind == "flavor"`
 	Phase string `json:"phase"`
 
-	// Runtime Runtime engine (vllm, tgi, …) or `external`
+	// Runtime Inference engine (`vllm`, `sglang`, `tgi`, …), `external` for a model
+	// hosted off-cluster, or `unknown` when the serving's spec names none.
 	Runtime string `json:"runtime"`
 
 	// ServedModelName Served model name (the OpenAI `model` id)
 	ServedModelName *string `json:"served_model_name"`
+
+	// ToolCalling Flavor-only: whether the active target advertises tool calling.
+	ToolCalling *bool `json:"tool_calling"`
+}
+
+// SignalBindingsDto defines model for SignalBindingsDto.
+type SignalBindingsDto struct {
+	ChannelIds []openapi_types.UUID `json:"channel_ids"`
+	Signal     string               `json:"signal"`
+}
+
+// SignalThresholdsDto One signal's effective thresholds. `*_is_override` tells the UI whether it
+// is showing a platform default or the org's own value, so "reset to default"
+// can be offered only when it means something.
+type SignalThresholdsDto struct {
+	CriticalIsOverride bool  `json:"critical_is_override"`
+	CriticalPct        int32 `json:"critical_pct"`
+
+	// Signal `pvc_disk` | `bucket_quota`
+	Signal            string `json:"signal"`
+	WarningIsOverride bool   `json:"warning_is_override"`
+	WarningPct        int32  `json:"warning_pct"`
 }
 
 // SigningKeys defines model for SigningKeys.
@@ -8618,9 +10162,28 @@ type UnifiedCatalogResponse struct {
 // Unit defines model for Unit.
 type Unit string
 
+// UpdateActionTypeRequest `api_name` and `object_type_id` are deliberately absent — like
+// [`ObjectType::api_name`] and a link's endpoints, they are the action's
+// structural identity; retargeting is modelled as delete+recreate.
+//
+// PATCH semantics are COALESCE-based: an absent/`null` field is left
+// unchanged, and the nullable `description` cannot be cleared back to
+// `NULL` via PATCH (`parameters` is not nullable — send `[]` to empty it).
+type UpdateActionTypeRequest struct {
+	Description *string `json:"description"`
+	DisplayName *string `json:"display_name"`
+
+	// Operation One of [`ACTION_OPERATIONS`] when present (validated by the service).
+	Operation  *string            `json:"operation"`
+	Parameters *[]ActionParameter `json:"parameters"`
+}
+
 // UpdateAiAgentRequest Partial update. Only present fields are applied. Empty strings clear
 // `description` / `context` / `inference.model`.
 type UpdateAiAgentRequest struct {
+	// Budgets What the agent may spend answering one question. Both unset means the
+	// runtime derives them from the serving's advertised context window.
+	Budgets     *AiAgentBudgetsDto      `json:"budgets,omitempty"`
 	Context     *string                 `json:"context"`
 	DataSources *[]AiAgentDataSourceDto `json:"data_sources"`
 	Description *string                 `json:"description"`
@@ -8634,15 +10197,31 @@ type UpdateAiAgentRequest struct {
 
 	// Mail Mailbox configuration for the `mail` interface: one account used for both
 	// IMAP (inbound) and SMTP (replies).
-	Mail        *AiAgentMailDto `json:"mail,omitempty"`
-	QuestionSet *[]string       `json:"question_set"`
+	//
+	// Every field below `mode` besides `display_name`/`allowed_senders` is
+	// meaningful, and accepted, **only** in `External` mode (FR6): a `Managed`
+	// payload need not — and, per `validate_mail`, must not — set them.
+	Mail *AiAgentMailDto `json:"mail,omitempty"`
+
+	// Mission Replaces this capability's own instructions. An empty string clears them.
+	Mission     *string   `json:"mission"`
+	QuestionSet *[]string `json:"question_set"`
 
 	// Scaling Scale-to-zero bounds for the agent runtime.
 	Scaling *AiAgentScalingDto `json:"scaling,omitempty"`
 
 	// ServiceAccountId Attach this service account. Ignored when `detach_service_account`.
 	ServiceAccountId *openapi_types.UUID `json:"service_account_id"`
-	SystemPrompt     *string             `json:"system_prompt"`
+
+	// Speciality Replaces the speciality. An empty string clears it.
+	Speciality *string `json:"speciality"`
+
+	// SubagentOf Replaces the owning router. An empty string detaches the subagent.
+	SubagentOf   *string `json:"subagent_of"`
+	SystemPrompt *string `json:"system_prompt"`
+
+	// Tools Replaces the tool list. An empty array restores every tool and command.
+	Tools *[]string `json:"tools"`
 }
 
 // UpdateCatalogExposureRequestBody defines model for UpdateCatalogExposureRequestBody.
@@ -8744,6 +10323,23 @@ type UpdateDataDockSecuritySettingsBody struct {
 	TableLabelMatching     *bool     `json:"table_label_matching"`
 }
 
+// UpdateDevWorkstationNetworkRequest Partial update of a workstation's egress network settings. Every field is
+// optional; only present fields are applied to the CR `spec.network`.
+type UpdateDevWorkstationNetworkRequest struct {
+	// Allowlists Replaces the workstation's referenced `EgressAllowlist` names when
+	// present. Each must exist in the workstation's harbor namespace.
+	Allowlists *[]string `json:"allowlists"`
+
+	// EgressProfile Egress allow-list profile: `default` | `restricted` | `extended`.
+	EgressProfile *string `json:"egress_profile"`
+
+	// ExtraFqdns Replaces the workstation's extra FQDNs when present.
+	ExtraFqdns *[]string `json:"extra_fqdns"`
+
+	// LlmProviders Replaces the workstation's selected managed LLM providers when present.
+	LlmProviders *[]string `json:"llm_providers"`
+}
+
 // UpdateDevWorkstationRequest Partial update of a workstation's inference settings. Every field is
 // optional; only present fields are applied to the CR `spec.inference`.
 type UpdateDevWorkstationRequest struct {
@@ -8752,8 +10348,9 @@ type UpdateDevWorkstationRequest struct {
 	// it so the entrypoint's curated default applies again.
 	InferenceModel *string `json:"inference_model"`
 
-	// InferenceProvider Inference provider: `sapience` (in-cluster LLMaaS) or `openrouter`
-	// (external). When present, replaces the workstation's provider.
+	// InferenceProvider Inference provider: `sapience` (in-cluster LLMaaS), `openrouter`
+	// (external), or `claude` (Claude Code as the workstation agent). When
+	// present, replaces the workstation's provider.
 	InferenceProvider *string `json:"inference_provider"`
 
 	// OpenrouterKeySecretId Id of a Passe Partout secret of type `plaintext` holding the OpenRouter
@@ -8811,6 +10408,41 @@ type UpdateKafkaHFTopicRequest struct {
 	Replicas *int32 `json:"replicas"`
 }
 
+// UpdateLinkTypeRequest The two endpoints (`source_object_type_id`/`target_object_type_id`) are
+// absent — like `ObjectType::api_name`, they are the link's structural
+// identity; retargeting a link is modelled as delete+recreate.
+//
+// PATCH semantics are COALESCE-based: an absent/`null` field is left
+// unchanged, and the nullable join columns (`source_property`/
+// `target_property`) cannot be cleared back to `NULL` via PATCH.
+type UpdateLinkTypeRequest struct {
+	Cardinality    *string `json:"cardinality"`
+	Description    *string `json:"description"`
+	DisplayName    *string `json:"display_name"`
+	SourceProperty *string `json:"source_property"`
+	TargetProperty *string `json:"target_property"`
+}
+
+// UpdateObjectTypeRequest `api_name` is deliberately absent — see [`ObjectType::api_name`].
+//
+// PATCH semantics are COALESCE-based: a field that is absent (or `null`) in
+// the request body is left unchanged, and a nullable column can therefore
+// NOT be cleared back to `NULL` via PATCH — grounding
+// (`data_dock_id`/`backing_*`/`primary_key_column`) is effectively one-way
+// for now (ungrounding would be delete+recreate).
+type UpdateObjectTypeRequest struct {
+	BackingCatalog    *string             `json:"backing_catalog"`
+	BackingSchema     *string             `json:"backing_schema"`
+	BackingTable      *string             `json:"backing_table"`
+	Color             *string             `json:"color"`
+	DataDockId        *openapi_types.UUID `json:"data_dock_id"`
+	Description       *string             `json:"description"`
+	DisplayName       *string             `json:"display_name"`
+	Icon              *string             `json:"icon"`
+	PluralDisplayName *string             `json:"plural_display_name"`
+	PrimaryKeyColumn  *string             `json:"primary_key_column"`
+}
+
 // UpdateOptimizeRunStatusRequest defines model for UpdateOptimizeRunStatusRequest.
 type UpdateOptimizeRunStatusRequest struct {
 	Errors          *[]interface{} `json:"errors"`
@@ -8851,6 +10483,19 @@ type UpdatePipelineRequest struct {
 	Suspend bool `json:"suspend"`
 }
 
+// UpdatePropertyDefinitionRequest PATCH semantics are COALESCE-based: an absent/`null` field is left
+// unchanged, and a nullable field (`description`, `source_column`) cannot be
+// cleared back to `NULL` via PATCH — remapping a property away from a
+// physical column is delete+recreate for now.
+type UpdatePropertyDefinitionRequest struct {
+	DataType     *string `json:"data_type"`
+	Description  *string `json:"description"`
+	DisplayName  *string `json:"display_name"`
+	IsPrimaryKey *bool   `json:"is_primary_key"`
+	IsTitle      *bool   `json:"is_title"`
+	SourceColumn *string `json:"source_column"`
+}
+
 // UpdateRefRequest defines model for UpdateRefRequest.
 type UpdateRefRequest struct {
 	Attempts     int64      `json:"attempts"`
@@ -8887,9 +10532,17 @@ type UpdateSecretRequestBody struct {
 	Value       interface{} `json:"value,omitempty"`
 }
 
-// UpdateServiceAccountCrdRequestBody defines model for UpdateServiceAccountCrdRequestBody.
+// UpdateServiceAccountCrdRequestBody Editable Keycloak-client settings. `client_id` is not among them — the CRD
+// marks it immutable, since changing it would re-point the account's grants.
 type UpdateServiceAccountCrdRequestBody struct {
 	Description *string `json:"description"`
+	Enabled     bool    `json:"enabled"`
+
+	// PublicClient `true` switches the client to browser flow: it authenticates without a
+	// secret, and its stored credentials are dropped.
+	PublicClient bool     `json:"public_client"`
+	RedirectUris []string `json:"redirect_uris"`
+	WebOrigins   []string `json:"web_origins"`
 }
 
 // UpdateTableClassificationBody Request to update a table classification.
@@ -8948,13 +10601,6 @@ type UsageSummary struct {
 	TotalTokens  int64 `json:"total_tokens"`
 }
 
-// UsageTimePoint One point of the consumption-over-time series (`ts` = bucket-hour unix secs).
-type UsageTimePoint struct {
-	InputTokens  int64 `json:"input_tokens"`
-	OutputTokens int64 `json:"output_tokens"`
-	Ts           int64 `json:"ts"`
-}
-
 // User defines model for User.
 type User struct {
 	CreatedAt time.Time          `json:"created_at"`
@@ -9002,6 +10648,11 @@ type Value = interface{}
 
 // ValueFormat How a numeric cell is displayed (issue #2959).
 type ValueFormat string
+
+// VerifySignupRequestBody defines model for VerifySignupRequestBody.
+type VerifySignupRequestBody struct {
+	Code string `json:"code"`
+}
 
 // VersionEntry defines model for VersionEntry.
 type VersionEntry struct {
@@ -9095,6 +10746,36 @@ type WorkstationFile struct {
 	Path string `json:"path"`
 }
 
+// WorkstationRepositoryInput A repository to clone into a workstation. Used both at create time (for the
+// additional repositories) and by the add-a-repository endpoint.
+type WorkstationRepositoryInput struct {
+	// Provider SCM provider: `github` or `forgejo`. Must match the workstation's primary
+	// provider — the in-pod git credential helper is host-blind, so a single
+	// token has to work for every repository.
+	Provider *string `json:"provider"`
+
+	// RepoRef Branch/tag to check out. Defaults to `main`.
+	RepoRef *string `json:"repo_ref"`
+
+	// Url http(s) clone URL.
+	Url string `json:"url"`
+}
+
+// WorkstationRepositoryResponse One repository of a workstation, as the console shows it.
+type WorkstationRepositoryResponse struct {
+	// Dir Directory the repo is cloned into, relative to `/workspace`. This is the
+	// value to pass as the `repo` parameter on the git and file endpoints.
+	Dir string `json:"dir"`
+
+	// Id `null` for the primary repository: it has no row of its own and cannot be
+	// removed (it is the workstation's identity, fixed at create time).
+	Id        *openapi_types.UUID `json:"id"`
+	IsPrimary bool                `json:"is_primary"`
+	Provider  string              `json:"provider"`
+	RepoRef   string              `json:"repo_ref"`
+	Url       string              `json:"url"`
+}
+
 // WorkstationTemplateResponse A workstation template as returned by the API.
 type WorkstationTemplateResponse struct {
 	// BaseImage Base image the workstation pod will run on.
@@ -9144,6 +10825,10 @@ type WriteFileRequest struct {
 	BaseHash *string `json:"base_hash"`
 	Content  string  `json:"content"`
 	Path     string  `json:"path"`
+
+	// Repo Clone directory of the repository `path` is relative to. Absent = the
+	// primary repository.
+	Repo *string `json:"repo"`
 }
 
 // WriteFileResponse defines model for WriteFileResponse.
@@ -9171,11 +10856,81 @@ type ListScmRepositoriesParams struct {
 type ReadFileParams struct {
 	// Path Repo-relative path.
 	Path string `form:"path" json:"path"`
+
+	// Repo Clone directory of the repository the path is relative to, as returned by
+	// `GET /api/dev/workstations/{id}/repositories`. Absent = the primary
+	// repository, which is what a single-repo workstation always resolves to.
+	Repo *string `form:"repo,omitempty" json:"repo,omitempty"`
 }
 
 // ListFilesParams defines parameters for ListFiles.
 type ListFilesParams struct {
 	Query *string `form:"query,omitempty" json:"query,omitempty"`
+
+	// Repo Clone directory of the repository to browse/search, as returned by
+	// `GET /api/dev/workstations/{id}/repositories`. Absent = the primary
+	// repository. Returned paths are always relative to THIS repository, so they
+	// can be handed straight to the file and git endpoints with the same `repo`.
+	Repo *string `form:"repo,omitempty" json:"repo,omitempty"`
+}
+
+// GitBranchesParams defines parameters for GitBranches.
+type GitBranchesParams struct {
+	// Repo Clone directory under `/workspace`, as returned by
+	// `GET /api/dev/workstations/{id}/repositories`.
+	Repo *string `form:"repo,omitempty" json:"repo,omitempty"`
+}
+
+// GitCheckoutParams defines parameters for GitCheckout.
+type GitCheckoutParams struct {
+	// Repo Clone directory under `/workspace`, as returned by
+	// `GET /api/dev/workstations/{id}/repositories`.
+	Repo *string `form:"repo,omitempty" json:"repo,omitempty"`
+}
+
+// GitCommitParams defines parameters for GitCommit.
+type GitCommitParams struct {
+	// Repo Clone directory under `/workspace`, as returned by
+	// `GET /api/dev/workstations/{id}/repositories`.
+	Repo *string `form:"repo,omitempty" json:"repo,omitempty"`
+}
+
+// GitDiffParams defines parameters for GitDiff.
+type GitDiffParams struct {
+	// Repo Clone directory under `/workspace`, as returned by
+	// `GET /api/dev/workstations/{id}/repositories`.
+	Repo *string `form:"repo,omitempty" json:"repo,omitempty"`
+}
+
+// GitDiscardParams defines parameters for GitDiscard.
+type GitDiscardParams struct {
+	// Repo Clone directory under `/workspace`, as returned by
+	// `GET /api/dev/workstations/{id}/repositories`.
+	Repo *string `form:"repo,omitempty" json:"repo,omitempty"`
+}
+
+// GitPrParams defines parameters for GitPr.
+type GitPrParams struct {
+	// Repo Clone directory under `/workspace`, as returned by
+	// `GET /api/dev/workstations/{id}/repositories`.
+	Repo *string `form:"repo,omitempty" json:"repo,omitempty"`
+}
+
+// GitPrsParams defines parameters for GitPrs.
+type GitPrsParams struct {
+	// Repo Clone directory under `/workspace`, as returned by
+	// `GET /api/dev/workstations/{id}/repositories`.
+	Repo *string `form:"repo,omitempty" json:"repo,omitempty"`
+}
+
+// GetDevWorkstationEgressFlowsParams defines parameters for GetDevWorkstationEgressFlows.
+type GetDevWorkstationEgressFlowsParams struct {
+	// SinceSecs Lookback window in seconds. Default 900 (15 min), clamped to
+	// [`MAX_SINCE_SECS`].
+	SinceSecs *int64 `form:"since_secs,omitempty" json:"since_secs,omitempty"`
+
+	// Verdict `all` (default) | `forwarded` | `dropped`. Any other value is a 400.
+	Verdict *string `form:"verdict,omitempty" json:"verdict,omitempty"`
 }
 
 // DeleteBucketFileParams defines parameters for DeleteBucketFile.
@@ -9291,6 +11046,11 @@ type ListResourceAccessParams struct {
 	IncludeInherited *bool `form:"include_inherited,omitempty" json:"include_inherited,omitempty"`
 }
 
+// ListAlertEventsParams defines parameters for ListAlertEvents.
+type ListAlertEventsParams struct {
+	Limit *int64 `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
 // StreamPodLogsParams defines parameters for StreamPodLogs.
 type StreamPodLogsParams struct {
 	// TailLines Number of tail lines to start from (default: 100)
@@ -9298,6 +11058,17 @@ type StreamPodLogsParams struct {
 
 	// Previous Read logs from the previous (last terminated) container instance so crash-loop output survives a restart (default: false)
 	Previous *bool `form:"previous,omitempty" json:"previous,omitempty"`
+}
+
+// CheckCustomDomainAvailabilityParams defines parameters for CheckCustomDomainAvailability.
+type CheckCustomDomainAvailabilityParams struct {
+	// Fqdn FQDN to test, e.g. `app.acme.com`. Normalised server-side.
+	Fqdn string `form:"fqdn" json:"fqdn"`
+
+	// AppId Container app the FQDN would be assigned to. When set, that app's own claim on
+	// the FQDN is not reported as a conflict, so an edit dialog can re-submit
+	// unchanged domains.
+	AppId *openapi_types.UUID `form:"app_id,omitempty" json:"app_id,omitempty"`
 }
 
 // UnbindRoleFromGroupParams defines parameters for UnbindRoleFromGroup.
@@ -9816,6 +11587,22 @@ type GetMonitoringOverviewParams struct {
 	Range *MetricsRange `form:"range,omitempty" json:"range,omitempty"`
 }
 
+// ListPipelinesParams defines parameters for ListPipelines.
+type ListPipelinesParams struct {
+	// Page Zero-based page index. Absent or omitted defaults to the first page.
+	Page *int64 `form:"page,omitempty" json:"page,omitempty"`
+
+	// Limit Page size, clamped to `[1, 200]`. Absent defaults to 50.
+	Limit *int64 `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Search Case-insensitive substring match on the pipeline name. Absent matches
+	// every name.
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// Status Filter by suspend state. Absent behaves like `all`.
+	Status *PipelineStatusFilter `form:"status,omitempty" json:"status,omitempty"`
+}
+
 // CountPipelineRefsParams defines parameters for CountPipelineRefs.
 type CountPipelineRefsParams struct {
 	Status          *RefStatus `form:"status,omitempty" json:"status,omitempty"`
@@ -9827,9 +11614,49 @@ type CountPipelineRefsParams struct {
 
 // ListPipelineLogsParams defines parameters for ListPipelineLogs.
 type ListPipelineLogsParams struct {
-	Limit          *int32     `form:"limit,omitempty" json:"limit,omitempty"`
-	Offset         *int32     `form:"offset,omitempty" json:"offset,omitempty"`
-	CreatedAtAfter *time.Time `form:"created_at_after,omitempty" json:"created_at_after,omitempty"`
+	Range *MetricsRange `form:"range,omitempty" json:"range,omitempty"`
+
+	// Search Optional free-text search term, matched against the log message.
+	// Embedded as an escaped, case-insensitive LogsQL regex filter — never
+	// raw query syntax. Interpreted according to `search_mode`.
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// SearchMode How to interpret `search`: `text` (default, case-insensitive substring)
+	// or `regex` (a validated RE2 pattern). Ignored when `search` is empty.
+	SearchMode *SearchMode `form:"search_mode,omitempty" json:"search_mode,omitempty"`
+
+	// Pod Optional exact `kubernetes.pod_name` source filter (one entry from the
+	// `sources` facet). Validated as a plausible k8s name and embedded as an
+	// exact `:=` filter.
+	Pod *string `form:"pod,omitempty" json:"pod,omitempty"`
+
+	// Container Optional exact `kubernetes.container_name` source filter (one entry from
+	// the `sources` facet). Validated as a plausible k8s name and embedded as
+	// an exact `:=` filter.
+	Container *string `form:"container,omitempty" json:"container,omitempty"`
+
+	// Stream Optional CRI stream filter (`stdout` | `stderr`). Maps to a static exact
+	// `stream:="…"` LogsQL filter.
+	Stream *LogStream `form:"stream,omitempty" json:"stream,omitempty"`
+
+	// Level Optional severity filter. Maps to a static case-insensitive
+	// prefix-token LogsQL clause over the unstructured message text
+	// (heuristic — see ADR-0020; false positives accepted).
+	Level *LogLevel `form:"level,omitempty" json:"level,omitempty"`
+
+	// Start Optional custom window start (unix epoch SECONDS). When BOTH `start`
+	// and `end` are provided they define the query window and `range` is
+	// ignored; otherwise `range` applies. The effective (possibly
+	// org-retention-clamped) window is echoed back in the response
+	// `start`/`end` fields.
+	Start *int64 `form:"start,omitempty" json:"start,omitempty"`
+
+	// End Optional custom window end (unix epoch SECONDS). See `start`. May be
+	// slightly in the future (client clock slack); it is clamped to "now".
+	End *int64 `form:"end,omitempty" json:"end,omitempty"`
+
+	// Limit Maximum number of entries to return (clamped to 1..=1000, default 500).
+	Limit *int32 `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
 // GetTokenUsageByModelParams defines parameters for GetTokenUsageByModel.
@@ -9855,8 +11682,14 @@ type GetTokenUsageSummaryParams struct {
 	Source *UsageSource  `form:"source,omitempty" json:"source,omitempty"`
 }
 
-// GetTokenUsageTimeseriesParams defines parameters for GetTokenUsageTimeseries.
-type GetTokenUsageTimeseriesParams struct {
+// GetTokenUsageTimeseriesByModelParams defines parameters for GetTokenUsageTimeseriesByModel.
+type GetTokenUsageTimeseriesByModelParams struct {
+	Range  *MetricsRange `form:"range,omitempty" json:"range,omitempty"`
+	Source *UsageSource  `form:"source,omitempty" json:"source,omitempty"`
+}
+
+// GetTokenUsageTimeseriesByPrincipalParams defines parameters for GetTokenUsageTimeseriesByPrincipal.
+type GetTokenUsageTimeseriesByPrincipalParams struct {
 	Range  *MetricsRange `form:"range,omitempty" json:"range,omitempty"`
 	Source *UsageSource  `form:"source,omitempty" json:"source,omitempty"`
 }
@@ -9963,6 +11796,24 @@ type CreateContextualRestrictionHandlerParams struct {
 type ListDataDocksParams struct {
 	// Slug Filter by exact data dock slug (slugs are unique within a harbor).
 	Slug *string `form:"slug,omitempty" json:"slug,omitempty"`
+}
+
+// ListInstancesHandlerParams defines parameters for ListInstancesHandler.
+type ListInstancesHandlerParams struct {
+	// Limit Page size (1–200, default 50)
+	Limit *int64 `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Offset Rows to skip (default 0)
+	Offset *int64 `form:"offset,omitempty" json:"offset,omitempty"`
+}
+
+// TraverseLinkHandlerParams defines parameters for TraverseLinkHandler.
+type TraverseLinkHandlerParams struct {
+	// Limit Page size (1–200, default 50)
+	Limit *int64 `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Offset Rows to skip (default 0)
+	Offset *int64 `form:"offset,omitempty" json:"offset,omitempty"`
 }
 
 // ListServiceAccountsHandlerParams defines parameters for ListServiceAccountsHandler.
@@ -10089,6 +11940,12 @@ type IssueRegistryTokenParams struct {
 	OfflineToken *bool `form:"offline_token,omitempty" json:"offline_token,omitempty"`
 }
 
+// CreateEgressAllowlistJSONRequestBody defines body for CreateEgressAllowlist for application/json ContentType.
+type CreateEgressAllowlistJSONRequestBody = CreateOrUpdateEgressAllowlistRequest
+
+// UpdateEgressAllowlistJSONRequestBody defines body for UpdateEgressAllowlist for application/json ContentType.
+type UpdateEgressAllowlistJSONRequestBody = CreateOrUpdateEgressAllowlistRequest
+
 // CreateDevWorkstationJSONRequestBody defines body for CreateDevWorkstation for application/json ContentType.
 type CreateDevWorkstationJSONRequestBody = CreateDevWorkstationRequest
 
@@ -10113,6 +11970,9 @@ type GitPrJSONRequestBody = PrRequest
 // UpdatePermissionPolicyJSONRequestBody defines body for UpdatePermissionPolicy for application/json ContentType.
 type UpdatePermissionPolicyJSONRequestBody = UpdatePermissionPolicyRequest
 
+// ReplyQuestionJSONRequestBody defines body for ReplyQuestion for application/json ContentType.
+type ReplyQuestionJSONRequestBody = QuestionReplyRequest
+
 // CreateSessionJSONRequestBody defines body for CreateSession for application/json ContentType.
 type CreateSessionJSONRequestBody = CreateSessionRequest
 
@@ -10125,6 +11985,12 @@ type ReplyPermissionJSONRequestBody = PermissionReplyRequest
 // AiEditJSONRequestBody defines body for AiEdit for application/json ContentType.
 type AiEditJSONRequestBody = AiEditRequest
 
+// UpdateDevWorkstationNetworkJSONRequestBody defines body for UpdateDevWorkstationNetwork for application/json ContentType.
+type UpdateDevWorkstationNetworkJSONRequestBody = UpdateDevWorkstationNetworkRequest
+
+// AddWorkstationRepositoryJSONRequestBody defines body for AddWorkstationRepository for application/json ContentType.
+type AddWorkstationRepositoryJSONRequestBody = WorkstationRepositoryInput
+
 // RenameDevWorkstationTerminalJSONRequestBody defines body for RenameDevWorkstationTerminal for application/json ContentType.
 type RenameDevWorkstationTerminalJSONRequestBody = RenameTerminalRequest
 
@@ -10136,21 +12002,6 @@ type UpdateContextProviderHandlerJSONRequestBody = UpdateContextProviderBody
 
 // UpdateContextualRestrictionHandlerJSONRequestBody defines body for UpdateContextualRestrictionHandler for application/json ContentType.
 type UpdateContextualRestrictionHandlerJSONRequestBody = UpdateContextualRestrictionBody
-
-// CreateDashboardJSONRequestBody defines body for CreateDashboard for application/json ContentType.
-type CreateDashboardJSONRequestBody = CreateDashboardRequest
-
-// GenerateDashboardWidgetsJSONRequestBody defines body for GenerateDashboardWidgets for application/json ContentType.
-type GenerateDashboardWidgetsJSONRequestBody = CopilotGenerateRequest
-
-// UpdateDashboardJSONRequestBody defines body for UpdateDashboard for application/json ContentType.
-type UpdateDashboardJSONRequestBody = UpdateDashboardRequest
-
-// DuplicateDashboardJSONRequestBody defines body for DuplicateDashboard for application/json ContentType.
-type DuplicateDashboardJSONRequestBody = DuplicateDashboardRequest
-
-// TransferDashboardJSONRequestBody defines body for TransferDashboard for application/json ContentType.
-type TransferDashboardJSONRequestBody = TransferDashboardRequest
 
 // CreateBucketFolderJSONRequestBody defines body for CreateBucketFolder for application/json ContentType.
 type CreateBucketFolderJSONRequestBody = CreateBucketFolderRequest
@@ -10224,6 +12075,21 @@ type CompleteMultipartUploadJSONRequestBody = CompleteMultipartUploadRequest
 // PrepareArchiveImportJSONRequestBody defines body for PrepareArchiveImport for application/json ContentType.
 type PrepareArchiveImportJSONRequestBody = PrepareArchiveImportRequest
 
+// CreateDashboardJSONRequestBody defines body for CreateDashboard for application/json ContentType.
+type CreateDashboardJSONRequestBody = CreateDashboardRequest
+
+// GenerateDashboardWidgetsJSONRequestBody defines body for GenerateDashboardWidgets for application/json ContentType.
+type GenerateDashboardWidgetsJSONRequestBody = CopilotGenerateRequest
+
+// UpdateDashboardJSONRequestBody defines body for UpdateDashboard for application/json ContentType.
+type UpdateDashboardJSONRequestBody = UpdateDashboardRequest
+
+// DuplicateDashboardJSONRequestBody defines body for DuplicateDashboard for application/json ContentType.
+type DuplicateDashboardJSONRequestBody = DuplicateDashboardRequest
+
+// TransferDashboardJSONRequestBody defines body for TransferDashboard for application/json ContentType.
+type TransferDashboardJSONRequestBody = TransferDashboardRequest
+
 // EnableSqlEngineJSONRequestBody defines body for EnableSqlEngine for application/json ContentType.
 type EnableSqlEngineJSONRequestBody = EnableSqlEngineRequest
 
@@ -10266,6 +12132,24 @@ type AskAiAgentJSONRequestBody = AskAiAgentRequest
 // PatchAirflowCrdJSONRequestBody defines body for PatchAirflowCrd for application/json ContentType.
 type PatchAirflowCrdJSONRequestBody = PatchAirflowCrdRequestBody
 
+// SetAlertBindingsJSONRequestBody defines body for SetAlertBindings for application/json ContentType.
+type SetAlertBindingsJSONRequestBody = SetBindingsBody
+
+// CreateNotificationChannelJSONRequestBody defines body for CreateNotificationChannel for application/json ContentType.
+type CreateNotificationChannelJSONRequestBody = ChannelBody
+
+// UpdateNotificationChannelJSONRequestBody defines body for UpdateNotificationChannel for application/json ContentType.
+type UpdateNotificationChannelJSONRequestBody = ChannelBody
+
+// CreateAlertRuleJSONRequestBody defines body for CreateAlertRule for application/json ContentType.
+type CreateAlertRuleJSONRequestBody = AlertRuleBody
+
+// UpdateAlertRuleJSONRequestBody defines body for UpdateAlertRule for application/json ContentType.
+type UpdateAlertRuleJSONRequestBody = AlertRuleBody
+
+// SetAlertThresholdsJSONRequestBody defines body for SetAlertThresholds for application/json ContentType.
+type SetAlertThresholdsJSONRequestBody = SetThresholdsBody
+
 // CreateApiKeyJSONRequestBody defines body for CreateApiKey for application/json ContentType.
 type CreateApiKeyJSONRequestBody = CreateApiKeyRequest
 
@@ -10283,6 +12167,9 @@ type PatchContainerAppCrdJSONRequestBody = PatchContainerAppCrdRequestBody
 
 // PatchDagsterCrdJSONRequestBody defines body for PatchDagsterCrd for application/json ContentType.
 type PatchDagsterCrdJSONRequestBody = PatchDagsterCrdRequestBody
+
+// SetDedicatedHarborNamespacesJSONRequestBody defines body for SetDedicatedHarborNamespaces for application/json ContentType.
+type SetDedicatedHarborNamespacesJSONRequestBody = SetDedicatedHarborNamespacesRequestBody
 
 // CreateDomainVerificationJSONRequestBody defines body for CreateDomainVerification for application/json ContentType.
 type CreateDomainVerificationJSONRequestBody = CreateDomainVerificationRequestBody
@@ -10416,8 +12303,41 @@ type CreateContextProviderHandlerJSONRequestBody = CreateContextProviderBody
 // CreateContextualRestrictionHandlerJSONRequestBody defines body for CreateContextualRestrictionHandler for application/json ContentType.
 type CreateContextualRestrictionHandlerJSONRequestBody = CreateContextualRestrictionBody
 
-// AssignSubscriptionHandlerJSONRequestBody defines body for AssignSubscriptionHandler for application/json ContentType.
-type AssignSubscriptionHandlerJSONRequestBody = AssignSubscriptionBody
+// CreateActionTypeHandlerJSONRequestBody defines body for CreateActionTypeHandler for application/json ContentType.
+type CreateActionTypeHandlerJSONRequestBody = CreateActionTypeRequest
+
+// UpdateActionTypeHandlerJSONRequestBody defines body for UpdateActionTypeHandler for application/json ContentType.
+type UpdateActionTypeHandlerJSONRequestBody = UpdateActionTypeRequest
+
+// ExecuteActionHandlerJSONRequestBody defines body for ExecuteActionHandler for application/json ContentType.
+type ExecuteActionHandlerJSONRequestBody = ExecuteActionRequest
+
+// ApplyOntologyProposalHandlerJSONRequestBody defines body for ApplyOntologyProposalHandler for application/json ContentType.
+type ApplyOntologyProposalHandlerJSONRequestBody = ApplyOntologyProposalRequest
+
+// OntologyAssistantHandlerJSONRequestBody defines body for OntologyAssistantHandler for application/json ContentType.
+type OntologyAssistantHandlerJSONRequestBody = AssistantRequest
+
+// GenerateOntologyHandlerJSONRequestBody defines body for GenerateOntologyHandler for application/json ContentType.
+type GenerateOntologyHandlerJSONRequestBody = GenerateOntologyRequest
+
+// CreateLinkTypeHandlerJSONRequestBody defines body for CreateLinkTypeHandler for application/json ContentType.
+type CreateLinkTypeHandlerJSONRequestBody = CreateLinkTypeRequest
+
+// UpdateLinkTypeHandlerJSONRequestBody defines body for UpdateLinkTypeHandler for application/json ContentType.
+type UpdateLinkTypeHandlerJSONRequestBody = UpdateLinkTypeRequest
+
+// CreateObjectTypeHandlerJSONRequestBody defines body for CreateObjectTypeHandler for application/json ContentType.
+type CreateObjectTypeHandlerJSONRequestBody = CreateObjectTypeRequest
+
+// UpdateObjectTypeHandlerJSONRequestBody defines body for UpdateObjectTypeHandler for application/json ContentType.
+type UpdateObjectTypeHandlerJSONRequestBody = UpdateObjectTypeRequest
+
+// AddPropertyHandlerJSONRequestBody defines body for AddPropertyHandler for application/json ContentType.
+type AddPropertyHandlerJSONRequestBody = CreatePropertyDefinitionRequest
+
+// UpdatePropertyHandlerJSONRequestBody defines body for UpdatePropertyHandler for application/json ContentType.
+type UpdatePropertyHandlerJSONRequestBody = UpdatePropertyDefinitionRequest
 
 // UpdateOrgSecuritySettingsHandlerJSONRequestBody defines body for UpdateOrgSecuritySettingsHandler for application/json ContentType.
 type UpdateOrgSecuritySettingsHandlerJSONRequestBody = UpdateOrgSecuritySettingsBody
@@ -10442,6 +12362,12 @@ type UpdateRefJSONRequestBody = UpdateRefRequest
 
 // SetRolePermissionsJSONRequestBody defines body for SetRolePermissions for application/json ContentType.
 type SetRolePermissionsJSONRequestBody = SetRolePermissionsRequestBody
+
+// CreateSignupRequestJSONRequestBody defines body for CreateSignupRequest for application/json ContentType.
+type CreateSignupRequestJSONRequestBody = CreateSignupRequestBody
+
+// VerifySignupRequestJSONRequestBody defines body for VerifySignupRequest for application/json ContentType.
+type VerifySignupRequestJSONRequestBody = VerifySignupRequestBody
 
 // ExecuteQueryHandlerJSONRequestBody defines body for ExecuteQueryHandler for application/json ContentType.
 type ExecuteQueryHandlerJSONRequestBody = ExecuteRequest
@@ -11947,6 +13873,94 @@ func (t *OcrProviderConfig) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsPipelineFieldReference0 returns the union data inside the PipelineFieldReference as a PipelineFieldReference0
+func (t PipelineFieldReference) AsPipelineFieldReference0() (PipelineFieldReference0, error) {
+	var body PipelineFieldReference0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPipelineFieldReference0 overwrites any union data inside the PipelineFieldReference as the provided PipelineFieldReference0
+func (t *PipelineFieldReference) FromPipelineFieldReference0(v PipelineFieldReference0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePipelineFieldReference0 performs a merge with any union data inside the PipelineFieldReference, using the provided PipelineFieldReference0
+func (t *PipelineFieldReference) MergePipelineFieldReference0(v PipelineFieldReference0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsPipelineFieldReference1 returns the union data inside the PipelineFieldReference as a PipelineFieldReference1
+func (t PipelineFieldReference) AsPipelineFieldReference1() (PipelineFieldReference1, error) {
+	var body PipelineFieldReference1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPipelineFieldReference1 overwrites any union data inside the PipelineFieldReference as the provided PipelineFieldReference1
+func (t *PipelineFieldReference) FromPipelineFieldReference1(v PipelineFieldReference1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePipelineFieldReference1 performs a merge with any union data inside the PipelineFieldReference, using the provided PipelineFieldReference1
+func (t *PipelineFieldReference) MergePipelineFieldReference1(v PipelineFieldReference1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsPipelineFieldReference2 returns the union data inside the PipelineFieldReference as a PipelineFieldReference2
+func (t PipelineFieldReference) AsPipelineFieldReference2() (PipelineFieldReference2, error) {
+	var body PipelineFieldReference2
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPipelineFieldReference2 overwrites any union data inside the PipelineFieldReference as the provided PipelineFieldReference2
+func (t *PipelineFieldReference) FromPipelineFieldReference2(v PipelineFieldReference2) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePipelineFieldReference2 performs a merge with any union data inside the PipelineFieldReference, using the provided PipelineFieldReference2
+func (t *PipelineFieldReference) MergePipelineFieldReference2(v PipelineFieldReference2) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t PipelineFieldReference) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *PipelineFieldReference) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsPipelineOutputParameters0 returns the union data inside the PipelineOutputParameters as a PipelineOutputParameters0
 func (t PipelineOutputParameters) AsPipelineOutputParameters0() (PipelineOutputParameters0, error) {
 	var body PipelineOutputParameters0
@@ -12355,6 +14369,25 @@ type ClientInterface interface {
 	// ListForgejoBranches request
 	ListForgejoBranches(ctx context.Context, harborId openapi_types.UUID, owner string, name string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListEgressAllowlists request
+	ListEgressAllowlists(ctx context.Context, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateEgressAllowlistWithBody request with any body
+	CreateEgressAllowlistWithBody(ctx context.Context, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateEgressAllowlist(ctx context.Context, harborId openapi_types.UUID, body CreateEgressAllowlistJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteEgressAllowlist request
+	DeleteEgressAllowlist(ctx context.Context, harborId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetEgressAllowlist request
+	GetEgressAllowlist(ctx context.Context, harborId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateEgressAllowlistWithBody request with any body
+	UpdateEgressAllowlistWithBody(ctx context.Context, harborId openapi_types.UUID, name string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateEgressAllowlist(ctx context.Context, harborId openapi_types.UUID, name string, body UpdateEgressAllowlistJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListScmRepositories request
 	ListScmRepositories(ctx context.Context, secretId openapi_types.UUID, params *ListScmRepositoriesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -12395,33 +14428,36 @@ type ClientInterface interface {
 	ListFiles(ctx context.Context, id openapi_types.UUID, params *ListFilesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GitBranches request
-	GitBranches(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GitBranches(ctx context.Context, id openapi_types.UUID, params *GitBranchesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GitCheckoutWithBody request with any body
-	GitCheckoutWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GitCheckoutWithBody(ctx context.Context, id openapi_types.UUID, params *GitCheckoutParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	GitCheckout(ctx context.Context, id openapi_types.UUID, body GitCheckoutJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GitCheckout(ctx context.Context, id openapi_types.UUID, params *GitCheckoutParams, body GitCheckoutJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GitCommitWithBody request with any body
-	GitCommitWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GitCommitWithBody(ctx context.Context, id openapi_types.UUID, params *GitCommitParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	GitCommit(ctx context.Context, id openapi_types.UUID, body GitCommitJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GitCommit(ctx context.Context, id openapi_types.UUID, params *GitCommitParams, body GitCommitJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GitDiff request
-	GitDiff(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GitDiff(ctx context.Context, id openapi_types.UUID, params *GitDiffParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GitDiscardWithBody request with any body
-	GitDiscardWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GitDiscardWithBody(ctx context.Context, id openapi_types.UUID, params *GitDiscardParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	GitDiscard(ctx context.Context, id openapi_types.UUID, body GitDiscardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GitDiscard(ctx context.Context, id openapi_types.UUID, params *GitDiscardParams, body GitDiscardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GitPrWithBody request with any body
-	GitPrWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GitPrWithBody(ctx context.Context, id openapi_types.UUID, params *GitPrParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	GitPr(ctx context.Context, id openapi_types.UUID, body GitPrJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GitPr(ctx context.Context, id openapi_types.UUID, params *GitPrParams, body GitPrJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GitPrs request
-	GitPrs(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GitPrs(ctx context.Context, id openapi_types.UUID, params *GitPrsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GitRepos request
+	GitRepos(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListModels request
 	ListModels(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -12442,6 +14478,17 @@ type ClientInterface interface {
 
 	// ListPendingPermissions request
 	ListPendingPermissions(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListPendingQuestions request
+	ListPendingQuestions(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RejectQuestion request
+	RejectQuestion(ctx context.Context, id openapi_types.UUID, rid string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ReplyQuestionWithBody request with any body
+	ReplyQuestionWithBody(ctx context.Context, id openapi_types.UUID, rid string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ReplyQuestion(ctx context.Context, id openapi_types.UUID, rid string, body ReplyQuestionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListSessions request
 	ListSessions(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -12478,11 +14525,33 @@ type ClientInterface interface {
 
 	AiEdit(ctx context.Context, id openapi_types.UUID, body AiEditJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetDevWorkstationEgress request
+	GetDevWorkstationEgress(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetDevWorkstationEgressFlows request
+	GetDevWorkstationEgressFlows(ctx context.Context, id openapi_types.UUID, params *GetDevWorkstationEgressFlowsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetDevWorkstationMetrics request
 	GetDevWorkstationMetrics(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// UpdateDevWorkstationNetworkWithBody request with any body
+	UpdateDevWorkstationNetworkWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateDevWorkstationNetwork(ctx context.Context, id openapi_types.UUID, body UpdateDevWorkstationNetworkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// AuthorizePreview request
 	AuthorizePreview(ctx context.Context, id openapi_types.UUID, port int32, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListWorkstationRepositories request
+	ListWorkstationRepositories(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AddWorkstationRepositoryWithBody request with any body
+	AddWorkstationRepositoryWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AddWorkstationRepository(ctx context.Context, id openapi_types.UUID, body AddWorkstationRepositoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RemoveWorkstationRepository request
+	RemoveWorkstationRepository(ctx context.Context, id openapi_types.UUID, repoId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListDevWorkstationTerminals request
 	ListDevWorkstationTerminals(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -12515,6 +14584,9 @@ type ClientInterface interface {
 	// GetBifrostInfo request
 	GetBifrostInfo(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListChangelogsHandler request
+	ListChangelogsHandler(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetCliVersion request
 	GetCliVersion(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -12545,55 +14617,6 @@ type ClientInterface interface {
 	UpdateContextualRestrictionHandlerWithBody(ctx context.Context, restrictionId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	UpdateContextualRestrictionHandler(ctx context.Context, restrictionId openapi_types.UUID, body UpdateContextualRestrictionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ListDashboards request
-	ListDashboards(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// CreateDashboardWithBody request with any body
-	CreateDashboardWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	CreateDashboard(ctx context.Context, body CreateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GenerateDashboardWidgetsWithBody request with any body
-	GenerateDashboardWidgetsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	GenerateDashboardWidgets(ctx context.Context, body GenerateDashboardWidgetsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ListDashboardTrash request
-	ListDashboardTrash(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// DeleteDashboard request
-	DeleteDashboard(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetDashboard request
-	GetDashboard(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// UpdateDashboardWithBody request with any body
-	UpdateDashboardWithBody(ctx context.Context, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	UpdateDashboard(ctx context.Context, dashboardId openapi_types.UUID, body UpdateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// DuplicateDashboardWithBody request with any body
-	DuplicateDashboardWithBody(ctx context.Context, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	DuplicateDashboard(ctx context.Context, dashboardId openapi_types.UUID, body DuplicateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// CheckDashboardHealth request
-	CheckDashboardHealth(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// RestoreDashboard request
-	RestoreDashboard(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// TransferDashboardWithBody request with any body
-	TransferDashboardWithBody(ctx context.Context, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	TransferDashboard(ctx context.Context, dashboardId openapi_types.UUID, body TransferDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ListDashboardVersions request
-	ListDashboardVersions(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// RestoreDashboardVersion request
-	RestoreDashboardVersion(ctx context.Context, dashboardId openapi_types.UUID, versionNo int32, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteBucketFile request
 	DeleteBucketFile(ctx context.Context, dataContainerId openapi_types.UUID, params *DeleteBucketFileParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -12677,6 +14700,9 @@ type ClientInterface interface {
 
 	// DeleteSchema request
 	DeleteSchema(ctx context.Context, dataContainerId openapi_types.UUID, schemaName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteTable request
+	DeleteTable(ctx context.Context, dataContainerId openapi_types.UUID, schemaName string, tableName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetTableColumns request
 	GetTableColumns(ctx context.Context, dataContainerId openapi_types.UUID, schemaName string, tableName string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -12853,6 +14879,55 @@ type ClientInterface interface {
 	// UploadBucketObject request
 	UploadBucketObject(ctx context.Context, harborId openapi_types.UUID, bucketName string, params *UploadBucketObjectParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListDashboards request
+	ListDashboards(ctx context.Context, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateDashboardWithBody request with any body
+	CreateDashboardWithBody(ctx context.Context, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateDashboard(ctx context.Context, harborId openapi_types.UUID, body CreateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GenerateDashboardWidgetsWithBody request with any body
+	GenerateDashboardWidgetsWithBody(ctx context.Context, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	GenerateDashboardWidgets(ctx context.Context, harborId openapi_types.UUID, body GenerateDashboardWidgetsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListDashboardTrash request
+	ListDashboardTrash(ctx context.Context, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteDashboard request
+	DeleteDashboard(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetDashboard request
+	GetDashboard(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateDashboardWithBody request with any body
+	UpdateDashboardWithBody(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateDashboard(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body UpdateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DuplicateDashboardWithBody request with any body
+	DuplicateDashboardWithBody(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DuplicateDashboard(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body DuplicateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CheckDashboardHealth request
+	CheckDashboardHealth(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RestoreDashboard request
+	RestoreDashboard(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TransferDashboardWithBody request with any body
+	TransferDashboardWithBody(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	TransferDashboard(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body TransferDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListDashboardVersions request
+	ListDashboardVersions(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RestoreDashboardVersion request
+	RestoreDashboardVersion(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, versionNo int32, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListHarborDataDock request
 	ListHarborDataDock(ctx context.Context, harborId openapi_types.UUID, params *ListHarborDataDockParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -12990,6 +15065,15 @@ type ClientInterface interface {
 	// GetAiAgentMailStats request
 	GetAiAgentMailStats(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListAiAgentSessions request
+	ListAiAgentSessions(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteAiAgentSession request
+	DeleteAiAgentSession(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, sessionId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAiAgentSession request
+	GetAiAgentSession(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, sessionId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetAirflow request
 	GetAirflow(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -13003,6 +15087,66 @@ type ClientInterface interface {
 	PatchAirflowCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	PatchAirflowCrd(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, body PatchAirflowCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAlertablePanels request
+	ListAlertablePanels(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAlertBindings request
+	ListAlertBindings(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SetAlertBindingsWithBody request with any body
+	SetAlertBindingsWithBody(ctx context.Context, organizationId openapi_types.UUID, signal string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SetAlertBindings(ctx context.Context, organizationId openapi_types.UUID, signal string, body SetAlertBindingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListNotificationChannels request
+	ListNotificationChannels(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateNotificationChannelWithBody request with any body
+	CreateNotificationChannelWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateNotificationChannel(ctx context.Context, organizationId openapi_types.UUID, body CreateNotificationChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteNotificationChannel request
+	DeleteNotificationChannel(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateNotificationChannelWithBody request with any body
+	UpdateNotificationChannelWithBody(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateNotificationChannel(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, body UpdateNotificationChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TestNotificationChannel request
+	TestNotificationChannel(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAlertEvents request
+	ListAlertEvents(ctx context.Context, organizationId openapi_types.UUID, params *ListAlertEventsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAlertRules request
+	ListAlertRules(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateAlertRuleWithBody request with any body
+	CreateAlertRuleWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateAlertRule(ctx context.Context, organizationId openapi_types.UUID, body CreateAlertRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteAlertRule request
+	DeleteAlertRule(ctx context.Context, organizationId openapi_types.UUID, ruleId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateAlertRuleWithBody request with any body
+	UpdateAlertRuleWithBody(ctx context.Context, organizationId openapi_types.UUID, ruleId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateAlertRule(ctx context.Context, organizationId openapi_types.UUID, ruleId openapi_types.UUID, body UpdateAlertRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAlertThresholds request
+	ListAlertThresholds(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ClearAlertThresholds request
+	ClearAlertThresholds(ctx context.Context, organizationId openapi_types.UUID, signal string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SetAlertThresholdsWithBody request with any body
+	SetAlertThresholdsWithBody(ctx context.Context, organizationId openapi_types.UUID, signal string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SetAlertThresholds(ctx context.Context, organizationId openapi_types.UUID, signal string, body SetAlertThresholdsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListApiKeys request
 	ListApiKeys(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -13068,6 +15212,9 @@ type ClientInterface interface {
 	// DeleteOrganizationCrd request
 	DeleteOrganizationCrd(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// CheckCustomDomainAvailability request
+	CheckCustomDomainAvailability(ctx context.Context, organizationId openapi_types.UUID, params *CheckCustomDomainAvailabilityParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetDagster request
 	GetDagster(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -13081,6 +15228,11 @@ type ClientInterface interface {
 	PatchDagsterCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	PatchDagsterCrd(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, body PatchDagsterCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SetDedicatedHarborNamespacesWithBody request with any body
+	SetDedicatedHarborNamespacesWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SetDedicatedHarborNamespaces(ctx context.Context, organizationId openapi_types.UUID, body SetDedicatedHarborNamespacesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListDomainVerifications request
 	ListDomainVerifications(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -13504,7 +15656,10 @@ type ClientInterface interface {
 	GetOrganizationOverview(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListPipelines request
-	ListPipelines(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	ListPipelines(ctx context.Context, organizationId openapi_types.UUID, params *ListPipelinesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetPipelinesStats request
+	GetPipelinesStats(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TestImapConnectionWithBody request with any body
 	TestImapConnectionWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -13570,8 +15725,11 @@ type ClientInterface interface {
 	// GetTokenUsageSummary request
 	GetTokenUsageSummary(ctx context.Context, organizationId openapi_types.UUID, params *GetTokenUsageSummaryParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetTokenUsageTimeseries request
-	GetTokenUsageTimeseries(ctx context.Context, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetTokenUsageTimeseriesByModel request
+	GetTokenUsageTimeseriesByModel(ctx context.Context, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesByModelParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetTokenUsageTimeseriesByPrincipal request
+	GetTokenUsageTimeseriesByPrincipal(ctx context.Context, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesByPrincipalParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListSecrets request
 	ListSecrets(ctx context.Context, organizationId openapi_types.UUID, params *ListSecretsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -13609,10 +15767,16 @@ type ClientInterface interface {
 	// DeleteServiceAccountCrd request
 	DeleteServiceAccountCrd(ctx context.Context, organizationId openapi_types.UUID, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetServiceAccountCrd request
+	GetServiceAccountCrd(ctx context.Context, organizationId openapi_types.UUID, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// UpdateServiceAccountCrdWithBody request with any body
 	UpdateServiceAccountCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	UpdateServiceAccountCrd(ctx context.Context, organizationId openapi_types.UUID, clientId string, body UpdateServiceAccountCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RotateServiceAccountSecret request
+	RotateServiceAccountSecret(ctx context.Context, organizationId openapi_types.UUID, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListServiceAccountGrants request
 	ListServiceAccountGrants(ctx context.Context, organizationId openapi_types.UUID, serviceAccountId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -13722,13 +15886,110 @@ type ClientInterface interface {
 	// GetEffectiveSecuritySettingsHandler request
 	GetEffectiveSecuritySettingsHandler(ctx context.Context, organizationId openapi_types.UUID, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetOrgFeaturesHandler request
+	GetOrgFeaturesHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListActionTypesHandler request
+	ListActionTypesHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateActionTypeHandlerWithBody request with any body
+	CreateActionTypeHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateActionTypeHandler(ctx context.Context, organizationId openapi_types.UUID, body CreateActionTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteActionTypeHandler request
+	DeleteActionTypeHandler(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetActionTypeHandler request
+	GetActionTypeHandler(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateActionTypeHandlerWithBody request with any body
+	UpdateActionTypeHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateActionTypeHandler(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, body UpdateActionTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ExecuteActionHandlerWithBody request with any body
+	ExecuteActionHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ExecuteActionHandler(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, body ExecuteActionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ApplyOntologyProposalHandlerWithBody request with any body
+	ApplyOntologyProposalHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ApplyOntologyProposalHandler(ctx context.Context, organizationId openapi_types.UUID, body ApplyOntologyProposalHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// OntologyAssistantHandlerWithBody request with any body
+	OntologyAssistantHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OntologyAssistantHandler(ctx context.Context, organizationId openapi_types.UUID, body OntologyAssistantHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GenerateOntologyHandlerWithBody request with any body
+	GenerateOntologyHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	GenerateOntologyHandler(ctx context.Context, organizationId openapi_types.UUID, body GenerateOntologyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListLinkTypesHandler request
+	ListLinkTypesHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateLinkTypeHandlerWithBody request with any body
+	CreateLinkTypeHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateLinkTypeHandler(ctx context.Context, organizationId openapi_types.UUID, body CreateLinkTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteLinkTypeHandler request
+	DeleteLinkTypeHandler(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetLinkTypeHandler request
+	GetLinkTypeHandler(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateLinkTypeHandlerWithBody request with any body
+	UpdateLinkTypeHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateLinkTypeHandler(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, body UpdateLinkTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListObjectTypesHandler request
+	ListObjectTypesHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateObjectTypeHandlerWithBody request with any body
+	CreateObjectTypeHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateObjectTypeHandler(ctx context.Context, organizationId openapi_types.UUID, body CreateObjectTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteObjectTypeHandler request
+	DeleteObjectTypeHandler(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetObjectTypeHandler request
+	GetObjectTypeHandler(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateObjectTypeHandlerWithBody request with any body
+	UpdateObjectTypeHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateObjectTypeHandler(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, body UpdateObjectTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListInstancesHandler request
+	ListInstancesHandler(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, params *ListInstancesHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetInstanceHandler request
+	GetInstanceHandler(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, primaryKey string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TraverseLinkHandler request
+	TraverseLinkHandler(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, primaryKey string, linkTypeId openapi_types.UUID, params *TraverseLinkHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AddPropertyHandlerWithBody request with any body
+	AddPropertyHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AddPropertyHandler(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, body AddPropertyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeletePropertyHandler request
+	DeletePropertyHandler(ctx context.Context, organizationId openapi_types.UUID, propertyId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdatePropertyHandlerWithBody request with any body
+	UpdatePropertyHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, propertyId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdatePropertyHandler(ctx context.Context, organizationId openapi_types.UUID, propertyId openapi_types.UUID, body UpdatePropertyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetOrgQuotasHandler request
 	GetOrgQuotasHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// AssignSubscriptionHandlerWithBody request with any body
-	AssignSubscriptionHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	AssignSubscriptionHandler(ctx context.Context, organizationId openapi_types.UUID, body AssignSubscriptionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetOrgSecuritySettingsHandler request
 	GetOrgSecuritySettingsHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -13817,6 +16078,16 @@ type ClientInterface interface {
 
 	// GetSharedModel request
 	GetSharedModel(ctx context.Context, name string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateSignupRequestWithBody request with any body
+	CreateSignupRequestWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateSignupRequest(ctx context.Context, body CreateSignupRequestJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// VerifySignupRequestWithBody request with any body
+	VerifySignupRequestWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	VerifySignupRequest(ctx context.Context, id openapi_types.UUID, body VerifySignupRequestJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AnalyticsSlowQueriesHandler request
 	AnalyticsSlowQueriesHandler(ctx context.Context, params *AnalyticsSlowQueriesHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -13973,6 +16244,90 @@ func (c *Client) ListForgejoRepositories(ctx context.Context, harborId openapi_t
 
 func (c *Client) ListForgejoBranches(ctx context.Context, harborId openapi_types.UUID, owner string, name string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListForgejoBranchesRequest(c.Server, harborId, owner, name)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListEgressAllowlists(ctx context.Context, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListEgressAllowlistsRequest(c.Server, harborId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateEgressAllowlistWithBody(ctx context.Context, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateEgressAllowlistRequestWithBody(c.Server, harborId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateEgressAllowlist(ctx context.Context, harborId openapi_types.UUID, body CreateEgressAllowlistJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateEgressAllowlistRequest(c.Server, harborId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteEgressAllowlist(ctx context.Context, harborId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteEgressAllowlistRequest(c.Server, harborId, name)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetEgressAllowlist(ctx context.Context, harborId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetEgressAllowlistRequest(c.Server, harborId, name)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateEgressAllowlistWithBody(ctx context.Context, harborId openapi_types.UUID, name string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateEgressAllowlistRequestWithBody(c.Server, harborId, name, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateEgressAllowlist(ctx context.Context, harborId openapi_types.UUID, name string, body UpdateEgressAllowlistJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateEgressAllowlistRequest(c.Server, harborId, name, body)
 	if err != nil {
 		return nil, err
 	}
@@ -14151,8 +16506,8 @@ func (c *Client) ListFiles(ctx context.Context, id openapi_types.UUID, params *L
 	return c.Client.Do(req)
 }
 
-func (c *Client) GitBranches(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGitBranchesRequest(c.Server, id)
+func (c *Client) GitBranches(ctx context.Context, id openapi_types.UUID, params *GitBranchesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGitBranchesRequest(c.Server, id, params)
 	if err != nil {
 		return nil, err
 	}
@@ -14163,8 +16518,8 @@ func (c *Client) GitBranches(ctx context.Context, id openapi_types.UUID, reqEdit
 	return c.Client.Do(req)
 }
 
-func (c *Client) GitCheckoutWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGitCheckoutRequestWithBody(c.Server, id, contentType, body)
+func (c *Client) GitCheckoutWithBody(ctx context.Context, id openapi_types.UUID, params *GitCheckoutParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGitCheckoutRequestWithBody(c.Server, id, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -14175,8 +16530,8 @@ func (c *Client) GitCheckoutWithBody(ctx context.Context, id openapi_types.UUID,
 	return c.Client.Do(req)
 }
 
-func (c *Client) GitCheckout(ctx context.Context, id openapi_types.UUID, body GitCheckoutJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGitCheckoutRequest(c.Server, id, body)
+func (c *Client) GitCheckout(ctx context.Context, id openapi_types.UUID, params *GitCheckoutParams, body GitCheckoutJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGitCheckoutRequest(c.Server, id, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -14187,8 +16542,8 @@ func (c *Client) GitCheckout(ctx context.Context, id openapi_types.UUID, body Gi
 	return c.Client.Do(req)
 }
 
-func (c *Client) GitCommitWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGitCommitRequestWithBody(c.Server, id, contentType, body)
+func (c *Client) GitCommitWithBody(ctx context.Context, id openapi_types.UUID, params *GitCommitParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGitCommitRequestWithBody(c.Server, id, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -14199,8 +16554,8 @@ func (c *Client) GitCommitWithBody(ctx context.Context, id openapi_types.UUID, c
 	return c.Client.Do(req)
 }
 
-func (c *Client) GitCommit(ctx context.Context, id openapi_types.UUID, body GitCommitJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGitCommitRequest(c.Server, id, body)
+func (c *Client) GitCommit(ctx context.Context, id openapi_types.UUID, params *GitCommitParams, body GitCommitJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGitCommitRequest(c.Server, id, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -14211,8 +16566,8 @@ func (c *Client) GitCommit(ctx context.Context, id openapi_types.UUID, body GitC
 	return c.Client.Do(req)
 }
 
-func (c *Client) GitDiff(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGitDiffRequest(c.Server, id)
+func (c *Client) GitDiff(ctx context.Context, id openapi_types.UUID, params *GitDiffParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGitDiffRequest(c.Server, id, params)
 	if err != nil {
 		return nil, err
 	}
@@ -14223,8 +16578,8 @@ func (c *Client) GitDiff(ctx context.Context, id openapi_types.UUID, reqEditors 
 	return c.Client.Do(req)
 }
 
-func (c *Client) GitDiscardWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGitDiscardRequestWithBody(c.Server, id, contentType, body)
+func (c *Client) GitDiscardWithBody(ctx context.Context, id openapi_types.UUID, params *GitDiscardParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGitDiscardRequestWithBody(c.Server, id, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -14235,8 +16590,8 @@ func (c *Client) GitDiscardWithBody(ctx context.Context, id openapi_types.UUID, 
 	return c.Client.Do(req)
 }
 
-func (c *Client) GitDiscard(ctx context.Context, id openapi_types.UUID, body GitDiscardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGitDiscardRequest(c.Server, id, body)
+func (c *Client) GitDiscard(ctx context.Context, id openapi_types.UUID, params *GitDiscardParams, body GitDiscardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGitDiscardRequest(c.Server, id, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -14247,8 +16602,8 @@ func (c *Client) GitDiscard(ctx context.Context, id openapi_types.UUID, body Git
 	return c.Client.Do(req)
 }
 
-func (c *Client) GitPrWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGitPrRequestWithBody(c.Server, id, contentType, body)
+func (c *Client) GitPrWithBody(ctx context.Context, id openapi_types.UUID, params *GitPrParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGitPrRequestWithBody(c.Server, id, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -14259,8 +16614,8 @@ func (c *Client) GitPrWithBody(ctx context.Context, id openapi_types.UUID, conte
 	return c.Client.Do(req)
 }
 
-func (c *Client) GitPr(ctx context.Context, id openapi_types.UUID, body GitPrJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGitPrRequest(c.Server, id, body)
+func (c *Client) GitPr(ctx context.Context, id openapi_types.UUID, params *GitPrParams, body GitPrJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGitPrRequest(c.Server, id, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -14271,8 +16626,20 @@ func (c *Client) GitPr(ctx context.Context, id openapi_types.UUID, body GitPrJSO
 	return c.Client.Do(req)
 }
 
-func (c *Client) GitPrs(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGitPrsRequest(c.Server, id)
+func (c *Client) GitPrs(ctx context.Context, id openapi_types.UUID, params *GitPrsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGitPrsRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GitRepos(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGitReposRequest(c.Server, id)
 	if err != nil {
 		return nil, err
 	}
@@ -14357,6 +16724,54 @@ func (c *Client) ResetSessionApprovals(ctx context.Context, id openapi_types.UUI
 
 func (c *Client) ListPendingPermissions(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListPendingPermissionsRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListPendingQuestions(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListPendingQuestionsRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RejectQuestion(ctx context.Context, id openapi_types.UUID, rid string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRejectQuestionRequest(c.Server, id, rid)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ReplyQuestionWithBody(ctx context.Context, id openapi_types.UUID, rid string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReplyQuestionRequestWithBody(c.Server, id, rid, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ReplyQuestion(ctx context.Context, id openapi_types.UUID, rid string, body ReplyQuestionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReplyQuestionRequest(c.Server, id, rid, body)
 	if err != nil {
 		return nil, err
 	}
@@ -14523,6 +16938,30 @@ func (c *Client) AiEdit(ctx context.Context, id openapi_types.UUID, body AiEditJ
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetDevWorkstationEgress(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetDevWorkstationEgressRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetDevWorkstationEgressFlows(ctx context.Context, id openapi_types.UUID, params *GetDevWorkstationEgressFlowsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetDevWorkstationEgressFlowsRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetDevWorkstationMetrics(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetDevWorkstationMetricsRequest(c.Server, id)
 	if err != nil {
@@ -14535,8 +16974,80 @@ func (c *Client) GetDevWorkstationMetrics(ctx context.Context, id openapi_types.
 	return c.Client.Do(req)
 }
 
+func (c *Client) UpdateDevWorkstationNetworkWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateDevWorkstationNetworkRequestWithBody(c.Server, id, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateDevWorkstationNetwork(ctx context.Context, id openapi_types.UUID, body UpdateDevWorkstationNetworkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateDevWorkstationNetworkRequest(c.Server, id, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) AuthorizePreview(ctx context.Context, id openapi_types.UUID, port int32, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAuthorizePreviewRequest(c.Server, id, port)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListWorkstationRepositories(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListWorkstationRepositoriesRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddWorkstationRepositoryWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddWorkstationRepositoryRequestWithBody(c.Server, id, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddWorkstationRepository(ctx context.Context, id openapi_types.UUID, body AddWorkstationRepositoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddWorkstationRepositoryRequest(c.Server, id, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RemoveWorkstationRepository(ctx context.Context, id openapi_types.UUID, repoId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRemoveWorkstationRepositoryRequest(c.Server, id, repoId)
 	if err != nil {
 		return nil, err
 	}
@@ -14679,6 +17190,18 @@ func (c *Client) GetBifrostInfo(ctx context.Context, reqEditors ...RequestEditor
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListChangelogsHandler(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListChangelogsHandlerRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetCliVersion(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetCliVersionRequest(c.Server)
 	if err != nil {
@@ -14801,222 +17324,6 @@ func (c *Client) UpdateContextualRestrictionHandlerWithBody(ctx context.Context,
 
 func (c *Client) UpdateContextualRestrictionHandler(ctx context.Context, restrictionId openapi_types.UUID, body UpdateContextualRestrictionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateContextualRestrictionHandlerRequest(c.Server, restrictionId, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ListDashboards(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListDashboardsRequest(c.Server)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) CreateDashboardWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateDashboardRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) CreateDashboard(ctx context.Context, body CreateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateDashboardRequest(c.Server, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GenerateDashboardWidgetsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGenerateDashboardWidgetsRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GenerateDashboardWidgets(ctx context.Context, body GenerateDashboardWidgetsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGenerateDashboardWidgetsRequest(c.Server, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ListDashboardTrash(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListDashboardTrashRequest(c.Server)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DeleteDashboard(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteDashboardRequest(c.Server, dashboardId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetDashboard(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetDashboardRequest(c.Server, dashboardId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) UpdateDashboardWithBody(ctx context.Context, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateDashboardRequestWithBody(c.Server, dashboardId, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) UpdateDashboard(ctx context.Context, dashboardId openapi_types.UUID, body UpdateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateDashboardRequest(c.Server, dashboardId, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DuplicateDashboardWithBody(ctx context.Context, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDuplicateDashboardRequestWithBody(c.Server, dashboardId, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DuplicateDashboard(ctx context.Context, dashboardId openapi_types.UUID, body DuplicateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDuplicateDashboardRequest(c.Server, dashboardId, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) CheckDashboardHealth(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCheckDashboardHealthRequest(c.Server, dashboardId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) RestoreDashboard(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewRestoreDashboardRequest(c.Server, dashboardId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) TransferDashboardWithBody(ctx context.Context, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewTransferDashboardRequestWithBody(c.Server, dashboardId, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) TransferDashboard(ctx context.Context, dashboardId openapi_types.UUID, body TransferDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewTransferDashboardRequest(c.Server, dashboardId, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ListDashboardVersions(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListDashboardVersionsRequest(c.Server, dashboardId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) RestoreDashboardVersion(ctx context.Context, dashboardId openapi_types.UUID, versionNo int32, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewRestoreDashboardVersionRequest(c.Server, dashboardId, versionNo)
 	if err != nil {
 		return nil, err
 	}
@@ -15377,6 +17684,18 @@ func (c *Client) CreateSchema(ctx context.Context, dataContainerId openapi_types
 
 func (c *Client) DeleteSchema(ctx context.Context, dataContainerId openapi_types.UUID, schemaName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteSchemaRequest(c.Server, dataContainerId, schemaName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteTable(ctx context.Context, dataContainerId openapi_types.UUID, schemaName string, tableName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteTableRequest(c.Server, dataContainerId, schemaName, tableName)
 	if err != nil {
 		return nil, err
 	}
@@ -16155,6 +18474,222 @@ func (c *Client) UploadBucketObject(ctx context.Context, harborId openapi_types.
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListDashboards(ctx context.Context, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListDashboardsRequest(c.Server, harborId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateDashboardWithBody(ctx context.Context, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateDashboardRequestWithBody(c.Server, harborId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateDashboard(ctx context.Context, harborId openapi_types.UUID, body CreateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateDashboardRequest(c.Server, harborId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GenerateDashboardWidgetsWithBody(ctx context.Context, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGenerateDashboardWidgetsRequestWithBody(c.Server, harborId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GenerateDashboardWidgets(ctx context.Context, harborId openapi_types.UUID, body GenerateDashboardWidgetsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGenerateDashboardWidgetsRequest(c.Server, harborId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListDashboardTrash(ctx context.Context, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListDashboardTrashRequest(c.Server, harborId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteDashboard(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteDashboardRequest(c.Server, harborId, dashboardId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetDashboard(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetDashboardRequest(c.Server, harborId, dashboardId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateDashboardWithBody(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateDashboardRequestWithBody(c.Server, harborId, dashboardId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateDashboard(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body UpdateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateDashboardRequest(c.Server, harborId, dashboardId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DuplicateDashboardWithBody(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDuplicateDashboardRequestWithBody(c.Server, harborId, dashboardId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DuplicateDashboard(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body DuplicateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDuplicateDashboardRequest(c.Server, harborId, dashboardId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CheckDashboardHealth(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCheckDashboardHealthRequest(c.Server, harborId, dashboardId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RestoreDashboard(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRestoreDashboardRequest(c.Server, harborId, dashboardId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TransferDashboardWithBody(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTransferDashboardRequestWithBody(c.Server, harborId, dashboardId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TransferDashboard(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body TransferDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTransferDashboardRequest(c.Server, harborId, dashboardId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListDashboardVersions(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListDashboardVersionsRequest(c.Server, harborId, dashboardId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RestoreDashboardVersion(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, versionNo int32, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRestoreDashboardVersionRequest(c.Server, harborId, dashboardId, versionNo)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListHarborDataDock(ctx context.Context, harborId openapi_types.UUID, params *ListHarborDataDockParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListHarborDataDockRequest(c.Server, harborId, params)
 	if err != nil {
@@ -16755,6 +19290,42 @@ func (c *Client) GetAiAgentMailStats(ctx context.Context, organizationId openapi
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListAiAgentSessions(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAiAgentSessionsRequest(c.Server, organizationId, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteAiAgentSession(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, sessionId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteAiAgentSessionRequest(c.Server, organizationId, id, sessionId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAiAgentSession(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, sessionId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAiAgentSessionRequest(c.Server, organizationId, id, sessionId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetAirflow(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetAirflowRequest(c.Server, organizationId, instanceId)
 	if err != nil {
@@ -16805,6 +19376,270 @@ func (c *Client) PatchAirflowCrdWithBody(ctx context.Context, organizationId ope
 
 func (c *Client) PatchAirflowCrd(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, body PatchAirflowCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPatchAirflowCrdRequest(c.Server, organizationId, instanceId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListAlertablePanels(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAlertablePanelsRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListAlertBindings(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAlertBindingsRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SetAlertBindingsWithBody(ctx context.Context, organizationId openapi_types.UUID, signal string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSetAlertBindingsRequestWithBody(c.Server, organizationId, signal, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SetAlertBindings(ctx context.Context, organizationId openapi_types.UUID, signal string, body SetAlertBindingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSetAlertBindingsRequest(c.Server, organizationId, signal, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListNotificationChannels(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListNotificationChannelsRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateNotificationChannelWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateNotificationChannelRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateNotificationChannel(ctx context.Context, organizationId openapi_types.UUID, body CreateNotificationChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateNotificationChannelRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteNotificationChannel(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteNotificationChannelRequest(c.Server, organizationId, channelId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateNotificationChannelWithBody(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateNotificationChannelRequestWithBody(c.Server, organizationId, channelId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateNotificationChannel(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, body UpdateNotificationChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateNotificationChannelRequest(c.Server, organizationId, channelId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TestNotificationChannel(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTestNotificationChannelRequest(c.Server, organizationId, channelId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListAlertEvents(ctx context.Context, organizationId openapi_types.UUID, params *ListAlertEventsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAlertEventsRequest(c.Server, organizationId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListAlertRules(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAlertRulesRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateAlertRuleWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateAlertRuleRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateAlertRule(ctx context.Context, organizationId openapi_types.UUID, body CreateAlertRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateAlertRuleRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteAlertRule(ctx context.Context, organizationId openapi_types.UUID, ruleId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteAlertRuleRequest(c.Server, organizationId, ruleId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateAlertRuleWithBody(ctx context.Context, organizationId openapi_types.UUID, ruleId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAlertRuleRequestWithBody(c.Server, organizationId, ruleId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateAlertRule(ctx context.Context, organizationId openapi_types.UUID, ruleId openapi_types.UUID, body UpdateAlertRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAlertRuleRequest(c.Server, organizationId, ruleId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListAlertThresholds(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAlertThresholdsRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ClearAlertThresholds(ctx context.Context, organizationId openapi_types.UUID, signal string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewClearAlertThresholdsRequest(c.Server, organizationId, signal)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SetAlertThresholdsWithBody(ctx context.Context, organizationId openapi_types.UUID, signal string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSetAlertThresholdsRequestWithBody(c.Server, organizationId, signal, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SetAlertThresholds(ctx context.Context, organizationId openapi_types.UUID, signal string, body SetAlertThresholdsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSetAlertThresholdsRequest(c.Server, organizationId, signal, body)
 	if err != nil {
 		return nil, err
 	}
@@ -17091,6 +19926,18 @@ func (c *Client) DeleteOrganizationCrd(ctx context.Context, organizationId opena
 	return c.Client.Do(req)
 }
 
+func (c *Client) CheckCustomDomainAvailability(ctx context.Context, organizationId openapi_types.UUID, params *CheckCustomDomainAvailabilityParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCheckCustomDomainAvailabilityRequest(c.Server, organizationId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetDagster(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetDagsterRequest(c.Server, organizationId, instanceId)
 	if err != nil {
@@ -17141,6 +19988,30 @@ func (c *Client) PatchDagsterCrdWithBody(ctx context.Context, organizationId ope
 
 func (c *Client) PatchDagsterCrd(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, body PatchDagsterCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPatchDagsterCrdRequest(c.Server, organizationId, instanceId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SetDedicatedHarborNamespacesWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSetDedicatedHarborNamespacesRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SetDedicatedHarborNamespaces(ctx context.Context, organizationId openapi_types.UUID, body SetDedicatedHarborNamespacesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSetDedicatedHarborNamespacesRequest(c.Server, organizationId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -18951,8 +21822,20 @@ func (c *Client) GetOrganizationOverview(ctx context.Context, organizationId ope
 	return c.Client.Do(req)
 }
 
-func (c *Client) ListPipelines(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListPipelinesRequest(c.Server, organizationId)
+func (c *Client) ListPipelines(ctx context.Context, organizationId openapi_types.UUID, params *ListPipelinesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListPipelinesRequest(c.Server, organizationId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetPipelinesStats(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetPipelinesStatsRequest(c.Server, organizationId)
 	if err != nil {
 		return nil, err
 	}
@@ -19227,8 +22110,20 @@ func (c *Client) GetTokenUsageSummary(ctx context.Context, organizationId openap
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetTokenUsageTimeseries(ctx context.Context, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetTokenUsageTimeseriesRequest(c.Server, organizationId, params)
+func (c *Client) GetTokenUsageTimeseriesByModel(ctx context.Context, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesByModelParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetTokenUsageTimeseriesByModelRequest(c.Server, organizationId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetTokenUsageTimeseriesByPrincipal(ctx context.Context, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesByPrincipalParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetTokenUsageTimeseriesByPrincipalRequest(c.Server, organizationId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -19395,6 +22290,18 @@ func (c *Client) DeleteServiceAccountCrd(ctx context.Context, organizationId ope
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetServiceAccountCrd(ctx context.Context, organizationId openapi_types.UUID, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetServiceAccountCrdRequest(c.Server, organizationId, clientId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) UpdateServiceAccountCrdWithBody(ctx context.Context, organizationId openapi_types.UUID, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateServiceAccountCrdRequestWithBody(c.Server, organizationId, clientId, contentType, body)
 	if err != nil {
@@ -19409,6 +22316,18 @@ func (c *Client) UpdateServiceAccountCrdWithBody(ctx context.Context, organizati
 
 func (c *Client) UpdateServiceAccountCrd(ctx context.Context, organizationId openapi_types.UUID, clientId string, body UpdateServiceAccountCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateServiceAccountCrdRequest(c.Server, organizationId, clientId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RotateServiceAccountSecret(ctx context.Context, organizationId openapi_types.UUID, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRotateServiceAccountSecretRequest(c.Server, organizationId, clientId)
 	if err != nil {
 		return nil, err
 	}
@@ -19887,32 +22806,464 @@ func (c *Client) GetEffectiveSecuritySettingsHandler(ctx context.Context, organi
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetOrgFeaturesHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrgFeaturesHandlerRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListActionTypesHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListActionTypesHandlerRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateActionTypeHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateActionTypeHandlerRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateActionTypeHandler(ctx context.Context, organizationId openapi_types.UUID, body CreateActionTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateActionTypeHandlerRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteActionTypeHandler(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteActionTypeHandlerRequest(c.Server, organizationId, actionTypeId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetActionTypeHandler(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetActionTypeHandlerRequest(c.Server, organizationId, actionTypeId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateActionTypeHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateActionTypeHandlerRequestWithBody(c.Server, organizationId, actionTypeId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateActionTypeHandler(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, body UpdateActionTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateActionTypeHandlerRequest(c.Server, organizationId, actionTypeId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ExecuteActionHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewExecuteActionHandlerRequestWithBody(c.Server, organizationId, actionTypeId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ExecuteActionHandler(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, body ExecuteActionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewExecuteActionHandlerRequest(c.Server, organizationId, actionTypeId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ApplyOntologyProposalHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewApplyOntologyProposalHandlerRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ApplyOntologyProposalHandler(ctx context.Context, organizationId openapi_types.UUID, body ApplyOntologyProposalHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewApplyOntologyProposalHandlerRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) OntologyAssistantHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOntologyAssistantHandlerRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) OntologyAssistantHandler(ctx context.Context, organizationId openapi_types.UUID, body OntologyAssistantHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOntologyAssistantHandlerRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GenerateOntologyHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGenerateOntologyHandlerRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GenerateOntologyHandler(ctx context.Context, organizationId openapi_types.UUID, body GenerateOntologyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGenerateOntologyHandlerRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListLinkTypesHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListLinkTypesHandlerRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateLinkTypeHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateLinkTypeHandlerRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateLinkTypeHandler(ctx context.Context, organizationId openapi_types.UUID, body CreateLinkTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateLinkTypeHandlerRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteLinkTypeHandler(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteLinkTypeHandlerRequest(c.Server, organizationId, linkTypeId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetLinkTypeHandler(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetLinkTypeHandlerRequest(c.Server, organizationId, linkTypeId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateLinkTypeHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateLinkTypeHandlerRequestWithBody(c.Server, organizationId, linkTypeId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateLinkTypeHandler(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, body UpdateLinkTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateLinkTypeHandlerRequest(c.Server, organizationId, linkTypeId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListObjectTypesHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListObjectTypesHandlerRequest(c.Server, organizationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateObjectTypeHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateObjectTypeHandlerRequestWithBody(c.Server, organizationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateObjectTypeHandler(ctx context.Context, organizationId openapi_types.UUID, body CreateObjectTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateObjectTypeHandlerRequest(c.Server, organizationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteObjectTypeHandler(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteObjectTypeHandlerRequest(c.Server, organizationId, objectTypeId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetObjectTypeHandler(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetObjectTypeHandlerRequest(c.Server, organizationId, objectTypeId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateObjectTypeHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateObjectTypeHandlerRequestWithBody(c.Server, organizationId, objectTypeId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateObjectTypeHandler(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, body UpdateObjectTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateObjectTypeHandlerRequest(c.Server, organizationId, objectTypeId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListInstancesHandler(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, params *ListInstancesHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListInstancesHandlerRequest(c.Server, organizationId, objectTypeId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetInstanceHandler(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, primaryKey string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetInstanceHandlerRequest(c.Server, organizationId, objectTypeId, primaryKey)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TraverseLinkHandler(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, primaryKey string, linkTypeId openapi_types.UUID, params *TraverseLinkHandlerParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTraverseLinkHandlerRequest(c.Server, organizationId, objectTypeId, primaryKey, linkTypeId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddPropertyHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddPropertyHandlerRequestWithBody(c.Server, organizationId, objectTypeId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddPropertyHandler(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, body AddPropertyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddPropertyHandlerRequest(c.Server, organizationId, objectTypeId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeletePropertyHandler(ctx context.Context, organizationId openapi_types.UUID, propertyId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeletePropertyHandlerRequest(c.Server, organizationId, propertyId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdatePropertyHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, propertyId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdatePropertyHandlerRequestWithBody(c.Server, organizationId, propertyId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdatePropertyHandler(ctx context.Context, organizationId openapi_types.UUID, propertyId openapi_types.UUID, body UpdatePropertyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdatePropertyHandlerRequest(c.Server, organizationId, propertyId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetOrgQuotasHandler(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetOrgQuotasHandlerRequest(c.Server, organizationId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) AssignSubscriptionHandlerWithBody(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAssignSubscriptionHandlerRequestWithBody(c.Server, organizationId, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) AssignSubscriptionHandler(ctx context.Context, organizationId openapi_types.UUID, body AssignSubscriptionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAssignSubscriptionHandlerRequest(c.Server, organizationId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -20297,6 +23648,54 @@ func (c *Client) ListSharedModels(ctx context.Context, reqEditors ...RequestEdit
 
 func (c *Client) GetSharedModel(ctx context.Context, name string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetSharedModelRequest(c.Server, name)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateSignupRequestWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateSignupRequestRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateSignupRequest(ctx context.Context, body CreateSignupRequestJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateSignupRequestRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) VerifySignupRequestWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewVerifySignupRequestRequestWithBody(c.Server, id, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) VerifySignupRequest(ctx context.Context, id openapi_types.UUID, body VerifySignupRequestJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewVerifySignupRequestRequest(c.Server, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -20978,6 +24377,223 @@ func NewListForgejoBranchesRequest(server string, harborId openapi_types.UUID, o
 	return req, nil
 }
 
+// NewListEgressAllowlistsRequest generates requests for ListEgressAllowlists
+func NewListEgressAllowlistsRequest(server string, harborId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/harbors/%s/egress-allowlists", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateEgressAllowlistRequest calls the generic CreateEgressAllowlist builder with application/json body
+func NewCreateEgressAllowlistRequest(server string, harborId openapi_types.UUID, body CreateEgressAllowlistJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateEgressAllowlistRequestWithBody(server, harborId, "application/json", bodyReader)
+}
+
+// NewCreateEgressAllowlistRequestWithBody generates requests for CreateEgressAllowlist with any type of body
+func NewCreateEgressAllowlistRequestWithBody(server string, harborId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/harbors/%s/egress-allowlists", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteEgressAllowlistRequest generates requests for DeleteEgressAllowlist
+func NewDeleteEgressAllowlistRequest(server string, harborId openapi_types.UUID, name string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "name", runtime.ParamLocationPath, name)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/harbors/%s/egress-allowlists/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetEgressAllowlistRequest generates requests for GetEgressAllowlist
+func NewGetEgressAllowlistRequest(server string, harborId openapi_types.UUID, name string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "name", runtime.ParamLocationPath, name)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/harbors/%s/egress-allowlists/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateEgressAllowlistRequest calls the generic UpdateEgressAllowlist builder with application/json body
+func NewUpdateEgressAllowlistRequest(server string, harborId openapi_types.UUID, name string, body UpdateEgressAllowlistJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateEgressAllowlistRequestWithBody(server, harborId, name, "application/json", bodyReader)
+}
+
+// NewUpdateEgressAllowlistRequestWithBody generates requests for UpdateEgressAllowlist with any type of body
+func NewUpdateEgressAllowlistRequestWithBody(server string, harborId openapi_types.UUID, name string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "name", runtime.ParamLocationPath, name)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/harbors/%s/egress-allowlists/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewListScmRepositoriesRequest generates requests for ListScmRepositories
 func NewListScmRepositoriesRequest(server string, secretId openapi_types.UUID, params *ListScmRepositoriesParams) (*http.Request, error) {
 	var err error
@@ -21339,6 +24955,22 @@ func NewReadFileRequest(server string, id openapi_types.UUID, params *ReadFilePa
 			}
 		}
 
+		if params.Repo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "repo", runtime.ParamLocationQuery, *params.Repo); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
 		queryURL.RawQuery = queryValues.Encode()
 	}
 
@@ -21442,6 +25074,22 @@ func NewListFilesRequest(server string, id openapi_types.UUID, params *ListFiles
 
 		}
 
+		if params.Repo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "repo", runtime.ParamLocationQuery, *params.Repo); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
 		queryURL.RawQuery = queryValues.Encode()
 	}
 
@@ -21454,7 +25102,7 @@ func NewListFilesRequest(server string, id openapi_types.UUID, params *ListFiles
 }
 
 // NewGitBranchesRequest generates requests for GitBranches
-func NewGitBranchesRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+func NewGitBranchesRequest(server string, id openapi_types.UUID, params *GitBranchesParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -21479,6 +25127,28 @@ func NewGitBranchesRequest(server string, id openapi_types.UUID) (*http.Request,
 		return nil, err
 	}
 
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Repo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "repo", runtime.ParamLocationQuery, *params.Repo); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
@@ -21488,18 +25158,18 @@ func NewGitBranchesRequest(server string, id openapi_types.UUID) (*http.Request,
 }
 
 // NewGitCheckoutRequest calls the generic GitCheckout builder with application/json body
-func NewGitCheckoutRequest(server string, id openapi_types.UUID, body GitCheckoutJSONRequestBody) (*http.Request, error) {
+func NewGitCheckoutRequest(server string, id openapi_types.UUID, params *GitCheckoutParams, body GitCheckoutJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewGitCheckoutRequestWithBody(server, id, "application/json", bodyReader)
+	return NewGitCheckoutRequestWithBody(server, id, params, "application/json", bodyReader)
 }
 
 // NewGitCheckoutRequestWithBody generates requests for GitCheckout with any type of body
-func NewGitCheckoutRequestWithBody(server string, id openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewGitCheckoutRequestWithBody(server string, id openapi_types.UUID, params *GitCheckoutParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -21524,6 +25194,28 @@ func NewGitCheckoutRequestWithBody(server string, id openapi_types.UUID, content
 		return nil, err
 	}
 
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Repo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "repo", runtime.ParamLocationQuery, *params.Repo); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
 	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
@@ -21535,18 +25227,18 @@ func NewGitCheckoutRequestWithBody(server string, id openapi_types.UUID, content
 }
 
 // NewGitCommitRequest calls the generic GitCommit builder with application/json body
-func NewGitCommitRequest(server string, id openapi_types.UUID, body GitCommitJSONRequestBody) (*http.Request, error) {
+func NewGitCommitRequest(server string, id openapi_types.UUID, params *GitCommitParams, body GitCommitJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewGitCommitRequestWithBody(server, id, "application/json", bodyReader)
+	return NewGitCommitRequestWithBody(server, id, params, "application/json", bodyReader)
 }
 
 // NewGitCommitRequestWithBody generates requests for GitCommit with any type of body
-func NewGitCommitRequestWithBody(server string, id openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewGitCommitRequestWithBody(server string, id openapi_types.UUID, params *GitCommitParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -21571,6 +25263,28 @@ func NewGitCommitRequestWithBody(server string, id openapi_types.UUID, contentTy
 		return nil, err
 	}
 
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Repo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "repo", runtime.ParamLocationQuery, *params.Repo); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
 	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
@@ -21582,7 +25296,7 @@ func NewGitCommitRequestWithBody(server string, id openapi_types.UUID, contentTy
 }
 
 // NewGitDiffRequest generates requests for GitDiff
-func NewGitDiffRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+func NewGitDiffRequest(server string, id openapi_types.UUID, params *GitDiffParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -21607,6 +25321,28 @@ func NewGitDiffRequest(server string, id openapi_types.UUID) (*http.Request, err
 		return nil, err
 	}
 
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Repo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "repo", runtime.ParamLocationQuery, *params.Repo); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
@@ -21616,18 +25352,18 @@ func NewGitDiffRequest(server string, id openapi_types.UUID) (*http.Request, err
 }
 
 // NewGitDiscardRequest calls the generic GitDiscard builder with application/json body
-func NewGitDiscardRequest(server string, id openapi_types.UUID, body GitDiscardJSONRequestBody) (*http.Request, error) {
+func NewGitDiscardRequest(server string, id openapi_types.UUID, params *GitDiscardParams, body GitDiscardJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewGitDiscardRequestWithBody(server, id, "application/json", bodyReader)
+	return NewGitDiscardRequestWithBody(server, id, params, "application/json", bodyReader)
 }
 
 // NewGitDiscardRequestWithBody generates requests for GitDiscard with any type of body
-func NewGitDiscardRequestWithBody(server string, id openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewGitDiscardRequestWithBody(server string, id openapi_types.UUID, params *GitDiscardParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -21652,6 +25388,28 @@ func NewGitDiscardRequestWithBody(server string, id openapi_types.UUID, contentT
 		return nil, err
 	}
 
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Repo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "repo", runtime.ParamLocationQuery, *params.Repo); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
 	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
@@ -21663,18 +25421,18 @@ func NewGitDiscardRequestWithBody(server string, id openapi_types.UUID, contentT
 }
 
 // NewGitPrRequest calls the generic GitPr builder with application/json body
-func NewGitPrRequest(server string, id openapi_types.UUID, body GitPrJSONRequestBody) (*http.Request, error) {
+func NewGitPrRequest(server string, id openapi_types.UUID, params *GitPrParams, body GitPrJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewGitPrRequestWithBody(server, id, "application/json", bodyReader)
+	return NewGitPrRequestWithBody(server, id, params, "application/json", bodyReader)
 }
 
 // NewGitPrRequestWithBody generates requests for GitPr with any type of body
-func NewGitPrRequestWithBody(server string, id openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewGitPrRequestWithBody(server string, id openapi_types.UUID, params *GitPrParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -21699,6 +25457,28 @@ func NewGitPrRequestWithBody(server string, id openapi_types.UUID, contentType s
 		return nil, err
 	}
 
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Repo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "repo", runtime.ParamLocationQuery, *params.Repo); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
 	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
@@ -21710,7 +25490,7 @@ func NewGitPrRequestWithBody(server string, id openapi_types.UUID, contentType s
 }
 
 // NewGitPrsRequest generates requests for GitPrs
-func NewGitPrsRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+func NewGitPrsRequest(server string, id openapi_types.UUID, params *GitPrsParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -21726,6 +25506,62 @@ func NewGitPrsRequest(server string, id openapi_types.UUID) (*http.Request, erro
 	}
 
 	operationPath := fmt.Sprintf("/api/dev/workstations/%s/agent/git/prs", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Repo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "repo", runtime.ParamLocationQuery, *params.Repo); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGitReposRequest generates requests for GitRepos
+func NewGitReposRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/workstations/%s/agent/git/repos", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21956,6 +25792,135 @@ func NewListPendingPermissionsRequest(server string, id openapi_types.UUID) (*ht
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewListPendingQuestionsRequest generates requests for ListPendingQuestions
+func NewListPendingQuestionsRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/workstations/%s/agent/questions", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewRejectQuestionRequest generates requests for RejectQuestion
+func NewRejectQuestionRequest(server string, id openapi_types.UUID, rid string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "rid", runtime.ParamLocationPath, rid)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/workstations/%s/agent/questions/%s/reject", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewReplyQuestionRequest calls the generic ReplyQuestion builder with application/json body
+func NewReplyQuestionRequest(server string, id openapi_types.UUID, rid string, body ReplyQuestionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewReplyQuestionRequestWithBody(server, id, rid, "application/json", bodyReader)
+}
+
+// NewReplyQuestionRequestWithBody generates requests for ReplyQuestion with any type of body
+func NewReplyQuestionRequestWithBody(server string, id openapi_types.UUID, rid string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "rid", runtime.ParamLocationPath, rid)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/workstations/%s/agent/questions/%s/reply", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -22367,6 +26332,112 @@ func NewAiEditRequestWithBody(server string, id openapi_types.UUID, contentType 
 	return req, nil
 }
 
+// NewGetDevWorkstationEgressRequest generates requests for GetDevWorkstationEgress
+func NewGetDevWorkstationEgressRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/workstations/%s/egress", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetDevWorkstationEgressFlowsRequest generates requests for GetDevWorkstationEgressFlows
+func NewGetDevWorkstationEgressFlowsRequest(server string, id openapi_types.UUID, params *GetDevWorkstationEgressFlowsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/workstations/%s/egress/flows", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.SinceSecs != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "since_secs", runtime.ParamLocationQuery, *params.SinceSecs); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Verdict != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "verdict", runtime.ParamLocationQuery, *params.Verdict); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetDevWorkstationMetricsRequest generates requests for GetDevWorkstationMetrics
 func NewGetDevWorkstationMetricsRequest(server string, id openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -22397,6 +26468,53 @@ func NewGetDevWorkstationMetricsRequest(server string, id openapi_types.UUID) (*
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewUpdateDevWorkstationNetworkRequest calls the generic UpdateDevWorkstationNetwork builder with application/json body
+func NewUpdateDevWorkstationNetworkRequest(server string, id openapi_types.UUID, body UpdateDevWorkstationNetworkJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateDevWorkstationNetworkRequestWithBody(server, id, "application/json", bodyReader)
+}
+
+// NewUpdateDevWorkstationNetworkRequestWithBody generates requests for UpdateDevWorkstationNetwork with any type of body
+func NewUpdateDevWorkstationNetworkRequestWithBody(server string, id openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/workstations/%s/network", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -22435,6 +26553,128 @@ func NewAuthorizePreviewRequest(server string, id openapi_types.UUID, port int32
 	}
 
 	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListWorkstationRepositoriesRequest generates requests for ListWorkstationRepositories
+func NewListWorkstationRepositoriesRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/workstations/%s/repositories", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAddWorkstationRepositoryRequest calls the generic AddWorkstationRepository builder with application/json body
+func NewAddWorkstationRepositoryRequest(server string, id openapi_types.UUID, body AddWorkstationRepositoryJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAddWorkstationRepositoryRequestWithBody(server, id, "application/json", bodyReader)
+}
+
+// NewAddWorkstationRepositoryRequestWithBody generates requests for AddWorkstationRepository with any type of body
+func NewAddWorkstationRepositoryRequestWithBody(server string, id openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/workstations/%s/repositories", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewRemoveWorkstationRepositoryRequest generates requests for RemoveWorkstationRepository
+func NewRemoveWorkstationRepositoryRequest(server string, id openapi_types.UUID, repoId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "repo_id", runtime.ParamLocationPath, repoId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/dev/workstations/%s/repositories/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -22781,6 +27021,33 @@ func NewGetBifrostInfoRequest(server string) (*http.Request, error) {
 	return req, nil
 }
 
+// NewListChangelogsHandlerRequest generates requests for ListChangelogsHandler
+func NewListChangelogsHandlerRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/changelogs")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetCliVersionRequest generates requests for GetCliVersion
 func NewGetCliVersionRequest(server string) (*http.Request, error) {
 	var err error
@@ -23095,492 +27362,6 @@ func NewUpdateContextualRestrictionHandlerRequestWithBody(server string, restric
 	}
 
 	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewListDashboardsRequest generates requests for ListDashboards
-func NewListDashboardsRequest(server string) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/dashboards")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewCreateDashboardRequest calls the generic CreateDashboard builder with application/json body
-func NewCreateDashboardRequest(server string, body CreateDashboardJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewCreateDashboardRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewCreateDashboardRequestWithBody generates requests for CreateDashboard with any type of body
-func NewCreateDashboardRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/dashboards")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewGenerateDashboardWidgetsRequest calls the generic GenerateDashboardWidgets builder with application/json body
-func NewGenerateDashboardWidgetsRequest(server string, body GenerateDashboardWidgetsJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewGenerateDashboardWidgetsRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewGenerateDashboardWidgetsRequestWithBody generates requests for GenerateDashboardWidgets with any type of body
-func NewGenerateDashboardWidgetsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/dashboards/copilot")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewListDashboardTrashRequest generates requests for ListDashboardTrash
-func NewListDashboardTrashRequest(server string) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/dashboards/trash")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewDeleteDashboardRequest generates requests for DeleteDashboard
-func NewDeleteDashboardRequest(server string, dashboardId openapi_types.UUID) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/dashboards/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetDashboardRequest generates requests for GetDashboard
-func NewGetDashboardRequest(server string, dashboardId openapi_types.UUID) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/dashboards/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewUpdateDashboardRequest calls the generic UpdateDashboard builder with application/json body
-func NewUpdateDashboardRequest(server string, dashboardId openapi_types.UUID, body UpdateDashboardJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewUpdateDashboardRequestWithBody(server, dashboardId, "application/json", bodyReader)
-}
-
-// NewUpdateDashboardRequestWithBody generates requests for UpdateDashboard with any type of body
-func NewUpdateDashboardRequestWithBody(server string, dashboardId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/dashboards/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("PUT", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewDuplicateDashboardRequest calls the generic DuplicateDashboard builder with application/json body
-func NewDuplicateDashboardRequest(server string, dashboardId openapi_types.UUID, body DuplicateDashboardJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewDuplicateDashboardRequestWithBody(server, dashboardId, "application/json", bodyReader)
-}
-
-// NewDuplicateDashboardRequestWithBody generates requests for DuplicateDashboard with any type of body
-func NewDuplicateDashboardRequestWithBody(server string, dashboardId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/dashboards/%s/duplicate", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewCheckDashboardHealthRequest generates requests for CheckDashboardHealth
-func NewCheckDashboardHealthRequest(server string, dashboardId openapi_types.UUID) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/dashboards/%s/health", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewRestoreDashboardRequest generates requests for RestoreDashboard
-func NewRestoreDashboardRequest(server string, dashboardId openapi_types.UUID) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/dashboards/%s/restore", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewTransferDashboardRequest calls the generic TransferDashboard builder with application/json body
-func NewTransferDashboardRequest(server string, dashboardId openapi_types.UUID, body TransferDashboardJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewTransferDashboardRequestWithBody(server, dashboardId, "application/json", bodyReader)
-}
-
-// NewTransferDashboardRequestWithBody generates requests for TransferDashboard with any type of body
-func NewTransferDashboardRequestWithBody(server string, dashboardId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/dashboards/%s/transfer", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewListDashboardVersionsRequest generates requests for ListDashboardVersions
-func NewListDashboardVersionsRequest(server string, dashboardId openapi_types.UUID) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/dashboards/%s/versions", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewRestoreDashboardVersionRequest generates requests for RestoreDashboardVersion
-func NewRestoreDashboardVersionRequest(server string, dashboardId openapi_types.UUID, versionNo int32) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "version_no", runtime.ParamLocationPath, versionNo)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/dashboards/%s/versions/%s/restore", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
 
 	return req, nil
 }
@@ -24548,6 +28329,54 @@ func NewDeleteSchemaRequest(server string, dataContainerId openapi_types.UUID, s
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/data-containers/iceberg/%s/schemas/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteTableRequest generates requests for DeleteTable
+func NewDeleteTableRequest(server string, dataContainerId openapi_types.UUID, schemaName string, tableName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "data_container_id", runtime.ParamLocationPath, dataContainerId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "schema_name", runtime.ParamLocationPath, schemaName)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "table_name", runtime.ParamLocationPath, tableName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/data-containers/iceberg/%s/schemas/%s/tables/%s", pathParam0, pathParam1, pathParam2)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -26781,6 +30610,583 @@ func NewUploadBucketObjectRequest(server string, harborId openapi_types.UUID, bu
 	return req, nil
 }
 
+// NewListDashboardsRequest generates requests for ListDashboards
+func NewListDashboardsRequest(server string, harborId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/harbors/%s/dashboards", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateDashboardRequest calls the generic CreateDashboard builder with application/json body
+func NewCreateDashboardRequest(server string, harborId openapi_types.UUID, body CreateDashboardJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateDashboardRequestWithBody(server, harborId, "application/json", bodyReader)
+}
+
+// NewCreateDashboardRequestWithBody generates requests for CreateDashboard with any type of body
+func NewCreateDashboardRequestWithBody(server string, harborId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/harbors/%s/dashboards", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGenerateDashboardWidgetsRequest calls the generic GenerateDashboardWidgets builder with application/json body
+func NewGenerateDashboardWidgetsRequest(server string, harborId openapi_types.UUID, body GenerateDashboardWidgetsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewGenerateDashboardWidgetsRequestWithBody(server, harborId, "application/json", bodyReader)
+}
+
+// NewGenerateDashboardWidgetsRequestWithBody generates requests for GenerateDashboardWidgets with any type of body
+func NewGenerateDashboardWidgetsRequestWithBody(server string, harborId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/harbors/%s/dashboards/copilot", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListDashboardTrashRequest generates requests for ListDashboardTrash
+func NewListDashboardTrashRequest(server string, harborId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/harbors/%s/dashboards/trash", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteDashboardRequest generates requests for DeleteDashboard
+func NewDeleteDashboardRequest(server string, harborId openapi_types.UUID, dashboardId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/harbors/%s/dashboards/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetDashboardRequest generates requests for GetDashboard
+func NewGetDashboardRequest(server string, harborId openapi_types.UUID, dashboardId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/harbors/%s/dashboards/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateDashboardRequest calls the generic UpdateDashboard builder with application/json body
+func NewUpdateDashboardRequest(server string, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body UpdateDashboardJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateDashboardRequestWithBody(server, harborId, dashboardId, "application/json", bodyReader)
+}
+
+// NewUpdateDashboardRequestWithBody generates requests for UpdateDashboard with any type of body
+func NewUpdateDashboardRequestWithBody(server string, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/harbors/%s/dashboards/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDuplicateDashboardRequest calls the generic DuplicateDashboard builder with application/json body
+func NewDuplicateDashboardRequest(server string, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body DuplicateDashboardJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDuplicateDashboardRequestWithBody(server, harborId, dashboardId, "application/json", bodyReader)
+}
+
+// NewDuplicateDashboardRequestWithBody generates requests for DuplicateDashboard with any type of body
+func NewDuplicateDashboardRequestWithBody(server string, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/harbors/%s/dashboards/%s/duplicate", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCheckDashboardHealthRequest generates requests for CheckDashboardHealth
+func NewCheckDashboardHealthRequest(server string, harborId openapi_types.UUID, dashboardId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/harbors/%s/dashboards/%s/health", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewRestoreDashboardRequest generates requests for RestoreDashboard
+func NewRestoreDashboardRequest(server string, harborId openapi_types.UUID, dashboardId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/harbors/%s/dashboards/%s/restore", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewTransferDashboardRequest calls the generic TransferDashboard builder with application/json body
+func NewTransferDashboardRequest(server string, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body TransferDashboardJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewTransferDashboardRequestWithBody(server, harborId, dashboardId, "application/json", bodyReader)
+}
+
+// NewTransferDashboardRequestWithBody generates requests for TransferDashboard with any type of body
+func NewTransferDashboardRequestWithBody(server string, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/harbors/%s/dashboards/%s/transfer", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListDashboardVersionsRequest generates requests for ListDashboardVersions
+func NewListDashboardVersionsRequest(server string, harborId openapi_types.UUID, dashboardId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/harbors/%s/dashboards/%s/versions", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewRestoreDashboardVersionRequest generates requests for RestoreDashboardVersion
+func NewRestoreDashboardVersionRequest(server string, harborId openapi_types.UUID, dashboardId openapi_types.UUID, versionNo int32) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "harbor_id", runtime.ParamLocationPath, harborId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dashboard_id", runtime.ParamLocationPath, dashboardId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "version_no", runtime.ParamLocationPath, versionNo)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/harbors/%s/dashboards/%s/versions/%s/restore", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewListHarborDataDockRequest generates requests for ListHarborDataDock
 func NewListHarborDataDockRequest(server string, harborId openapi_types.UUID, params *ListHarborDataDockParams) (*http.Request, error) {
 	var err error
@@ -28470,6 +32876,143 @@ func NewGetAiAgentMailStatsRequest(server string, organizationId openapi_types.U
 	return req, nil
 }
 
+// NewListAiAgentSessionsRequest generates requests for ListAiAgentSessions
+func NewListAiAgentSessionsRequest(server string, organizationId openapi_types.UUID, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/ai-agents/%s/sessions", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteAiAgentSessionRequest generates requests for DeleteAiAgentSession
+func NewDeleteAiAgentSessionRequest(server string, organizationId openapi_types.UUID, id openapi_types.UUID, sessionId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "session_id", runtime.ParamLocationPath, sessionId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/ai-agents/%s/sessions/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetAiAgentSessionRequest generates requests for GetAiAgentSession
+func NewGetAiAgentSessionRequest(server string, organizationId openapi_types.UUID, id openapi_types.UUID, sessionId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "session_id", runtime.ParamLocationPath, sessionId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/ai-agents/%s/sessions/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetAirflowRequest generates requests for GetAirflow
 func NewGetAirflowRequest(server string, organizationId openapi_types.UUID, instanceId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -28638,6 +33181,706 @@ func NewPatchAirflowCrdRequestWithBody(server string, organizationId openapi_typ
 	}
 
 	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListAlertablePanelsRequest generates requests for ListAlertablePanels
+func NewListAlertablePanelsRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/alertable-panels", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListAlertBindingsRequest generates requests for ListAlertBindings
+func NewListAlertBindingsRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/bindings", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewSetAlertBindingsRequest calls the generic SetAlertBindings builder with application/json body
+func NewSetAlertBindingsRequest(server string, organizationId openapi_types.UUID, signal string, body SetAlertBindingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSetAlertBindingsRequestWithBody(server, organizationId, signal, "application/json", bodyReader)
+}
+
+// NewSetAlertBindingsRequestWithBody generates requests for SetAlertBindings with any type of body
+func NewSetAlertBindingsRequestWithBody(server string, organizationId openapi_types.UUID, signal string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "signal", runtime.ParamLocationPath, signal)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/bindings/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListNotificationChannelsRequest generates requests for ListNotificationChannels
+func NewListNotificationChannelsRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/channels", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateNotificationChannelRequest calls the generic CreateNotificationChannel builder with application/json body
+func NewCreateNotificationChannelRequest(server string, organizationId openapi_types.UUID, body CreateNotificationChannelJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateNotificationChannelRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewCreateNotificationChannelRequestWithBody generates requests for CreateNotificationChannel with any type of body
+func NewCreateNotificationChannelRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/channels", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteNotificationChannelRequest generates requests for DeleteNotificationChannel
+func NewDeleteNotificationChannelRequest(server string, organizationId openapi_types.UUID, channelId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "channel_id", runtime.ParamLocationPath, channelId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/channels/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateNotificationChannelRequest calls the generic UpdateNotificationChannel builder with application/json body
+func NewUpdateNotificationChannelRequest(server string, organizationId openapi_types.UUID, channelId openapi_types.UUID, body UpdateNotificationChannelJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateNotificationChannelRequestWithBody(server, organizationId, channelId, "application/json", bodyReader)
+}
+
+// NewUpdateNotificationChannelRequestWithBody generates requests for UpdateNotificationChannel with any type of body
+func NewUpdateNotificationChannelRequestWithBody(server string, organizationId openapi_types.UUID, channelId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "channel_id", runtime.ParamLocationPath, channelId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/channels/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewTestNotificationChannelRequest generates requests for TestNotificationChannel
+func NewTestNotificationChannelRequest(server string, organizationId openapi_types.UUID, channelId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "channel_id", runtime.ParamLocationPath, channelId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/channels/%s/test", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListAlertEventsRequest generates requests for ListAlertEvents
+func NewListAlertEventsRequest(server string, organizationId openapi_types.UUID, params *ListAlertEventsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/events", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListAlertRulesRequest generates requests for ListAlertRules
+func NewListAlertRulesRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/rules", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateAlertRuleRequest calls the generic CreateAlertRule builder with application/json body
+func NewCreateAlertRuleRequest(server string, organizationId openapi_types.UUID, body CreateAlertRuleJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateAlertRuleRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewCreateAlertRuleRequestWithBody generates requests for CreateAlertRule with any type of body
+func NewCreateAlertRuleRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/rules", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteAlertRuleRequest generates requests for DeleteAlertRule
+func NewDeleteAlertRuleRequest(server string, organizationId openapi_types.UUID, ruleId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "rule_id", runtime.ParamLocationPath, ruleId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/rules/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateAlertRuleRequest calls the generic UpdateAlertRule builder with application/json body
+func NewUpdateAlertRuleRequest(server string, organizationId openapi_types.UUID, ruleId openapi_types.UUID, body UpdateAlertRuleJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateAlertRuleRequestWithBody(server, organizationId, ruleId, "application/json", bodyReader)
+}
+
+// NewUpdateAlertRuleRequestWithBody generates requests for UpdateAlertRule with any type of body
+func NewUpdateAlertRuleRequestWithBody(server string, organizationId openapi_types.UUID, ruleId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "rule_id", runtime.ParamLocationPath, ruleId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/rules/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListAlertThresholdsRequest generates requests for ListAlertThresholds
+func NewListAlertThresholdsRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/thresholds", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewClearAlertThresholdsRequest generates requests for ClearAlertThresholds
+func NewClearAlertThresholdsRequest(server string, organizationId openapi_types.UUID, signal string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "signal", runtime.ParamLocationPath, signal)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/thresholds/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewSetAlertThresholdsRequest calls the generic SetAlertThresholds builder with application/json body
+func NewSetAlertThresholdsRequest(server string, organizationId openapi_types.UUID, signal string, body SetAlertThresholdsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSetAlertThresholdsRequestWithBody(server, organizationId, signal, "application/json", bodyReader)
+}
+
+// NewSetAlertThresholdsRequestWithBody generates requests for SetAlertThresholds with any type of body
+func NewSetAlertThresholdsRequestWithBody(server string, organizationId openapi_types.UUID, signal string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "signal", runtime.ParamLocationPath, signal)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/alerting/thresholds/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -29467,6 +34710,74 @@ func NewDeleteOrganizationCrdRequest(server string, organizationId openapi_types
 	return req, nil
 }
 
+// NewCheckCustomDomainAvailabilityRequest generates requests for CheckCustomDomainAvailability
+func NewCheckCustomDomainAvailabilityRequest(server string, organizationId openapi_types.UUID, params *CheckCustomDomainAvailabilityParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/custom-domains/availability", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "fqdn", runtime.ParamLocationQuery, params.Fqdn); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		if params.AppId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "app_id", runtime.ParamLocationQuery, *params.AppId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetDagsterRequest generates requests for GetDagster
 func NewGetDagsterRequest(server string, organizationId openapi_types.UUID, instanceId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -29625,6 +34936,53 @@ func NewPatchDagsterCrdRequestWithBody(server string, organizationId openapi_typ
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/organizations/%s/dagsters/%s/crd", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewSetDedicatedHarborNamespacesRequest calls the generic SetDedicatedHarborNamespaces builder with application/json body
+func NewSetDedicatedHarborNamespacesRequest(server string, organizationId openapi_types.UUID, body SetDedicatedHarborNamespacesJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSetDedicatedHarborNamespacesRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewSetDedicatedHarborNamespacesRequestWithBody generates requests for SetDedicatedHarborNamespaces with any type of body
+func NewSetDedicatedHarborNamespacesRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/dedicated-harbor-namespaces", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -37005,7 +42363,7 @@ func NewGetOrganizationOverviewRequest(server string, organizationId openapi_typ
 }
 
 // NewListPipelinesRequest generates requests for ListPipelines
-func NewListPipelinesRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+func NewListPipelinesRequest(server string, organizationId openapi_types.UUID, params *ListPipelinesParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -37021,6 +42379,110 @@ func NewListPipelinesRequest(server string, organizationId openapi_types.UUID) (
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/organizations/%s/pipelines", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Search != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "search", runtime.ParamLocationQuery, *params.Search); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Status != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "status", runtime.ParamLocationQuery, *params.Status); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetPipelinesStatsRequest generates requests for GetPipelinesStats
+func NewGetPipelinesStatsRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/pipelines/stats", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -37562,41 +43024,153 @@ func NewListPipelineLogsRequest(server string, organizationId openapi_types.UUID
 	if params != nil {
 		queryValues := queryURL.Query()
 
+		if params.Range != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "range", runtime.ParamLocationQuery, *params.Range); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Search != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "search", runtime.ParamLocationQuery, *params.Search); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.SearchMode != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "search_mode", runtime.ParamLocationQuery, *params.SearchMode); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Pod != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "pod", runtime.ParamLocationQuery, *params.Pod); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Container != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "container", runtime.ParamLocationQuery, *params.Container); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Stream != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "stream", runtime.ParamLocationQuery, *params.Stream); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Level != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "level", runtime.ParamLocationQuery, *params.Level); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Start != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "start", runtime.ParamLocationQuery, *params.Start); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.End != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "end", runtime.ParamLocationQuery, *params.End); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
 		if params.Limit != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.Offset != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "offset", runtime.ParamLocationQuery, *params.Offset); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.CreatedAtAfter != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "created_at_after", runtime.ParamLocationQuery, *params.CreatedAtAfter); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -38146,8 +43720,8 @@ func NewGetTokenUsageSummaryRequest(server string, organizationId openapi_types.
 	return req, nil
 }
 
-// NewGetTokenUsageTimeseriesRequest generates requests for GetTokenUsageTimeseries
-func NewGetTokenUsageTimeseriesRequest(server string, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesParams) (*http.Request, error) {
+// NewGetTokenUsageTimeseriesByModelRequest generates requests for GetTokenUsageTimeseriesByModel
+func NewGetTokenUsageTimeseriesByModelRequest(server string, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesByModelParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -38162,7 +43736,79 @@ func NewGetTokenUsageTimeseriesRequest(server string, organizationId openapi_typ
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/v1/organizations/%s/sapience/token-usage/timeseries", pathParam0)
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/sapience/token-usage/timeseries/by-model", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Range != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "range", runtime.ParamLocationQuery, *params.Range); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Source != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "source", runtime.ParamLocationQuery, *params.Source); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetTokenUsageTimeseriesByPrincipalRequest generates requests for GetTokenUsageTimeseriesByPrincipal
+func NewGetTokenUsageTimeseriesByPrincipalRequest(server string, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesByPrincipalParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/sapience/token-usage/timeseries/by-principal", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -38790,6 +44436,47 @@ func NewDeleteServiceAccountCrdRequest(server string, organizationId openapi_typ
 	return req, nil
 }
 
+// NewGetServiceAccountCrdRequest generates requests for GetServiceAccountCrd
+func NewGetServiceAccountCrdRequest(server string, organizationId openapi_types.UUID, clientId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "client_id", runtime.ParamLocationPath, clientId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/service-accounts/crd/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewUpdateServiceAccountCrdRequest calls the generic UpdateServiceAccountCrd builder with application/json body
 func NewUpdateServiceAccountCrdRequest(server string, organizationId openapi_types.UUID, clientId string, body UpdateServiceAccountCrdJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -38840,6 +44527,47 @@ func NewUpdateServiceAccountCrdRequestWithBody(server string, organizationId ope
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewRotateServiceAccountSecretRequest generates requests for RotateServiceAccountSecret
+func NewRotateServiceAccountSecretRequest(server string, organizationId openapi_types.UUID, clientId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "client_id", runtime.ParamLocationPath, clientId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/organizations/%s/service-accounts/crd/%s/rotate-secret", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -40438,6 +46166,1255 @@ func NewGetEffectiveSecuritySettingsHandlerRequest(server string, organizationId
 	return req, nil
 }
 
+// NewGetOrgFeaturesHandlerRequest generates requests for GetOrgFeaturesHandler
+func NewGetOrgFeaturesHandlerRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/features", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListActionTypesHandlerRequest generates requests for ListActionTypesHandler
+func NewListActionTypesHandlerRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/action-types", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateActionTypeHandlerRequest calls the generic CreateActionTypeHandler builder with application/json body
+func NewCreateActionTypeHandlerRequest(server string, organizationId openapi_types.UUID, body CreateActionTypeHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateActionTypeHandlerRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewCreateActionTypeHandlerRequestWithBody generates requests for CreateActionTypeHandler with any type of body
+func NewCreateActionTypeHandlerRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/action-types", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteActionTypeHandlerRequest generates requests for DeleteActionTypeHandler
+func NewDeleteActionTypeHandlerRequest(server string, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "action_type_id", runtime.ParamLocationPath, actionTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/action-types/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetActionTypeHandlerRequest generates requests for GetActionTypeHandler
+func NewGetActionTypeHandlerRequest(server string, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "action_type_id", runtime.ParamLocationPath, actionTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/action-types/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateActionTypeHandlerRequest calls the generic UpdateActionTypeHandler builder with application/json body
+func NewUpdateActionTypeHandlerRequest(server string, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, body UpdateActionTypeHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateActionTypeHandlerRequestWithBody(server, organizationId, actionTypeId, "application/json", bodyReader)
+}
+
+// NewUpdateActionTypeHandlerRequestWithBody generates requests for UpdateActionTypeHandler with any type of body
+func NewUpdateActionTypeHandlerRequestWithBody(server string, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "action_type_id", runtime.ParamLocationPath, actionTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/action-types/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewExecuteActionHandlerRequest calls the generic ExecuteActionHandler builder with application/json body
+func NewExecuteActionHandlerRequest(server string, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, body ExecuteActionHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewExecuteActionHandlerRequestWithBody(server, organizationId, actionTypeId, "application/json", bodyReader)
+}
+
+// NewExecuteActionHandlerRequestWithBody generates requests for ExecuteActionHandler with any type of body
+func NewExecuteActionHandlerRequestWithBody(server string, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "action_type_id", runtime.ParamLocationPath, actionTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/action-types/%s/execute", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewApplyOntologyProposalHandlerRequest calls the generic ApplyOntologyProposalHandler builder with application/json body
+func NewApplyOntologyProposalHandlerRequest(server string, organizationId openapi_types.UUID, body ApplyOntologyProposalHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewApplyOntologyProposalHandlerRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewApplyOntologyProposalHandlerRequestWithBody generates requests for ApplyOntologyProposalHandler with any type of body
+func NewApplyOntologyProposalHandlerRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/apply", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewOntologyAssistantHandlerRequest calls the generic OntologyAssistantHandler builder with application/json body
+func NewOntologyAssistantHandlerRequest(server string, organizationId openapi_types.UUID, body OntologyAssistantHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOntologyAssistantHandlerRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewOntologyAssistantHandlerRequestWithBody generates requests for OntologyAssistantHandler with any type of body
+func NewOntologyAssistantHandlerRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/assistant", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGenerateOntologyHandlerRequest calls the generic GenerateOntologyHandler builder with application/json body
+func NewGenerateOntologyHandlerRequest(server string, organizationId openapi_types.UUID, body GenerateOntologyHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewGenerateOntologyHandlerRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewGenerateOntologyHandlerRequestWithBody generates requests for GenerateOntologyHandler with any type of body
+func NewGenerateOntologyHandlerRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/generate", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListLinkTypesHandlerRequest generates requests for ListLinkTypesHandler
+func NewListLinkTypesHandlerRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/link-types", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateLinkTypeHandlerRequest calls the generic CreateLinkTypeHandler builder with application/json body
+func NewCreateLinkTypeHandlerRequest(server string, organizationId openapi_types.UUID, body CreateLinkTypeHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateLinkTypeHandlerRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewCreateLinkTypeHandlerRequestWithBody generates requests for CreateLinkTypeHandler with any type of body
+func NewCreateLinkTypeHandlerRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/link-types", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteLinkTypeHandlerRequest generates requests for DeleteLinkTypeHandler
+func NewDeleteLinkTypeHandlerRequest(server string, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "link_type_id", runtime.ParamLocationPath, linkTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/link-types/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetLinkTypeHandlerRequest generates requests for GetLinkTypeHandler
+func NewGetLinkTypeHandlerRequest(server string, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "link_type_id", runtime.ParamLocationPath, linkTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/link-types/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateLinkTypeHandlerRequest calls the generic UpdateLinkTypeHandler builder with application/json body
+func NewUpdateLinkTypeHandlerRequest(server string, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, body UpdateLinkTypeHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateLinkTypeHandlerRequestWithBody(server, organizationId, linkTypeId, "application/json", bodyReader)
+}
+
+// NewUpdateLinkTypeHandlerRequestWithBody generates requests for UpdateLinkTypeHandler with any type of body
+func NewUpdateLinkTypeHandlerRequestWithBody(server string, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "link_type_id", runtime.ParamLocationPath, linkTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/link-types/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListObjectTypesHandlerRequest generates requests for ListObjectTypesHandler
+func NewListObjectTypesHandlerRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/object-types", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateObjectTypeHandlerRequest calls the generic CreateObjectTypeHandler builder with application/json body
+func NewCreateObjectTypeHandlerRequest(server string, organizationId openapi_types.UUID, body CreateObjectTypeHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateObjectTypeHandlerRequestWithBody(server, organizationId, "application/json", bodyReader)
+}
+
+// NewCreateObjectTypeHandlerRequestWithBody generates requests for CreateObjectTypeHandler with any type of body
+func NewCreateObjectTypeHandlerRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/object-types", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteObjectTypeHandlerRequest generates requests for DeleteObjectTypeHandler
+func NewDeleteObjectTypeHandlerRequest(server string, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "object_type_id", runtime.ParamLocationPath, objectTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/object-types/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetObjectTypeHandlerRequest generates requests for GetObjectTypeHandler
+func NewGetObjectTypeHandlerRequest(server string, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "object_type_id", runtime.ParamLocationPath, objectTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/object-types/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateObjectTypeHandlerRequest calls the generic UpdateObjectTypeHandler builder with application/json body
+func NewUpdateObjectTypeHandlerRequest(server string, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, body UpdateObjectTypeHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateObjectTypeHandlerRequestWithBody(server, organizationId, objectTypeId, "application/json", bodyReader)
+}
+
+// NewUpdateObjectTypeHandlerRequestWithBody generates requests for UpdateObjectTypeHandler with any type of body
+func NewUpdateObjectTypeHandlerRequestWithBody(server string, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "object_type_id", runtime.ParamLocationPath, objectTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/object-types/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListInstancesHandlerRequest generates requests for ListInstancesHandler
+func NewListInstancesHandlerRequest(server string, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, params *ListInstancesHandlerParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "object_type_id", runtime.ParamLocationPath, objectTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/object-types/%s/instances", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Offset != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "offset", runtime.ParamLocationQuery, *params.Offset); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetInstanceHandlerRequest generates requests for GetInstanceHandler
+func NewGetInstanceHandlerRequest(server string, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, primaryKey string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "object_type_id", runtime.ParamLocationPath, objectTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "primary_key", runtime.ParamLocationPath, primaryKey)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/object-types/%s/instances/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewTraverseLinkHandlerRequest generates requests for TraverseLinkHandler
+func NewTraverseLinkHandlerRequest(server string, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, primaryKey string, linkTypeId openapi_types.UUID, params *TraverseLinkHandlerParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "object_type_id", runtime.ParamLocationPath, objectTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "primary_key", runtime.ParamLocationPath, primaryKey)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam3 string
+
+	pathParam3, err = runtime.StyleParamWithLocation("simple", false, "link_type_id", runtime.ParamLocationPath, linkTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/object-types/%s/instances/%s/links/%s", pathParam0, pathParam1, pathParam2, pathParam3)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Offset != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "offset", runtime.ParamLocationQuery, *params.Offset); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAddPropertyHandlerRequest calls the generic AddPropertyHandler builder with application/json body
+func NewAddPropertyHandlerRequest(server string, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, body AddPropertyHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAddPropertyHandlerRequestWithBody(server, organizationId, objectTypeId, "application/json", bodyReader)
+}
+
+// NewAddPropertyHandlerRequestWithBody generates requests for AddPropertyHandler with any type of body
+func NewAddPropertyHandlerRequestWithBody(server string, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "object_type_id", runtime.ParamLocationPath, objectTypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/object-types/%s/properties", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeletePropertyHandlerRequest generates requests for DeletePropertyHandler
+func NewDeletePropertyHandlerRequest(server string, organizationId openapi_types.UUID, propertyId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "property_id", runtime.ParamLocationPath, propertyId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/properties/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdatePropertyHandlerRequest calls the generic UpdatePropertyHandler builder with application/json body
+func NewUpdatePropertyHandlerRequest(server string, organizationId openapi_types.UUID, propertyId openapi_types.UUID, body UpdatePropertyHandlerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdatePropertyHandlerRequestWithBody(server, organizationId, propertyId, "application/json", bodyReader)
+}
+
+// NewUpdatePropertyHandlerRequestWithBody generates requests for UpdatePropertyHandler with any type of body
+func NewUpdatePropertyHandlerRequestWithBody(server string, organizationId openapi_types.UUID, propertyId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "property_id", runtime.ParamLocationPath, propertyId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/orgs/%s/ontology/properties/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetOrgQuotasHandlerRequest generates requests for GetOrgQuotasHandler
 func NewGetOrgQuotasHandlerRequest(server string, organizationId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -40468,53 +47445,6 @@ func NewGetOrgQuotasHandlerRequest(server string, organizationId openapi_types.U
 	if err != nil {
 		return nil, err
 	}
-
-	return req, nil
-}
-
-// NewAssignSubscriptionHandlerRequest calls the generic AssignSubscriptionHandler builder with application/json body
-func NewAssignSubscriptionHandlerRequest(server string, organizationId openapi_types.UUID, body AssignSubscriptionHandlerJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewAssignSubscriptionHandlerRequestWithBody(server, organizationId, "application/json", bodyReader)
-}
-
-// NewAssignSubscriptionHandlerRequestWithBody generates requests for AssignSubscriptionHandler with any type of body
-func NewAssignSubscriptionHandlerRequestWithBody(server string, organizationId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/orgs/%s/quotas/subscription", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("PUT", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -41616,6 +48546,93 @@ func NewGetSharedModelRequest(server string, name string) (*http.Request, error)
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewCreateSignupRequestRequest calls the generic CreateSignupRequest builder with application/json body
+func NewCreateSignupRequestRequest(server string, body CreateSignupRequestJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateSignupRequestRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreateSignupRequestRequestWithBody generates requests for CreateSignupRequest with any type of body
+func NewCreateSignupRequestRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/signup-requests")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewVerifySignupRequestRequest calls the generic VerifySignupRequest builder with application/json body
+func NewVerifySignupRequestRequest(server string, id openapi_types.UUID, body VerifySignupRequestJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewVerifySignupRequestRequestWithBody(server, id, "application/json", bodyReader)
+}
+
+// NewVerifySignupRequestRequestWithBody generates requests for VerifySignupRequest with any type of body
+func NewVerifySignupRequestRequestWithBody(server string, id openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/signup-requests/%s/verify", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -43365,6 +50382,25 @@ type ClientWithResponsesInterface interface {
 	// ListForgejoBranchesWithResponse request
 	ListForgejoBranchesWithResponse(ctx context.Context, harborId openapi_types.UUID, owner string, name string, reqEditors ...RequestEditorFn) (*ListForgejoBranchesRes, error)
 
+	// ListEgressAllowlistsWithResponse request
+	ListEgressAllowlistsWithResponse(ctx context.Context, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListEgressAllowlistsRes, error)
+
+	// CreateEgressAllowlistWithBodyWithResponse request with any body
+	CreateEgressAllowlistWithBodyWithResponse(ctx context.Context, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateEgressAllowlistRes, error)
+
+	CreateEgressAllowlistWithResponse(ctx context.Context, harborId openapi_types.UUID, body CreateEgressAllowlistJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateEgressAllowlistRes, error)
+
+	// DeleteEgressAllowlistWithResponse request
+	DeleteEgressAllowlistWithResponse(ctx context.Context, harborId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*DeleteEgressAllowlistRes, error)
+
+	// GetEgressAllowlistWithResponse request
+	GetEgressAllowlistWithResponse(ctx context.Context, harborId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*GetEgressAllowlistRes, error)
+
+	// UpdateEgressAllowlistWithBodyWithResponse request with any body
+	UpdateEgressAllowlistWithBodyWithResponse(ctx context.Context, harborId openapi_types.UUID, name string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateEgressAllowlistRes, error)
+
+	UpdateEgressAllowlistWithResponse(ctx context.Context, harborId openapi_types.UUID, name string, body UpdateEgressAllowlistJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateEgressAllowlistRes, error)
+
 	// ListScmRepositoriesWithResponse request
 	ListScmRepositoriesWithResponse(ctx context.Context, secretId openapi_types.UUID, params *ListScmRepositoriesParams, reqEditors ...RequestEditorFn) (*ListScmRepositoriesRes, error)
 
@@ -43405,33 +50441,36 @@ type ClientWithResponsesInterface interface {
 	ListFilesWithResponse(ctx context.Context, id openapi_types.UUID, params *ListFilesParams, reqEditors ...RequestEditorFn) (*ListFilesRes, error)
 
 	// GitBranchesWithResponse request
-	GitBranchesWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GitBranchesRes, error)
+	GitBranchesWithResponse(ctx context.Context, id openapi_types.UUID, params *GitBranchesParams, reqEditors ...RequestEditorFn) (*GitBranchesRes, error)
 
 	// GitCheckoutWithBodyWithResponse request with any body
-	GitCheckoutWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitCheckoutRes, error)
+	GitCheckoutWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *GitCheckoutParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitCheckoutRes, error)
 
-	GitCheckoutWithResponse(ctx context.Context, id openapi_types.UUID, body GitCheckoutJSONRequestBody, reqEditors ...RequestEditorFn) (*GitCheckoutRes, error)
+	GitCheckoutWithResponse(ctx context.Context, id openapi_types.UUID, params *GitCheckoutParams, body GitCheckoutJSONRequestBody, reqEditors ...RequestEditorFn) (*GitCheckoutRes, error)
 
 	// GitCommitWithBodyWithResponse request with any body
-	GitCommitWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitCommitRes, error)
+	GitCommitWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *GitCommitParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitCommitRes, error)
 
-	GitCommitWithResponse(ctx context.Context, id openapi_types.UUID, body GitCommitJSONRequestBody, reqEditors ...RequestEditorFn) (*GitCommitRes, error)
+	GitCommitWithResponse(ctx context.Context, id openapi_types.UUID, params *GitCommitParams, body GitCommitJSONRequestBody, reqEditors ...RequestEditorFn) (*GitCommitRes, error)
 
 	// GitDiffWithResponse request
-	GitDiffWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GitDiffRes, error)
+	GitDiffWithResponse(ctx context.Context, id openapi_types.UUID, params *GitDiffParams, reqEditors ...RequestEditorFn) (*GitDiffRes, error)
 
 	// GitDiscardWithBodyWithResponse request with any body
-	GitDiscardWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitDiscardRes, error)
+	GitDiscardWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *GitDiscardParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitDiscardRes, error)
 
-	GitDiscardWithResponse(ctx context.Context, id openapi_types.UUID, body GitDiscardJSONRequestBody, reqEditors ...RequestEditorFn) (*GitDiscardRes, error)
+	GitDiscardWithResponse(ctx context.Context, id openapi_types.UUID, params *GitDiscardParams, body GitDiscardJSONRequestBody, reqEditors ...RequestEditorFn) (*GitDiscardRes, error)
 
 	// GitPrWithBodyWithResponse request with any body
-	GitPrWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitPrRes, error)
+	GitPrWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *GitPrParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitPrRes, error)
 
-	GitPrWithResponse(ctx context.Context, id openapi_types.UUID, body GitPrJSONRequestBody, reqEditors ...RequestEditorFn) (*GitPrRes, error)
+	GitPrWithResponse(ctx context.Context, id openapi_types.UUID, params *GitPrParams, body GitPrJSONRequestBody, reqEditors ...RequestEditorFn) (*GitPrRes, error)
 
 	// GitPrsWithResponse request
-	GitPrsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GitPrsRes, error)
+	GitPrsWithResponse(ctx context.Context, id openapi_types.UUID, params *GitPrsParams, reqEditors ...RequestEditorFn) (*GitPrsRes, error)
+
+	// GitReposWithResponse request
+	GitReposWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GitReposRes, error)
 
 	// ListModelsWithResponse request
 	ListModelsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListModelsRes, error)
@@ -43452,6 +50491,17 @@ type ClientWithResponsesInterface interface {
 
 	// ListPendingPermissionsWithResponse request
 	ListPendingPermissionsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListPendingPermissionsRes, error)
+
+	// ListPendingQuestionsWithResponse request
+	ListPendingQuestionsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListPendingQuestionsRes, error)
+
+	// RejectQuestionWithResponse request
+	RejectQuestionWithResponse(ctx context.Context, id openapi_types.UUID, rid string, reqEditors ...RequestEditorFn) (*RejectQuestionRes, error)
+
+	// ReplyQuestionWithBodyWithResponse request with any body
+	ReplyQuestionWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, rid string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReplyQuestionRes, error)
+
+	ReplyQuestionWithResponse(ctx context.Context, id openapi_types.UUID, rid string, body ReplyQuestionJSONRequestBody, reqEditors ...RequestEditorFn) (*ReplyQuestionRes, error)
 
 	// ListSessionsWithResponse request
 	ListSessionsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListSessionsRes, error)
@@ -43488,11 +50538,33 @@ type ClientWithResponsesInterface interface {
 
 	AiEditWithResponse(ctx context.Context, id openapi_types.UUID, body AiEditJSONRequestBody, reqEditors ...RequestEditorFn) (*AiEditRes, error)
 
+	// GetDevWorkstationEgressWithResponse request
+	GetDevWorkstationEgressWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDevWorkstationEgressRes, error)
+
+	// GetDevWorkstationEgressFlowsWithResponse request
+	GetDevWorkstationEgressFlowsWithResponse(ctx context.Context, id openapi_types.UUID, params *GetDevWorkstationEgressFlowsParams, reqEditors ...RequestEditorFn) (*GetDevWorkstationEgressFlowsRes, error)
+
 	// GetDevWorkstationMetricsWithResponse request
 	GetDevWorkstationMetricsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDevWorkstationMetricsRes, error)
 
+	// UpdateDevWorkstationNetworkWithBodyWithResponse request with any body
+	UpdateDevWorkstationNetworkWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateDevWorkstationNetworkRes, error)
+
+	UpdateDevWorkstationNetworkWithResponse(ctx context.Context, id openapi_types.UUID, body UpdateDevWorkstationNetworkJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateDevWorkstationNetworkRes, error)
+
 	// AuthorizePreviewWithResponse request
 	AuthorizePreviewWithResponse(ctx context.Context, id openapi_types.UUID, port int32, reqEditors ...RequestEditorFn) (*AuthorizePreviewRes, error)
+
+	// ListWorkstationRepositoriesWithResponse request
+	ListWorkstationRepositoriesWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListWorkstationRepositoriesRes, error)
+
+	// AddWorkstationRepositoryWithBodyWithResponse request with any body
+	AddWorkstationRepositoryWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddWorkstationRepositoryRes, error)
+
+	AddWorkstationRepositoryWithResponse(ctx context.Context, id openapi_types.UUID, body AddWorkstationRepositoryJSONRequestBody, reqEditors ...RequestEditorFn) (*AddWorkstationRepositoryRes, error)
+
+	// RemoveWorkstationRepositoryWithResponse request
+	RemoveWorkstationRepositoryWithResponse(ctx context.Context, id openapi_types.UUID, repoId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RemoveWorkstationRepositoryRes, error)
 
 	// ListDevWorkstationTerminalsWithResponse request
 	ListDevWorkstationTerminalsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDevWorkstationTerminalsRes, error)
@@ -43525,6 +50597,9 @@ type ClientWithResponsesInterface interface {
 	// GetBifrostInfoWithResponse request
 	GetBifrostInfoWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetBifrostInfoRes, error)
 
+	// ListChangelogsHandlerWithResponse request
+	ListChangelogsHandlerWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListChangelogsHandlerRes, error)
+
 	// GetCliVersionWithResponse request
 	GetCliVersionWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetCliVersionRes, error)
 
@@ -43555,55 +50630,6 @@ type ClientWithResponsesInterface interface {
 	UpdateContextualRestrictionHandlerWithBodyWithResponse(ctx context.Context, restrictionId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateContextualRestrictionHandlerRes, error)
 
 	UpdateContextualRestrictionHandlerWithResponse(ctx context.Context, restrictionId openapi_types.UUID, body UpdateContextualRestrictionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateContextualRestrictionHandlerRes, error)
-
-	// ListDashboardsWithResponse request
-	ListDashboardsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListDashboardsRes, error)
-
-	// CreateDashboardWithBodyWithResponse request with any body
-	CreateDashboardWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateDashboardRes, error)
-
-	CreateDashboardWithResponse(ctx context.Context, body CreateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateDashboardRes, error)
-
-	// GenerateDashboardWidgetsWithBodyWithResponse request with any body
-	GenerateDashboardWidgetsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GenerateDashboardWidgetsRes, error)
-
-	GenerateDashboardWidgetsWithResponse(ctx context.Context, body GenerateDashboardWidgetsJSONRequestBody, reqEditors ...RequestEditorFn) (*GenerateDashboardWidgetsRes, error)
-
-	// ListDashboardTrashWithResponse request
-	ListDashboardTrashWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListDashboardTrashRes, error)
-
-	// DeleteDashboardWithResponse request
-	DeleteDashboardWithResponse(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteDashboardRes, error)
-
-	// GetDashboardWithResponse request
-	GetDashboardWithResponse(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDashboardRes, error)
-
-	// UpdateDashboardWithBodyWithResponse request with any body
-	UpdateDashboardWithBodyWithResponse(ctx context.Context, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateDashboardRes, error)
-
-	UpdateDashboardWithResponse(ctx context.Context, dashboardId openapi_types.UUID, body UpdateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateDashboardRes, error)
-
-	// DuplicateDashboardWithBodyWithResponse request with any body
-	DuplicateDashboardWithBodyWithResponse(ctx context.Context, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DuplicateDashboardRes, error)
-
-	DuplicateDashboardWithResponse(ctx context.Context, dashboardId openapi_types.UUID, body DuplicateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*DuplicateDashboardRes, error)
-
-	// CheckDashboardHealthWithResponse request
-	CheckDashboardHealthWithResponse(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*CheckDashboardHealthRes, error)
-
-	// RestoreDashboardWithResponse request
-	RestoreDashboardWithResponse(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RestoreDashboardRes, error)
-
-	// TransferDashboardWithBodyWithResponse request with any body
-	TransferDashboardWithBodyWithResponse(ctx context.Context, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TransferDashboardRes, error)
-
-	TransferDashboardWithResponse(ctx context.Context, dashboardId openapi_types.UUID, body TransferDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*TransferDashboardRes, error)
-
-	// ListDashboardVersionsWithResponse request
-	ListDashboardVersionsWithResponse(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDashboardVersionsRes, error)
-
-	// RestoreDashboardVersionWithResponse request
-	RestoreDashboardVersionWithResponse(ctx context.Context, dashboardId openapi_types.UUID, versionNo int32, reqEditors ...RequestEditorFn) (*RestoreDashboardVersionRes, error)
 
 	// DeleteBucketFileWithResponse request
 	DeleteBucketFileWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, params *DeleteBucketFileParams, reqEditors ...RequestEditorFn) (*DeleteBucketFileRes, error)
@@ -43687,6 +50713,9 @@ type ClientWithResponsesInterface interface {
 
 	// DeleteSchemaWithResponse request
 	DeleteSchemaWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaName string, reqEditors ...RequestEditorFn) (*DeleteSchemaRes, error)
+
+	// DeleteTableWithResponse request
+	DeleteTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaName string, tableName string, reqEditors ...RequestEditorFn) (*DeleteTableRes, error)
 
 	// GetTableColumnsWithResponse request
 	GetTableColumnsWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaName string, tableName string, reqEditors ...RequestEditorFn) (*GetTableColumnsRes, error)
@@ -43863,6 +50892,55 @@ type ClientWithResponsesInterface interface {
 	// UploadBucketObjectWithResponse request
 	UploadBucketObjectWithResponse(ctx context.Context, harborId openapi_types.UUID, bucketName string, params *UploadBucketObjectParams, reqEditors ...RequestEditorFn) (*UploadBucketObjectRes, error)
 
+	// ListDashboardsWithResponse request
+	ListDashboardsWithResponse(ctx context.Context, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDashboardsRes, error)
+
+	// CreateDashboardWithBodyWithResponse request with any body
+	CreateDashboardWithBodyWithResponse(ctx context.Context, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateDashboardRes, error)
+
+	CreateDashboardWithResponse(ctx context.Context, harborId openapi_types.UUID, body CreateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateDashboardRes, error)
+
+	// GenerateDashboardWidgetsWithBodyWithResponse request with any body
+	GenerateDashboardWidgetsWithBodyWithResponse(ctx context.Context, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GenerateDashboardWidgetsRes, error)
+
+	GenerateDashboardWidgetsWithResponse(ctx context.Context, harborId openapi_types.UUID, body GenerateDashboardWidgetsJSONRequestBody, reqEditors ...RequestEditorFn) (*GenerateDashboardWidgetsRes, error)
+
+	// ListDashboardTrashWithResponse request
+	ListDashboardTrashWithResponse(ctx context.Context, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDashboardTrashRes, error)
+
+	// DeleteDashboardWithResponse request
+	DeleteDashboardWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteDashboardRes, error)
+
+	// GetDashboardWithResponse request
+	GetDashboardWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDashboardRes, error)
+
+	// UpdateDashboardWithBodyWithResponse request with any body
+	UpdateDashboardWithBodyWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateDashboardRes, error)
+
+	UpdateDashboardWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body UpdateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateDashboardRes, error)
+
+	// DuplicateDashboardWithBodyWithResponse request with any body
+	DuplicateDashboardWithBodyWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DuplicateDashboardRes, error)
+
+	DuplicateDashboardWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body DuplicateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*DuplicateDashboardRes, error)
+
+	// CheckDashboardHealthWithResponse request
+	CheckDashboardHealthWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*CheckDashboardHealthRes, error)
+
+	// RestoreDashboardWithResponse request
+	RestoreDashboardWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RestoreDashboardRes, error)
+
+	// TransferDashboardWithBodyWithResponse request with any body
+	TransferDashboardWithBodyWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TransferDashboardRes, error)
+
+	TransferDashboardWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body TransferDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*TransferDashboardRes, error)
+
+	// ListDashboardVersionsWithResponse request
+	ListDashboardVersionsWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDashboardVersionsRes, error)
+
+	// RestoreDashboardVersionWithResponse request
+	RestoreDashboardVersionWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, versionNo int32, reqEditors ...RequestEditorFn) (*RestoreDashboardVersionRes, error)
+
 	// ListHarborDataDockWithResponse request
 	ListHarborDataDockWithResponse(ctx context.Context, harborId openapi_types.UUID, params *ListHarborDataDockParams, reqEditors ...RequestEditorFn) (*ListHarborDataDockRes, error)
 
@@ -44000,6 +51078,15 @@ type ClientWithResponsesInterface interface {
 	// GetAiAgentMailStatsWithResponse request
 	GetAiAgentMailStatsWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAiAgentMailStatsRes, error)
 
+	// ListAiAgentSessionsWithResponse request
+	ListAiAgentSessionsWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListAiAgentSessionsRes, error)
+
+	// DeleteAiAgentSessionWithResponse request
+	DeleteAiAgentSessionWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, sessionId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteAiAgentSessionRes, error)
+
+	// GetAiAgentSessionWithResponse request
+	GetAiAgentSessionWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, sessionId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAiAgentSessionRes, error)
+
 	// GetAirflowWithResponse request
 	GetAirflowWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAirflowRes, error)
 
@@ -44013,6 +51100,66 @@ type ClientWithResponsesInterface interface {
 	PatchAirflowCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchAirflowCrdRes, error)
 
 	PatchAirflowCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, body PatchAirflowCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchAirflowCrdRes, error)
+
+	// ListAlertablePanelsWithResponse request
+	ListAlertablePanelsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListAlertablePanelsRes, error)
+
+	// ListAlertBindingsWithResponse request
+	ListAlertBindingsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListAlertBindingsRes, error)
+
+	// SetAlertBindingsWithBodyWithResponse request with any body
+	SetAlertBindingsWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, signal string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetAlertBindingsRes, error)
+
+	SetAlertBindingsWithResponse(ctx context.Context, organizationId openapi_types.UUID, signal string, body SetAlertBindingsJSONRequestBody, reqEditors ...RequestEditorFn) (*SetAlertBindingsRes, error)
+
+	// ListNotificationChannelsWithResponse request
+	ListNotificationChannelsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListNotificationChannelsRes, error)
+
+	// CreateNotificationChannelWithBodyWithResponse request with any body
+	CreateNotificationChannelWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateNotificationChannelRes, error)
+
+	CreateNotificationChannelWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateNotificationChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateNotificationChannelRes, error)
+
+	// DeleteNotificationChannelWithResponse request
+	DeleteNotificationChannelWithResponse(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteNotificationChannelRes, error)
+
+	// UpdateNotificationChannelWithBodyWithResponse request with any body
+	UpdateNotificationChannelWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateNotificationChannelRes, error)
+
+	UpdateNotificationChannelWithResponse(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, body UpdateNotificationChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateNotificationChannelRes, error)
+
+	// TestNotificationChannelWithResponse request
+	TestNotificationChannelWithResponse(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, reqEditors ...RequestEditorFn) (*TestNotificationChannelRes, error)
+
+	// ListAlertEventsWithResponse request
+	ListAlertEventsWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *ListAlertEventsParams, reqEditors ...RequestEditorFn) (*ListAlertEventsRes, error)
+
+	// ListAlertRulesWithResponse request
+	ListAlertRulesWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListAlertRulesRes, error)
+
+	// CreateAlertRuleWithBodyWithResponse request with any body
+	CreateAlertRuleWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateAlertRuleRes, error)
+
+	CreateAlertRuleWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateAlertRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateAlertRuleRes, error)
+
+	// DeleteAlertRuleWithResponse request
+	DeleteAlertRuleWithResponse(ctx context.Context, organizationId openapi_types.UUID, ruleId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteAlertRuleRes, error)
+
+	// UpdateAlertRuleWithBodyWithResponse request with any body
+	UpdateAlertRuleWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, ruleId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAlertRuleRes, error)
+
+	UpdateAlertRuleWithResponse(ctx context.Context, organizationId openapi_types.UUID, ruleId openapi_types.UUID, body UpdateAlertRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAlertRuleRes, error)
+
+	// ListAlertThresholdsWithResponse request
+	ListAlertThresholdsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListAlertThresholdsRes, error)
+
+	// ClearAlertThresholdsWithResponse request
+	ClearAlertThresholdsWithResponse(ctx context.Context, organizationId openapi_types.UUID, signal string, reqEditors ...RequestEditorFn) (*ClearAlertThresholdsRes, error)
+
+	// SetAlertThresholdsWithBodyWithResponse request with any body
+	SetAlertThresholdsWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, signal string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetAlertThresholdsRes, error)
+
+	SetAlertThresholdsWithResponse(ctx context.Context, organizationId openapi_types.UUID, signal string, body SetAlertThresholdsJSONRequestBody, reqEditors ...RequestEditorFn) (*SetAlertThresholdsRes, error)
 
 	// ListApiKeysWithResponse request
 	ListApiKeysWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListApiKeysRes, error)
@@ -44078,6 +51225,9 @@ type ClientWithResponsesInterface interface {
 	// DeleteOrganizationCrdWithResponse request
 	DeleteOrganizationCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteOrganizationCrdRes, error)
 
+	// CheckCustomDomainAvailabilityWithResponse request
+	CheckCustomDomainAvailabilityWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *CheckCustomDomainAvailabilityParams, reqEditors ...RequestEditorFn) (*CheckCustomDomainAvailabilityRes, error)
+
 	// GetDagsterWithResponse request
 	GetDagsterWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDagsterRes, error)
 
@@ -44091,6 +51241,11 @@ type ClientWithResponsesInterface interface {
 	PatchDagsterCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchDagsterCrdRes, error)
 
 	PatchDagsterCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, body PatchDagsterCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchDagsterCrdRes, error)
+
+	// SetDedicatedHarborNamespacesWithBodyWithResponse request with any body
+	SetDedicatedHarborNamespacesWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetDedicatedHarborNamespacesRes, error)
+
+	SetDedicatedHarborNamespacesWithResponse(ctx context.Context, organizationId openapi_types.UUID, body SetDedicatedHarborNamespacesJSONRequestBody, reqEditors ...RequestEditorFn) (*SetDedicatedHarborNamespacesRes, error)
 
 	// ListDomainVerificationsWithResponse request
 	ListDomainVerificationsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDomainVerificationsRes, error)
@@ -44514,7 +51669,10 @@ type ClientWithResponsesInterface interface {
 	GetOrganizationOverviewWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOrganizationOverviewRes, error)
 
 	// ListPipelinesWithResponse request
-	ListPipelinesWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListPipelinesRes, error)
+	ListPipelinesWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *ListPipelinesParams, reqEditors ...RequestEditorFn) (*ListPipelinesRes, error)
+
+	// GetPipelinesStatsWithResponse request
+	GetPipelinesStatsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetPipelinesStatsRes, error)
 
 	// TestImapConnectionWithBodyWithResponse request with any body
 	TestImapConnectionWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TestImapConnectionRes, error)
@@ -44580,8 +51738,11 @@ type ClientWithResponsesInterface interface {
 	// GetTokenUsageSummaryWithResponse request
 	GetTokenUsageSummaryWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *GetTokenUsageSummaryParams, reqEditors ...RequestEditorFn) (*GetTokenUsageSummaryRes, error)
 
-	// GetTokenUsageTimeseriesWithResponse request
-	GetTokenUsageTimeseriesWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesParams, reqEditors ...RequestEditorFn) (*GetTokenUsageTimeseriesRes, error)
+	// GetTokenUsageTimeseriesByModelWithResponse request
+	GetTokenUsageTimeseriesByModelWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesByModelParams, reqEditors ...RequestEditorFn) (*GetTokenUsageTimeseriesByModelRes, error)
+
+	// GetTokenUsageTimeseriesByPrincipalWithResponse request
+	GetTokenUsageTimeseriesByPrincipalWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesByPrincipalParams, reqEditors ...RequestEditorFn) (*GetTokenUsageTimeseriesByPrincipalRes, error)
 
 	// ListSecretsWithResponse request
 	ListSecretsWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *ListSecretsParams, reqEditors ...RequestEditorFn) (*ListSecretsRes, error)
@@ -44619,10 +51780,16 @@ type ClientWithResponsesInterface interface {
 	// DeleteServiceAccountCrdWithResponse request
 	DeleteServiceAccountCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, clientId string, reqEditors ...RequestEditorFn) (*DeleteServiceAccountCrdRes, error)
 
+	// GetServiceAccountCrdWithResponse request
+	GetServiceAccountCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, clientId string, reqEditors ...RequestEditorFn) (*GetServiceAccountCrdRes, error)
+
 	// UpdateServiceAccountCrdWithBodyWithResponse request with any body
 	UpdateServiceAccountCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateServiceAccountCrdRes, error)
 
 	UpdateServiceAccountCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, clientId string, body UpdateServiceAccountCrdJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateServiceAccountCrdRes, error)
+
+	// RotateServiceAccountSecretWithResponse request
+	RotateServiceAccountSecretWithResponse(ctx context.Context, organizationId openapi_types.UUID, clientId string, reqEditors ...RequestEditorFn) (*RotateServiceAccountSecretRes, error)
 
 	// ListServiceAccountGrantsWithResponse request
 	ListServiceAccountGrantsWithResponse(ctx context.Context, organizationId openapi_types.UUID, serviceAccountId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListServiceAccountGrantsRes, error)
@@ -44732,13 +51899,110 @@ type ClientWithResponsesInterface interface {
 	// GetEffectiveSecuritySettingsHandlerWithResponse request
 	GetEffectiveSecuritySettingsHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, dataDockId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetEffectiveSecuritySettingsHandlerRes, error)
 
+	// GetOrgFeaturesHandlerWithResponse request
+	GetOrgFeaturesHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOrgFeaturesHandlerRes, error)
+
+	// ListActionTypesHandlerWithResponse request
+	ListActionTypesHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListActionTypesHandlerRes, error)
+
+	// CreateActionTypeHandlerWithBodyWithResponse request with any body
+	CreateActionTypeHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateActionTypeHandlerRes, error)
+
+	CreateActionTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateActionTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateActionTypeHandlerRes, error)
+
+	// DeleteActionTypeHandlerWithResponse request
+	DeleteActionTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteActionTypeHandlerRes, error)
+
+	// GetActionTypeHandlerWithResponse request
+	GetActionTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetActionTypeHandlerRes, error)
+
+	// UpdateActionTypeHandlerWithBodyWithResponse request with any body
+	UpdateActionTypeHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateActionTypeHandlerRes, error)
+
+	UpdateActionTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, body UpdateActionTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateActionTypeHandlerRes, error)
+
+	// ExecuteActionHandlerWithBodyWithResponse request with any body
+	ExecuteActionHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ExecuteActionHandlerRes, error)
+
+	ExecuteActionHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, body ExecuteActionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*ExecuteActionHandlerRes, error)
+
+	// ApplyOntologyProposalHandlerWithBodyWithResponse request with any body
+	ApplyOntologyProposalHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ApplyOntologyProposalHandlerRes, error)
+
+	ApplyOntologyProposalHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body ApplyOntologyProposalHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*ApplyOntologyProposalHandlerRes, error)
+
+	// OntologyAssistantHandlerWithBodyWithResponse request with any body
+	OntologyAssistantHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*OntologyAssistantHandlerRes, error)
+
+	OntologyAssistantHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body OntologyAssistantHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*OntologyAssistantHandlerRes, error)
+
+	// GenerateOntologyHandlerWithBodyWithResponse request with any body
+	GenerateOntologyHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GenerateOntologyHandlerRes, error)
+
+	GenerateOntologyHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body GenerateOntologyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*GenerateOntologyHandlerRes, error)
+
+	// ListLinkTypesHandlerWithResponse request
+	ListLinkTypesHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListLinkTypesHandlerRes, error)
+
+	// CreateLinkTypeHandlerWithBodyWithResponse request with any body
+	CreateLinkTypeHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateLinkTypeHandlerRes, error)
+
+	CreateLinkTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateLinkTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateLinkTypeHandlerRes, error)
+
+	// DeleteLinkTypeHandlerWithResponse request
+	DeleteLinkTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteLinkTypeHandlerRes, error)
+
+	// GetLinkTypeHandlerWithResponse request
+	GetLinkTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetLinkTypeHandlerRes, error)
+
+	// UpdateLinkTypeHandlerWithBodyWithResponse request with any body
+	UpdateLinkTypeHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateLinkTypeHandlerRes, error)
+
+	UpdateLinkTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, body UpdateLinkTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateLinkTypeHandlerRes, error)
+
+	// ListObjectTypesHandlerWithResponse request
+	ListObjectTypesHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListObjectTypesHandlerRes, error)
+
+	// CreateObjectTypeHandlerWithBodyWithResponse request with any body
+	CreateObjectTypeHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateObjectTypeHandlerRes, error)
+
+	CreateObjectTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateObjectTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateObjectTypeHandlerRes, error)
+
+	// DeleteObjectTypeHandlerWithResponse request
+	DeleteObjectTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteObjectTypeHandlerRes, error)
+
+	// GetObjectTypeHandlerWithResponse request
+	GetObjectTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetObjectTypeHandlerRes, error)
+
+	// UpdateObjectTypeHandlerWithBodyWithResponse request with any body
+	UpdateObjectTypeHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateObjectTypeHandlerRes, error)
+
+	UpdateObjectTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, body UpdateObjectTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateObjectTypeHandlerRes, error)
+
+	// ListInstancesHandlerWithResponse request
+	ListInstancesHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, params *ListInstancesHandlerParams, reqEditors ...RequestEditorFn) (*ListInstancesHandlerRes, error)
+
+	// GetInstanceHandlerWithResponse request
+	GetInstanceHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, primaryKey string, reqEditors ...RequestEditorFn) (*GetInstanceHandlerRes, error)
+
+	// TraverseLinkHandlerWithResponse request
+	TraverseLinkHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, primaryKey string, linkTypeId openapi_types.UUID, params *TraverseLinkHandlerParams, reqEditors ...RequestEditorFn) (*TraverseLinkHandlerRes, error)
+
+	// AddPropertyHandlerWithBodyWithResponse request with any body
+	AddPropertyHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddPropertyHandlerRes, error)
+
+	AddPropertyHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, body AddPropertyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*AddPropertyHandlerRes, error)
+
+	// DeletePropertyHandlerWithResponse request
+	DeletePropertyHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, propertyId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeletePropertyHandlerRes, error)
+
+	// UpdatePropertyHandlerWithBodyWithResponse request with any body
+	UpdatePropertyHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, propertyId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdatePropertyHandlerRes, error)
+
+	UpdatePropertyHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, propertyId openapi_types.UUID, body UpdatePropertyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdatePropertyHandlerRes, error)
+
 	// GetOrgQuotasHandlerWithResponse request
 	GetOrgQuotasHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOrgQuotasHandlerRes, error)
-
-	// AssignSubscriptionHandlerWithBodyWithResponse request with any body
-	AssignSubscriptionHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AssignSubscriptionHandlerRes, error)
-
-	AssignSubscriptionHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body AssignSubscriptionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*AssignSubscriptionHandlerRes, error)
 
 	// GetOrgSecuritySettingsHandlerWithResponse request
 	GetOrgSecuritySettingsHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOrgSecuritySettingsHandlerRes, error)
@@ -44827,6 +52091,16 @@ type ClientWithResponsesInterface interface {
 
 	// GetSharedModelWithResponse request
 	GetSharedModelWithResponse(ctx context.Context, name string, reqEditors ...RequestEditorFn) (*GetSharedModelRes, error)
+
+	// CreateSignupRequestWithBodyWithResponse request with any body
+	CreateSignupRequestWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateSignupRequestRes, error)
+
+	CreateSignupRequestWithResponse(ctx context.Context, body CreateSignupRequestJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateSignupRequestRes, error)
+
+	// VerifySignupRequestWithBodyWithResponse request with any body
+	VerifySignupRequestWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*VerifySignupRequestRes, error)
+
+	VerifySignupRequestWithResponse(ctx context.Context, id openapi_types.UUID, body VerifySignupRequestJSONRequestBody, reqEditors ...RequestEditorFn) (*VerifySignupRequestRes, error)
 
 	// AnalyticsSlowQueriesHandlerWithResponse request
 	AnalyticsSlowQueriesHandlerWithResponse(ctx context.Context, params *AnalyticsSlowQueriesHandlerParams, reqEditors ...RequestEditorFn) (*AnalyticsSlowQueriesHandlerRes, error)
@@ -45025,6 +52299,129 @@ func (r ListForgejoBranchesRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ListForgejoBranchesRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListEgressAllowlistsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]EgressAllowlistResponse
+	JSON403      *ApiErrorBody
+	JSON500      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListEgressAllowlistsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListEgressAllowlistsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateEgressAllowlistRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *EgressAllowlistResponse
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON409      *ApiErrorBody
+	JSON500      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateEgressAllowlistRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateEgressAllowlistRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteEgressAllowlistRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteEgressAllowlistRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteEgressAllowlistRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetEgressAllowlistRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *EgressAllowlistResponse
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GetEgressAllowlistRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetEgressAllowlistRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateEgressAllowlistRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *EgressAllowlistResponse
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON500      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateEgressAllowlistRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateEgressAllowlistRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -45465,6 +52862,29 @@ func (r GitPrsRes) StatusCode() int {
 	return 0
 }
 
+type GitReposRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]GitRepoStatus
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GitReposRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GitReposRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type ListModelsRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -45608,6 +53028,79 @@ func (r ListPendingPermissionsRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ListPendingPermissionsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListPendingQuestionsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]PendingQuestion
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON502      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListPendingQuestionsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListPendingQuestionsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type RejectQuestionRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON502      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r RejectQuestionRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RejectQuestionRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ReplyQuestionRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON502      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ReplyQuestionRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ReplyQuestionRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -45833,6 +53326,56 @@ func (r AiEditRes) StatusCode() int {
 	return 0
 }
 
+type GetDevWorkstationEgressRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DevWorkstationEgressResponse
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GetDevWorkstationEgressRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetDevWorkstationEgressRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetDevWorkstationEgressFlowsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DevWorkstationEgressFlowsResponse
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON409      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GetDevWorkstationEgressFlowsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetDevWorkstationEgressFlowsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetDevWorkstationMetricsRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -45858,6 +53401,32 @@ func (r GetDevWorkstationMetricsRes) StatusCode() int {
 	return 0
 }
 
+type UpdateDevWorkstationNetworkRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DevWorkstationEgressResponse
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON500      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateDevWorkstationNetworkRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateDevWorkstationNetworkRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type AuthorizePreviewRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -45877,6 +53446,77 @@ func (r AuthorizePreviewRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r AuthorizePreviewRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListWorkstationRepositoriesRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]WorkstationRepositoryResponse
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListWorkstationRepositoriesRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListWorkstationRepositoriesRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AddWorkstationRepositoryRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *AddWorkstationRepositoryResponse
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON409      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r AddWorkstationRepositoryRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AddWorkstationRepositoryRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type RemoveWorkstationRepositoryRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r RemoveWorkstationRepositoryRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RemoveWorkstationRepositoryRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -46099,6 +53739,29 @@ func (r GetBifrostInfoRes) StatusCode() int {
 	return 0
 }
 
+type ListChangelogsHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ListChangelogsResponse
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListChangelogsHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListChangelogsHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetCliVersionRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -46307,316 +53970,6 @@ func (r UpdateContextualRestrictionHandlerRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r UpdateContextualRestrictionHandlerRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ListDashboardsRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]DashboardSummary
-	JSON403      *ApiErrorBody
-}
-
-// Status returns HTTPResponse.Status
-func (r ListDashboardsRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListDashboardsRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type CreateDashboardRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON201      *Dashboard
-	JSON400      *ApiErrorBody
-	JSON403      *ApiErrorBody
-}
-
-// Status returns HTTPResponse.Status
-func (r CreateDashboardRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r CreateDashboardRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GenerateDashboardWidgetsRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *CopilotGenerateResponse
-	JSON403      *ApiErrorBody
-	JSON404      *ApiErrorBody
-	JSON500      *ApiErrorBody
-}
-
-// Status returns HTTPResponse.Status
-func (r GenerateDashboardWidgetsRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GenerateDashboardWidgetsRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ListDashboardTrashRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]DashboardSummary
-	JSON403      *ApiErrorBody
-}
-
-// Status returns HTTPResponse.Status
-func (r ListDashboardTrashRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListDashboardTrashRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DeleteDashboardRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON403      *ApiErrorBody
-	JSON404      *ApiErrorBody
-}
-
-// Status returns HTTPResponse.Status
-func (r DeleteDashboardRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeleteDashboardRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetDashboardRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Dashboard
-	JSON403      *ApiErrorBody
-	JSON404      *ApiErrorBody
-}
-
-// Status returns HTTPResponse.Status
-func (r GetDashboardRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetDashboardRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type UpdateDashboardRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Dashboard
-	JSON400      *ApiErrorBody
-	JSON403      *ApiErrorBody
-	JSON404      *ApiErrorBody
-}
-
-// Status returns HTTPResponse.Status
-func (r UpdateDashboardRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r UpdateDashboardRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DuplicateDashboardRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON201      *Dashboard
-	JSON403      *ApiErrorBody
-	JSON404      *ApiErrorBody
-}
-
-// Status returns HTTPResponse.Status
-func (r DuplicateDashboardRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DuplicateDashboardRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type CheckDashboardHealthRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]WidgetHealth
-	JSON403      *ApiErrorBody
-	JSON404      *ApiErrorBody
-}
-
-// Status returns HTTPResponse.Status
-func (r CheckDashboardHealthRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r CheckDashboardHealthRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type RestoreDashboardRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Dashboard
-	JSON403      *ApiErrorBody
-	JSON404      *ApiErrorBody
-}
-
-// Status returns HTTPResponse.Status
-func (r RestoreDashboardRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r RestoreDashboardRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type TransferDashboardRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Dashboard
-	JSON403      *ApiErrorBody
-	JSON404      *ApiErrorBody
-}
-
-// Status returns HTTPResponse.Status
-func (r TransferDashboardRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r TransferDashboardRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ListDashboardVersionsRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]DashboardVersionSummary
-	JSON403      *ApiErrorBody
-}
-
-// Status returns HTTPResponse.Status
-func (r ListDashboardVersionsRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListDashboardVersionsRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type RestoreDashboardVersionRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Dashboard
-	JSON403      *ApiErrorBody
-	JSON404      *ApiErrorBody
-}
-
-// Status returns HTTPResponse.Status
-func (r RestoreDashboardVersionRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r RestoreDashboardVersionRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -47181,6 +54534,31 @@ func (r DeleteSchemaRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r DeleteSchemaRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteTableRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON500      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteTableRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteTableRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -48319,6 +55697,316 @@ func (r UploadBucketObjectRes) StatusCode() int {
 	return 0
 }
 
+type ListDashboardsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]DashboardSummary
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListDashboardsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListDashboardsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateDashboardRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *Dashboard
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateDashboardRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateDashboardRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GenerateDashboardWidgetsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *CopilotGenerateResponse
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON500      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GenerateDashboardWidgetsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GenerateDashboardWidgetsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListDashboardTrashRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]DashboardSummary
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListDashboardTrashRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListDashboardTrashRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteDashboardRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteDashboardRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteDashboardRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetDashboardRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Dashboard
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GetDashboardRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetDashboardRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateDashboardRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Dashboard
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateDashboardRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateDashboardRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DuplicateDashboardRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *Dashboard
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r DuplicateDashboardRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DuplicateDashboardRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CheckDashboardHealthRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]WidgetHealth
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r CheckDashboardHealthRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CheckDashboardHealthRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type RestoreDashboardRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Dashboard
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r RestoreDashboardRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RestoreDashboardRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type TransferDashboardRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Dashboard
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r TransferDashboardRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TransferDashboardRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListDashboardVersionsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]DashboardVersionSummary
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListDashboardVersionsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListDashboardVersionsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type RestoreDashboardVersionRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Dashboard
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r RestoreDashboardVersionRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RestoreDashboardVersionRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type ListHarborDataDockRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -48820,6 +56508,7 @@ type CreateOpendataIngestionRes struct {
 	JSON201      *PipelineResponseData
 	JSON400      *ApiErrorBody
 	JSON403      *ApiErrorBody
+	JSON409      *ApiErrorBody
 	JSON500      *ApiErrorBody
 }
 
@@ -49233,6 +56922,81 @@ func (r GetAiAgentMailStatsRes) StatusCode() int {
 	return 0
 }
 
+type ListAiAgentSessionsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AiAgentSessionsResponse
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON409      *ApiErrorBody
+	JSON503      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAiAgentSessionsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAiAgentSessionsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteAiAgentSessionRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON409      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteAiAgentSessionRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteAiAgentSessionRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetAiAgentSessionRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AiAgentSessionTurnsResponse
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON409      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAiAgentSessionRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAiAgentSessionRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetAirflowRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -49326,6 +57090,380 @@ func (r PatchAirflowCrdRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PatchAirflowCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListAlertablePanelsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]AlertablePanelDto
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAlertablePanelsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAlertablePanelsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListAlertBindingsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]SignalBindingsDto
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAlertBindingsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAlertBindingsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SetAlertBindingsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r SetAlertBindingsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SetAlertBindingsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListNotificationChannelsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]NotificationChannelDto
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListNotificationChannelsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListNotificationChannelsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateNotificationChannelRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *NotificationChannelDto
+	JSON403      *ApiErrorBody
+	JSON409      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateNotificationChannelRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateNotificationChannelRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteNotificationChannelRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteNotificationChannelRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteNotificationChannelRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateNotificationChannelRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *NotificationChannelDto
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateNotificationChannelRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateNotificationChannelRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type TestNotificationChannelRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r TestNotificationChannelRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TestNotificationChannelRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListAlertEventsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]AlertEventDto
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAlertEventsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAlertEventsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListAlertRulesRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]AlertRuleDto
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAlertRulesRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAlertRulesRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateAlertRuleRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AlertRuleDto
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON409      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateAlertRuleRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateAlertRuleRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteAlertRuleRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteAlertRuleRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteAlertRuleRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateAlertRuleRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AlertRuleDto
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateAlertRuleRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateAlertRuleRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListAlertThresholdsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]SignalThresholdsDto
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAlertThresholdsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAlertThresholdsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ClearAlertThresholdsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SignalThresholdsDto
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ClearAlertThresholdsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ClearAlertThresholdsRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SetAlertThresholdsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SignalThresholdsDto
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r SetAlertThresholdsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SetAlertThresholdsRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -49775,6 +57913,31 @@ func (r DeleteOrganizationCrdRes) StatusCode() int {
 	return 0
 }
 
+type CheckCustomDomainAvailabilityRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *CustomDomainAvailabilityResponse
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON500      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r CheckCustomDomainAvailabilityRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CheckCustomDomainAvailabilityRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetDagsterRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -49868,6 +58031,32 @@ func (r PatchDagsterCrdRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PatchDagsterCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SetDedicatedHarborNamespacesRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Org
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON409      *ApiErrorBody
+	JSON500      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r SetDedicatedHarborNamespacesRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SetDedicatedHarborNamespacesRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -50663,6 +58852,7 @@ type CreateContainerAppCrdRes struct {
 	JSON400      *ApiErrorBody
 	JSON403      *ApiErrorBody
 	JSON404      *ApiErrorBody
+	JSON409      *ApiErrorBody
 	JSON500      *ApiErrorBody
 }
 
@@ -52872,7 +61062,7 @@ func (r GetOrganizationOverviewRes) StatusCode() int {
 type ListPipelinesRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *[]PipelineResponseData
+	JSON200      *PipelinesPage
 	JSON403      *ApiErrorBody
 	JSON500      *ApiErrorBody
 }
@@ -52887,6 +61077,30 @@ func (r ListPipelinesRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ListPipelinesRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetPipelinesStatsRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PipelinesStats
+	JSON403      *ApiErrorBody
+	JSON500      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GetPipelinesStatsRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetPipelinesStatsRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -53112,7 +61326,8 @@ func (r GetPipelineRunRes) StatusCode() int {
 type ListPipelineLogsRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ListLogsResponse
+	JSON200      *ResourceLogsResponse
+	JSON400      *ApiErrorBody
 	JSON403      *ApiErrorBody
 	JSON404      *ApiErrorBody
 	JSON500      *ApiErrorBody
@@ -53374,16 +61589,16 @@ func (r GetTokenUsageSummaryRes) StatusCode() int {
 	return 0
 }
 
-type GetTokenUsageTimeseriesRes struct {
+type GetTokenUsageTimeseriesByModelRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *[]UsageTimePoint
+	JSON200      *[]ModelUsageTimePoint
 	JSON401      *ApiErrorBody
 	JSON403      *ApiErrorBody
 }
 
 // Status returns HTTPResponse.Status
-func (r GetTokenUsageTimeseriesRes) Status() string {
+func (r GetTokenUsageTimeseriesByModelRes) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -53391,7 +61606,31 @@ func (r GetTokenUsageTimeseriesRes) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r GetTokenUsageTimeseriesRes) StatusCode() int {
+func (r GetTokenUsageTimeseriesByModelRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetTokenUsageTimeseriesByPrincipalRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]PrincipalUsageTimePoint
+	JSON401      *ApiErrorBody
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GetTokenUsageTimeseriesByPrincipalRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetTokenUsageTimeseriesByPrincipalRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -53553,6 +61792,7 @@ type UpdateSecretRes struct {
 	JSON400      *ApiErrorBody
 	JSON403      *ApiErrorBody
 	JSON404      *ApiErrorBody
+	JSON409      *ApiErrorBody
 	JSON500      *ApiErrorBody
 }
 
@@ -53647,10 +61887,36 @@ func (r DeleteServiceAccountCrdRes) StatusCode() int {
 	return 0
 }
 
+type GetServiceAccountCrdRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ServiceAccountCrdConfig
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON500      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GetServiceAccountCrdRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetServiceAccountCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type UpdateServiceAccountCrdRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ServiceAccount
+	JSON200      *ServiceAccountCrdConfig
+	JSON400      *ApiErrorBody
 	JSON403      *ApiErrorBody
 	JSON404      *ApiErrorBody
 	JSON500      *ApiErrorBody
@@ -53666,6 +61932,31 @@ func (r UpdateServiceAccountCrdRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r UpdateServiceAccountCrdRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type RotateServiceAccountSecretRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ServiceAccountCrdConfig
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON500      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r RotateServiceAccountSecretRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RotateServiceAccountSecretRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -54384,6 +62675,633 @@ func (r GetEffectiveSecuritySettingsHandlerRes) StatusCode() int {
 	return 0
 }
 
+type GetOrgFeaturesHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *OrgFeaturesResponse
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrgFeaturesHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrgFeaturesHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListActionTypesHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]ActionType
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListActionTypesHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListActionTypesHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateActionTypeHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *ActionType
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON409      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateActionTypeHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateActionTypeHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteActionTypeHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteActionTypeHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteActionTypeHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetActionTypeHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ActionType
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GetActionTypeHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetActionTypeHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateActionTypeHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ActionType
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateActionTypeHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateActionTypeHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ExecuteActionHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ActionResult
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ExecuteActionHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ExecuteActionHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ApplyOntologyProposalHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AppliedProposal
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ApplyOntologyProposalHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ApplyOntologyProposalHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type OntologyAssistantHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AssistantAnswer
+	JSON403      *ApiErrorBody
+	JSON500      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r OntologyAssistantHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r OntologyAssistantHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GenerateOntologyHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *OntologyProposal
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON500      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GenerateOntologyHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GenerateOntologyHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListLinkTypesHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]LinkType
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListLinkTypesHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListLinkTypesHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateLinkTypeHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *LinkType
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON409      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateLinkTypeHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateLinkTypeHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteLinkTypeHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteLinkTypeHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteLinkTypeHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetLinkTypeHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *LinkType
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GetLinkTypeHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetLinkTypeHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateLinkTypeHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *LinkType
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateLinkTypeHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateLinkTypeHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListObjectTypesHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]ObjectType
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListObjectTypesHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListObjectTypesHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateObjectTypeHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *ObjectType
+	JSON403      *ApiErrorBody
+	JSON409      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateObjectTypeHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateObjectTypeHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteObjectTypeHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteObjectTypeHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteObjectTypeHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetObjectTypeHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ObjectTypeWithProperties
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GetObjectTypeHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetObjectTypeHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateObjectTypeHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ObjectType
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateObjectTypeHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateObjectTypeHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListInstancesHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *InstancePage
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r ListInstancesHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListInstancesHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetInstanceHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ObjectInstance
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r GetInstanceHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetInstanceHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type TraverseLinkHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *InstancePage
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r TraverseLinkHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TraverseLinkHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AddPropertyHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *PropertyDefinition
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+	JSON409      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r AddPropertyHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AddPropertyHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeletePropertyHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r DeletePropertyHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeletePropertyHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdatePropertyHandlerRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PropertyDefinition
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdatePropertyHandlerRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdatePropertyHandlerRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetOrgQuotasHandlerRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -54402,29 +63320,6 @@ func (r GetOrgQuotasHandlerRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetOrgQuotasHandlerRes) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type AssignSubscriptionHandlerRes struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON403      *ApiErrorBody
-	JSON404      *ApiErrorBody
-}
-
-// Status returns HTTPResponse.Status
-func (r AssignSubscriptionHandlerRes) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r AssignSubscriptionHandlerRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -54718,7 +63613,9 @@ func (r ListPermissionsRes) StatusCode() int {
 type CreatePipelineRes struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON400      *ApiErrorBody
 	JSON403      *ApiErrorBody
+	JSON409      *ApiErrorBody
 	JSON500      *ApiErrorBody
 }
 
@@ -54992,6 +63889,54 @@ func (r GetSharedModelRes) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetSharedModelRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateSignupRequestRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *CreateSignupRequestResponse
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateSignupRequestRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateSignupRequestRes) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type VerifySignupRequestRes struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON400      *ApiErrorBody
+	JSON403      *ApiErrorBody
+	JSON404      *ApiErrorBody
+}
+
+// Status returns HTTPResponse.Status
+func (r VerifySignupRequestRes) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r VerifySignupRequestRes) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -55355,7 +64300,9 @@ type CreatePipelineV2Res struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *PipelineResponseData
+	JSON400      *ApiErrorBody
 	JSON403      *ApiErrorBody
+	JSON409      *ApiErrorBody
 	JSON500      *ApiErrorBody
 }
 
@@ -55914,6 +64861,67 @@ func (c *ClientWithResponses) ListForgejoBranchesWithResponse(ctx context.Contex
 	return ParseListForgejoBranchesRes(rsp)
 }
 
+// ListEgressAllowlistsWithResponse request returning *ListEgressAllowlistsRes
+func (c *ClientWithResponses) ListEgressAllowlistsWithResponse(ctx context.Context, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListEgressAllowlistsRes, error) {
+	rsp, err := c.ListEgressAllowlists(ctx, harborId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListEgressAllowlistsRes(rsp)
+}
+
+// CreateEgressAllowlistWithBodyWithResponse request with arbitrary body returning *CreateEgressAllowlistRes
+func (c *ClientWithResponses) CreateEgressAllowlistWithBodyWithResponse(ctx context.Context, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateEgressAllowlistRes, error) {
+	rsp, err := c.CreateEgressAllowlistWithBody(ctx, harborId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateEgressAllowlistRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateEgressAllowlistWithResponse(ctx context.Context, harborId openapi_types.UUID, body CreateEgressAllowlistJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateEgressAllowlistRes, error) {
+	rsp, err := c.CreateEgressAllowlist(ctx, harborId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateEgressAllowlistRes(rsp)
+}
+
+// DeleteEgressAllowlistWithResponse request returning *DeleteEgressAllowlistRes
+func (c *ClientWithResponses) DeleteEgressAllowlistWithResponse(ctx context.Context, harborId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*DeleteEgressAllowlistRes, error) {
+	rsp, err := c.DeleteEgressAllowlist(ctx, harborId, name, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteEgressAllowlistRes(rsp)
+}
+
+// GetEgressAllowlistWithResponse request returning *GetEgressAllowlistRes
+func (c *ClientWithResponses) GetEgressAllowlistWithResponse(ctx context.Context, harborId openapi_types.UUID, name string, reqEditors ...RequestEditorFn) (*GetEgressAllowlistRes, error) {
+	rsp, err := c.GetEgressAllowlist(ctx, harborId, name, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetEgressAllowlistRes(rsp)
+}
+
+// UpdateEgressAllowlistWithBodyWithResponse request with arbitrary body returning *UpdateEgressAllowlistRes
+func (c *ClientWithResponses) UpdateEgressAllowlistWithBodyWithResponse(ctx context.Context, harborId openapi_types.UUID, name string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateEgressAllowlistRes, error) {
+	rsp, err := c.UpdateEgressAllowlistWithBody(ctx, harborId, name, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateEgressAllowlistRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdateEgressAllowlistWithResponse(ctx context.Context, harborId openapi_types.UUID, name string, body UpdateEgressAllowlistJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateEgressAllowlistRes, error) {
+	rsp, err := c.UpdateEgressAllowlist(ctx, harborId, name, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateEgressAllowlistRes(rsp)
+}
+
 // ListScmRepositoriesWithResponse request returning *ListScmRepositoriesRes
 func (c *ClientWithResponses) ListScmRepositoriesWithResponse(ctx context.Context, secretId openapi_types.UUID, params *ListScmRepositoriesParams, reqEditors ...RequestEditorFn) (*ListScmRepositoriesRes, error) {
 	rsp, err := c.ListScmRepositories(ctx, secretId, params, reqEditors...)
@@ -56038,8 +65046,8 @@ func (c *ClientWithResponses) ListFilesWithResponse(ctx context.Context, id open
 }
 
 // GitBranchesWithResponse request returning *GitBranchesRes
-func (c *ClientWithResponses) GitBranchesWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GitBranchesRes, error) {
-	rsp, err := c.GitBranches(ctx, id, reqEditors...)
+func (c *ClientWithResponses) GitBranchesWithResponse(ctx context.Context, id openapi_types.UUID, params *GitBranchesParams, reqEditors ...RequestEditorFn) (*GitBranchesRes, error) {
+	rsp, err := c.GitBranches(ctx, id, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -56047,16 +65055,16 @@ func (c *ClientWithResponses) GitBranchesWithResponse(ctx context.Context, id op
 }
 
 // GitCheckoutWithBodyWithResponse request with arbitrary body returning *GitCheckoutRes
-func (c *ClientWithResponses) GitCheckoutWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitCheckoutRes, error) {
-	rsp, err := c.GitCheckoutWithBody(ctx, id, contentType, body, reqEditors...)
+func (c *ClientWithResponses) GitCheckoutWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *GitCheckoutParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitCheckoutRes, error) {
+	rsp, err := c.GitCheckoutWithBody(ctx, id, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 	return ParseGitCheckoutRes(rsp)
 }
 
-func (c *ClientWithResponses) GitCheckoutWithResponse(ctx context.Context, id openapi_types.UUID, body GitCheckoutJSONRequestBody, reqEditors ...RequestEditorFn) (*GitCheckoutRes, error) {
-	rsp, err := c.GitCheckout(ctx, id, body, reqEditors...)
+func (c *ClientWithResponses) GitCheckoutWithResponse(ctx context.Context, id openapi_types.UUID, params *GitCheckoutParams, body GitCheckoutJSONRequestBody, reqEditors ...RequestEditorFn) (*GitCheckoutRes, error) {
+	rsp, err := c.GitCheckout(ctx, id, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -56064,16 +65072,16 @@ func (c *ClientWithResponses) GitCheckoutWithResponse(ctx context.Context, id op
 }
 
 // GitCommitWithBodyWithResponse request with arbitrary body returning *GitCommitRes
-func (c *ClientWithResponses) GitCommitWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitCommitRes, error) {
-	rsp, err := c.GitCommitWithBody(ctx, id, contentType, body, reqEditors...)
+func (c *ClientWithResponses) GitCommitWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *GitCommitParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitCommitRes, error) {
+	rsp, err := c.GitCommitWithBody(ctx, id, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 	return ParseGitCommitRes(rsp)
 }
 
-func (c *ClientWithResponses) GitCommitWithResponse(ctx context.Context, id openapi_types.UUID, body GitCommitJSONRequestBody, reqEditors ...RequestEditorFn) (*GitCommitRes, error) {
-	rsp, err := c.GitCommit(ctx, id, body, reqEditors...)
+func (c *ClientWithResponses) GitCommitWithResponse(ctx context.Context, id openapi_types.UUID, params *GitCommitParams, body GitCommitJSONRequestBody, reqEditors ...RequestEditorFn) (*GitCommitRes, error) {
+	rsp, err := c.GitCommit(ctx, id, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -56081,8 +65089,8 @@ func (c *ClientWithResponses) GitCommitWithResponse(ctx context.Context, id open
 }
 
 // GitDiffWithResponse request returning *GitDiffRes
-func (c *ClientWithResponses) GitDiffWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GitDiffRes, error) {
-	rsp, err := c.GitDiff(ctx, id, reqEditors...)
+func (c *ClientWithResponses) GitDiffWithResponse(ctx context.Context, id openapi_types.UUID, params *GitDiffParams, reqEditors ...RequestEditorFn) (*GitDiffRes, error) {
+	rsp, err := c.GitDiff(ctx, id, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -56090,16 +65098,16 @@ func (c *ClientWithResponses) GitDiffWithResponse(ctx context.Context, id openap
 }
 
 // GitDiscardWithBodyWithResponse request with arbitrary body returning *GitDiscardRes
-func (c *ClientWithResponses) GitDiscardWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitDiscardRes, error) {
-	rsp, err := c.GitDiscardWithBody(ctx, id, contentType, body, reqEditors...)
+func (c *ClientWithResponses) GitDiscardWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *GitDiscardParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitDiscardRes, error) {
+	rsp, err := c.GitDiscardWithBody(ctx, id, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 	return ParseGitDiscardRes(rsp)
 }
 
-func (c *ClientWithResponses) GitDiscardWithResponse(ctx context.Context, id openapi_types.UUID, body GitDiscardJSONRequestBody, reqEditors ...RequestEditorFn) (*GitDiscardRes, error) {
-	rsp, err := c.GitDiscard(ctx, id, body, reqEditors...)
+func (c *ClientWithResponses) GitDiscardWithResponse(ctx context.Context, id openapi_types.UUID, params *GitDiscardParams, body GitDiscardJSONRequestBody, reqEditors ...RequestEditorFn) (*GitDiscardRes, error) {
+	rsp, err := c.GitDiscard(ctx, id, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -56107,16 +65115,16 @@ func (c *ClientWithResponses) GitDiscardWithResponse(ctx context.Context, id ope
 }
 
 // GitPrWithBodyWithResponse request with arbitrary body returning *GitPrRes
-func (c *ClientWithResponses) GitPrWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitPrRes, error) {
-	rsp, err := c.GitPrWithBody(ctx, id, contentType, body, reqEditors...)
+func (c *ClientWithResponses) GitPrWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *GitPrParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GitPrRes, error) {
+	rsp, err := c.GitPrWithBody(ctx, id, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 	return ParseGitPrRes(rsp)
 }
 
-func (c *ClientWithResponses) GitPrWithResponse(ctx context.Context, id openapi_types.UUID, body GitPrJSONRequestBody, reqEditors ...RequestEditorFn) (*GitPrRes, error) {
-	rsp, err := c.GitPr(ctx, id, body, reqEditors...)
+func (c *ClientWithResponses) GitPrWithResponse(ctx context.Context, id openapi_types.UUID, params *GitPrParams, body GitPrJSONRequestBody, reqEditors ...RequestEditorFn) (*GitPrRes, error) {
+	rsp, err := c.GitPr(ctx, id, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -56124,12 +65132,21 @@ func (c *ClientWithResponses) GitPrWithResponse(ctx context.Context, id openapi_
 }
 
 // GitPrsWithResponse request returning *GitPrsRes
-func (c *ClientWithResponses) GitPrsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GitPrsRes, error) {
-	rsp, err := c.GitPrs(ctx, id, reqEditors...)
+func (c *ClientWithResponses) GitPrsWithResponse(ctx context.Context, id openapi_types.UUID, params *GitPrsParams, reqEditors ...RequestEditorFn) (*GitPrsRes, error) {
+	rsp, err := c.GitPrs(ctx, id, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 	return ParseGitPrsRes(rsp)
+}
+
+// GitReposWithResponse request returning *GitReposRes
+func (c *ClientWithResponses) GitReposWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GitReposRes, error) {
+	rsp, err := c.GitRepos(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGitReposRes(rsp)
 }
 
 // ListModelsWithResponse request returning *ListModelsRes
@@ -56192,6 +65209,41 @@ func (c *ClientWithResponses) ListPendingPermissionsWithResponse(ctx context.Con
 		return nil, err
 	}
 	return ParseListPendingPermissionsRes(rsp)
+}
+
+// ListPendingQuestionsWithResponse request returning *ListPendingQuestionsRes
+func (c *ClientWithResponses) ListPendingQuestionsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListPendingQuestionsRes, error) {
+	rsp, err := c.ListPendingQuestions(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListPendingQuestionsRes(rsp)
+}
+
+// RejectQuestionWithResponse request returning *RejectQuestionRes
+func (c *ClientWithResponses) RejectQuestionWithResponse(ctx context.Context, id openapi_types.UUID, rid string, reqEditors ...RequestEditorFn) (*RejectQuestionRes, error) {
+	rsp, err := c.RejectQuestion(ctx, id, rid, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRejectQuestionRes(rsp)
+}
+
+// ReplyQuestionWithBodyWithResponse request with arbitrary body returning *ReplyQuestionRes
+func (c *ClientWithResponses) ReplyQuestionWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, rid string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReplyQuestionRes, error) {
+	rsp, err := c.ReplyQuestionWithBody(ctx, id, rid, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReplyQuestionRes(rsp)
+}
+
+func (c *ClientWithResponses) ReplyQuestionWithResponse(ctx context.Context, id openapi_types.UUID, rid string, body ReplyQuestionJSONRequestBody, reqEditors ...RequestEditorFn) (*ReplyQuestionRes, error) {
+	rsp, err := c.ReplyQuestion(ctx, id, rid, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReplyQuestionRes(rsp)
 }
 
 // ListSessionsWithResponse request returning *ListSessionsRes
@@ -56307,6 +65359,24 @@ func (c *ClientWithResponses) AiEditWithResponse(ctx context.Context, id openapi
 	return ParseAiEditRes(rsp)
 }
 
+// GetDevWorkstationEgressWithResponse request returning *GetDevWorkstationEgressRes
+func (c *ClientWithResponses) GetDevWorkstationEgressWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDevWorkstationEgressRes, error) {
+	rsp, err := c.GetDevWorkstationEgress(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetDevWorkstationEgressRes(rsp)
+}
+
+// GetDevWorkstationEgressFlowsWithResponse request returning *GetDevWorkstationEgressFlowsRes
+func (c *ClientWithResponses) GetDevWorkstationEgressFlowsWithResponse(ctx context.Context, id openapi_types.UUID, params *GetDevWorkstationEgressFlowsParams, reqEditors ...RequestEditorFn) (*GetDevWorkstationEgressFlowsRes, error) {
+	rsp, err := c.GetDevWorkstationEgressFlows(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetDevWorkstationEgressFlowsRes(rsp)
+}
+
 // GetDevWorkstationMetricsWithResponse request returning *GetDevWorkstationMetricsRes
 func (c *ClientWithResponses) GetDevWorkstationMetricsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDevWorkstationMetricsRes, error) {
 	rsp, err := c.GetDevWorkstationMetrics(ctx, id, reqEditors...)
@@ -56316,6 +65386,23 @@ func (c *ClientWithResponses) GetDevWorkstationMetricsWithResponse(ctx context.C
 	return ParseGetDevWorkstationMetricsRes(rsp)
 }
 
+// UpdateDevWorkstationNetworkWithBodyWithResponse request with arbitrary body returning *UpdateDevWorkstationNetworkRes
+func (c *ClientWithResponses) UpdateDevWorkstationNetworkWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateDevWorkstationNetworkRes, error) {
+	rsp, err := c.UpdateDevWorkstationNetworkWithBody(ctx, id, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateDevWorkstationNetworkRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdateDevWorkstationNetworkWithResponse(ctx context.Context, id openapi_types.UUID, body UpdateDevWorkstationNetworkJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateDevWorkstationNetworkRes, error) {
+	rsp, err := c.UpdateDevWorkstationNetwork(ctx, id, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateDevWorkstationNetworkRes(rsp)
+}
+
 // AuthorizePreviewWithResponse request returning *AuthorizePreviewRes
 func (c *ClientWithResponses) AuthorizePreviewWithResponse(ctx context.Context, id openapi_types.UUID, port int32, reqEditors ...RequestEditorFn) (*AuthorizePreviewRes, error) {
 	rsp, err := c.AuthorizePreview(ctx, id, port, reqEditors...)
@@ -56323,6 +65410,41 @@ func (c *ClientWithResponses) AuthorizePreviewWithResponse(ctx context.Context, 
 		return nil, err
 	}
 	return ParseAuthorizePreviewRes(rsp)
+}
+
+// ListWorkstationRepositoriesWithResponse request returning *ListWorkstationRepositoriesRes
+func (c *ClientWithResponses) ListWorkstationRepositoriesWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListWorkstationRepositoriesRes, error) {
+	rsp, err := c.ListWorkstationRepositories(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListWorkstationRepositoriesRes(rsp)
+}
+
+// AddWorkstationRepositoryWithBodyWithResponse request with arbitrary body returning *AddWorkstationRepositoryRes
+func (c *ClientWithResponses) AddWorkstationRepositoryWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddWorkstationRepositoryRes, error) {
+	rsp, err := c.AddWorkstationRepositoryWithBody(ctx, id, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddWorkstationRepositoryRes(rsp)
+}
+
+func (c *ClientWithResponses) AddWorkstationRepositoryWithResponse(ctx context.Context, id openapi_types.UUID, body AddWorkstationRepositoryJSONRequestBody, reqEditors ...RequestEditorFn) (*AddWorkstationRepositoryRes, error) {
+	rsp, err := c.AddWorkstationRepository(ctx, id, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddWorkstationRepositoryRes(rsp)
+}
+
+// RemoveWorkstationRepositoryWithResponse request returning *RemoveWorkstationRepositoryRes
+func (c *ClientWithResponses) RemoveWorkstationRepositoryWithResponse(ctx context.Context, id openapi_types.UUID, repoId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RemoveWorkstationRepositoryRes, error) {
+	rsp, err := c.RemoveWorkstationRepository(ctx, id, repoId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRemoveWorkstationRepositoryRes(rsp)
 }
 
 // ListDevWorkstationTerminalsWithResponse request returning *ListDevWorkstationTerminalsRes
@@ -56422,6 +65544,15 @@ func (c *ClientWithResponses) GetBifrostInfoWithResponse(ctx context.Context, re
 	return ParseGetBifrostInfoRes(rsp)
 }
 
+// ListChangelogsHandlerWithResponse request returning *ListChangelogsHandlerRes
+func (c *ClientWithResponses) ListChangelogsHandlerWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListChangelogsHandlerRes, error) {
+	rsp, err := c.ListChangelogsHandler(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListChangelogsHandlerRes(rsp)
+}
+
 // GetCliVersionWithResponse request returning *GetCliVersionRes
 func (c *ClientWithResponses) GetCliVersionWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetCliVersionRes, error) {
 	rsp, err := c.GetCliVersion(ctx, reqEditors...)
@@ -56517,163 +65648,6 @@ func (c *ClientWithResponses) UpdateContextualRestrictionHandlerWithResponse(ctx
 		return nil, err
 	}
 	return ParseUpdateContextualRestrictionHandlerRes(rsp)
-}
-
-// ListDashboardsWithResponse request returning *ListDashboardsRes
-func (c *ClientWithResponses) ListDashboardsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListDashboardsRes, error) {
-	rsp, err := c.ListDashboards(ctx, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseListDashboardsRes(rsp)
-}
-
-// CreateDashboardWithBodyWithResponse request with arbitrary body returning *CreateDashboardRes
-func (c *ClientWithResponses) CreateDashboardWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateDashboardRes, error) {
-	rsp, err := c.CreateDashboardWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCreateDashboardRes(rsp)
-}
-
-func (c *ClientWithResponses) CreateDashboardWithResponse(ctx context.Context, body CreateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateDashboardRes, error) {
-	rsp, err := c.CreateDashboard(ctx, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCreateDashboardRes(rsp)
-}
-
-// GenerateDashboardWidgetsWithBodyWithResponse request with arbitrary body returning *GenerateDashboardWidgetsRes
-func (c *ClientWithResponses) GenerateDashboardWidgetsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GenerateDashboardWidgetsRes, error) {
-	rsp, err := c.GenerateDashboardWidgetsWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGenerateDashboardWidgetsRes(rsp)
-}
-
-func (c *ClientWithResponses) GenerateDashboardWidgetsWithResponse(ctx context.Context, body GenerateDashboardWidgetsJSONRequestBody, reqEditors ...RequestEditorFn) (*GenerateDashboardWidgetsRes, error) {
-	rsp, err := c.GenerateDashboardWidgets(ctx, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGenerateDashboardWidgetsRes(rsp)
-}
-
-// ListDashboardTrashWithResponse request returning *ListDashboardTrashRes
-func (c *ClientWithResponses) ListDashboardTrashWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListDashboardTrashRes, error) {
-	rsp, err := c.ListDashboardTrash(ctx, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseListDashboardTrashRes(rsp)
-}
-
-// DeleteDashboardWithResponse request returning *DeleteDashboardRes
-func (c *ClientWithResponses) DeleteDashboardWithResponse(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteDashboardRes, error) {
-	rsp, err := c.DeleteDashboard(ctx, dashboardId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteDashboardRes(rsp)
-}
-
-// GetDashboardWithResponse request returning *GetDashboardRes
-func (c *ClientWithResponses) GetDashboardWithResponse(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDashboardRes, error) {
-	rsp, err := c.GetDashboard(ctx, dashboardId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetDashboardRes(rsp)
-}
-
-// UpdateDashboardWithBodyWithResponse request with arbitrary body returning *UpdateDashboardRes
-func (c *ClientWithResponses) UpdateDashboardWithBodyWithResponse(ctx context.Context, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateDashboardRes, error) {
-	rsp, err := c.UpdateDashboardWithBody(ctx, dashboardId, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseUpdateDashboardRes(rsp)
-}
-
-func (c *ClientWithResponses) UpdateDashboardWithResponse(ctx context.Context, dashboardId openapi_types.UUID, body UpdateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateDashboardRes, error) {
-	rsp, err := c.UpdateDashboard(ctx, dashboardId, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseUpdateDashboardRes(rsp)
-}
-
-// DuplicateDashboardWithBodyWithResponse request with arbitrary body returning *DuplicateDashboardRes
-func (c *ClientWithResponses) DuplicateDashboardWithBodyWithResponse(ctx context.Context, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DuplicateDashboardRes, error) {
-	rsp, err := c.DuplicateDashboardWithBody(ctx, dashboardId, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDuplicateDashboardRes(rsp)
-}
-
-func (c *ClientWithResponses) DuplicateDashboardWithResponse(ctx context.Context, dashboardId openapi_types.UUID, body DuplicateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*DuplicateDashboardRes, error) {
-	rsp, err := c.DuplicateDashboard(ctx, dashboardId, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDuplicateDashboardRes(rsp)
-}
-
-// CheckDashboardHealthWithResponse request returning *CheckDashboardHealthRes
-func (c *ClientWithResponses) CheckDashboardHealthWithResponse(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*CheckDashboardHealthRes, error) {
-	rsp, err := c.CheckDashboardHealth(ctx, dashboardId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCheckDashboardHealthRes(rsp)
-}
-
-// RestoreDashboardWithResponse request returning *RestoreDashboardRes
-func (c *ClientWithResponses) RestoreDashboardWithResponse(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RestoreDashboardRes, error) {
-	rsp, err := c.RestoreDashboard(ctx, dashboardId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseRestoreDashboardRes(rsp)
-}
-
-// TransferDashboardWithBodyWithResponse request with arbitrary body returning *TransferDashboardRes
-func (c *ClientWithResponses) TransferDashboardWithBodyWithResponse(ctx context.Context, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TransferDashboardRes, error) {
-	rsp, err := c.TransferDashboardWithBody(ctx, dashboardId, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseTransferDashboardRes(rsp)
-}
-
-func (c *ClientWithResponses) TransferDashboardWithResponse(ctx context.Context, dashboardId openapi_types.UUID, body TransferDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*TransferDashboardRes, error) {
-	rsp, err := c.TransferDashboard(ctx, dashboardId, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseTransferDashboardRes(rsp)
-}
-
-// ListDashboardVersionsWithResponse request returning *ListDashboardVersionsRes
-func (c *ClientWithResponses) ListDashboardVersionsWithResponse(ctx context.Context, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDashboardVersionsRes, error) {
-	rsp, err := c.ListDashboardVersions(ctx, dashboardId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseListDashboardVersionsRes(rsp)
-}
-
-// RestoreDashboardVersionWithResponse request returning *RestoreDashboardVersionRes
-func (c *ClientWithResponses) RestoreDashboardVersionWithResponse(ctx context.Context, dashboardId openapi_types.UUID, versionNo int32, reqEditors ...RequestEditorFn) (*RestoreDashboardVersionRes, error) {
-	rsp, err := c.RestoreDashboardVersion(ctx, dashboardId, versionNo, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseRestoreDashboardVersionRes(rsp)
 }
 
 // DeleteBucketFileWithResponse request returning *DeleteBucketFileRes
@@ -56937,6 +65911,15 @@ func (c *ClientWithResponses) DeleteSchemaWithResponse(ctx context.Context, data
 		return nil, err
 	}
 	return ParseDeleteSchemaRes(rsp)
+}
+
+// DeleteTableWithResponse request returning *DeleteTableRes
+func (c *ClientWithResponses) DeleteTableWithResponse(ctx context.Context, dataContainerId openapi_types.UUID, schemaName string, tableName string, reqEditors ...RequestEditorFn) (*DeleteTableRes, error) {
+	rsp, err := c.DeleteTable(ctx, dataContainerId, schemaName, tableName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteTableRes(rsp)
 }
 
 // GetTableColumnsWithResponse request returning *GetTableColumnsRes
@@ -57498,6 +66481,163 @@ func (c *ClientWithResponses) UploadBucketObjectWithResponse(ctx context.Context
 	return ParseUploadBucketObjectRes(rsp)
 }
 
+// ListDashboardsWithResponse request returning *ListDashboardsRes
+func (c *ClientWithResponses) ListDashboardsWithResponse(ctx context.Context, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDashboardsRes, error) {
+	rsp, err := c.ListDashboards(ctx, harborId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListDashboardsRes(rsp)
+}
+
+// CreateDashboardWithBodyWithResponse request with arbitrary body returning *CreateDashboardRes
+func (c *ClientWithResponses) CreateDashboardWithBodyWithResponse(ctx context.Context, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateDashboardRes, error) {
+	rsp, err := c.CreateDashboardWithBody(ctx, harborId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateDashboardRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateDashboardWithResponse(ctx context.Context, harborId openapi_types.UUID, body CreateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateDashboardRes, error) {
+	rsp, err := c.CreateDashboard(ctx, harborId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateDashboardRes(rsp)
+}
+
+// GenerateDashboardWidgetsWithBodyWithResponse request with arbitrary body returning *GenerateDashboardWidgetsRes
+func (c *ClientWithResponses) GenerateDashboardWidgetsWithBodyWithResponse(ctx context.Context, harborId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GenerateDashboardWidgetsRes, error) {
+	rsp, err := c.GenerateDashboardWidgetsWithBody(ctx, harborId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGenerateDashboardWidgetsRes(rsp)
+}
+
+func (c *ClientWithResponses) GenerateDashboardWidgetsWithResponse(ctx context.Context, harborId openapi_types.UUID, body GenerateDashboardWidgetsJSONRequestBody, reqEditors ...RequestEditorFn) (*GenerateDashboardWidgetsRes, error) {
+	rsp, err := c.GenerateDashboardWidgets(ctx, harborId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGenerateDashboardWidgetsRes(rsp)
+}
+
+// ListDashboardTrashWithResponse request returning *ListDashboardTrashRes
+func (c *ClientWithResponses) ListDashboardTrashWithResponse(ctx context.Context, harborId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDashboardTrashRes, error) {
+	rsp, err := c.ListDashboardTrash(ctx, harborId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListDashboardTrashRes(rsp)
+}
+
+// DeleteDashboardWithResponse request returning *DeleteDashboardRes
+func (c *ClientWithResponses) DeleteDashboardWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteDashboardRes, error) {
+	rsp, err := c.DeleteDashboard(ctx, harborId, dashboardId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteDashboardRes(rsp)
+}
+
+// GetDashboardWithResponse request returning *GetDashboardRes
+func (c *ClientWithResponses) GetDashboardWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDashboardRes, error) {
+	rsp, err := c.GetDashboard(ctx, harborId, dashboardId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetDashboardRes(rsp)
+}
+
+// UpdateDashboardWithBodyWithResponse request with arbitrary body returning *UpdateDashboardRes
+func (c *ClientWithResponses) UpdateDashboardWithBodyWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateDashboardRes, error) {
+	rsp, err := c.UpdateDashboardWithBody(ctx, harborId, dashboardId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateDashboardRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdateDashboardWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body UpdateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateDashboardRes, error) {
+	rsp, err := c.UpdateDashboard(ctx, harborId, dashboardId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateDashboardRes(rsp)
+}
+
+// DuplicateDashboardWithBodyWithResponse request with arbitrary body returning *DuplicateDashboardRes
+func (c *ClientWithResponses) DuplicateDashboardWithBodyWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DuplicateDashboardRes, error) {
+	rsp, err := c.DuplicateDashboardWithBody(ctx, harborId, dashboardId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDuplicateDashboardRes(rsp)
+}
+
+func (c *ClientWithResponses) DuplicateDashboardWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body DuplicateDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*DuplicateDashboardRes, error) {
+	rsp, err := c.DuplicateDashboard(ctx, harborId, dashboardId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDuplicateDashboardRes(rsp)
+}
+
+// CheckDashboardHealthWithResponse request returning *CheckDashboardHealthRes
+func (c *ClientWithResponses) CheckDashboardHealthWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*CheckDashboardHealthRes, error) {
+	rsp, err := c.CheckDashboardHealth(ctx, harborId, dashboardId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCheckDashboardHealthRes(rsp)
+}
+
+// RestoreDashboardWithResponse request returning *RestoreDashboardRes
+func (c *ClientWithResponses) RestoreDashboardWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RestoreDashboardRes, error) {
+	rsp, err := c.RestoreDashboard(ctx, harborId, dashboardId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRestoreDashboardRes(rsp)
+}
+
+// TransferDashboardWithBodyWithResponse request with arbitrary body returning *TransferDashboardRes
+func (c *ClientWithResponses) TransferDashboardWithBodyWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TransferDashboardRes, error) {
+	rsp, err := c.TransferDashboardWithBody(ctx, harborId, dashboardId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTransferDashboardRes(rsp)
+}
+
+func (c *ClientWithResponses) TransferDashboardWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, body TransferDashboardJSONRequestBody, reqEditors ...RequestEditorFn) (*TransferDashboardRes, error) {
+	rsp, err := c.TransferDashboard(ctx, harborId, dashboardId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTransferDashboardRes(rsp)
+}
+
+// ListDashboardVersionsWithResponse request returning *ListDashboardVersionsRes
+func (c *ClientWithResponses) ListDashboardVersionsWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListDashboardVersionsRes, error) {
+	rsp, err := c.ListDashboardVersions(ctx, harborId, dashboardId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListDashboardVersionsRes(rsp)
+}
+
+// RestoreDashboardVersionWithResponse request returning *RestoreDashboardVersionRes
+func (c *ClientWithResponses) RestoreDashboardVersionWithResponse(ctx context.Context, harborId openapi_types.UUID, dashboardId openapi_types.UUID, versionNo int32, reqEditors ...RequestEditorFn) (*RestoreDashboardVersionRes, error) {
+	rsp, err := c.RestoreDashboardVersion(ctx, harborId, dashboardId, versionNo, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRestoreDashboardVersionRes(rsp)
+}
+
 // ListHarborDataDockWithResponse request returning *ListHarborDataDockRes
 func (c *ClientWithResponses) ListHarborDataDockWithResponse(ctx context.Context, harborId openapi_types.UUID, params *ListHarborDataDockParams, reqEditors ...RequestEditorFn) (*ListHarborDataDockRes, error) {
 	rsp, err := c.ListHarborDataDock(ctx, harborId, params, reqEditors...)
@@ -57935,6 +67075,33 @@ func (c *ClientWithResponses) GetAiAgentMailStatsWithResponse(ctx context.Contex
 	return ParseGetAiAgentMailStatsRes(rsp)
 }
 
+// ListAiAgentSessionsWithResponse request returning *ListAiAgentSessionsRes
+func (c *ClientWithResponses) ListAiAgentSessionsWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListAiAgentSessionsRes, error) {
+	rsp, err := c.ListAiAgentSessions(ctx, organizationId, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAiAgentSessionsRes(rsp)
+}
+
+// DeleteAiAgentSessionWithResponse request returning *DeleteAiAgentSessionRes
+func (c *ClientWithResponses) DeleteAiAgentSessionWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, sessionId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteAiAgentSessionRes, error) {
+	rsp, err := c.DeleteAiAgentSession(ctx, organizationId, id, sessionId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteAiAgentSessionRes(rsp)
+}
+
+// GetAiAgentSessionWithResponse request returning *GetAiAgentSessionRes
+func (c *ClientWithResponses) GetAiAgentSessionWithResponse(ctx context.Context, organizationId openapi_types.UUID, id openapi_types.UUID, sessionId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAiAgentSessionRes, error) {
+	rsp, err := c.GetAiAgentSession(ctx, organizationId, id, sessionId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAiAgentSessionRes(rsp)
+}
+
 // GetAirflowWithResponse request returning *GetAirflowRes
 func (c *ClientWithResponses) GetAirflowWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAirflowRes, error) {
 	rsp, err := c.GetAirflow(ctx, organizationId, instanceId, reqEditors...)
@@ -57977,6 +67144,198 @@ func (c *ClientWithResponses) PatchAirflowCrdWithResponse(ctx context.Context, o
 		return nil, err
 	}
 	return ParsePatchAirflowCrdRes(rsp)
+}
+
+// ListAlertablePanelsWithResponse request returning *ListAlertablePanelsRes
+func (c *ClientWithResponses) ListAlertablePanelsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListAlertablePanelsRes, error) {
+	rsp, err := c.ListAlertablePanels(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAlertablePanelsRes(rsp)
+}
+
+// ListAlertBindingsWithResponse request returning *ListAlertBindingsRes
+func (c *ClientWithResponses) ListAlertBindingsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListAlertBindingsRes, error) {
+	rsp, err := c.ListAlertBindings(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAlertBindingsRes(rsp)
+}
+
+// SetAlertBindingsWithBodyWithResponse request with arbitrary body returning *SetAlertBindingsRes
+func (c *ClientWithResponses) SetAlertBindingsWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, signal string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetAlertBindingsRes, error) {
+	rsp, err := c.SetAlertBindingsWithBody(ctx, organizationId, signal, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSetAlertBindingsRes(rsp)
+}
+
+func (c *ClientWithResponses) SetAlertBindingsWithResponse(ctx context.Context, organizationId openapi_types.UUID, signal string, body SetAlertBindingsJSONRequestBody, reqEditors ...RequestEditorFn) (*SetAlertBindingsRes, error) {
+	rsp, err := c.SetAlertBindings(ctx, organizationId, signal, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSetAlertBindingsRes(rsp)
+}
+
+// ListNotificationChannelsWithResponse request returning *ListNotificationChannelsRes
+func (c *ClientWithResponses) ListNotificationChannelsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListNotificationChannelsRes, error) {
+	rsp, err := c.ListNotificationChannels(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListNotificationChannelsRes(rsp)
+}
+
+// CreateNotificationChannelWithBodyWithResponse request with arbitrary body returning *CreateNotificationChannelRes
+func (c *ClientWithResponses) CreateNotificationChannelWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateNotificationChannelRes, error) {
+	rsp, err := c.CreateNotificationChannelWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateNotificationChannelRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateNotificationChannelWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateNotificationChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateNotificationChannelRes, error) {
+	rsp, err := c.CreateNotificationChannel(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateNotificationChannelRes(rsp)
+}
+
+// DeleteNotificationChannelWithResponse request returning *DeleteNotificationChannelRes
+func (c *ClientWithResponses) DeleteNotificationChannelWithResponse(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteNotificationChannelRes, error) {
+	rsp, err := c.DeleteNotificationChannel(ctx, organizationId, channelId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteNotificationChannelRes(rsp)
+}
+
+// UpdateNotificationChannelWithBodyWithResponse request with arbitrary body returning *UpdateNotificationChannelRes
+func (c *ClientWithResponses) UpdateNotificationChannelWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateNotificationChannelRes, error) {
+	rsp, err := c.UpdateNotificationChannelWithBody(ctx, organizationId, channelId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateNotificationChannelRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdateNotificationChannelWithResponse(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, body UpdateNotificationChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateNotificationChannelRes, error) {
+	rsp, err := c.UpdateNotificationChannel(ctx, organizationId, channelId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateNotificationChannelRes(rsp)
+}
+
+// TestNotificationChannelWithResponse request returning *TestNotificationChannelRes
+func (c *ClientWithResponses) TestNotificationChannelWithResponse(ctx context.Context, organizationId openapi_types.UUID, channelId openapi_types.UUID, reqEditors ...RequestEditorFn) (*TestNotificationChannelRes, error) {
+	rsp, err := c.TestNotificationChannel(ctx, organizationId, channelId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTestNotificationChannelRes(rsp)
+}
+
+// ListAlertEventsWithResponse request returning *ListAlertEventsRes
+func (c *ClientWithResponses) ListAlertEventsWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *ListAlertEventsParams, reqEditors ...RequestEditorFn) (*ListAlertEventsRes, error) {
+	rsp, err := c.ListAlertEvents(ctx, organizationId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAlertEventsRes(rsp)
+}
+
+// ListAlertRulesWithResponse request returning *ListAlertRulesRes
+func (c *ClientWithResponses) ListAlertRulesWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListAlertRulesRes, error) {
+	rsp, err := c.ListAlertRules(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAlertRulesRes(rsp)
+}
+
+// CreateAlertRuleWithBodyWithResponse request with arbitrary body returning *CreateAlertRuleRes
+func (c *ClientWithResponses) CreateAlertRuleWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateAlertRuleRes, error) {
+	rsp, err := c.CreateAlertRuleWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateAlertRuleRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateAlertRuleWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateAlertRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateAlertRuleRes, error) {
+	rsp, err := c.CreateAlertRule(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateAlertRuleRes(rsp)
+}
+
+// DeleteAlertRuleWithResponse request returning *DeleteAlertRuleRes
+func (c *ClientWithResponses) DeleteAlertRuleWithResponse(ctx context.Context, organizationId openapi_types.UUID, ruleId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteAlertRuleRes, error) {
+	rsp, err := c.DeleteAlertRule(ctx, organizationId, ruleId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteAlertRuleRes(rsp)
+}
+
+// UpdateAlertRuleWithBodyWithResponse request with arbitrary body returning *UpdateAlertRuleRes
+func (c *ClientWithResponses) UpdateAlertRuleWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, ruleId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAlertRuleRes, error) {
+	rsp, err := c.UpdateAlertRuleWithBody(ctx, organizationId, ruleId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAlertRuleRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdateAlertRuleWithResponse(ctx context.Context, organizationId openapi_types.UUID, ruleId openapi_types.UUID, body UpdateAlertRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAlertRuleRes, error) {
+	rsp, err := c.UpdateAlertRule(ctx, organizationId, ruleId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAlertRuleRes(rsp)
+}
+
+// ListAlertThresholdsWithResponse request returning *ListAlertThresholdsRes
+func (c *ClientWithResponses) ListAlertThresholdsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListAlertThresholdsRes, error) {
+	rsp, err := c.ListAlertThresholds(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAlertThresholdsRes(rsp)
+}
+
+// ClearAlertThresholdsWithResponse request returning *ClearAlertThresholdsRes
+func (c *ClientWithResponses) ClearAlertThresholdsWithResponse(ctx context.Context, organizationId openapi_types.UUID, signal string, reqEditors ...RequestEditorFn) (*ClearAlertThresholdsRes, error) {
+	rsp, err := c.ClearAlertThresholds(ctx, organizationId, signal, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseClearAlertThresholdsRes(rsp)
+}
+
+// SetAlertThresholdsWithBodyWithResponse request with arbitrary body returning *SetAlertThresholdsRes
+func (c *ClientWithResponses) SetAlertThresholdsWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, signal string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetAlertThresholdsRes, error) {
+	rsp, err := c.SetAlertThresholdsWithBody(ctx, organizationId, signal, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSetAlertThresholdsRes(rsp)
+}
+
+func (c *ClientWithResponses) SetAlertThresholdsWithResponse(ctx context.Context, organizationId openapi_types.UUID, signal string, body SetAlertThresholdsJSONRequestBody, reqEditors ...RequestEditorFn) (*SetAlertThresholdsRes, error) {
+	rsp, err := c.SetAlertThresholds(ctx, organizationId, signal, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSetAlertThresholdsRes(rsp)
 }
 
 // ListApiKeysWithResponse request returning *ListApiKeysRes
@@ -58181,6 +67540,15 @@ func (c *ClientWithResponses) DeleteOrganizationCrdWithResponse(ctx context.Cont
 	return ParseDeleteOrganizationCrdRes(rsp)
 }
 
+// CheckCustomDomainAvailabilityWithResponse request returning *CheckCustomDomainAvailabilityRes
+func (c *ClientWithResponses) CheckCustomDomainAvailabilityWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *CheckCustomDomainAvailabilityParams, reqEditors ...RequestEditorFn) (*CheckCustomDomainAvailabilityRes, error) {
+	rsp, err := c.CheckCustomDomainAvailability(ctx, organizationId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCheckCustomDomainAvailabilityRes(rsp)
+}
+
 // GetDagsterWithResponse request returning *GetDagsterRes
 func (c *ClientWithResponses) GetDagsterWithResponse(ctx context.Context, organizationId openapi_types.UUID, instanceId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetDagsterRes, error) {
 	rsp, err := c.GetDagster(ctx, organizationId, instanceId, reqEditors...)
@@ -58223,6 +67591,23 @@ func (c *ClientWithResponses) PatchDagsterCrdWithResponse(ctx context.Context, o
 		return nil, err
 	}
 	return ParsePatchDagsterCrdRes(rsp)
+}
+
+// SetDedicatedHarborNamespacesWithBodyWithResponse request with arbitrary body returning *SetDedicatedHarborNamespacesRes
+func (c *ClientWithResponses) SetDedicatedHarborNamespacesWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetDedicatedHarborNamespacesRes, error) {
+	rsp, err := c.SetDedicatedHarborNamespacesWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSetDedicatedHarborNamespacesRes(rsp)
+}
+
+func (c *ClientWithResponses) SetDedicatedHarborNamespacesWithResponse(ctx context.Context, organizationId openapi_types.UUID, body SetDedicatedHarborNamespacesJSONRequestBody, reqEditors ...RequestEditorFn) (*SetDedicatedHarborNamespacesRes, error) {
+	rsp, err := c.SetDedicatedHarborNamespaces(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSetDedicatedHarborNamespacesRes(rsp)
 }
 
 // ListDomainVerificationsWithResponse request returning *ListDomainVerificationsRes
@@ -59547,12 +68932,21 @@ func (c *ClientWithResponses) GetOrganizationOverviewWithResponse(ctx context.Co
 }
 
 // ListPipelinesWithResponse request returning *ListPipelinesRes
-func (c *ClientWithResponses) ListPipelinesWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListPipelinesRes, error) {
-	rsp, err := c.ListPipelines(ctx, organizationId, reqEditors...)
+func (c *ClientWithResponses) ListPipelinesWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *ListPipelinesParams, reqEditors ...RequestEditorFn) (*ListPipelinesRes, error) {
+	rsp, err := c.ListPipelines(ctx, organizationId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 	return ParseListPipelinesRes(rsp)
+}
+
+// GetPipelinesStatsWithResponse request returning *GetPipelinesStatsRes
+func (c *ClientWithResponses) GetPipelinesStatsWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetPipelinesStatsRes, error) {
+	rsp, err := c.GetPipelinesStats(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetPipelinesStatsRes(rsp)
 }
 
 // TestImapConnectionWithBodyWithResponse request with arbitrary body returning *TestImapConnectionRes
@@ -59751,13 +69145,22 @@ func (c *ClientWithResponses) GetTokenUsageSummaryWithResponse(ctx context.Conte
 	return ParseGetTokenUsageSummaryRes(rsp)
 }
 
-// GetTokenUsageTimeseriesWithResponse request returning *GetTokenUsageTimeseriesRes
-func (c *ClientWithResponses) GetTokenUsageTimeseriesWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesParams, reqEditors ...RequestEditorFn) (*GetTokenUsageTimeseriesRes, error) {
-	rsp, err := c.GetTokenUsageTimeseries(ctx, organizationId, params, reqEditors...)
+// GetTokenUsageTimeseriesByModelWithResponse request returning *GetTokenUsageTimeseriesByModelRes
+func (c *ClientWithResponses) GetTokenUsageTimeseriesByModelWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesByModelParams, reqEditors ...RequestEditorFn) (*GetTokenUsageTimeseriesByModelRes, error) {
+	rsp, err := c.GetTokenUsageTimeseriesByModel(ctx, organizationId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetTokenUsageTimeseriesRes(rsp)
+	return ParseGetTokenUsageTimeseriesByModelRes(rsp)
+}
+
+// GetTokenUsageTimeseriesByPrincipalWithResponse request returning *GetTokenUsageTimeseriesByPrincipalRes
+func (c *ClientWithResponses) GetTokenUsageTimeseriesByPrincipalWithResponse(ctx context.Context, organizationId openapi_types.UUID, params *GetTokenUsageTimeseriesByPrincipalParams, reqEditors ...RequestEditorFn) (*GetTokenUsageTimeseriesByPrincipalRes, error) {
+	rsp, err := c.GetTokenUsageTimeseriesByPrincipal(ctx, organizationId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetTokenUsageTimeseriesByPrincipalRes(rsp)
 }
 
 // ListSecretsWithResponse request returning *ListSecretsRes
@@ -59874,6 +69277,15 @@ func (c *ClientWithResponses) DeleteServiceAccountCrdWithResponse(ctx context.Co
 	return ParseDeleteServiceAccountCrdRes(rsp)
 }
 
+// GetServiceAccountCrdWithResponse request returning *GetServiceAccountCrdRes
+func (c *ClientWithResponses) GetServiceAccountCrdWithResponse(ctx context.Context, organizationId openapi_types.UUID, clientId string, reqEditors ...RequestEditorFn) (*GetServiceAccountCrdRes, error) {
+	rsp, err := c.GetServiceAccountCrd(ctx, organizationId, clientId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetServiceAccountCrdRes(rsp)
+}
+
 // UpdateServiceAccountCrdWithBodyWithResponse request with arbitrary body returning *UpdateServiceAccountCrdRes
 func (c *ClientWithResponses) UpdateServiceAccountCrdWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateServiceAccountCrdRes, error) {
 	rsp, err := c.UpdateServiceAccountCrdWithBody(ctx, organizationId, clientId, contentType, body, reqEditors...)
@@ -59889,6 +69301,15 @@ func (c *ClientWithResponses) UpdateServiceAccountCrdWithResponse(ctx context.Co
 		return nil, err
 	}
 	return ParseUpdateServiceAccountCrdRes(rsp)
+}
+
+// RotateServiceAccountSecretWithResponse request returning *RotateServiceAccountSecretRes
+func (c *ClientWithResponses) RotateServiceAccountSecretWithResponse(ctx context.Context, organizationId openapi_types.UUID, clientId string, reqEditors ...RequestEditorFn) (*RotateServiceAccountSecretRes, error) {
+	rsp, err := c.RotateServiceAccountSecret(ctx, organizationId, clientId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRotateServiceAccountSecretRes(rsp)
 }
 
 // ListServiceAccountGrantsWithResponse request returning *ListServiceAccountGrantsRes
@@ -60233,6 +69654,336 @@ func (c *ClientWithResponses) GetEffectiveSecuritySettingsHandlerWithResponse(ct
 	return ParseGetEffectiveSecuritySettingsHandlerRes(rsp)
 }
 
+// GetOrgFeaturesHandlerWithResponse request returning *GetOrgFeaturesHandlerRes
+func (c *ClientWithResponses) GetOrgFeaturesHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOrgFeaturesHandlerRes, error) {
+	rsp, err := c.GetOrgFeaturesHandler(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetOrgFeaturesHandlerRes(rsp)
+}
+
+// ListActionTypesHandlerWithResponse request returning *ListActionTypesHandlerRes
+func (c *ClientWithResponses) ListActionTypesHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListActionTypesHandlerRes, error) {
+	rsp, err := c.ListActionTypesHandler(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListActionTypesHandlerRes(rsp)
+}
+
+// CreateActionTypeHandlerWithBodyWithResponse request with arbitrary body returning *CreateActionTypeHandlerRes
+func (c *ClientWithResponses) CreateActionTypeHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateActionTypeHandlerRes, error) {
+	rsp, err := c.CreateActionTypeHandlerWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateActionTypeHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateActionTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateActionTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateActionTypeHandlerRes, error) {
+	rsp, err := c.CreateActionTypeHandler(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateActionTypeHandlerRes(rsp)
+}
+
+// DeleteActionTypeHandlerWithResponse request returning *DeleteActionTypeHandlerRes
+func (c *ClientWithResponses) DeleteActionTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteActionTypeHandlerRes, error) {
+	rsp, err := c.DeleteActionTypeHandler(ctx, organizationId, actionTypeId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteActionTypeHandlerRes(rsp)
+}
+
+// GetActionTypeHandlerWithResponse request returning *GetActionTypeHandlerRes
+func (c *ClientWithResponses) GetActionTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetActionTypeHandlerRes, error) {
+	rsp, err := c.GetActionTypeHandler(ctx, organizationId, actionTypeId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetActionTypeHandlerRes(rsp)
+}
+
+// UpdateActionTypeHandlerWithBodyWithResponse request with arbitrary body returning *UpdateActionTypeHandlerRes
+func (c *ClientWithResponses) UpdateActionTypeHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateActionTypeHandlerRes, error) {
+	rsp, err := c.UpdateActionTypeHandlerWithBody(ctx, organizationId, actionTypeId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateActionTypeHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdateActionTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, body UpdateActionTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateActionTypeHandlerRes, error) {
+	rsp, err := c.UpdateActionTypeHandler(ctx, organizationId, actionTypeId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateActionTypeHandlerRes(rsp)
+}
+
+// ExecuteActionHandlerWithBodyWithResponse request with arbitrary body returning *ExecuteActionHandlerRes
+func (c *ClientWithResponses) ExecuteActionHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ExecuteActionHandlerRes, error) {
+	rsp, err := c.ExecuteActionHandlerWithBody(ctx, organizationId, actionTypeId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExecuteActionHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) ExecuteActionHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, actionTypeId openapi_types.UUID, body ExecuteActionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*ExecuteActionHandlerRes, error) {
+	rsp, err := c.ExecuteActionHandler(ctx, organizationId, actionTypeId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExecuteActionHandlerRes(rsp)
+}
+
+// ApplyOntologyProposalHandlerWithBodyWithResponse request with arbitrary body returning *ApplyOntologyProposalHandlerRes
+func (c *ClientWithResponses) ApplyOntologyProposalHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ApplyOntologyProposalHandlerRes, error) {
+	rsp, err := c.ApplyOntologyProposalHandlerWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseApplyOntologyProposalHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) ApplyOntologyProposalHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body ApplyOntologyProposalHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*ApplyOntologyProposalHandlerRes, error) {
+	rsp, err := c.ApplyOntologyProposalHandler(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseApplyOntologyProposalHandlerRes(rsp)
+}
+
+// OntologyAssistantHandlerWithBodyWithResponse request with arbitrary body returning *OntologyAssistantHandlerRes
+func (c *ClientWithResponses) OntologyAssistantHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*OntologyAssistantHandlerRes, error) {
+	rsp, err := c.OntologyAssistantHandlerWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseOntologyAssistantHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) OntologyAssistantHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body OntologyAssistantHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*OntologyAssistantHandlerRes, error) {
+	rsp, err := c.OntologyAssistantHandler(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseOntologyAssistantHandlerRes(rsp)
+}
+
+// GenerateOntologyHandlerWithBodyWithResponse request with arbitrary body returning *GenerateOntologyHandlerRes
+func (c *ClientWithResponses) GenerateOntologyHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GenerateOntologyHandlerRes, error) {
+	rsp, err := c.GenerateOntologyHandlerWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGenerateOntologyHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) GenerateOntologyHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body GenerateOntologyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*GenerateOntologyHandlerRes, error) {
+	rsp, err := c.GenerateOntologyHandler(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGenerateOntologyHandlerRes(rsp)
+}
+
+// ListLinkTypesHandlerWithResponse request returning *ListLinkTypesHandlerRes
+func (c *ClientWithResponses) ListLinkTypesHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListLinkTypesHandlerRes, error) {
+	rsp, err := c.ListLinkTypesHandler(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListLinkTypesHandlerRes(rsp)
+}
+
+// CreateLinkTypeHandlerWithBodyWithResponse request with arbitrary body returning *CreateLinkTypeHandlerRes
+func (c *ClientWithResponses) CreateLinkTypeHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateLinkTypeHandlerRes, error) {
+	rsp, err := c.CreateLinkTypeHandlerWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateLinkTypeHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateLinkTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateLinkTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateLinkTypeHandlerRes, error) {
+	rsp, err := c.CreateLinkTypeHandler(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateLinkTypeHandlerRes(rsp)
+}
+
+// DeleteLinkTypeHandlerWithResponse request returning *DeleteLinkTypeHandlerRes
+func (c *ClientWithResponses) DeleteLinkTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteLinkTypeHandlerRes, error) {
+	rsp, err := c.DeleteLinkTypeHandler(ctx, organizationId, linkTypeId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteLinkTypeHandlerRes(rsp)
+}
+
+// GetLinkTypeHandlerWithResponse request returning *GetLinkTypeHandlerRes
+func (c *ClientWithResponses) GetLinkTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetLinkTypeHandlerRes, error) {
+	rsp, err := c.GetLinkTypeHandler(ctx, organizationId, linkTypeId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetLinkTypeHandlerRes(rsp)
+}
+
+// UpdateLinkTypeHandlerWithBodyWithResponse request with arbitrary body returning *UpdateLinkTypeHandlerRes
+func (c *ClientWithResponses) UpdateLinkTypeHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateLinkTypeHandlerRes, error) {
+	rsp, err := c.UpdateLinkTypeHandlerWithBody(ctx, organizationId, linkTypeId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateLinkTypeHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdateLinkTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, linkTypeId openapi_types.UUID, body UpdateLinkTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateLinkTypeHandlerRes, error) {
+	rsp, err := c.UpdateLinkTypeHandler(ctx, organizationId, linkTypeId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateLinkTypeHandlerRes(rsp)
+}
+
+// ListObjectTypesHandlerWithResponse request returning *ListObjectTypesHandlerRes
+func (c *ClientWithResponses) ListObjectTypesHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListObjectTypesHandlerRes, error) {
+	rsp, err := c.ListObjectTypesHandler(ctx, organizationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListObjectTypesHandlerRes(rsp)
+}
+
+// CreateObjectTypeHandlerWithBodyWithResponse request with arbitrary body returning *CreateObjectTypeHandlerRes
+func (c *ClientWithResponses) CreateObjectTypeHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateObjectTypeHandlerRes, error) {
+	rsp, err := c.CreateObjectTypeHandlerWithBody(ctx, organizationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateObjectTypeHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateObjectTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body CreateObjectTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateObjectTypeHandlerRes, error) {
+	rsp, err := c.CreateObjectTypeHandler(ctx, organizationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateObjectTypeHandlerRes(rsp)
+}
+
+// DeleteObjectTypeHandlerWithResponse request returning *DeleteObjectTypeHandlerRes
+func (c *ClientWithResponses) DeleteObjectTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteObjectTypeHandlerRes, error) {
+	rsp, err := c.DeleteObjectTypeHandler(ctx, organizationId, objectTypeId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteObjectTypeHandlerRes(rsp)
+}
+
+// GetObjectTypeHandlerWithResponse request returning *GetObjectTypeHandlerRes
+func (c *ClientWithResponses) GetObjectTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetObjectTypeHandlerRes, error) {
+	rsp, err := c.GetObjectTypeHandler(ctx, organizationId, objectTypeId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetObjectTypeHandlerRes(rsp)
+}
+
+// UpdateObjectTypeHandlerWithBodyWithResponse request with arbitrary body returning *UpdateObjectTypeHandlerRes
+func (c *ClientWithResponses) UpdateObjectTypeHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateObjectTypeHandlerRes, error) {
+	rsp, err := c.UpdateObjectTypeHandlerWithBody(ctx, organizationId, objectTypeId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateObjectTypeHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdateObjectTypeHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, body UpdateObjectTypeHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateObjectTypeHandlerRes, error) {
+	rsp, err := c.UpdateObjectTypeHandler(ctx, organizationId, objectTypeId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateObjectTypeHandlerRes(rsp)
+}
+
+// ListInstancesHandlerWithResponse request returning *ListInstancesHandlerRes
+func (c *ClientWithResponses) ListInstancesHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, params *ListInstancesHandlerParams, reqEditors ...RequestEditorFn) (*ListInstancesHandlerRes, error) {
+	rsp, err := c.ListInstancesHandler(ctx, organizationId, objectTypeId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListInstancesHandlerRes(rsp)
+}
+
+// GetInstanceHandlerWithResponse request returning *GetInstanceHandlerRes
+func (c *ClientWithResponses) GetInstanceHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, primaryKey string, reqEditors ...RequestEditorFn) (*GetInstanceHandlerRes, error) {
+	rsp, err := c.GetInstanceHandler(ctx, organizationId, objectTypeId, primaryKey, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetInstanceHandlerRes(rsp)
+}
+
+// TraverseLinkHandlerWithResponse request returning *TraverseLinkHandlerRes
+func (c *ClientWithResponses) TraverseLinkHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, primaryKey string, linkTypeId openapi_types.UUID, params *TraverseLinkHandlerParams, reqEditors ...RequestEditorFn) (*TraverseLinkHandlerRes, error) {
+	rsp, err := c.TraverseLinkHandler(ctx, organizationId, objectTypeId, primaryKey, linkTypeId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTraverseLinkHandlerRes(rsp)
+}
+
+// AddPropertyHandlerWithBodyWithResponse request with arbitrary body returning *AddPropertyHandlerRes
+func (c *ClientWithResponses) AddPropertyHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddPropertyHandlerRes, error) {
+	rsp, err := c.AddPropertyHandlerWithBody(ctx, organizationId, objectTypeId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddPropertyHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) AddPropertyHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, objectTypeId openapi_types.UUID, body AddPropertyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*AddPropertyHandlerRes, error) {
+	rsp, err := c.AddPropertyHandler(ctx, organizationId, objectTypeId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddPropertyHandlerRes(rsp)
+}
+
+// DeletePropertyHandlerWithResponse request returning *DeletePropertyHandlerRes
+func (c *ClientWithResponses) DeletePropertyHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, propertyId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeletePropertyHandlerRes, error) {
+	rsp, err := c.DeletePropertyHandler(ctx, organizationId, propertyId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeletePropertyHandlerRes(rsp)
+}
+
+// UpdatePropertyHandlerWithBodyWithResponse request with arbitrary body returning *UpdatePropertyHandlerRes
+func (c *ClientWithResponses) UpdatePropertyHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, propertyId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdatePropertyHandlerRes, error) {
+	rsp, err := c.UpdatePropertyHandlerWithBody(ctx, organizationId, propertyId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdatePropertyHandlerRes(rsp)
+}
+
+func (c *ClientWithResponses) UpdatePropertyHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, propertyId openapi_types.UUID, body UpdatePropertyHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdatePropertyHandlerRes, error) {
+	rsp, err := c.UpdatePropertyHandler(ctx, organizationId, propertyId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdatePropertyHandlerRes(rsp)
+}
+
 // GetOrgQuotasHandlerWithResponse request returning *GetOrgQuotasHandlerRes
 func (c *ClientWithResponses) GetOrgQuotasHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOrgQuotasHandlerRes, error) {
 	rsp, err := c.GetOrgQuotasHandler(ctx, organizationId, reqEditors...)
@@ -60240,23 +69991,6 @@ func (c *ClientWithResponses) GetOrgQuotasHandlerWithResponse(ctx context.Contex
 		return nil, err
 	}
 	return ParseGetOrgQuotasHandlerRes(rsp)
-}
-
-// AssignSubscriptionHandlerWithBodyWithResponse request with arbitrary body returning *AssignSubscriptionHandlerRes
-func (c *ClientWithResponses) AssignSubscriptionHandlerWithBodyWithResponse(ctx context.Context, organizationId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AssignSubscriptionHandlerRes, error) {
-	rsp, err := c.AssignSubscriptionHandlerWithBody(ctx, organizationId, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAssignSubscriptionHandlerRes(rsp)
-}
-
-func (c *ClientWithResponses) AssignSubscriptionHandlerWithResponse(ctx context.Context, organizationId openapi_types.UUID, body AssignSubscriptionHandlerJSONRequestBody, reqEditors ...RequestEditorFn) (*AssignSubscriptionHandlerRes, error) {
-	rsp, err := c.AssignSubscriptionHandler(ctx, organizationId, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAssignSubscriptionHandlerRes(rsp)
 }
 
 // GetOrgSecuritySettingsHandlerWithResponse request returning *GetOrgSecuritySettingsHandlerRes
@@ -60537,6 +70271,40 @@ func (c *ClientWithResponses) GetSharedModelWithResponse(ctx context.Context, na
 		return nil, err
 	}
 	return ParseGetSharedModelRes(rsp)
+}
+
+// CreateSignupRequestWithBodyWithResponse request with arbitrary body returning *CreateSignupRequestRes
+func (c *ClientWithResponses) CreateSignupRequestWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateSignupRequestRes, error) {
+	rsp, err := c.CreateSignupRequestWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateSignupRequestRes(rsp)
+}
+
+func (c *ClientWithResponses) CreateSignupRequestWithResponse(ctx context.Context, body CreateSignupRequestJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateSignupRequestRes, error) {
+	rsp, err := c.CreateSignupRequest(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateSignupRequestRes(rsp)
+}
+
+// VerifySignupRequestWithBodyWithResponse request with arbitrary body returning *VerifySignupRequestRes
+func (c *ClientWithResponses) VerifySignupRequestWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*VerifySignupRequestRes, error) {
+	rsp, err := c.VerifySignupRequestWithBody(ctx, id, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseVerifySignupRequestRes(rsp)
+}
+
+func (c *ClientWithResponses) VerifySignupRequestWithResponse(ctx context.Context, id openapi_types.UUID, body VerifySignupRequestJSONRequestBody, reqEditors ...RequestEditorFn) (*VerifySignupRequestRes, error) {
+	rsp, err := c.VerifySignupRequest(ctx, id, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseVerifySignupRequestRes(rsp)
 }
 
 // AnalyticsSlowQueriesHandlerWithResponse request returning *AnalyticsSlowQueriesHandlerRes
@@ -61033,6 +70801,227 @@ func ParseListForgejoBranchesRes(rsp *http.Response) (*ListForgejoBranchesRes, e
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest []string
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListEgressAllowlistsRes parses an HTTP response from a ListEgressAllowlistsWithResponse call
+func ParseListEgressAllowlistsRes(rsp *http.Response) (*ListEgressAllowlistsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListEgressAllowlistsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []EgressAllowlistResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateEgressAllowlistRes parses an HTTP response from a CreateEgressAllowlistWithResponse call
+func ParseCreateEgressAllowlistRes(rsp *http.Response) (*CreateEgressAllowlistRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateEgressAllowlistRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest EgressAllowlistResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteEgressAllowlistRes parses an HTTP response from a DeleteEgressAllowlistWithResponse call
+func ParseDeleteEgressAllowlistRes(rsp *http.Response) (*DeleteEgressAllowlistRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteEgressAllowlistRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetEgressAllowlistRes parses an HTTP response from a GetEgressAllowlistWithResponse call
+func ParseGetEgressAllowlistRes(rsp *http.Response) (*GetEgressAllowlistRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetEgressAllowlistRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest EgressAllowlistResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateEgressAllowlistRes parses an HTTP response from a UpdateEgressAllowlistWithResponse call
+func ParseUpdateEgressAllowlistRes(rsp *http.Response) (*UpdateEgressAllowlistRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateEgressAllowlistRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest EgressAllowlistResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -61805,6 +71794,39 @@ func ParseGitPrsRes(rsp *http.Response) (*GitPrsRes, error) {
 	return response, nil
 }
 
+// ParseGitReposRes parses an HTTP response from a GitReposWithResponse call
+func ParseGitReposRes(rsp *http.Response) (*GitReposRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GitReposRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []GitRepoStatus
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListModelsRes parses an HTTP response from a ListModelsWithResponse call
 func ParseListModelsRes(rsp *http.Response) (*ListModelsRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -62054,6 +72076,133 @@ func ParseListPendingPermissionsRes(rsp *http.Response) (*ListPendingPermissions
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 502:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON502 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListPendingQuestionsRes parses an HTTP response from a ListPendingQuestionsWithResponse call
+func ParseListPendingQuestionsRes(rsp *http.Response) (*ListPendingQuestionsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListPendingQuestionsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []PendingQuestion
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 502:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON502 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRejectQuestionRes parses an HTTP response from a RejectQuestionWithResponse call
+func ParseRejectQuestionRes(rsp *http.Response) (*RejectQuestionRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RejectQuestionRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 502:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON502 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseReplyQuestionRes parses an HTTP response from a ReplyQuestionWithResponse call
+func ParseReplyQuestionRes(rsp *http.Response) (*ReplyQuestionRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ReplyQuestionRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ApiErrorBody
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -62461,6 +72610,100 @@ func ParseAiEditRes(rsp *http.Response) (*AiEditRes, error) {
 	return response, nil
 }
 
+// ParseGetDevWorkstationEgressRes parses an HTTP response from a GetDevWorkstationEgressWithResponse call
+func ParseGetDevWorkstationEgressRes(rsp *http.Response) (*GetDevWorkstationEgressRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetDevWorkstationEgressRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DevWorkstationEgressResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetDevWorkstationEgressFlowsRes parses an HTTP response from a GetDevWorkstationEgressFlowsWithResponse call
+func ParseGetDevWorkstationEgressFlowsRes(rsp *http.Response) (*GetDevWorkstationEgressFlowsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetDevWorkstationEgressFlowsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DevWorkstationEgressFlowsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetDevWorkstationMetricsRes parses an HTTP response from a GetDevWorkstationMetricsWithResponse call
 func ParseGetDevWorkstationMetricsRes(rsp *http.Response) (*GetDevWorkstationMetricsRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -62508,6 +72751,60 @@ func ParseGetDevWorkstationMetricsRes(rsp *http.Response) (*GetDevWorkstationMet
 	return response, nil
 }
 
+// ParseUpdateDevWorkstationNetworkRes parses an HTTP response from a UpdateDevWorkstationNetworkWithResponse call
+func ParseUpdateDevWorkstationNetworkRes(rsp *http.Response) (*UpdateDevWorkstationNetworkRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateDevWorkstationNetworkRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DevWorkstationEgressResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseAuthorizePreviewRes parses an HTTP response from a AuthorizePreviewWithResponse call
 func ParseAuthorizePreviewRes(rsp *http.Response) (*AuthorizePreviewRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -62549,6 +72846,119 @@ func ParseAuthorizePreviewRes(rsp *http.Response) (*AuthorizePreviewRes, error) 
 			return nil, err
 		}
 		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListWorkstationRepositoriesRes parses an HTTP response from a ListWorkstationRepositoriesWithResponse call
+func ParseListWorkstationRepositoriesRes(rsp *http.Response) (*ListWorkstationRepositoriesRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListWorkstationRepositoriesRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []WorkstationRepositoryResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAddWorkstationRepositoryRes parses an HTTP response from a AddWorkstationRepositoryWithResponse call
+func ParseAddWorkstationRepositoryRes(rsp *http.Response) (*AddWorkstationRepositoryRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AddWorkstationRepositoryRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest AddWorkstationRepositoryResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRemoveWorkstationRepositoryRes parses an HTTP response from a RemoveWorkstationRepositoryWithResponse call
+func ParseRemoveWorkstationRepositoryRes(rsp *http.Response) (*RemoveWorkstationRepositoryRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RemoveWorkstationRepositoryRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
 
 	}
 
@@ -62915,6 +73325,39 @@ func ParseGetBifrostInfoRes(rsp *http.Response) (*GetBifrostInfoRes, error) {
 	return response, nil
 }
 
+// ParseListChangelogsHandlerRes parses an HTTP response from a ListChangelogsHandlerWithResponse call
+func ParseListChangelogsHandlerRes(rsp *http.Response) (*ListChangelogsHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListChangelogsHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListChangelogsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetCliVersionRes parses an HTTP response from a GetCliVersionWithResponse call
 func ParseGetCliVersionRes(rsp *http.Response) (*GetCliVersionRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -63241,512 +73684,6 @@ func ParseUpdateContextualRestrictionHandlerRes(rsp *http.Response) (*UpdateCont
 			return nil, err
 		}
 		response.JSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListDashboardsRes parses an HTTP response from a ListDashboardsWithResponse call
-func ParseListDashboardsRes(rsp *http.Response) (*ListDashboardsRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListDashboardsRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []DashboardSummary
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseCreateDashboardRes parses an HTTP response from a CreateDashboardWithResponse call
-func ParseCreateDashboardRes(rsp *http.Response) (*CreateDashboardRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &CreateDashboardRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Dashboard
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGenerateDashboardWidgetsRes parses an HTTP response from a GenerateDashboardWidgetsWithResponse call
-func ParseGenerateDashboardWidgetsRes(rsp *http.Response) (*GenerateDashboardWidgetsRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GenerateDashboardWidgetsRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest CopilotGenerateResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON500 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListDashboardTrashRes parses an HTTP response from a ListDashboardTrashWithResponse call
-func ParseListDashboardTrashRes(rsp *http.Response) (*ListDashboardTrashRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListDashboardTrashRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []DashboardSummary
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeleteDashboardRes parses an HTTP response from a DeleteDashboardWithResponse call
-func ParseDeleteDashboardRes(rsp *http.Response) (*DeleteDashboardRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeleteDashboardRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetDashboardRes parses an HTTP response from a GetDashboardWithResponse call
-func ParseGetDashboardRes(rsp *http.Response) (*GetDashboardRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetDashboardRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Dashboard
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseUpdateDashboardRes parses an HTTP response from a UpdateDashboardWithResponse call
-func ParseUpdateDashboardRes(rsp *http.Response) (*UpdateDashboardRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &UpdateDashboardRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Dashboard
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDuplicateDashboardRes parses an HTTP response from a DuplicateDashboardWithResponse call
-func ParseDuplicateDashboardRes(rsp *http.Response) (*DuplicateDashboardRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DuplicateDashboardRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Dashboard
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseCheckDashboardHealthRes parses an HTTP response from a CheckDashboardHealthWithResponse call
-func ParseCheckDashboardHealthRes(rsp *http.Response) (*CheckDashboardHealthRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &CheckDashboardHealthRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []WidgetHealth
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseRestoreDashboardRes parses an HTTP response from a RestoreDashboardWithResponse call
-func ParseRestoreDashboardRes(rsp *http.Response) (*RestoreDashboardRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &RestoreDashboardRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Dashboard
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseTransferDashboardRes parses an HTTP response from a TransferDashboardWithResponse call
-func ParseTransferDashboardRes(rsp *http.Response) (*TransferDashboardRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &TransferDashboardRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Dashboard
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListDashboardVersionsRes parses an HTTP response from a ListDashboardVersionsWithResponse call
-func ParseListDashboardVersionsRes(rsp *http.Response) (*ListDashboardVersionsRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListDashboardVersionsRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []DashboardVersionSummary
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ApiErrorBody
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseRestoreDashboardVersionRes parses an HTTP response from a RestoreDashboardVersionWithResponse call
-func ParseRestoreDashboardVersionRes(rsp *http.Response) (*RestoreDashboardVersionRes, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &RestoreDashboardVersionRes{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Dashboard
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ApiErrorBody
@@ -64733,6 +74670,53 @@ func ParseDeleteSchemaRes(rsp *http.Response) (*DeleteSchemaRes, error) {
 	}
 
 	response := &DeleteSchemaRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteTableRes parses an HTTP response from a DeleteTableWithResponse call
+func ParseDeleteTableRes(rsp *http.Response) (*DeleteTableRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteTableRes{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -66679,6 +76663,512 @@ func ParseUploadBucketObjectRes(rsp *http.Response) (*UploadBucketObjectRes, err
 	return response, nil
 }
 
+// ParseListDashboardsRes parses an HTTP response from a ListDashboardsWithResponse call
+func ParseListDashboardsRes(rsp *http.Response) (*ListDashboardsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListDashboardsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []DashboardSummary
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateDashboardRes parses an HTTP response from a CreateDashboardWithResponse call
+func ParseCreateDashboardRes(rsp *http.Response) (*CreateDashboardRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateDashboardRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Dashboard
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGenerateDashboardWidgetsRes parses an HTTP response from a GenerateDashboardWidgetsWithResponse call
+func ParseGenerateDashboardWidgetsRes(rsp *http.Response) (*GenerateDashboardWidgetsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GenerateDashboardWidgetsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest CopilotGenerateResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListDashboardTrashRes parses an HTTP response from a ListDashboardTrashWithResponse call
+func ParseListDashboardTrashRes(rsp *http.Response) (*ListDashboardTrashRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListDashboardTrashRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []DashboardSummary
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteDashboardRes parses an HTTP response from a DeleteDashboardWithResponse call
+func ParseDeleteDashboardRes(rsp *http.Response) (*DeleteDashboardRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteDashboardRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetDashboardRes parses an HTTP response from a GetDashboardWithResponse call
+func ParseGetDashboardRes(rsp *http.Response) (*GetDashboardRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetDashboardRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Dashboard
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateDashboardRes parses an HTTP response from a UpdateDashboardWithResponse call
+func ParseUpdateDashboardRes(rsp *http.Response) (*UpdateDashboardRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateDashboardRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Dashboard
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDuplicateDashboardRes parses an HTTP response from a DuplicateDashboardWithResponse call
+func ParseDuplicateDashboardRes(rsp *http.Response) (*DuplicateDashboardRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DuplicateDashboardRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Dashboard
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCheckDashboardHealthRes parses an HTTP response from a CheckDashboardHealthWithResponse call
+func ParseCheckDashboardHealthRes(rsp *http.Response) (*CheckDashboardHealthRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CheckDashboardHealthRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []WidgetHealth
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRestoreDashboardRes parses an HTTP response from a RestoreDashboardWithResponse call
+func ParseRestoreDashboardRes(rsp *http.Response) (*RestoreDashboardRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RestoreDashboardRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Dashboard
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTransferDashboardRes parses an HTTP response from a TransferDashboardWithResponse call
+func ParseTransferDashboardRes(rsp *http.Response) (*TransferDashboardRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TransferDashboardRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Dashboard
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListDashboardVersionsRes parses an HTTP response from a ListDashboardVersionsWithResponse call
+func ParseListDashboardVersionsRes(rsp *http.Response) (*ListDashboardVersionsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListDashboardVersionsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []DashboardVersionSummary
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRestoreDashboardVersionRes parses an HTTP response from a RestoreDashboardVersionWithResponse call
+func ParseRestoreDashboardVersionRes(rsp *http.Response) (*RestoreDashboardVersionRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RestoreDashboardVersionRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Dashboard
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListHarborDataDockRes parses an HTTP response from a ListHarborDataDockWithResponse call
 func ParseListHarborDataDockRes(rsp *http.Response) (*ListHarborDataDockRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -67619,6 +78109,13 @@ func ParseCreateOpendataIngestionRes(rsp *http.Response) (*CreateOpendataIngesti
 		}
 		response.JSON403 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ApiErrorBody
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -68341,6 +78838,147 @@ func ParseGetAiAgentMailStatsRes(rsp *http.Response) (*GetAiAgentMailStatsRes, e
 	return response, nil
 }
 
+// ParseListAiAgentSessionsRes parses an HTTP response from a ListAiAgentSessionsWithResponse call
+func ParseListAiAgentSessionsRes(rsp *http.Response) (*ListAiAgentSessionsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAiAgentSessionsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AiAgentSessionsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteAiAgentSessionRes parses an HTTP response from a DeleteAiAgentSessionWithResponse call
+func ParseDeleteAiAgentSessionRes(rsp *http.Response) (*DeleteAiAgentSessionRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteAiAgentSessionRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAiAgentSessionRes parses an HTTP response from a GetAiAgentSessionWithResponse call
+func ParseGetAiAgentSessionRes(rsp *http.Response) (*GetAiAgentSessionRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAiAgentSessionRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AiAgentSessionTurnsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetAirflowRes parses an HTTP response from a GetAirflowWithResponse call
 func ParseGetAirflowRes(rsp *http.Response) (*GetAirflowRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -68516,6 +79154,576 @@ func ParsePatchAirflowCrdRes(rsp *http.Response) (*PatchAirflowCrdRes, error) {
 			return nil, err
 		}
 		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListAlertablePanelsRes parses an HTTP response from a ListAlertablePanelsWithResponse call
+func ParseListAlertablePanelsRes(rsp *http.Response) (*ListAlertablePanelsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAlertablePanelsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []AlertablePanelDto
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListAlertBindingsRes parses an HTTP response from a ListAlertBindingsWithResponse call
+func ParseListAlertBindingsRes(rsp *http.Response) (*ListAlertBindingsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAlertBindingsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []SignalBindingsDto
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSetAlertBindingsRes parses an HTTP response from a SetAlertBindingsWithResponse call
+func ParseSetAlertBindingsRes(rsp *http.Response) (*SetAlertBindingsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SetAlertBindingsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListNotificationChannelsRes parses an HTTP response from a ListNotificationChannelsWithResponse call
+func ParseListNotificationChannelsRes(rsp *http.Response) (*ListNotificationChannelsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListNotificationChannelsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []NotificationChannelDto
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateNotificationChannelRes parses an HTTP response from a CreateNotificationChannelWithResponse call
+func ParseCreateNotificationChannelRes(rsp *http.Response) (*CreateNotificationChannelRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateNotificationChannelRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest NotificationChannelDto
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteNotificationChannelRes parses an HTTP response from a DeleteNotificationChannelWithResponse call
+func ParseDeleteNotificationChannelRes(rsp *http.Response) (*DeleteNotificationChannelRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteNotificationChannelRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateNotificationChannelRes parses an HTTP response from a UpdateNotificationChannelWithResponse call
+func ParseUpdateNotificationChannelRes(rsp *http.Response) (*UpdateNotificationChannelRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateNotificationChannelRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest NotificationChannelDto
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTestNotificationChannelRes parses an HTTP response from a TestNotificationChannelWithResponse call
+func ParseTestNotificationChannelRes(rsp *http.Response) (*TestNotificationChannelRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TestNotificationChannelRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListAlertEventsRes parses an HTTP response from a ListAlertEventsWithResponse call
+func ParseListAlertEventsRes(rsp *http.Response) (*ListAlertEventsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAlertEventsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []AlertEventDto
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListAlertRulesRes parses an HTTP response from a ListAlertRulesWithResponse call
+func ParseListAlertRulesRes(rsp *http.Response) (*ListAlertRulesRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAlertRulesRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []AlertRuleDto
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateAlertRuleRes parses an HTTP response from a CreateAlertRuleWithResponse call
+func ParseCreateAlertRuleRes(rsp *http.Response) (*CreateAlertRuleRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateAlertRuleRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AlertRuleDto
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteAlertRuleRes parses an HTTP response from a DeleteAlertRuleWithResponse call
+func ParseDeleteAlertRuleRes(rsp *http.Response) (*DeleteAlertRuleRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteAlertRuleRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateAlertRuleRes parses an HTTP response from a UpdateAlertRuleWithResponse call
+func ParseUpdateAlertRuleRes(rsp *http.Response) (*UpdateAlertRuleRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateAlertRuleRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AlertRuleDto
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListAlertThresholdsRes parses an HTTP response from a ListAlertThresholdsWithResponse call
+func ParseListAlertThresholdsRes(rsp *http.Response) (*ListAlertThresholdsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAlertThresholdsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []SignalThresholdsDto
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseClearAlertThresholdsRes parses an HTTP response from a ClearAlertThresholdsWithResponse call
+func ParseClearAlertThresholdsRes(rsp *http.Response) (*ClearAlertThresholdsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ClearAlertThresholdsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SignalThresholdsDto
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSetAlertThresholdsRes parses an HTTP response from a SetAlertThresholdsWithResponse call
+func ParseSetAlertThresholdsRes(rsp *http.Response) (*SetAlertThresholdsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SetAlertThresholdsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SignalThresholdsDto
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
 
 	}
 
@@ -69319,6 +80527,53 @@ func ParseDeleteOrganizationCrdRes(rsp *http.Response) (*DeleteOrganizationCrdRe
 	return response, nil
 }
 
+// ParseCheckCustomDomainAvailabilityRes parses an HTTP response from a CheckCustomDomainAvailabilityWithResponse call
+func ParseCheckCustomDomainAvailabilityRes(rsp *http.Response) (*CheckCustomDomainAvailabilityRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CheckCustomDomainAvailabilityRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest CustomDomainAvailabilityResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetDagsterRes parses an HTTP response from a GetDagsterWithResponse call
 func ParseGetDagsterRes(rsp *http.Response) (*GetDagsterRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -69487,6 +80742,60 @@ func ParsePatchDagsterCrdRes(rsp *http.Response) (*PatchDagsterCrdRes, error) {
 			return nil, err
 		}
 		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSetDedicatedHarborNamespacesRes parses an HTTP response from a SetDedicatedHarborNamespacesWithResponse call
+func ParseSetDedicatedHarborNamespacesRes(rsp *http.Response) (*SetDedicatedHarborNamespacesRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SetDedicatedHarborNamespacesRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Org
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ApiErrorBody
@@ -70919,6 +82228,13 @@ func ParseCreateContainerAppCrdRes(rsp *http.Response) (*CreateContainerAppCrdRe
 			return nil, err
 		}
 		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ApiErrorBody
@@ -74992,7 +86308,47 @@ func ParseListPipelinesRes(rsp *http.Response) (*ListPipelinesRes, error) {
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []PipelineResponseData
+		var dest PipelinesPage
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetPipelinesStatsRes parses an HTTP response from a GetPipelinesStatsWithResponse call
+func ParseGetPipelinesStatsRes(rsp *http.Response) (*GetPipelinesStatsRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetPipelinesStatsRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PipelinesStats
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -75392,11 +86748,18 @@ func ParseListPipelineLogsRes(rsp *http.Response) (*ListPipelineLogsRes, error) 
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ListLogsResponse
+		var dest ResourceLogsResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ApiErrorBody
@@ -75824,22 +87187,62 @@ func ParseGetTokenUsageSummaryRes(rsp *http.Response) (*GetTokenUsageSummaryRes,
 	return response, nil
 }
 
-// ParseGetTokenUsageTimeseriesRes parses an HTTP response from a GetTokenUsageTimeseriesWithResponse call
-func ParseGetTokenUsageTimeseriesRes(rsp *http.Response) (*GetTokenUsageTimeseriesRes, error) {
+// ParseGetTokenUsageTimeseriesByModelRes parses an HTTP response from a GetTokenUsageTimeseriesByModelWithResponse call
+func ParseGetTokenUsageTimeseriesByModelRes(rsp *http.Response) (*GetTokenUsageTimeseriesByModelRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &GetTokenUsageTimeseriesRes{
+	response := &GetTokenUsageTimeseriesByModelRes{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []UsageTimePoint
+		var dest []ModelUsageTimePoint
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetTokenUsageTimeseriesByPrincipalRes parses an HTTP response from a GetTokenUsageTimeseriesByPrincipalWithResponse call
+func ParseGetTokenUsageTimeseriesByPrincipalRes(rsp *http.Response) (*GetTokenUsageTimeseriesByPrincipalRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetTokenUsageTimeseriesByPrincipalRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []PrincipalUsageTimePoint
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -76174,6 +87577,13 @@ func ParseUpdateSecretRes(rsp *http.Response) (*UpdateSecretRes, error) {
 		}
 		response.JSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ApiErrorBody
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -76327,6 +87737,53 @@ func ParseDeleteServiceAccountCrdRes(rsp *http.Response) (*DeleteServiceAccountC
 	return response, nil
 }
 
+// ParseGetServiceAccountCrdRes parses an HTTP response from a GetServiceAccountCrdWithResponse call
+func ParseGetServiceAccountCrdRes(rsp *http.Response) (*GetServiceAccountCrdRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetServiceAccountCrdRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ServiceAccountCrdConfig
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseUpdateServiceAccountCrdRes parses an HTTP response from a UpdateServiceAccountCrdWithResponse call
 func ParseUpdateServiceAccountCrdRes(rsp *http.Response) (*UpdateServiceAccountCrdRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -76342,7 +87799,61 @@ func ParseUpdateServiceAccountCrdRes(rsp *http.Response) (*UpdateServiceAccountC
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ServiceAccount
+		var dest ServiceAccountCrdConfig
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRotateServiceAccountSecretRes parses an HTTP response from a RotateServiceAccountSecretWithResponse call
+func ParseRotateServiceAccountSecretRes(rsp *http.Response) (*RotateServiceAccountSecretRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RotateServiceAccountSecretRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ServiceAccountCrdConfig
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -77518,22 +89029,175 @@ func ParseGetEffectiveSecuritySettingsHandlerRes(rsp *http.Response) (*GetEffect
 	return response, nil
 }
 
-// ParseGetOrgQuotasHandlerRes parses an HTTP response from a GetOrgQuotasHandlerWithResponse call
-func ParseGetOrgQuotasHandlerRes(rsp *http.Response) (*GetOrgQuotasHandlerRes, error) {
+// ParseGetOrgFeaturesHandlerRes parses an HTTP response from a GetOrgFeaturesHandlerWithResponse call
+func ParseGetOrgFeaturesHandlerRes(rsp *http.Response) (*GetOrgFeaturesHandlerRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &GetOrgQuotasHandlerRes{
+	response := &GetOrgFeaturesHandlerRes{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest OrganizationQuotaResponse
+		var dest OrgFeaturesResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListActionTypesHandlerRes parses an HTTP response from a ListActionTypesHandlerWithResponse call
+func ParseListActionTypesHandlerRes(rsp *http.Response) (*ListActionTypesHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListActionTypesHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []ActionType
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateActionTypeHandlerRes parses an HTTP response from a CreateActionTypeHandlerWithResponse call
+func ParseCreateActionTypeHandlerRes(rsp *http.Response) (*CreateActionTypeHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateActionTypeHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ActionType
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteActionTypeHandlerRes parses an HTTP response from a DeleteActionTypeHandlerWithResponse call
+func ParseDeleteActionTypeHandlerRes(rsp *http.Response) (*DeleteActionTypeHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteActionTypeHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetActionTypeHandlerRes parses an HTTP response from a GetActionTypeHandlerWithResponse call
+func ParseGetActionTypeHandlerRes(rsp *http.Response) (*GetActionTypeHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetActionTypeHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ActionType
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -77558,20 +89222,895 @@ func ParseGetOrgQuotasHandlerRes(rsp *http.Response) (*GetOrgQuotasHandlerRes, e
 	return response, nil
 }
 
-// ParseAssignSubscriptionHandlerRes parses an HTTP response from a AssignSubscriptionHandlerWithResponse call
-func ParseAssignSubscriptionHandlerRes(rsp *http.Response) (*AssignSubscriptionHandlerRes, error) {
+// ParseUpdateActionTypeHandlerRes parses an HTTP response from a UpdateActionTypeHandlerWithResponse call
+func ParseUpdateActionTypeHandlerRes(rsp *http.Response) (*UpdateActionTypeHandlerRes, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &AssignSubscriptionHandlerRes{
+	response := &UpdateActionTypeHandlerRes{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ActionType
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseExecuteActionHandlerRes parses an HTTP response from a ExecuteActionHandlerWithResponse call
+func ParseExecuteActionHandlerRes(rsp *http.Response) (*ExecuteActionHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ExecuteActionHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ActionResult
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseApplyOntologyProposalHandlerRes parses an HTTP response from a ApplyOntologyProposalHandlerWithResponse call
+func ParseApplyOntologyProposalHandlerRes(rsp *http.Response) (*ApplyOntologyProposalHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ApplyOntologyProposalHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AppliedProposal
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseOntologyAssistantHandlerRes parses an HTTP response from a OntologyAssistantHandlerWithResponse call
+func ParseOntologyAssistantHandlerRes(rsp *http.Response) (*OntologyAssistantHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &OntologyAssistantHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AssistantAnswer
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGenerateOntologyHandlerRes parses an HTTP response from a GenerateOntologyHandlerWithResponse call
+func ParseGenerateOntologyHandlerRes(rsp *http.Response) (*GenerateOntologyHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GenerateOntologyHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest OntologyProposal
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListLinkTypesHandlerRes parses an HTTP response from a ListLinkTypesHandlerWithResponse call
+func ParseListLinkTypesHandlerRes(rsp *http.Response) (*ListLinkTypesHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListLinkTypesHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []LinkType
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateLinkTypeHandlerRes parses an HTTP response from a CreateLinkTypeHandlerWithResponse call
+func ParseCreateLinkTypeHandlerRes(rsp *http.Response) (*CreateLinkTypeHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateLinkTypeHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest LinkType
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteLinkTypeHandlerRes parses an HTTP response from a DeleteLinkTypeHandlerWithResponse call
+func ParseDeleteLinkTypeHandlerRes(rsp *http.Response) (*DeleteLinkTypeHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteLinkTypeHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetLinkTypeHandlerRes parses an HTTP response from a GetLinkTypeHandlerWithResponse call
+func ParseGetLinkTypeHandlerRes(rsp *http.Response) (*GetLinkTypeHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetLinkTypeHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest LinkType
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateLinkTypeHandlerRes parses an HTTP response from a UpdateLinkTypeHandlerWithResponse call
+func ParseUpdateLinkTypeHandlerRes(rsp *http.Response) (*UpdateLinkTypeHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateLinkTypeHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest LinkType
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListObjectTypesHandlerRes parses an HTTP response from a ListObjectTypesHandlerWithResponse call
+func ParseListObjectTypesHandlerRes(rsp *http.Response) (*ListObjectTypesHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListObjectTypesHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []ObjectType
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateObjectTypeHandlerRes parses an HTTP response from a CreateObjectTypeHandlerWithResponse call
+func ParseCreateObjectTypeHandlerRes(rsp *http.Response) (*CreateObjectTypeHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateObjectTypeHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ObjectType
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteObjectTypeHandlerRes parses an HTTP response from a DeleteObjectTypeHandlerWithResponse call
+func ParseDeleteObjectTypeHandlerRes(rsp *http.Response) (*DeleteObjectTypeHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteObjectTypeHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetObjectTypeHandlerRes parses an HTTP response from a GetObjectTypeHandlerWithResponse call
+func ParseGetObjectTypeHandlerRes(rsp *http.Response) (*GetObjectTypeHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetObjectTypeHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ObjectTypeWithProperties
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateObjectTypeHandlerRes parses an HTTP response from a UpdateObjectTypeHandlerWithResponse call
+func ParseUpdateObjectTypeHandlerRes(rsp *http.Response) (*UpdateObjectTypeHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateObjectTypeHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ObjectType
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListInstancesHandlerRes parses an HTTP response from a ListInstancesHandlerWithResponse call
+func ParseListInstancesHandlerRes(rsp *http.Response) (*ListInstancesHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListInstancesHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest InstancePage
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetInstanceHandlerRes parses an HTTP response from a GetInstanceHandlerWithResponse call
+func ParseGetInstanceHandlerRes(rsp *http.Response) (*GetInstanceHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetInstanceHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ObjectInstance
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTraverseLinkHandlerRes parses an HTTP response from a TraverseLinkHandlerWithResponse call
+func ParseTraverseLinkHandlerRes(rsp *http.Response) (*TraverseLinkHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TraverseLinkHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest InstancePage
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAddPropertyHandlerRes parses an HTTP response from a AddPropertyHandlerWithResponse call
+func ParseAddPropertyHandlerRes(rsp *http.Response) (*AddPropertyHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AddPropertyHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest PropertyDefinition
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeletePropertyHandlerRes parses an HTTP response from a DeletePropertyHandlerWithResponse call
+func ParseDeletePropertyHandlerRes(rsp *http.Response) (*DeletePropertyHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeletePropertyHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdatePropertyHandlerRes parses an HTTP response from a UpdatePropertyHandlerWithResponse call
+func ParseUpdatePropertyHandlerRes(rsp *http.Response) (*UpdatePropertyHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdatePropertyHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PropertyDefinition
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOrgQuotasHandlerRes parses an HTTP response from a GetOrgQuotasHandlerWithResponse call
+func ParseGetOrgQuotasHandlerRes(rsp *http.Response) (*GetOrgQuotasHandlerRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrgQuotasHandlerRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest OrganizationQuotaResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ApiErrorBody
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -78057,12 +90596,26 @@ func ParseCreatePipelineRes(rsp *http.Response) (*CreatePipelineRes, error) {
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ApiErrorBody
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ApiErrorBody
@@ -78482,6 +91035,86 @@ func ParseGetSharedModelRes(rsp *http.Response) (*GetSharedModelRes, error) {
 			return nil, err
 		}
 		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateSignupRequestRes parses an HTTP response from a CreateSignupRequestWithResponse call
+func ParseCreateSignupRequestRes(rsp *http.Response) (*CreateSignupRequestRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateSignupRequestRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest CreateSignupRequestResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseVerifySignupRequestRes parses an HTTP response from a VerifySignupRequestWithResponse call
+func ParseVerifySignupRequestRes(rsp *http.Response) (*VerifySignupRequestRes, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &VerifySignupRequestRes{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
 
 	}
 
@@ -79060,12 +91693,26 @@ func ParseCreatePipelineV2Res(rsp *http.Response) (*CreatePipelineV2Res, error) 
 		}
 		response.JSON201 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ApiErrorBody
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ApiErrorBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ApiErrorBody
