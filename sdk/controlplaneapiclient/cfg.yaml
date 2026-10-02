@@ -6,3 +6,5 @@ generate:
   client: true
 output-options:
   response-type-suffix: "Res"
+  overlay:
+    path: overlay.yaml
